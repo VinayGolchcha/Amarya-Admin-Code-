@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Typography, Card, CardContent } from "@mui/material";
+import { Typography, Card, CardContent } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
@@ -11,7 +11,6 @@ const ExpandMore = styled((props) => {
     return <IconButton {...other} />;
 })(({ theme, expand }) => ({
     marginLeft: 'auto',
-    // transform: `rotate(${expand ? '180deg' : '0deg'})`,
     transition: theme.transitions.create('transform', {
         duration: theme.transitions.duration.shortest,
     }),
@@ -32,11 +31,7 @@ const CardComponenet = (props) =>{
                         {props.data.heading}
                     </Typography>
                     <Typography variant="h6" color="black" sx={{}}>
-                        This impressive paella is a perfect party dish and a fun meal to cook
-                        together with your guests. Add 1 cup of frozen peas along with the mussels,
-                        if you like.This impressive paella is a perfect party dish and a fun meal to cook
-                        together with your guests. Add 1 cup of frozen peas along with the mussels,
-                        if you like
+                        {props.data.content}
                     </Typography>
                     <Collapse in={!expanded}>
                         <Typography >
@@ -47,13 +42,7 @@ const CardComponenet = (props) =>{
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
                         <Typography variant="h6">
-                            Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over
-                            medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring
-                            occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a
-                            large plate and set aside, leaving chicken and chorizo in the pan. Add
-                            pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook,
-                            stirring often until thickened and fragrant, about 10 minutes. Add
-                            saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.
+                            {props.data.fullContent}
                         </Typography>
                     </CardContent>
                 </Collapse>
