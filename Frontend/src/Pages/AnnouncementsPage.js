@@ -24,7 +24,7 @@ const AnnouncementPage = () => {
 
     return (
         <Box
-            sx={{ display: "flex", flexDirection: "column", margin: '1% 3%' }}>
+            sx={{ display: "flex", flexDirection: "column", margin: '1% 2.3%' }}>
             <Typography variant="h5" sx={{ fontWeight: '700', color: '#121843' }} gutterBottom>
                 Announcement Tab
             </Typography>
