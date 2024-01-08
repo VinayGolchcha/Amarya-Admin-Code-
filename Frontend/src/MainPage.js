@@ -18,7 +18,7 @@ import PoliciesPage from './Pages/PoliciesPage';
 import SettingsPage from './Pages/SettingsPage';
 import TrainingsPage from './Pages/TrainingsPage';
 import WorksheetPage from './Pages/WorksheetPage';
-import AnnouncementPage from './Pages/AnnouncementsPage';
+// import AnnouncementPage from './Pages/AnnouncementsPage';
 
 const drawerWidth = 240;
 
@@ -57,7 +57,7 @@ const MainPage = (props) => {
                 sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` }, paddingTop: '8vh', scrollMarginRight:'', overflowY: 'auto', overflowX: 'hidden'}}
             >
                 <Routes>
-                    <Route path="/dashboard" element={<AnnouncementPage />} />
+                    <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/assets" element={<AssetsPage />} />
                     <Route path="/leaves" element={<LeaveManagementPage />} />
                     <Route path="/trainings" element={<TrainingsPage />} />
