@@ -1,13 +1,17 @@
 import React from 'react'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LoginPage from './Pages/LoginPage'
-import AnnouncementPage from './Pages/AnnouncementsPage'
+import MainPage from './MainPage';
 
 const App = () => {
   return (
-    <div>
-      {/* <LoginPage /> */}
-    <AnnouncementPage/>
-    </div>
+   <BrowserRouter>
+    {/* <Routes>
+        <Route path='/' element={<LoginPage/>}/>
+        <Route path='/home' element={<MainPage/>}/>
+    </Routes> */}
+    <MainPage/>
+   </BrowserRouter>
   )
 }
 
