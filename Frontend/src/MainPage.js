@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,6 +18,7 @@ import SettingsPage from './Pages/SettingsPage';
 import TrainingsPage from './Pages/TrainingsPage';
 import WorksheetPage from './Pages/WorksheetPage';
 // import AnnouncementPage from './Pages/AnnouncementsPage';
+import UserProfilePage from './Pages/UserProfilePage';
 
 const drawerWidth = 240;
 
@@ -64,6 +64,7 @@ const MainPage = (props) => {
                     <Route path="/worksheet" element={<WorksheetPage />} />
                     <Route path="/policies" element={<PoliciesPage />} />
                     <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/profile" element={<UserProfilePage/>}></Route>
                 </Routes>
             </Box>
         </Box>
