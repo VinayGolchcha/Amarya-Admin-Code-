@@ -108,6 +108,7 @@ const UserProfilePage = () => {
                                                 '& .MuiOutlinedInput-notchedOutline': {
                                                     borderWidth: '2px',
                                                     borderColor: '#b3b3b3',
+                                                    borderRadius:'10px'
                                                 },
                                             }}
                                         />
@@ -205,7 +206,7 @@ const UserProfilePage = () => {
                                                     }} gutterBottom color="#6e7880">
                                                         {item.value}
                                                     </Typography>
-                                                    <Typography variant="body2" color="#9fadb8">
+                                                    <Typography variant="subtitle1"color="#9fadb8">
                                                         {item.info}
                                                     </Typography>
                                                 </CardContent>
