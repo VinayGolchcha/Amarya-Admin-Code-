@@ -17,7 +17,8 @@ import { Avatar, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import MenuIcon from '@mui/icons-material/Menu';
-
+import { useHistory } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -67,6 +68,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 
 const NavBar = ({ handleDrawerToggle }) => {
+    const location = useLocation();
+    const navigate = useNavigate();
+
     const [arrow, updateArrow] = React.useState(false);
     const toggleArrow = () => {
         updateArrow(!arrow);
@@ -88,6 +92,7 @@ const NavBar = ({ handleDrawerToggle }) => {
     const handleMenuClose = () => {
         setAnchorEl(null);
         handleMobileMenuClose();
+        navigate('/profile'); 
     };
 
     const handleMobileMenuOpen = (event) => {
