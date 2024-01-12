@@ -3,8 +3,6 @@ import { Typography, Card, CardContent } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
-import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
