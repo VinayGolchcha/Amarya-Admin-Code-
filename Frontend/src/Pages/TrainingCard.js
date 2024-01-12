@@ -18,7 +18,6 @@ export default function TrainingCard({field}) {
   // const [sapHr, setSapHr] = useState(false);
   // const [sapCDS, setSapCDS] = useState(false);
   
-  console.log(field);
   function handleFlip(val) {
     setIsFlip(!isFLip);
   }
