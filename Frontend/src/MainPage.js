@@ -18,6 +18,7 @@ import SettingsPage from "./Pages/SettingsPage";
 import TrainingsPage from "./Pages/TrainingsPage";
 import WorkSheet from "./Pages/WorksheetPage";
 import AnnouncementPage from './Pages/AnnouncementsPage';
+import ActivitiesPage from './Pages/ActivitiesPage';
 import UserProfilePage from './Pages/UserProfilePage';
 
 const drawerWidth = 240;
@@ -75,6 +76,7 @@ const MainPage = (props) => {
           <Route path="/worksheet" element={<WorkSheet />} />
           <Route path="/profile" element={<UserProfilePage/>}></Route>
           <Route path="/announcements" element={<AnnouncementPage/>}></Route>
+          <Route path="/activities" element={<ActivitiesPage />} />
         </Routes>
       </Box>
     </Box>
