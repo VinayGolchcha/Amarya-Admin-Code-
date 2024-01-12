@@ -59,7 +59,7 @@ const CardComponenet = (props) =>{
                             {expanded ? 'Read less' : 'Read more'}
                         </ExpandMore>
                     </div>
-                    <div>
+                    {/* <div>
                         <IconButton aria-label="thumbsup" sx={{ marginRight: "1rem" }}>
                             <ThumbUpOutlinedIcon />
                         </IconButton>
@@ -67,7 +67,7 @@ const CardComponenet = (props) =>{
 
                             <ChatOutlinedIcon />
                         </IconButton>
-                    </div>
+                    </div> */}
                 </div>
             </Card>
 
