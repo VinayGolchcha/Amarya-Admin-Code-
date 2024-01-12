@@ -16,8 +16,8 @@ import LeaveManagementPage from "./Pages/LeaveMangementPage";
 import PoliciesPage from "./Pages/PoliciesPage";
 import SettingsPage from "./Pages/SettingsPage";
 import TrainingsPage from "./Pages/TrainingsPage";
-import WorkSheet from "./Pages/WorkSheetPage";
-// import AnnouncementPage from './Pages/AnnouncementsPage';
+import WorkSheet from "./Pages/WorksheetPage";
+import AnnouncementPage from './Pages/AnnouncementsPage';
 import UserProfilePage from './Pages/UserProfilePage';
 
 const drawerWidth = 240;
@@ -74,6 +74,7 @@ const MainPage = (props) => {
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/worksheet" element={<WorkSheet />} />
           <Route path="/profile" element={<UserProfilePage/>}></Route>
+          <Route path="/announcements" element={<AnnouncementPage/>}></Route>
         </Routes>
       </Box>
     </Box>
