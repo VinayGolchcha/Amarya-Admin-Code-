@@ -9,6 +9,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { activities } from "./ActivitiesPage";
+// import Carousel from "./Carousel";
 
 const ActivityPage = () => {
     const { activityId } = useParams();
@@ -33,11 +34,9 @@ const ActivityPage = () => {
             <Box display="flex" flexWrap="wrap" justifyContent="center" sx={{ width: '100%' }}>
                 <Card
                     style={{
-                        // flex: '0 0 calc(25% - 16px)',
                         backgroundColor: '#e8f0fb',
                         border: 'solid 1px #74787e',
                         borderRadius: '15px',
-                        // maxHeight: '50vh',
                         height:'50vh',
                         width: '90%',
                         position:'relative'
@@ -52,7 +51,6 @@ const ActivityPage = () => {
                                     style={{
                                         maxHeight:'50vh',
                                         width:'100%',
-                                        // maxHeight: 'max-content',
                                         objectFit: 'cover',
                                         overflow:'hidden'
                                     }}
@@ -62,7 +60,12 @@ const ActivityPage = () => {
                         ))}
                     </Slider>
                 </Card>
-                {/* {activity.content} */}
+            </Box>
+            {/* <Carousel images={activity.images}/> */}
+            <Box sx={{marginTop:'30px', textAlign:'center'}}>
+                <Typography variant="h6">
+                    {activity.details}
+                </Typography>
             </Box>
         </Box>
     )
