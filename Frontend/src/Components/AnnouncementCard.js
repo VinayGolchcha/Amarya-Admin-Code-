@@ -3,8 +3,6 @@ import { Typography, Card, CardContent } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
-import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
-import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 
 const ExpandMore = styled((props) => {
     const { expand, ...other } = props;
@@ -59,7 +57,7 @@ const CardComponenet = (props) =>{
                             {expanded ? 'Read less' : 'Read more'}
                         </ExpandMore>
                     </div>
-                    <div>
+                    {/* <div>
                         <IconButton aria-label="thumbsup" sx={{ marginRight: "1rem" }}>
                             <ThumbUpOutlinedIcon />
                         </IconButton>
@@ -67,7 +65,7 @@ const CardComponenet = (props) =>{
 
                             <ChatOutlinedIcon />
                         </IconButton>
-                    </div>
+                    </div> */}
                 </div>
             </Card>
 
