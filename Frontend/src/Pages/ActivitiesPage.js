@@ -13,6 +13,7 @@ export const activities = [
         id: 1,
         title: 'Activity 1',
         content: <LoremIpsum avgSentencesPerParagraph={4} />,
+        details:<LoremIpsum avgSentencesPerParagraph={8} p={2} />,
         date: new Date('2023-09-19').toISOString().substring(0, 10),
         images: ['/Images/activities/activity1/1.jpg', '/Images/activities/activity1/2.jpg', '/Images/activities/activity1/3.jpg', '/Images/activities/activity1/4.jpg']
     },
@@ -20,6 +21,7 @@ export const activities = [
         id: 2,
         title: 'Activity 2',
         content: <LoremIpsum avgSentencesPerParagraph={4} />,
+        details:<LoremIpsum avgSentencesPerParagraph={8} p={2} />,
         date: new Date('2023-09-19').toISOString().substring(0, 10),
         images: ['/Images/activities/activity1/1.jpg', '/Images/activities/activity1/2.jpg', '/Images/activities/activity1/3.jpg', '/Images/activities/activity1/4.jpg']
     },
@@ -27,6 +29,7 @@ export const activities = [
         id: 3,
         title: 'Activity 3',
         content: <LoremIpsum avgSentencesPerParagraph={4} />,
+        details:<LoremIpsum avgSentencesPerParagraph={8} p={2} />,
         date: new Date('2023-09-19').toISOString().substring(0, 10),
         images: ['/Images/activities/activity1/1.jpg', '/Images/activities/activity1/2.jpg', '/Images/activities/activity1/3.jpg', '/Images/activities/activity1/4.jpg']
     },
@@ -34,6 +37,7 @@ export const activities = [
         id: 4,
         title: 'Activity 4',
         content: <LoremIpsum avgSentencesPerParagraph={4} />,
+        details:<LoremIpsum avgSentencesPerParagraph={8} p={2} />,
         date: new Date('2023-09-19').toISOString().substring(0, 10),
         images: ['/Images/activities/activity1/1.jpg', '/Images/activities/activity1/2.jpg', '/Images/activities/activity1/3.jpg', '/Images/activities/activity1/4.jpg']
     },
@@ -41,6 +45,7 @@ export const activities = [
         id: 5,
         title: 'Activity 5',
         content: <LoremIpsum avgSentencesPerParagraph={4} />,
+        details:<LoremIpsum avgSentencesPerParagraph={8} p={2} />,
         date: new Date('2023-09-19').toISOString().substring(0, 10),
         images: ['/Images/activities/activity1/1.jpg', '/Images/activities/activity1/2.jpg', '/Images/activities/activity1/3.jpg', '/Images/activities/activity1/4.jpg']
     },
@@ -48,6 +53,7 @@ export const activities = [
         id: 6,
         title: 'Activity 6',
         content: <LoremIpsum avgSentencesPerParagraph={4} />,
+        details:<LoremIpsum avgSentencesPerParagraph={8} p={2} />,
         date: new Date('2023-09-19').toISOString().substring(0, 10),
         images: ['/Images/activities/activity1/1.jpg', '/Images/activities/activity1/2.jpg', '/Images/activities/activity1/3.jpg', '/Images/activities/activity1/4.jpg']
     },
@@ -55,6 +61,7 @@ export const activities = [
         id: 7,
         title: 'Activity 7',
         content: <LoremIpsum avgSentencesPerParagraph={4} />,
+        details:<LoremIpsum avgSentencesPerParagraph={8} p={2} />,
         date: new Date('2023-09-19').toISOString().substring(0, 10),
         images: ['/Images/activities/activity1/1.jpg', '/Images/activities/activity1/2.jpg', '/Images/activities/activity1/3.jpg', '/Images/activities/activity1/4.jpg']
     },
@@ -62,6 +69,7 @@ export const activities = [
         id: 8,
         title: 'Activity 8',
         content: <LoremIpsum avgSentencesPerParagraph={4} />,
+        details:<LoremIpsum avgSentencesPerParagraph={8} p={2} />,
         date: new Date('2023-09-19').toISOString().substring(0, 10),
         images: ['/Images/activities/activity1/1.jpg', '/Images/activities/activity1/2.jpg', '/Images/activities/activity1/3.jpg', '/Images/activities/activity1/4.jpg']
     }
