@@ -55,6 +55,59 @@ const UserProfilePage = () => {
         }
     ]
 
+    const projectsData = {
+        currentProject: {
+            currentProject: 'Shephertz',
+            projectManager:'Sumit Kumar',
+            lastWorkingProject:'BSW J Japan',
+            workingTechnologies:'Node Js, Express Js, Mongo DB',
+            timeWithCurrentProject:9,
+            totalCompletedProjects:5
+        },
+        projects: [
+            {
+                id: '1',
+                startedOn: new Date('2023-11-01'),
+                completedOn: new Date('2024-01-01'),
+                client: 'Internal',
+                project: 'Amarya Admin',
+                team: 'Full Stack',
+            },
+            {
+                id: '2',
+                startedOn: new Date('2023-01-01'),
+                completedOn: new Date('2023-10-01'),
+                client: 'Shephertz',
+                project: 'Stockydodo',
+                team: 'Full Stack',
+            },
+            {
+                id: '3',
+                startedOn: new Date('2022-01-01'),
+                completedOn: new Date('2022-11-01'),
+                client: 'BSW J Japan',
+                project: 'ODOO ERP',
+                team: 'Odoo ERP Team',
+            },
+        ]
+    }
+    const projectDetailsFields = [
+        { type: "text", label: "Current Project", field: "currentProject" },
+        { type: "text", label: "Project Manager", field: "projectManager" },
+        { type: "text", label: "Last Working Project", field: "lastWorkingProject" },
+        { type: "text", label: "Working Technologies", field: "workingTechnologies" },
+        { type: "text", label: "Time With Current Project", field: "timeWithCurrentProject" },
+        { type: "number", label: "Total Completed Projects", field: "totalCompletedProjects" },
+    ]
+
+    const projectTimelineFields = [
+        { type: "text", label: "Started on", field: "startedOn" },
+        { type: "text", label: "Completed on", field: "completedOn" },
+        { type: "text", label: "Client", field: "client" },
+        { type: "text", label: "Project", field: "project" },
+        { type: "text", label: "Team", field: "team" },
+    ]
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -69,6 +122,8 @@ const UserProfilePage = () => {
     };
 
     return (
+        <Box>
+
             <Box
                 sx={{
                     display: "flex", flexDirection: "row", justifyContent: "space-between", margin: '2% 2.3%',
@@ -83,8 +138,8 @@ const UserProfilePage = () => {
                     marginTop: "2%",
                 }}>
                     <Typography variant="h5" sx={{ fontWeight: '700', color: '#121843' }} gutterBottom>
-                    User profile
-                </Typography>
+                        User profile
+                    </Typography>
                     <Container maxWidth="md" sx={{ padding: '0 !important' }}>
                         <form onSubmit={handleSubmit}>
                             <Grid container spacing={1}>
@@ -108,7 +163,7 @@ const UserProfilePage = () => {
                                                 '& .MuiOutlinedInput-notchedOutline': {
                                                     borderWidth: '2px',
                                                     borderColor: '#b3b3b3',
-                                                    borderRadius:'10px'
+                                                    borderRadius: '10px'
                                                 },
                                             }}
                                         />
@@ -116,8 +171,8 @@ const UserProfilePage = () => {
                                 ))}
                             </Grid>
                             {isFormActive &&
-                                <Button type="submit" variant="contained" color="primary">
-                                    Submit
+                                <Button type="submit" variant="contained" color="primary" sx={{marginTop:'20px'}}>
+                                    SAVE
                                 </Button>
                             }
                         </form>
@@ -206,7 +261,7 @@ const UserProfilePage = () => {
                                                     }} gutterBottom color="#6e7880">
                                                         {item.value}
                                                     </Typography>
-                                                    <Typography variant="subtitle1"color="#9fadb8">
+                                                    <Typography variant="subtitle1" color="#9fadb8">
                                                         {item.info}
                                                     </Typography>
                                                 </CardContent>
@@ -219,6 +274,105 @@ const UserProfilePage = () => {
                     </Container>
                 </Box>
             </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', margin: '2% 2.3%' }}>
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "stretch", // Ensure equal height
+                    marginTop: "2%",
+                }}>
+                    <Typography variant="h5" sx={{ fontWeight: '700', color: '#121843' }} gutterBottom>
+                        Project Details
+                    </Typography>
+                    <Container sx={{ padding: '0 !important', marginTop: '10px' }}>
+                        <form onSubmit={handleSubmit}>
+                            <Grid container spacing={1}>
+                                {projectDetailsFields.map((item, index) => (
+                                    <Grid item xs={12} md={4} key={index}>
+                                        <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: '600', overflow: 'hidden' }}>
+                                            {item.label}
+                                        </Typography>
+                                        <TextField
+                                            fullWidth
+                                            variant="outlined"
+                                            type={item.type}
+                                            name={item.field}
+                                            value={projectsData.currentProject[item.field]}
+                                            onChange={handleChange}
+                                            disabled={!isFormActive}
+                                            sx={{
+                                                [theme.breakpoints.up('md')]: {
+                                                    width: '80%'
+                                                },
+                                                '& .MuiOutlinedInput-notchedOutline': {
+                                                    borderWidth: '2px',
+                                                    borderColor: '#b3b3b3',
+                                                    borderRadius: '10px'
+                                                },
+                                            }}
+                                        />
+                                    </Grid>
+                                ))}
+                            </Grid>
+                            {isFormActive &&
+                                <Button type="submit" variant="contained" color="primary" sx={{marginTop:'20px'}}>
+                                    SAVE
+                                </Button>
+                            }
+                        </form>
+                    </Container>
+                </Box>
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "stretch", // Ensure equal height
+                    marginTop: "2%",
+                }}>
+                    <Typography variant="h5" sx={{ fontWeight: '700', color: '#121843' }} gutterBottom>
+                        Project Timeline
+                    </Typography>
+                    <Container sx={{ padding: '0 !important', marginTop: '10px' }}>
+                        <form onSubmit={handleSubmit}>
+                            {projectsData?.projects.map((project, index) => (
+                                <Grid container spacing={1} key={project.id}>
+                                    {projectTimelineFields.map((item, index) => (
+                                        <Grid item xs={12} md={index === 0 || index === 1 ? '1.5' : '3'} key={index}>
+                                            <Typography variant="subtitle1" gutterBottom sx={{ fontWeight: '600', overflow: 'hidden' }}>
+                                                {item.label}
+                                            </Typography>
+                                            <TextField
+                                                fullWidth
+                                                variant="outlined"
+                                                type={item.type}
+                                                name={item.field}
+                                                value={item.field === 'startedOn' || item.field === 'completedOn' ? project[item.field].toLocaleString('en-US', { month: 'short', year: 'numeric' }) : project[item.field]}
+                                                onChange={handleChange}
+                                                disabled={!isFormActive}
+                                                sx={{
+                                                    [theme.breakpoints.up('md')]: {
+                                                        width: '80%'
+                                                    },
+                                                    '& .MuiOutlinedInput-notchedOutline': {
+                                                        borderWidth: '2px',
+                                                        borderColor: '#b3b3b3',
+                                                        borderRadius: '10px'
+                                                    },
+                                                }}
+                                            />
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            ))}
+                            {isFormActive &&
+                                <Button type="submit" variant="contained" color="primary" sx={{marginTop:'20px'}}>
+                                    SAVE
+                                </Button>
+                            }
+                        </form>
+                    </Container>
+                </Box>
+            </Box>
+        </Box>
     )
 }
 
