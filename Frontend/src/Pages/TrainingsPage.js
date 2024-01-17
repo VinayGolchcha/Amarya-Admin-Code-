@@ -86,7 +86,7 @@ export default function TrainingsPage(props) {
                     height: "40px",
                   }}
                 >
-                  <Checkbox onChange={() => handleCheckboxChange(row.id)} />
+                  <img src='Check.svg' style={{margin : '-4px 6px'}}/>
                   Tr.Id
                 </TableCell>
                 <TableCell
@@ -190,7 +190,7 @@ export default function TrainingsPage(props) {
             </TableBody>
           </Table>
         </TableContainer>
-        <Box sx={{ flexGrow: 1 , display : 'flex' ,flexWrap : 'wrap', p : 1}}>
+        <Box sx={{ flexGrow: 1 , display : 'flex' ,flexWrap : 'wrap', p : 1 , alignItems : 'center'}}>
           <Grid container spacing={2}>
             {courses.map((course) =>{
               return(<TrainingCard field = {course}/>)})}

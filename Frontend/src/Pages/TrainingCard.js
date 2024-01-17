@@ -10,14 +10,6 @@ import { useState } from "react";
 export default function TrainingCard({field}) {
   const [isFLip, setIsFlip] = useState(false);
   const dynamicColor = field.color;
-  // const [datascience, setDataScience] = useState(false);
-  // const [reactNative, setReactNative] = useState(false);
-  // const [vueJs, setVueJs] = useState(false);
-  // const [python, setPyhton] = useState(false);
-  // const [sapAbap, setSapAbap] = useState(false);
-  // const [sapHr, setSapHr] = useState(false);
-  // const [sapCDS, setSapCDS] = useState(false);
-  
   function handleFlip(val) {
     setIsFlip(!isFLip);
   }
