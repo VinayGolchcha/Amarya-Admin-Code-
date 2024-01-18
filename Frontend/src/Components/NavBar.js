@@ -19,6 +19,17 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useHistory } from 'react-router-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
+import Button from '@mui/material/Button';
+import Popover from '@mui/material/Popover';
+import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import {List,
+    ListItem,} from "@mui/material";
+import Popper from '@mui/material/Popper';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import NotificationPopUp from './NotificationPopUp';
+
+
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -72,6 +83,16 @@ const NavBar = ({ handleDrawerToggle }) => {
     const navigate = useNavigate();
 
     const [arrow, updateArrow] = React.useState(false);
+    
+    const [stickeyNotes , setStickeyNotes] = React.useState(['Conduct an inventory check of all IT assets, including hardware and software licenses.', 'Perform a regular backup of important data and verify its integrity.'])
+    const [anchorE2, setAnchorE2] = React.useState(null);
+
+    const handleClick = (event) => {
+        setAnchorE2(anchorE2 ? null : event.currentTarget);
+    };
+
+    const open = Boolean(anchorE2);
+    const id = open ? 'simple-popper' : undefined;
     const toggleArrow = () => {
         updateArrow(!arrow);
     }
@@ -149,6 +170,7 @@ const NavBar = ({ handleDrawerToggle }) => {
                     <Badge badgeContent={17} color="error">
                         <NotificationsIcon />
                     </Badge>
+                    <NotificationPopUp/>
                 </IconButton>
                 <p>Notifications</p>
             </MenuItem>
@@ -206,15 +228,31 @@ const NavBar = ({ handleDrawerToggle }) => {
                             color="inherit"
                             sx={{ marginRight: 1 }}
                         >
-                            <Badge badgeContent={1} color="error">
-                                <NotificationsIcon sx={{ color: '#b4b4b4' }} />
-                            </Badge>
+                            {/* code for Notifications Pop Up */}
+                            <NotificationPopUp/>
                         </IconButton>
+                        {/* code for stickey notes Pop Up*/}
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ marginRight: 1 }}>
-                            <Badge badgeContent={0} color="error">
-                                {/* <MailIcon /> */}
-                                <TextsmsIcon sx={{ color: '#b4b4b4' }} />
-                            </Badge>
+                            <div>
+                                {/* <button aria-describedby={id} type="button" onClick={handleClick}>
+                                    Toggle Popper
+                                </button> */}
+                                <Badge badgeContent={0} color="error">
+                                    {/* <MailIcon /> */}
+                                    <TextsmsIcon sx={{ color: '#b4b4b4' }} aria-describedby={id} onClick={handleClick}/>
+                                </Badge>
+                                <Popper id={id} open={open} anchorEl={anchorE2} sx={{marginTop : '20px' , position : 'relative'}} placement='bottom-start'>
+                                    <Box sx={{bgcolor: '#FFEBEB' , position : 'relative' ,top : '25px'}}>
+                                        <Box sx={{p:1 , height:'64px' ,width : '380px' , border : '1px solid #80808057' , borderRadius : '4px' , display : 'flex' , flexWrap : 'wrap' , alignItems : 'center'}}>
+                                            <Typography sx={{display : 'flex' , justifyContent : 'space-between' , width : '100%' , fontFamily :'Lato'}}>Add your task here… <Box > <AddIcon/></Box></Typography>
+                                        </Box>
+                                        {stickeyNotes.map((item) => {return(<Box sx={{ p : 1 ,width : '380px' , border : '1px solid #80808057' ,height:'64px' , borderRadius : '4px' , display : 'flex' , flexWrap : 'wrap' , alignItems : 'center'}}>
+                                            <Typography sx={{display : 'flex' , justifyContent : 'space-between' , alignItems : 'center' , fontFamily :'Lato'}}>{item} <Box><CloseIcon/></Box></Typography>
+                                        </Box>)})}
+                                    </Box>
+                                </Popper>
+                            </div>
+                            
                         </IconButton>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ marginRight: 1 }}>
                             <Badge badgeContent={0} color="error">
