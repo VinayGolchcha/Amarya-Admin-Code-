@@ -416,7 +416,6 @@ const AssetsPage = () => {
             <TextField
               variant="filled"
               label="Details"
-              variant="filled"
               multiline
               rows={3}
               value={details}
