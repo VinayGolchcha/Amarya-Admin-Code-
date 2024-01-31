@@ -37,7 +37,7 @@ export default function DashboardGraph3() {
                             label: '2021',
                             data: year1Data,
                             area: false,
-                            showMark: true,
+                            showMark: false,
                             curve: "linear",
                         },
                         {
@@ -45,7 +45,7 @@ export default function DashboardGraph3() {
                             label: '2022',
                             data: year2Data,
                             area: false,
-                            showMark: true,
+                            showMark: false,
                             curve: "linear",
                         },
                         {
@@ -53,7 +53,7 @@ export default function DashboardGraph3() {
                             label: '2023',
                             data: year3Data,
                             area: false,
-                            showMark: true,
+                            showMark: false,
                             curve: "linear",
                         },
                     ]}

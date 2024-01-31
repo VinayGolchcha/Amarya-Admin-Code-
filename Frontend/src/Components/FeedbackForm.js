@@ -3,7 +3,7 @@ import { Box, Button, Typography, TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { DemoItem } from '@mui/x-date-pickers/internals/demo';
 
 export default function FeedbackForm() {
     return (
@@ -14,9 +14,9 @@ export default function FeedbackForm() {
                 </Typography>
                 {/* Date code starts here */}
                 <LocalizationProvider dateAdapter={AdapterDayjs} >
-                    <DemoContainer components={['DatePicker']}>
+                    <DemoItem components={['DatePicker']}>
                         <DatePicker label="Date" />
-                    </DemoContainer>
+                    </DemoItem >
                 </LocalizationProvider>
                 {/* date code ends here */}
             </Box>

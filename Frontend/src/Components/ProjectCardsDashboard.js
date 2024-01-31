@@ -3,8 +3,8 @@ import { Box, Typography } from "@mui/material";
 
 export default function ProjectCardsDashboard() {
     return (
-        <Box sx={{ display: "flex" }}>
-            <Box sx={{ gap: 4, display: "flex", flexDirection: "column" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+            <Box sx={{ gap: 4, display: "flex", flexDirection: "column", width: "50%", maxWidth: "200px" }}>
                 {/* card1 */}
                 <Box sx={{ p: "12px 12px 12px 20px", borderRadius: "10px", backgroundColor: "#FFEFE7" }}>
                     <Typography sx={{ fontFamily: "Poppins", fontWeight: "500", fontSize: "18px", lineHeight: '28px', color: '#161E54' }} variant='p'>
@@ -39,7 +39,7 @@ export default function ProjectCardsDashboard() {
                     </Typography>
                 </Box>
             </Box>
-            <Box sx={{ gap: 8, display: "flex", flexDirection: "column", justifyContent: "center", ml: 2 }}>
+            <Box sx={{ gap: 8, display: "flex", flexDirection: "column", justifyContent: "center", ml: 2, maxWidth: "200px" }}>
                 {/* card4 */}
                 <Box sx={{ p: "12px 12px 12px 20px", borderRadius: "10px", backgroundColor: "#E8F0FB" }}>
                     <Typography sx={{ fontFamily: "Poppins", fontWeight: "500", fontSize: "18px", lineHeight: '28px', color: '#161E54' }} variant='p'>

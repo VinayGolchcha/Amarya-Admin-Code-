@@ -30,10 +30,10 @@ export default function DashboardPage() {
           <Grid item lg={3} md={0} sm={0} xs={0} sx={{ display: { xs: "none", lg: "block" } }}>
             <DashboardProfile />
           </Grid>
-          <Grid item lg={5} md={5} sm={12} xs={12}>
+          <Grid item lg={5} md={12} sm={12} xs={12}>
             <ProjectCardsDashboard />
           </Grid>
-          <Grid item lg={7} md={7} sm={12} xs={12}>
+          <Grid item lg={7} md={12} sm={12} xs={12}>
             <DashboardGraph1 />
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>

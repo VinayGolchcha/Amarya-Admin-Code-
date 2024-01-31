@@ -14,7 +14,7 @@ export default function AnnouncementComp() {
                 Announcements
                 {/* date code starts here */}
                 <Accordion
-                    sx={{ margin: "0", height: "auto", width: "39%", zIndex: '1000', float: "right" }}
+                    sx={{ margin: "0", height: "auto", zIndex: '1000', float: "right" }}
                 >
                     <AccordionSummary
                         expandIcon={<ExpandMoreIcon />}
