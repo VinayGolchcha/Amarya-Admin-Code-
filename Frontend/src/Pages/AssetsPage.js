@@ -295,12 +295,13 @@ const AssetsPage = () => {
                 component="legend"
                 sx={{
                   font: {
-                    lg: "normal normal 600 18px/26px Poppins",
-                    md: "normal normal 600 18px/26px Poppins",
+                    lg: "normal normal 600 16px/26px Poppins",
+                    md: "normal normal 600 16px/26px Poppins",
                     sm: "normal normal 600 16px/25px Poppins",
                     xs: "normal normal 600 15px/24px Poppins",
                   },
                   fontWeight: "bold",
+                  marginBottom:"5px"
                 }}
               >
                 Type of Request (choose all that apply)
@@ -341,12 +342,13 @@ const AssetsPage = () => {
                 component="legend"
                 sx={{
                   font: {
-                    lg: "normal normal 600 18px/26px Poppins",
+                    lg: "normal normal 600 16px/26px Poppins",
                     md: "normal normal 600 16px/26px Poppins",
                     sm: "normal normal 600 16px/25px Poppins",
                     xs: "normal normal 600 15px/24px Poppins",
                   },
                   fontWeight: "bold",
+                  marginBottom:"5px"
                 }}
               >
                 If Hardware (choose from)
@@ -381,6 +383,7 @@ const AssetsPage = () => {
                     xs: "normal normal 600 15px/24px Poppins",
                   },
                   fontWeight: "bold",
+                  marginBottom:"10px"
                 }}
               >
                 New Item/Replacement/Renewal

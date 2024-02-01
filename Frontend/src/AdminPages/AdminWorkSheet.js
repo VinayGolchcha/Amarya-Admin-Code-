@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -10,6 +10,7 @@ import {
   FormControlLabel,
   FormGroup,
   TableRow,
+  Autocomplete,
   Button,
   TextField,
   Checkbox,
@@ -24,6 +25,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { format } from "date-fns";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 const teams = [
   { value: "", label: "Select Team" },
@@ -33,20 +35,6 @@ const teams = [
   { value: "HR", label: "HR" },
   { value: "Admin", label: "Admin" },
 ];
-// const categories = [
-//   { value: "", label: "Select Category" },
-//   { value: "ClientProject", label: "Client Project" },
-//   { value: "InternalProject", label: "Internal Project" },
-// ];
-
-// const projects = [
-//   { value: "", label: "Select Project" },
-//   { value: "Shephertz", label: "Shephertz" },
-//   { value: "AdminDashboard", label: "Admin Dashboard" },
-//   { value: "ClothesDistribution", label: "Clothes Distribution" },
-//   { value: "ReactJsProject", label: "React Js Project" },
-// ];
-// const skillsets = ["NodeJS", "ReactJS", "Python", "ML", "Javascript"];
 
 const WorkSheet = () => {
   const renderTableCells = (rowData) => {
@@ -80,6 +68,42 @@ const WorkSheet = () => {
       </TableCell>
     ));
   };
+  const renderTableCells2 = (rowData) => {
+    const cellData = [
+      { key: "empid", label: "Emp Id." },
+      { key: "team", label: "Team" },
+      { key: "date", label: "Date" },
+      { key: "category", label: "Category" },
+      { key: "project", label: "Project" },
+      { key: "description", label: "Description" },
+      { key: "skillset", label: "Skillset" },
+      { key: "", label: "" },
+    ];
+
+    return cellData.map((cell, index) => (
+      <TableCell key={index} sx={{ background: "#161E54" }}>
+        <Typography
+          sx={{
+            color: "#FFFFFF",
+            font: {
+              lg: "normal normal 600 16px/25px Poppins",
+              md: "normal normal 600 16px/25px Poppins",
+              sm: "normal normal 600 16px/25px Poppins",
+              xs: "normal normal 600 10px/16px Poppins",
+            },
+            display: "flex",
+            alignItems: "center", // Align text and icon vertically
+          }}
+        >
+          {cell.label}
+          {["Team", "Project", "Category"].includes(cell.label) && (
+            <ArrowDropDownIcon sx={{ marginLeft: "4px" }} />
+          )}
+        </Typography>
+      </TableCell>
+    ));
+  };
+
   const [projects, setProjects] = useState([
     { value: "", label: "Select Project" },
     { value: "Shephertz", label: "Shephertz" },
@@ -110,19 +134,24 @@ const WorkSheet = () => {
   const [editingRowIndex, setEditingRowIndex] = useState(null);
   const [textValue, setTextValue] = useState("");
 
+  const [filterEmpId, setFilterEmpId] = useState(""); // State to store the selected employee ID for filtering
+  const handleFilterChange = (event) => {
+    setFilterEmpId(event.target.value);
+  };
+
   const handleChangePage = (event, newPage) => {
     setCurrentPage(newPage);
   };
   const [selectedOption, setSelectedOption] = useState("");
+  const [filterDropdown, setFilterDropdown] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
 
   const handleCheckboxChange = (field) => {
-    console.log(field + "hey");
     setSelectedOption(field);
   };
 
-  const handleTextFieldChange = (field) => {
-    console.log(field + "hey");
-    setTextValue(field);
+  const handleTextFieldChange = (value) => {
+    setTextValue(value);
   };
 
   const addOptionToDropdown = () => {
@@ -154,6 +183,11 @@ const WorkSheet = () => {
     });
     // setTextValue("");
   };
+
+  useEffect(() => {
+    console.log("Updated Filter Dropdown:", filterDropdown);
+  }, [filterDropdown]);
+
   const handleAddRow = () => {
     if (newRow !== null) {
       return;
@@ -172,85 +206,29 @@ const WorkSheet = () => {
       description: "",
       skillset: [],
     });
+
+    setFilterDropdown((prevFilterDropdown) => [
+      ...prevFilterDropdown,
+      randomId.toString(), // Convert to string for consistency
+    ]);
   };
-  // const handleAddRow = () => {
-  //   if (newRow !== null) {
-  //     return;
-  //   }
-  //   const randomId = Math.floor(Math.random() * 1000);
-  //   const today = format(new Date(), "yyyy-MM-dd");
-
-  //   const newRowData = {
-  //     empid: randomId,
-  //     team: "",
-  //     date: today,
-  //     category: "",
-  //     project: "",
-  //     description: "",
-  //     skillset: [],
-  //   };
-
-  //   setRows((prevRows) => [newRowData, ...prevRows]);
-  //   setNewRow({ ...newRowData }); // Update newRow with a copy of newRowData
-  //   setEditingRowIndex(0); // Set to 0 for the newly added row
-  //   setCurrentPage(0);
-  // };
-
-  //   const handleEditRow = (index) => {
-  //     setEditingRowIndex(index);
-  //   };
 
   const handleSaveRow = () => {
-    if (editingRowIndex !== null) {
+    if (newRow !== null) {
+      setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
+      setNewRow(null);
+    } else {
       setRows((prevRows) => {
         const updatedRows = [...prevRows];
         updatedRows[editingRowIndex] = {
           ...updatedRows[editingRowIndex],
-          ...newRow,
           checkbox: false,
         };
         return updatedRows;
       });
       setEditingRowIndex(null);
-      setNewRow(null);
-    } else {
-      setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
-      setNewRow(null);
     }
   };
-  // const handleSaveRow = () => {
-  //   if (editingRowIndex !== null) {
-  //     // Existing row editing logic remains the same
-  //     setRows((prevRows) => {
-  //       const updatedRows = [...prevRows];
-  //       updatedRows[editingRowIndex] = { ...updatedRows[editingRowIndex], ...newRow, checkbox: false };
-  //       return updatedRows;
-  //     });
-  //     setEditingRowIndex(null);
-  //     setNewRow(null);
-  //     console.log("In");
-  //   } else {
-  //     // Check if a row with the same empid and date exists
-  //     const existingRowIndex = rows.findIndex(
-  //       (row) => row.empid === newRow.empid && row.date === newRow.date
-  //     );
-
-  //     if (existingRowIndex !== -1) {
-  //       // If the row exists, merge the data into that row
-  //       setRows((prevRows) => {
-  //         const mergedRow = { ...prevRows[existingRowIndex], ...newRow, checkbox: false };
-  //         const updatedRows = [...prevRows];
-  //         updatedRows[existingRowIndex] = mergedRow;
-  //         return updatedRows;
-  //       });
-  //     } else {
-  //       // If the row does not exist, add a new row to the state
-  //       setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
-  //     }
-
-  //     setNewRow(null);
-  //   }
-  // };
 
   const handleNewRowChange = (field, value) => {
     setNewRow((prevNewRow) => ({ ...prevNewRow, [field]: value }));
@@ -273,20 +251,44 @@ const WorkSheet = () => {
 
   return (
     <Box style={{ margin: "20px 20px 20px 20px" }}>
-      <Typography
-        variant="h4"
-        sx={{
-          marginBottom: "25px",
-          font: {
-            lg: "normal normal 300 22px/35px Poppins",
-            md: "normal normal 300 22px/35px Poppins",
-            sm: "normal normal 300 20px/30px Poppins",
-            xs: "normal normal 300 22px/30px Poppins",
-          },
-        }}
-      >
-        Worksheet Dashboard
-      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Typography
+          variant="h4"
+          sx={{
+            marginBottom: "25px",
+            font: {
+              lg: "normal normal 600 22px/35px Poppins",
+              md: "normal normal 600 22px/35px Poppins",
+              sm: "normal normal 600 20px/30px Poppins",
+              xs: "normal normal 600 22px/30px Poppins",
+            },
+          }}
+        >
+          Worksheet Dashboard
+        </Typography>
+        <FormControl sx={{ minWidth: 220, mt: "10px" }}>
+          <InputLabel
+            id="demo-simple-select-label"
+            sx={{ color: "#333333", fontWeight: "400" }}
+          >
+            {/* Select Employee */}
+          </InputLabel>
+          {/* Replace the Select component with Autocomplete */}
+          <Autocomplete
+            options={["all", ...filterDropdown]} // Include the "All" option
+            getOptionLabel={(option) => option}
+            value={filterEmpId}
+            onChange={(event, newValue) => setFilterEmpId(newValue)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select Employee"
+                variant="standard"
+              />
+            )}
+          />
+        </FormControl>
+      </Box>
       <Typography
         variant="h4"
         sx={{
@@ -297,7 +299,7 @@ const WorkSheet = () => {
             sm: "normal normal 400 16px/25px Racing Sans One",
             xs: "normal normal 400 10px/16px Racing Sans One",
           },
-          color: "#161E54"
+          color: "#161E54",
         }}
       >
         AMEMP00012 - Sanjana Jain
@@ -346,6 +348,14 @@ const WorkSheet = () => {
           </TableHead>
           <TableBody sx={{}}>
             {rows
+              .filter((row) => {
+                // Filter based on the selected employee ID
+                return (
+                  filterEmpId === "" ||
+                  filterEmpId === "all" ||
+                  row.empid.toString() === filterEmpId
+                );
+              })
               .slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage)
               .map((row, index) => (
                 <TableRow key={index}>
@@ -362,15 +372,18 @@ const WorkSheet = () => {
                       component="img"
                       src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
                       alt="Check"
-                      // onClick={handleSaveRow}
-                      // sx={{ cursor: "pointer" }}
+                      onClick={handleSaveRow}
+                      sx={{ cursor: "pointer" }}
                     />
                   </TableCell>
                 </TableRow>
               ))}
+
             {newRow && (
               <TableRow>
-                <TableCell style={{ filter: "invert(1)" }}>
+                <TableCell
+                  style={{ filter: "invert(1)", alignItems: "center" }}
+                >
                   <Box
                     component="img"
                     src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
@@ -384,7 +397,7 @@ const WorkSheet = () => {
                     onChange={(e) =>
                       handleNewRowChange("empid", e.target.value)
                     }
-                    sx={{ width: "80px" }}
+                    sx={{ width: "80px", marginTop: "15px" }}
                   />
                 </TableCell>
                 <TableCell>
@@ -413,7 +426,7 @@ const WorkSheet = () => {
                     type="date"
                     value={newRow.date}
                     onChange={(e) => handleNewRowChange("date", e.target.value)}
-                    sx={{ width: "120px" }}
+                    sx={{ width: "120px", marginTop: "15px" }}
                   />
                 </TableCell>
                 <TableCell>
@@ -465,6 +478,7 @@ const WorkSheet = () => {
                     onChange={(e) =>
                       handleNewRowChange("description", e.target.value)
                     }
+                    sx={{ marginTop: "15px" }}
                   />
                 </TableCell>
                 <TableCell>

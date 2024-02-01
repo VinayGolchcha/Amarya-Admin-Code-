@@ -3,9 +3,11 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 // import Drawer from '@mui/material/Drawer';
+import WorkSheet from "./Pages/WorksheetPage";
 
 import NavBar from "./Components/NavBar";
 import SideBar from "./Components/SideBar";
+import AdminWorkSheet from './AdminPages/AdminWorkSheet'
 
 import { Route, Routes } from "react-router-dom";
 
@@ -15,10 +17,10 @@ import LeaveManagementPage from "./Pages/LeaveMangementPage";
 import PoliciesPage from "./Pages/PoliciesPage";
 import SettingsPage from "./Pages/SettingsPage";
 import TrainingsPage from "./Pages/TrainingsPage";
-import WorkSheet from "./Pages/WorksheetPage";
 import AnnouncementPage from './Pages/AnnouncementsPage';
 import ActivitiesPage from './Pages/ActivitiesPage';
 import UserProfilePage from './Pages/UserProfilePage';
+import AdminDashboard from "./AdminPages/AdminDashboard";
 
 const drawerWidth = 240;
 
@@ -76,6 +78,8 @@ const MainPage = (props) => {
           <Route path="/profile" element={<UserProfilePage/>}></Route>
           <Route path="/announcements" element={<AnnouncementPage/>}></Route>
           <Route path="/activities" element={<ActivitiesPage />} />
+          <Route path="/adminworksheet" element={<AdminWorkSheet />} />
+          <Route path="/admindashboard" element={<AdminDashboard />} />
         </Routes>
       </Box>
     </Box>
