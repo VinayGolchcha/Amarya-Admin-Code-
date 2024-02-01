@@ -12,22 +12,13 @@ import SearchIcon from '@mui/icons-material/Search';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
-import TextsmsIcon from '@mui/icons-material/Textsms';
 import { Avatar, TextField, Typography } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import MenuIcon from '@mui/icons-material/Menu';
-import { useHistory } from 'react-router-dom';
 import { useNavigate, useLocation } from 'react-router-dom';
-import Button from '@mui/material/Button';
-import Popover from '@mui/material/Popover';
-import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
-import {List,
-    ListItem,} from "@mui/material";
-import Popper from '@mui/material/Popper';
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
 import NotificationPopUp from './NotificationPopUp';
+import StickeyNotes from './StickeyNotes';
 
 
 
@@ -85,39 +76,9 @@ const NavBar = ({ handleDrawerToggle }) => {
     const [arrow, updateArrow] = React.useState(false);
     
     
-    const [stickeyNotes , setStickeyNotes] = React.useState(['Conduct an inventory check of all IT assets, including hardware and software licenses.', 'Perform a regular backup of important data and verify its integrity.'])
-    const [addIcon ,setAddIcon] = React.useState(false);
-    const [addTask , setAddTask] = React.useState('');
-     
-    function handleIconClick(){
-        setAddIcon(!addIcon);
-    }
+    
 
-    function handleAddTask(event){
-        setAddTask(event.target.value);
-    }
-
-    function handleDelete(index){
-        setStickeyNotes((prevStickyNotes) => {
-            const newStickyNotes = [...prevStickyNotes];
-            newStickyNotes.splice(index, 1);
-            return newStickyNotes;
-          });
-    }
-    function handleKeyDown(e){
-        if (e.key === 'Enter') {
-            setStickeyNotes((prevStickyNotes) => [...prevStickyNotes, addTask]);
-            setAddTask('');
-        }
-    }
-    const [anchorE2, setAnchorE2] = React.useState(null);
-
-    const handleClick = (event) => {
-        setAnchorE2(anchorE2 ? null : event.currentTarget);
-    };
-
-    const open = Boolean(anchorE2);
-    const id = open ? 'simple-popper' : undefined;
+    
     const toggleArrow = () => {
         updateArrow(!arrow);
     }
@@ -193,18 +154,13 @@ const NavBar = ({ handleDrawerToggle }) => {
                     aria-label="show 17 new notifications"
                     color="inherit"
                 >
-                    <Badge badgeContent={17} color="error">
-                        <NotificationsIcon />
-                    </Badge>
                     <NotificationPopUp/>
                 </IconButton>
                 <p>Notifications</p>
             </MenuItem>
             <MenuItem>
                 <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={4} color="error">
-                        <MailIcon />
-                    </Badge>
+                    <StickeyNotes/>
                 </IconButton>
                 <p>Messages</p>
             </MenuItem>
@@ -217,7 +173,7 @@ const NavBar = ({ handleDrawerToggle }) => {
                     color="inherit"
                 >
                     {/* <AccountCircle /> */}
-                    <Avatar alt="Cindy Baker" src="/avatar.jpg" sx={{ width: 24, height: 24, backgroundColor: '#262626' }} />
+                    <Avatar alt="Cindy Baker" src="/avatar.jpg" sx={{ width: 24, height: 24 }} />
                 </IconButton>
                 <p>Profile</p>
             </MenuItem>
@@ -259,30 +215,7 @@ const NavBar = ({ handleDrawerToggle }) => {
                         </IconButton>
                         {/* code for stickey notes Pop Up*/}
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ marginRight: 1 }}>
-                            <div>
-                                {/* <button aria-describedby={id} type="button" onClick={handleClick}>
-                                    Toggle Popper
-                                </button> */}
-                                <Badge badgeContent={0} color="error">
-                                    {/* <MailIcon /> */}
-                                    <TextsmsIcon sx={{ color: '#b4b4b4' }} aria-describedby={id} onClick={handleClick}/>
-                                </Badge>
-                                <Popper id={id} open={open} anchorEl={anchorE2} sx={{marginTop : '20px' , position : 'relative'}} placement='bottom-start'>
-                                    <Box sx={{bgcolor: '#FFEBEB' , position : 'relative' ,top : '25px'}}>
-                                        <Box sx={{padding : addIcon ? '2px' : '8px', height:'64px' ,width : '380px' , border : '1px solid #80808057' , borderRadius : '4px' , display : 'flex' , flexWrap : 'wrap' , alignItems : 'center'}}>
-                                            {!addIcon ? <Typography sx={{display : 'flex' , justifyContent : 'space-between' , width : '100%' , fontFamily :'Lato'}}>Add your task here… <Box > <AddIcon onClick={handleIconClick}/></Box></Typography>
-                                            : <TextField sx={{width : '100%' , height : '100%' , '& .MuiOutlinedInput-root': {
-                                                '&.Mui-focused': {
-                                                  borderColor: 'transparent', // Set the border color to transparent when focused
-                                                },
-                                              },}} value ={addTask} onChange={handleAddTask} onKeyDown={handleKeyDown} />}
-                                        </Box>
-                                        {stickeyNotes.map((item , index) => {return(<Box key={index} sx={{ p : 1 ,width : '380px' , border : '1px solid #80808057' ,height:'64px' , borderRadius : '4px' , display : 'flex' , flexWrap : 'wrap' , alignItems : 'center'}}>
-                                            <Typography sx={{display : 'flex' , justifyContent : 'space-between' , alignItems : 'center', width : '100%' , fontFamily :'Lato'}}>{item} <Box><CloseIcon onClick = {() => handleDelete(index)}/></Box></Typography>
-                                        </Box>)})}
-                                    </Box>
-                                </Popper>
-                            </div>
+                            <StickeyNotes/>
                             
                         </IconButton>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit" sx={{ marginRight: 1 }}>
