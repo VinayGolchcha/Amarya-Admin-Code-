@@ -48,7 +48,7 @@ const teams = [
 // ];
 // const skillsets = ["NodeJS", "ReactJS", "Python", "ML", "Javascript"];
 
-const WorkSheet = () => {
+const WorksheetPage = () => {
   const renderTableCells = (rowData) => {
     const cellData = [
       { key: "empid", label: "Emp Id." },
@@ -603,4 +603,4 @@ const WorkSheet = () => {
   );
 };
 
-export default WorkSheet;
+export default WorksheetPage;

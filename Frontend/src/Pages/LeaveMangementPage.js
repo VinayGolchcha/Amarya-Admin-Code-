@@ -321,10 +321,10 @@ export default function LeaveMangementPage() {
                   Leave Application{" "}
                 </Typography>
                 <Box sx={{ width: "25%" }}>
-                  <Accordion sx={{ margin: "4px 0px", height: "auto"}}>
+                  <Accordion sx={{ margin: "4px 0px", height: "auto" , width : 'auto' }}>
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
-                      sx={{ minHeight: "30px", height: "30px" }}
+                      sx={{ minHeight: "30px", height: "30px"  }}
                     >
                       <Typography
                         sx={{ fontSize: "0.6rem", minHeight: "25px" , display : 'flex' , flexWrap : 'wrap' , alignItems : 'center'}}
@@ -340,7 +340,7 @@ export default function LeaveMangementPage() {
                       </LocalizationProvider>
                     </AccordionDetails>
                   </Accordion>
-                  <Accordion sx={{ margin: "4px 0px", height: "auto" }}>
+                  <Accordion sx={{ margin: "4px 0px", height: "auto" , width : 'auto' }}>
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
                       sx={{ minHeight: "30px", height: "30px" }}
@@ -418,11 +418,11 @@ export default function LeaveMangementPage() {
                   Leaves Overview
                 </Typography>
                 <Accordion
-                  sx={{ margin: "4px 0px", height: "auto", width: "39%" , zIndex : '1000' }}
+                  sx={{ margin: "4px 0px", height: "auto", width: "39%" , zIndex : '1000', width : 'auto' }}
                 >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
-                    sx={{ minHeight: "31px", height: "30px" }}
+                    sx={{ minHeight: "31px", height: "30px"}}
                   >
                     <Typography sx={{ fontSize: "0.6rem"  , height : '30px' , display : 'flex' , alignItems : 'center' , color : 'gray'}}>
                       {currentDate}
@@ -530,11 +530,16 @@ export default function LeaveMangementPage() {
                     backgroundColor: "#161e54",
                     color: "#ffffff",
                     fontFamily: "Poppins",
-                    minWidth: "100px",
+                    minWidth: "110px",
                     height: "40px",
                   }}
                 >
-                  <Checkbox onChange={() => handleCheckboxChange(row.id)} />
+                  <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                      alt="Check"
+                      sx={{paddingRight: '10px'}}
+                    />
                   S.no
                 </TableCell>
                 <TableCell
@@ -605,11 +610,14 @@ export default function LeaveMangementPage() {
             <TableBody>
               {rows.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    <Checkbox
-                      checked={selectedRows.includes(row.id)}
-                      onChange={() => handleCheckboxChange(row.id)}
-                    />
+                  <TableCell style={{ fontFamily: "Poppins" , minWidth : '110px' }}>
+                  <Box
+                        component="img"
+                        src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                        alt="Check"
+                        style={{ filter: "invert(1)" }}
+                        sx={{paddingRight : '9px'}}
+                      />
                     {row.id}
                   </TableCell>
                   <TableCell

@@ -16,7 +16,7 @@ import LeaveManagementPage from "./Pages/LeaveMangementPage";
 import PoliciesPage from "./Pages/PoliciesPage";
 import SettingsPage from "./Pages/SettingsPage";
 import TrainingsPage from "./Pages/TrainingsPage";
-import WorkSheet from "./Pages/WorkSheetPage";
+import WorksheetPage from "./Pages/WorksheetPage";
 // import AnnouncementPage from './Pages/AnnouncementsPage';
 import UserProfilePage from './Pages/UserProfilePage';
 
@@ -72,7 +72,7 @@ const MainPage = (props) => {
           <Route path="/trainings" element={<TrainingsPage />} />
           <Route path="/policies" element={<PoliciesPage />} />
           <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/worksheet" element={<WorkSheet />} />
+          <Route path="/worksheet" element={<WorksheetPage />} />
           <Route path="/profile" element={<UserProfilePage/>}></Route>
         </Routes>
       </Box>
