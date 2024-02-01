@@ -202,8 +202,8 @@ const rows = [
 export default function AssetsAdminPage() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [assetsData , setAssetsData] = React.useState(rows);
   
-
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -218,6 +218,11 @@ export default function AssetsAdminPage() {
     setPage(0);
   };
 
+  function handleDelete(value){
+    console.log('Delete Item is called');
+    const updatedItems = rows.filter(item => item.inId === value);
+    setAssetsData(updatedItems);
+  }
   
   const renderItemImage = (type) => {
     let imageUrl;
@@ -339,11 +344,11 @@ export default function AssetsAdminPage() {
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? rows.slice(
+                  ? assetsData.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
-                  : rows
+                  : assetsData
                 ).map((row) => (
                   <TableRow
                     key={row.name}
@@ -394,7 +399,7 @@ export default function AssetsAdminPage() {
                       {row.warranty_End}
                     </TableCell>
                     <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
-                      <EditDeleteIcons />
+                      <EditDeleteIcons deleteAction ={ () => handleDelete(row.inId)}/>
                     </TableCell>
                   </TableRow>
                 ))}
