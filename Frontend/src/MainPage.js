@@ -73,8 +73,8 @@ const MainPage = (props) => {
           <Route path="/trainings" element={<TrainingsPage />} />
           <Route path="/policies" element={<PoliciesPage />} />
           <Route path="/settings" element={<SettingsPage />} />
-                    <Route path="/trainingPageAdmin" element={<TrainingsPageAdmin />} />
-          <Route path="/worksheet" element={<WorkSheet />} />
+          <Route path="/trainingPageAdmin" element={<TrainingsPageAdmin />} />
+          <Route path="/worksheet" element={<WorksheetPage />} />
           <Route path="/profile" element={<UserProfilePage/>}></Route>
         </Routes>
       </Box>
