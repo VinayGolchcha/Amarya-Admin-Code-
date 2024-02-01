@@ -10,13 +10,14 @@ import SideBar from "./Components/SideBar";
 
 import { Route, Routes } from "react-router-dom";
 
-import DashboardPage from "./Pages/DashboardPage";
-import AssetsPage from "./Pages/AssetsPage";
-import LeaveManagementPage from "./Pages/LeaveMangementPage";
-import PoliciesPage from "./Pages/PoliciesPage";
-import SettingsPage from "./Pages/SettingsPage";
-import TrainingsPage from "./Pages/TrainingsPage";
-import WorkSheet from "./Pages/WorkSheetPage";
+import DashboardPage from './Pages/DashboardPage';
+import AssetsPage from './Pages/AssetsPage';
+import LeaveManagementPage from './Pages/LeaveMangementPage';
+import PoliciesPage from './Pages/PoliciesPage';
+import SettingsPage from './Pages/SettingsPage';
+import TrainingsPage from './Pages/TrainingsPage';
+import WorksheetPage from './Pages/WorksheetPage';
+import TrainingsPageAdmin from './Pages/TrainingsPageAdmin';
 // import AnnouncementPage from './Pages/AnnouncementsPage';
 import UserProfilePage from './Pages/UserProfilePage';
 
@@ -72,6 +73,7 @@ const MainPage = (props) => {
           <Route path="/trainings" element={<TrainingsPage />} />
           <Route path="/policies" element={<PoliciesPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+                    <Route path="/trainingPageAdmin" element={<TrainingsPageAdmin />} />
           <Route path="/worksheet" element={<WorkSheet />} />
           <Route path="/profile" element={<UserProfilePage/>}></Route>
         </Routes>

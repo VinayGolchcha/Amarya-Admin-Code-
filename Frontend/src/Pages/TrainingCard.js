@@ -26,7 +26,6 @@ export default function TrainingCard({field}) {
                 <CardContent
                   sx={{
                     backgroundColor:  dynamicColor,
-                    border: "10px solid #E0E0E0",
                     padding: "10px",
                     height: "238px",
                     width: "273px",
