@@ -19,8 +19,10 @@ import React, { useState } from "react";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditDeleteIcons from "../Components/EditDeleteIcons";
-
-
+import AddEditModal from "../Components/AddEditModal";
+import AddNewAssets from "../Components/AddNewAsset";
+import { ToastContainer } from "react-toastify";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -198,12 +200,37 @@ const rows = [
     "14th Dec ‘23"
   ),
 ];
-
+let row;
 export default function AssetsAdminPage() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [assetsData , setAssetsData] = React.useState(rows);
-  
+  const [assetsData, setAssetsData] = React.useState(rows);
+  const [isAdd, setIsAdd] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+  const [selectedRows, setSelectedRows] = React.useState([]);
+  const handleChange = (e) => {
+    const { name, checked } = e.target;
+    if (name === "allselect") {
+      const checkedvalue = assetsData.map((user) => {
+        return { ...user, isChecked: checked };
+      });
+      setAssetsData(checkedvalue);
+      setSelectedRows(checkedvalue.filter((item) => item?.isChecked === true));
+    } else {
+      const checkedvalue = assetsData.map((user) =>
+        user.inId === name ? { ...user, isChecked: checked } : user
+      );
+      setAssetsData(checkedvalue);
+      setSelectedRows(checkedvalue.filter((item) => item?.isChecked === true));
+    }
+  };
+  function handleOpen() {
+    setOpen(true);
+  }
+
+  function handleClose() {
+    setOpen(false);
+  }
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -218,12 +245,11 @@ export default function AssetsAdminPage() {
     setPage(0);
   };
 
-  function handleDelete(value){
-    console.log('Delete Item is called');
-    const updatedItems = rows.filter(item => item.inId === value);
+  function handleDelete() {
+    const updatedItems = assetsData.filter((item) => item?.isChecked !== true);
     setAssetsData(updatedItems);
   }
-  
+
   const renderItemImage = (type) => {
     let imageUrl;
     if (type === "Laptop") {
@@ -266,79 +292,130 @@ export default function AssetsAdminPage() {
         >
           Assets
         </Typography>
-        <Box>
+        <Box sx={{ boxSizing: "border-box" }}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow sx={{ backgroundColor: "#1B204A" }}>
-                  <TableCell sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}>
+                  <TableCell
+                    sx={{
+                      color: "#FFFFFF",
+                      fontFamily: "Poppins",
+                      textAlign: "center",
+                      padding: "8px",
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      name="allselect"
+                      checked={
+                        !assetsData.some((user) => user?.isChecked !== true)
+                      }
+                      style={{ height: "40px", width: "20px" }}
+                      onChange={handleChange}
+                    />
+                    <br />
                     Invt. Id{" "}
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#FFFFFF",
+                      fontFamily: "Poppins",
+                      padding: "8px",
+                    }}
                   >
                     D.O.P
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#FFFFFF",
+                      fontFamily: "Poppins",
+                      padding: "8px",
+                    }}
                   >
                     Photo
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#FFFFFF",
+                      fontFamily: "Poppins",
+                      padding: "8px",
+                    }}
                   >
                     Assignee
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#FFFFFF",
+                      fontFamily: "Poppins",
+                      padding: "8px",
+                    }}
                   >
                     Item
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#FFFFFF",
+                      fontFamily: "Poppins",
+                      padding: "8px",
+                    }}
                   >
                     Description
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#FFFFFF",
+                      fontFamily: "Poppins",
+                      padding: "8px",
+                    }}
                   >
                     Issued From
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#FFFFFF",
+                      fontFamily: "Poppins",
+                      padding: "8px",
+                    }}
                   >
                     Issued Till
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#FFFFFF",
+                      fontFamily: "Poppins",
+                      padding: "8px",
+                    }}
                   >
                     Repairs
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#FFFFFF",
+                      fontFamily: "Poppins",
+                      padding: "8px",
+                    }}
                   >
                     In Warranty
                   </TableCell>
                   <TableCell
                     align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#FFFFFF",
+                      fontFamily: "Poppins",
+                      padding: "8px",
+                    }}
                   >
                     End of warranty
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
-                  >
-                    Action
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -358,57 +435,124 @@ export default function AssetsAdminPage() {
                       component="th"
                       scope="row"
                       align="center"
-                      sx={{ fontFamily: "Prompt" }}
+                      sx={{ fontFamily: "Poppins" }}
                     >
-                      <Box
+                      {/* <Box
                         component="img"
                         src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
                         alt="Check"
                         style={{ filter: "invert(1)" }}
+                      /> */}
+                      <input
+                        type="checkbox"
+                        name={row.inId}
+                        checked={row?.isChecked || false}
+                        onChange={handleChange}
+                        style={{ height: "40px", width: "20px" }}
                       />
                       {row.inId}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell
+                      align="center"
+                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                    >
                       {row.dop}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell
+                      align="center"
+                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                    >
                       {renderItemImage(row.item)}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell
+                      align="center"
+                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                    >
                       {row.assingnee}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell
+                      align="center"
+                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                    >
                       {row.item}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell
+                      align="center"
+                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                    >
                       {row.description}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell
+                      align="center"
+                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                    >
                       {row.issued_From}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell
+                      align="center"
+                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                    >
                       {row.issued_Till}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell
+                      align="center"
+                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                    >
                       {row.repairs}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell
+                      align="center"
+                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                    >
                       {row.in_Warranty}
                     </TableCell>
-                    <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell
+                      align="center"
+                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                    >
                       {row.warranty_End}
-                    </TableCell>
-                    <TableCell align="center" sx={{ fontFamily: "Prompt" }}>
-                      <EditDeleteIcons deleteAction ={ () => handleDelete(row.inId)}/>
                     </TableCell>
                   </TableRow>
                 ))}
+
                 {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
+                    <TableCell colSpan={12} style={{ borderBottom: "none" }} />
                   </TableRow>
                 )}
               </TableBody>
+              <TableRow>
+                <TableCell colSpan={12} sx={{ textAlign: "center" }}>
+                  {/* <Box
+                    component="img"
+                    src={`${process.env.PUBLIC_URL}/Images/Add_ring_duotone.png`}
+                    alt="add"
+                    onClick={handleOpen}
+                  /> */}
+                  <AddOutlinedIcon
+                    onClick={handleOpen}
+                    color="action"
+                    sx={{
+                      borderRadius: "50px",
+                      backgroundColor: "rgb(222, 225, 231)",
+                      width: "30px",
+                      height: "30px",
+                      margin: "0px 2px",
+                      padding: "4px",
+                    }}
+                  />
+                  <AddNewAssets
+                    assetsData={assetsData}
+                    handleAdd={setAssetsData}
+                    handleClose={handleClose}
+                    open={open}
+                  />
+                  <EditDeleteIcons
+                    deleteAction={handleDelete}
+                    rows={selectedRows}
+                  />
+                </TableCell>
+              </TableRow>
               <TableFooter>
                 <TableRow>
                   <TablePagination
@@ -418,7 +562,7 @@ export default function AssetsAdminPage() {
                       25,
                       { label: "All", value: -1 },
                     ]}
-                    colSpan={6}
+                    colSpan={12}
                     count={rows.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
@@ -438,6 +582,7 @@ export default function AssetsAdminPage() {
           </TableContainer>
         </Box>
       </Box>
+      <ToastContainer />
     </>
   );
 }
