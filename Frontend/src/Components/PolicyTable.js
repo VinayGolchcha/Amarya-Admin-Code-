@@ -44,10 +44,10 @@ export default function PolicyTable({ tableHeaders, tableContent }) {
                   {row?.dates ? row?.dates : row?.firstQuarter}
                 </TableCell>
                 <TableCell style={{ fontFamily: "Poppins" }}>
-                  {row?.day ? row?.dates : row?.secondQuarter}
+                  {row?.day ? row?.day : row?.secondQuarter}
                 </TableCell>
                 <TableCell style={{ fontFamily: "Poppins" }}>
-                  {row?.occation ? row?.dates : row?.thirdQuarter}
+                  {row?.occation ? row?.occation : row?.thirdQuarter}
                 </TableCell>
               </TableRow>
             ))}
