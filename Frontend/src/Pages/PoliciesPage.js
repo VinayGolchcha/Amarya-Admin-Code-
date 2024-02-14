@@ -22,7 +22,7 @@ const boxBody = {
   borderRadius: "6px",
   fontSize: "0.9rem",
   boxShadow:
-    "0px -10px 10px -10px rgb(205, 204, 202), -10px 0px 10px -10px rgb(205, 204, 202), 10px 0px 10px -10px rgb(205, 204, 202)",
+    "inset 0 12px 10px -10px rgb(205, 204, 202) , inset -5px 5px 5px -5px rgb(205, 204, 202), inset 5px 5px 5px -5px rgb(205, 204, 202)",
 };
 
 const tableHeadersLeave = ["Dates", "Day", "Occasion"];
@@ -124,13 +124,15 @@ const PoliciesPage = () => {
           <Grid item lg={11} md={11} sm={10} xs={9}>
             <Box
               sx={{
+                display: "flex",
+                alignItems: "cneter",
                 backgroundColor: "rgb(249, 248, 245)",
                 height: "100%",
                 width: "100%",
                 padding: "15px",
                 borderRadius: "6px",
                 boxShadow:
-                  "0px -10px 10px -10px rgb(205, 204, 202), -10px 0px 10px -10px rgb(205, 204, 202), 10px 0px 10px -10px rgb(205, 204, 202)",
+                  "inset 0 12px 10px -10px rgb(205, 204, 202) , inset -5px 5px 5px -5px rgb(205, 204, 202), inset 5px 5px 5px -5px rgb(205, 204, 202)",
               }}
             >
               <ul style={{ marginTop: "0px" }}>
