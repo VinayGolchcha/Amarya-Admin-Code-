@@ -50,7 +50,7 @@ const AdminDashboard = () => {
     <Box>
       <Typography
         variant="h4"
-        sx={{
+        sx={{ 
           margin: "25px 0px 15px 0px",
           font: {
             lg: "normal normal 400 22px/35px Poppins",
