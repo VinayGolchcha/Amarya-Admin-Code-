@@ -36,7 +36,7 @@ const Item = styled(Paper)(({ theme }) => ({
   textAlign: "center",
   color: theme.palette.text.secondary,
 }));
-const cls = '';
+const cls = "";
 
 export default function LeaveMangementPage() {
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -266,9 +266,9 @@ export default function LeaveMangementPage() {
               width: "fit-content",
               paddingTop: "8px",
               overflow: "auto",
-              display : 'flex',
-              alignItems : 'center',
-              padding : '12px',
+              display: "flex",
+              alignItems: "center",
+              padding: "12px",
             }}
           >
             <ol
@@ -276,7 +276,7 @@ export default function LeaveMangementPage() {
                 fontFamily: "poppins",
                 fontSize: "0.9rem",
                 fontWeight: "400",
-                paddingLeft : '1rem'
+                paddingLeft: "1rem",
               }}
             >
               <li style={{ fontFamily: "poppins" }}>13th March - Holi</li>
@@ -321,18 +321,30 @@ export default function LeaveMangementPage() {
                   Leave Application{" "}
                 </Typography>
                 <Box sx={{ width: "25%" }}>
-                  <Accordion sx={{ margin: "4px 0px", height: "auto" , width : 'auto' }}>
+                  <Accordion sx={{ margin: "4px 0px", height: "auto" }}>
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
                       sx={{ minHeight: "30px", height: "30px"  }}
                     >
                       <Typography
-                        sx={{ fontSize: "0.6rem", minHeight: "25px" , display : 'flex' , flexWrap : 'wrap' , alignItems : 'center'}}
+                        sx={{
+                          fontSize: "0.6rem",
+                          minHeight: "25px",
+                          display: "flex",
+                          flexWrap: "wrap",
+                          alignItems: "center",
+                        }}
                       >
                         From Date
                       </Typography>
                     </AccordionSummary>
-                    <AccordionDetails sx={{backgroundColor : 'white' , position : 'absolute'  , zIndex : '1000'}}>
+                    <AccordionDetails
+                      sx={{
+                        backgroundColor: "white",
+                        position: "absolute",
+                        zIndex: "1000",
+                      }}
+                    >
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={["DatePicker"]}>
                           <DatePicker label="Start Date" />
@@ -345,11 +357,25 @@ export default function LeaveMangementPage() {
                       expandIcon={<ExpandMoreIcon />}
                       sx={{ minHeight: "30px", height: "30px" }}
                     >
-                      <Typography sx={{ fontSize: "0.6rem" , minHeight: "25px" , display : 'flex' , flexWrap : 'wrap' , alignItems : 'center'}}>
+                      <Typography
+                        sx={{
+                          fontSize: "0.6rem",
+                          minHeight: "25px",
+                          display: "flex",
+                          flexWrap: "wrap",
+                          alignItems: "center",
+                        }}
+                      >
                         To Date
                       </Typography>
                     </AccordionSummary>
-                    <AccordionDetails sx={{backgroundColor : 'white' , position : 'absolute' , zIndex : '1000'}}>
+                    <AccordionDetails
+                      sx={{
+                        backgroundColor: "white",
+                        position: "absolute",
+                        zIndex: "1000",
+                      }}
+                    >
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DemoContainer components={["DatePicker"]}>
                           <DatePicker label="End Date" />
@@ -418,17 +444,32 @@ export default function LeaveMangementPage() {
                   Leaves Overview
                 </Typography>
                 <Accordion
-                  sx={{ margin: "4px 0px", height: "auto", width: "39%" , zIndex : '1000', width : 'auto' }}
+                  sx={{
+                    margin: "4px 0px",
+                    height: "auto",
+                    width: "39%",
+                    zIndex: "1000",
+                    width : 'auto' }}
                 >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     sx={{ minHeight: "31px", height: "30px"}}
                   >
-                    <Typography sx={{ fontSize: "0.6rem"  , height : '30px' , display : 'flex' , alignItems : 'center' , color : 'gray'}}>
+                    <Typography
+                      sx={{
+                        fontSize: "0.6rem",
+                        height: "30px",
+                        display: "flex",
+                        alignItems: "center",
+                        color: "gray",
+                      }}
+                    >
                       {currentDate}
                     </Typography>
                   </AccordionSummary>
-                  <AccordionDetails sx={{backgroundColor : 'white' , position : 'absolute'}}>
+                  <AccordionDetails
+                    sx={{ backgroundColor: "white", position: "absolute" }}
+                  >
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={["DatePicker"]}>
                         <DatePicker label="Select" />
@@ -448,8 +489,17 @@ export default function LeaveMangementPage() {
                 {" "}
                 Details of Leave taken in the Past
               </Typography>
-              <Box sx={{width : 'auto' , height : '241px' , overflow: 'auto' , margin : '4px 0px'}}>
-                <List sx={{ width: "100%", padding: "4px 0px" , height : '222px' }}>
+              <Box
+                sx={{
+                  width: "auto",
+                  height: "241px",
+                  overflow: "auto",
+                  margin: "4px 0px",
+                }}
+              >
+                <List
+                  sx={{ width: "100%", padding: "4px 0px", height: "222px" }}
+                >
                   <ListItem
                     sx={{
                       backgroundColor: "#E0E0E0",

@@ -4,6 +4,7 @@ import LoginPage from "./Pages/LoginPage";
 import MainPage from "./MainPage";
 import AssetsPage from "./Pages/AssetsPage";
 
+
 const App = () => {
   return (
     <BrowserRouter>
