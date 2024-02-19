@@ -1,12 +1,16 @@
-import React from 'react'
-import LoginPage from './Pages/LoginPage'
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LoginPage from "./Pages/LoginPage";
+import MainPage from "./MainPage";
+import AssetsPage from "./Pages/AssetsPage";
+
 
 const App = () => {
   return (
-    <div>
-      <LoginPage />
-    </div>
-  )
-}
+    <BrowserRouter>
+      <MainPage />
+    </BrowserRouter>
+  );
+};
 
-export default App
+export default App;
