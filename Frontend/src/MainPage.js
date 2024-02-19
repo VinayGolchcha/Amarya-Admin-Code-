@@ -24,16 +24,8 @@ import AdminDashboard from "./AdminPages/AdminDashboard";
 import AdminAnnouncement from "./Pages/AdminAnnouncement";
 
 import AssetsAdminPage from "./Pages/AssetsAdminPage";
-import DashboardPage from './Pages/DashboardPage';
-import AssetsPage from './Pages/AssetsPage';
-import LeaveManagementPage from './Pages/LeaveMangementPage';
-import PoliciesPage from './Pages/PoliciesPage';
-import SettingsPage from './Pages/SettingsPage';
-import TrainingsPage from './Pages/TrainingsPage';
 import WorksheetPage from './Pages/WorksheetPage';
 import TrainingsPageAdmin from './Pages/TrainingsPageAdmin';
-// import AnnouncementPage from './Pages/AnnouncementsPage';
-import UserProfilePage from './Pages/UserProfilePage';
 
 const drawerWidth = 240;
 
