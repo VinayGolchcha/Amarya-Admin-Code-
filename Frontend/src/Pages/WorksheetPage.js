@@ -10,7 +10,6 @@ import {
   FormControlLabel,
   FormGroup,
   TableRow,
-  IconButton,
   Button,
   TextField,
   Checkbox,
@@ -18,11 +17,12 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  InputAdornment,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { format } from "date-fns";
 
 const teams = [
@@ -143,28 +143,27 @@ const WorkSheet = () => {
       setSkillsets((prevArray) => [...prevArray, textValue]);
     }
 
-    setTextValue("");
+    toast.success("Property saved successfully!", {
+      position: "top-right",
+      autoClose: 3000, // Close the toast automatically after 3 seconds
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+    // setTextValue("");
   };
-  // const handleAddRow = () => {
-  //   const randomId = Math.floor(Math.random() * 1000);
-  //   // Get today's date
-  //   const today = format(new Date(), "yyyy-MM-dd");
-
-  //   setNewRow({
-  //     empid: randomId,
-  //     team: "",
-  //     date: today,
-  //     category: "",
-  //     project: "",
-  //     description: "",
-  //     skillset: [],
-  //   });
-  // };
   const handleAddRow = () => {
+    if (newRow !== null) {
+      return;
+    }
+
     const randomId = Math.floor(Math.random() * 1000);
+    // Get today's date
     const today = format(new Date(), "yyyy-MM-dd");
 
-    const newRowData = {
+    setNewRow({
       empid: randomId,
       team: "",
       date: today,
@@ -172,17 +171,34 @@ const WorkSheet = () => {
       project: "",
       description: "",
       skillset: [],
-    };
-
-    setRows((prevRows) => [newRowData, ...prevRows]);
-    setNewRow({ ...newRowData }); // Update newRow with a copy of newRowData
-    setEditingRowIndex(0); // Set to 0 for the newly added row
-    setCurrentPage(0);
+    });
   };
+  // const handleAddRow = () => {
+  //   if (newRow !== null) {
+  //     return;
+  //   }
+  //   const randomId = Math.floor(Math.random() * 1000);
+  //   const today = format(new Date(), "yyyy-MM-dd");
 
-  const handleEditRow = (index) => {
-    setEditingRowIndex(index);
-  };
+  //   const newRowData = {
+  //     empid: randomId,
+  //     team: "",
+  //     date: today,
+  //     category: "",
+  //     project: "",
+  //     description: "",
+  //     skillset: [],
+  //   };
+
+  //   setRows((prevRows) => [newRowData, ...prevRows]);
+  //   setNewRow({ ...newRowData }); // Update newRow with a copy of newRowData
+  //   setEditingRowIndex(0); // Set to 0 for the newly added row
+  //   setCurrentPage(0);
+  // };
+
+  //   const handleEditRow = (index) => {
+  //     setEditingRowIndex(index);
+  //   };
 
   const handleSaveRow = () => {
     if (editingRowIndex !== null) {
@@ -281,6 +297,7 @@ const WorkSheet = () => {
             sm: "normal normal 400 16px/25px Racing Sans One",
             xs: "normal normal 400 10px/16px Racing Sans One",
           },
+          color: "#161E54"
         }}
       >
         AMEMP00012 - Sanjana Jain
@@ -367,7 +384,7 @@ const WorkSheet = () => {
                     onChange={(e) =>
                       handleNewRowChange("empid", e.target.value)
                     }
-                    sx={{ width: "80px", height: "30px" }}
+                    sx={{ width: "80px" }}
                   />
                 </TableCell>
                 <TableCell>
@@ -545,19 +562,28 @@ const WorkSheet = () => {
         >
           <FormControlLabel
             control={
-              <Checkbox onChange={() => handleCheckboxChange("Project")} />
+              <Checkbox
+                checked={selectedOption === "Project"}
+                onChange={() => handleCheckboxChange("Project")}
+              />
             }
             label="Project"
           />
           <FormControlLabel
             control={
-              <Checkbox onChange={() => handleCheckboxChange("Category")} />
+              <Checkbox
+                checked={selectedOption === "Category"}
+                onChange={() => handleCheckboxChange("Category")}
+              />
             }
             label="Category"
           />
           <FormControlLabel
             control={
-              <Checkbox onChange={() => handleCheckboxChange("Skillset")} />
+              <Checkbox
+                checked={selectedOption === "Skillset"}
+                onChange={() => handleCheckboxChange("Skillset")}
+              />
             }
             label="Skill Set"
           />
@@ -598,6 +624,7 @@ const WorkSheet = () => {
             Click to Save
           </Button>
         </box>
+        <ToastContainer />
       </Box>
     </Box>
   );
