@@ -24,8 +24,9 @@ import AdminDashboard from "./AdminPages/AdminDashboard";
 import AdminAnnouncement from "./Pages/AdminAnnouncement";
 
 import AssetsAdminPage from "./Pages/AssetsAdminPage";
-import WorksheetPage from './Pages/WorksheetPage';
-import TrainingsPageAdmin from './Pages/TrainingsPageAdmin';
+import WorksheetPage from "./Pages/WorksheetPage";
+import TrainingsPageAdmin from "./Pages/TrainingsPageAdmin";
+import ActivityPage from "./Pages/ActivityPage";
 
 const drawerWidth = 240;
 
@@ -84,10 +85,11 @@ const MainPage = (props) => {
           <Route path="/profile" element={<UserProfilePage />}></Route>
           <Route path="/announcements" element={<AnnouncementPage />}></Route>
           <Route path="/activities" element={<ActivitiesPage />} />
-          <Route path="/assetsAdminPAge" element={<AssetsAdminPage/>} />
+          <Route path="/assetsAdminPAge" element={<AssetsAdminPage />} />
           <Route path="/adminworksheet" element={<AdminWorkSheet />} />
           <Route path="/admindashboard" element={<AdminDashboard />} />
           <Route path="/adminAnouncement" element={<AdminAnnouncement />} />
+          <Route path="/activities/:id" element={<ActivityPage />} />
         </Routes>
       </Box>
     </Box>

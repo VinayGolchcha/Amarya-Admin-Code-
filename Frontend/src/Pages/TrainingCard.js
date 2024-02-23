@@ -7,7 +7,7 @@ import { Card } from "@mui/material";
 import ReactCardFlip from "react-card-flip";
 import { useState } from "react";
 
-export default function TrainingCard({ field }) {
+export default function TrainingCard({ field, i }) {
   const [isFLip, setIsFlip] = useState(false);
   const dynamicColor = field.color;
   function handleFlip(val) {
@@ -42,7 +42,7 @@ export default function TrainingCard({ field }) {
                 color="text.secondary"
                 gutterBottom
               >
-                Training
+                Training {i + 1}
                 <LaunchIcon />
               </Typography>
               <Typography
@@ -53,6 +53,7 @@ export default function TrainingCard({ field }) {
                   textAlign: "center",
                   margin: "15px",
                   color: "#161E54",
+                  fontSize: "1.8rem",
                 }}
               >
                 {field.courseName}

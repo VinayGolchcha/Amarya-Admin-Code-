@@ -14,6 +14,7 @@ const boxHeading = {
   padding: "6px",
   borderRadius: "6px",
   fontSize: "0.9rem",
+  fontWeight: "700",
 };
 const boxBody = {
   margin: "20px 0px",
@@ -125,7 +126,7 @@ const PoliciesPage = () => {
             <Box
               sx={{
                 display: "flex",
-                alignItems: "cneter",
+                alignItems: "center",
                 backgroundColor: "rgb(249, 248, 245)",
                 height: "100%",
                 width: "100%",

@@ -278,11 +278,8 @@ export default function LeaveMangementPage() {
             sx={{
               height: "48%",
               width: "fit-content",
-              paddingTop: "8px",
               overflow: "auto",
-              display: "flex",
-              alignItems: "center",
-              padding: "12px",
+              padding: "2px 12px",
             }}
           >
             <ol
@@ -460,7 +457,7 @@ export default function LeaveMangementPage() {
               <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
               <TextField
                 variant="outlined"
-                sx={{ width: "100%", backgroundColor: "#E0E0E0E0" }}
+                sx={{ width: "100%", backgroundColor: "#fafafa" }}
               />
               <FormLabel sx={{ margin: "2px 0px", fontSize: "12px" }}>
                 Body
@@ -469,7 +466,7 @@ export default function LeaveMangementPage() {
                 multiline
                 rows={6}
                 variant="outlined"
-                sx={{ width: "100%", backgroundColor: "#E0E0E0E0" }}
+                sx={{ width: "100%", backgroundColor: "#fafafa" }}
               />
             </Box>
             <Button
@@ -605,7 +602,7 @@ export default function LeaveMangementPage() {
                 >
                   <ListItem
                     sx={{
-                      backgroundColor: "#E0E0E0",
+                      backgroundColor: "#fafafa",
                       margin: "5px 0px",
                       border: "0.5px solid #E0E0E0",
                       borderRadius: "6px",
@@ -622,7 +619,7 @@ export default function LeaveMangementPage() {
                   </ListItem>
                   <ListItem
                     sx={{
-                      backgroundColor: "#E0E0E0",
+                      backgroundColor: "#fafafa",
                       margin: "5px 0px",
                       border: "0.5px solid #E0E0E0",
                       borderRadius: "6px",
@@ -637,7 +634,7 @@ export default function LeaveMangementPage() {
                   </ListItem>
                   <ListItem
                     sx={{
-                      backgroundColor: "#E0E0E0",
+                      backgroundColor: "#fafafa",
                       margin: "5px 0px",
                       border: "0.5px solid #E0E0E0",
                       borderRadius: "6px",
@@ -654,7 +651,7 @@ export default function LeaveMangementPage() {
                   </ListItem>
                   <ListItem
                     sx={{
-                      backgroundColor: "#E0E0E0",
+                      backgroundColor: "#fafafa",
                       margin: "5px 0px",
                       border: "0.5px solid #E0E0E0",
                       borderRadius: "6px",

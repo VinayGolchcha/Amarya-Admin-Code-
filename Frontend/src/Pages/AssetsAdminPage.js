@@ -395,16 +395,6 @@ export default function AssetsAdminPage() {
                       padding: "8px",
                     }}
                   >
-                    Repairs
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      color: "#FFFFFF",
-                      fontFamily: "Poppins",
-                      padding: "8px",
-                    }}
-                  >
                     In Warranty
                   </TableCell>
                   <TableCell
@@ -450,6 +440,7 @@ export default function AssetsAdminPage() {
                         onChange={handleChange}
                         style={{ height: "40px", width: "20px" }}
                       />
+                      <br />
                       {row.inId}
                     </TableCell>
                     <TableCell
@@ -493,12 +484,6 @@ export default function AssetsAdminPage() {
                       sx={{ fontFamily: "Poppins", padding: "8px" }}
                     >
                       {row.issued_Till}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      sx={{ fontFamily: "Poppins", padding: "8px" }}
-                    >
-                      {row.repairs}
                     </TableCell>
                     <TableCell
                       align="center"
