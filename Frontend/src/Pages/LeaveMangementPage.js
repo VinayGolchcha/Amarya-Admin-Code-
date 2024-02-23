@@ -16,6 +16,9 @@ import {
   TableBody,
   Checkbox,
 } from "@mui/material";
+
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import * as React from "react";
@@ -24,10 +27,10 @@ import Paper from "@mui/material/Paper";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -40,15 +43,26 @@ const cls = "";
 
 export default function LeaveMangementPage() {
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const handleCheckboxChange = (rowId) => {
-    const isSelected = selectedRows.includes(rowId);
-    setSelectedRows((prevSelected) =>
-      isSelected
-        ? prevSelected.filter((id) => id !== rowId)
-        : [...prevSelected, rowId]
-    );
-  };
-  const currentDate = new Date().toDateString();
+  const [fromDate, setFromDate] = React.useState(null);
+  const [toDate, setToDate] = React.useState(null);
+  const [error, setError] = React.useState("");
+  function handleFromDateChange(newDate) {
+    setFromDate(newDate);
+    // If toDate is selected and it's less than fromDate, reset toDate
+    if (toDate && newDate > toDate) {
+      setToDate(null);
+    }
+    // const selectedDate = new Date(newDate);
+    // console.log(selectedDate);
+    // if (!toDate && selectedDate <= toDate) {
+    //   setFromDate(selectedDate);
+    //   setError("");
+    // } else {
+    //   setError("From date cannot be greater than to date");
+    // }
+  }
+
+  const currentDate = new Date();
   const rows = [
     {
       id: 1,
@@ -296,7 +310,7 @@ export default function LeaveMangementPage() {
           spacing={1}
           sx={{ margin: "6px 0px", justifyContent: "space-between" }}
         >
-          <Grid item lg={6} md={6} sm={6} xs={12}>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
             <Box
               p={1}
               sx={{
@@ -312,19 +326,18 @@ export default function LeaveMangementPage() {
                   display: "flex",
                   justifyContent: "space-between",
                   flexWrap: "wrap",
+                  color: "#161E54",
+                  fontSize: "1.4rem",
                 }}
               >
-                <Typography
-                  variant="subtitle-1"
-                  sx={{ color: "#161E54", fontSize: "1.4rem" }}
+                Leave Application{" "}
+                <Box
+                  sx={{ width: { lg: "33%", md: "37%", sm: "40%", xs: "43%" } }}
                 >
-                  Leave Application{" "}
-                </Typography>
-                <Box sx={{ width: "25%" }}>
-                  <Accordion sx={{ margin: "4px 0px", height: "auto" }}>
+                  {/* <Accordion sx={{ margin: "4px 0px", height: "auto" }}>
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
-                      sx={{ minHeight: "30px", height: "30px"  }}
+                      sx={{ minHeight: "30px", height: "30px" }}
                     >
                       <Typography
                         sx={{
@@ -351,8 +364,52 @@ export default function LeaveMangementPage() {
                         </DemoContainer>
                       </LocalizationProvider>
                     </AccordionDetails>
-                  </Accordion>
-                  <Accordion sx={{ margin: "4px 0px", height: "auto" , width : 'auto' }}>
+                  </Accordion> */}
+                  {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoItem components={["DatePicker"]}>
+                      <DatePicker
+                        label="From Date"
+                        value={fromDate}
+                        onChange={handleFromDateChage}
+                        slotProps={{ textField: { size: "small" } }}
+                      />
+                    </DemoItem>
+                  </LocalizationProvider>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoItem components={["DatePicker"]}>
+                      <DatePicker
+                        label="To Date"
+                        value={toDate}
+                        onChange={handleToDateChage}
+                        slotProps={{ textField: { size: "small" } }}
+                      />
+                    </DemoItem>
+                  </LocalizationProvider> */}
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      label="From Date"
+                      value={fromDate}
+                      minDate={currentDate}
+                      onChange={handleFromDateChange}
+                      renderInput={(params) => (
+                        <TextField {...params} size="small" />
+                      )}
+                      slotProps={{ textField: { size: "small" } }}
+                    />
+                    <DatePicker
+                      label="To Date"
+                      value={toDate}
+                      minDate={fromDate} // Set the minDate based on fromDate
+                      onChange={(newDate) => setToDate(newDate)}
+                      renderInput={(params) => (
+                        <TextField {...params} size="small" />
+                      )}
+                      slotProps={{ textField: { size: "small" } }}
+                    />
+                  </LocalizationProvider>
+                  {/* <Accordion
+                    sx={{ margin: "4px 0px", height: "auto", width: "auto" }}
+                  >
                     <AccordionSummary
                       expandIcon={<ExpandMoreIcon />}
                       sx={{ minHeight: "30px", height: "30px" }}
@@ -382,7 +439,7 @@ export default function LeaveMangementPage() {
                         </DemoContainer>
                       </LocalizationProvider>
                     </AccordionDetails>
-                  </Accordion>
+                  </Accordion> */}
                 </Box>
               </Box>
               <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
@@ -395,7 +452,7 @@ export default function LeaveMangementPage() {
               </FormLabel>
               <TextField
                 multiline
-                rows={4}
+                rows={6}
                 variant="outlined"
                 sx={{ width: "100%", backgroundColor: "#E0E0E0E0" }}
               />
@@ -419,7 +476,7 @@ export default function LeaveMangementPage() {
               Send to admin
             </Button>
           </Grid>
-          <Grid item lg={6} md={6} sm={6} xs={12}>
+          <Grid item lg={6} md={6} sm={12} xs={12}>
             <Box
               p={1}
               sx={{
@@ -430,7 +487,7 @@ export default function LeaveMangementPage() {
                 borderRadius: "12px",
               }}
             >
-              <Box
+              {/* <Box
                 sx={{
                   display: "flex",
                   justifyContent: "space-between",
@@ -439,21 +496,36 @@ export default function LeaveMangementPage() {
               >
                 <Typography
                   variant="subtitle-1"
-                  sx={{ color: "#161E54", fontSize: "1.4rem" }}
+                  sx={{  }}
                 >
-                  Leaves Overview
+                  
                 </Typography>
-                <Accordion
+                
+              </Box> */}
+              <Box
+                sx={{
+                  color: "#161E54",
+                  fontSize: "1.4rem",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                }}
+              >
+                Leaves Overview
+                {/* date code starts here */}
+                {/* <Accordion
                   sx={{
-                    margin: "4px 0px",
-                    height: "auto",
-                    width: "39%",
+                    margin: "0",
+                    height: "50px",
                     zIndex: "1000",
-                    width : 'auto' }}
+                    float: "right",
+                    display: "inline-grid",
+                    alignItems: "center",
+                  }}
                 >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
-                    sx={{ minHeight: "31px", height: "30px"}}
+                    sx={{ minHeight: "25px", height: "25px", p: 1 }}
                   >
                     <Typography
                       sx={{
@@ -472,11 +544,20 @@ export default function LeaveMangementPage() {
                   >
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={["DatePicker"]}>
-                        <DatePicker label="Select" />
+                        <DatePicker label="Select" size="small" />
                       </DemoContainer>
                     </LocalizationProvider>
                   </AccordionDetails>
-                </Accordion>
+                </Accordion> */}
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    sx={{ width: "35%" }}
+                    label={'select "month" and "year"'}
+                    views={["month", "year"]}
+                    slotProps={{ textField: { size: "small" } }}
+                  />
+                </LocalizationProvider>
+                {/* date code ends here */}
               </Box>
               <Typography
                 sx={{
@@ -492,13 +573,16 @@ export default function LeaveMangementPage() {
               <Box
                 sx={{
                   width: "auto",
-                  height: "241px",
                   overflow: "auto",
                   margin: "4px 0px",
                 }}
               >
                 <List
-                  sx={{ width: "100%", padding: "4px 0px", height: "222px" }}
+                  sx={{
+                    width: "100%",
+                    padding: "4px 0px",
+                    height: { lg: "330px", md: "362px", sm: "305px" },
+                  }}
                 >
                   <ListItem
                     sx={{
@@ -549,16 +633,24 @@ export default function LeaveMangementPage() {
                       }
                     />
                   </ListItem>
+                  <ListItem
+                    sx={{
+                      backgroundColor: "#E0E0E0",
+                      margin: "5px 0px",
+                      border: "0.5px solid #E0E0E0",
+                      borderRadius: "6px",
+                    }}
+                  >
+                    <ListItemText
+                      primary="Due to personal reason "
+                      secondary={
+                        <React.Fragment>
+                          {"1st Sep 2021 - 4th Sep 2021"}
+                        </React.Fragment>
+                      }
+                    />
+                  </ListItem>
                 </List>
-              </Box>
-              <Box sx={{ textAlign: "end" }}>
-                <Button
-                  variant="contained"
-                  color="error"
-                  sx={{ textTransform: "none" }}
-                >
-                  Apply for Leave
-                </Button>
               </Box>
             </Box>
           </Grid>
@@ -585,11 +677,11 @@ export default function LeaveMangementPage() {
                   }}
                 >
                   <Box
-                      component="img"
-                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                      alt="Check"
-                      sx={{paddingRight: '10px'}}
-                    />
+                    component="img"
+                    src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                    alt="Check"
+                    sx={{ paddingRight: "10px" }}
+                  />
                   S.no
                 </TableCell>
                 <TableCell
@@ -660,14 +752,16 @@ export default function LeaveMangementPage() {
             <TableBody>
               {rows.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell style={{ fontFamily: "Poppins" , minWidth : '110px' }}>
-                  <Box
-                        component="img"
-                        src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                        alt="Check"
-                        style={{ filter: "invert(1)" }}
-                        sx={{paddingRight : '9px'}}
-                      />
+                  <TableCell
+                    style={{ fontFamily: "Poppins", minWidth: "110px" }}
+                  >
+                    <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                      alt="Check"
+                      style={{ filter: "invert(1)" }}
+                      sx={{ paddingRight: "9px" }}
+                    />
                     {row.id}
                   </TableCell>
                   <TableCell

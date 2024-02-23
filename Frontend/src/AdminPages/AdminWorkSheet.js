@@ -126,7 +126,17 @@ const WorkSheet = () => {
     "Javascript",
   ]);
 
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState([
+    {
+      empid: "AMEMP00012",
+      team: "",
+      date: new Date().toLocaleDateString(),
+      category: "Client Project",
+      project: "Shephertz",
+      description: "Finance Automation for GST, TDS in the app",
+      skillset: ["Node JS", "Python", "ML", "AWS"],
+    },
+  ]);
   const [currentPage, setCurrentPage] = useState(0);
   const rowsPerPage = 5;
 
@@ -314,6 +324,7 @@ const WorkSheet = () => {
           borderRadius: "12px",
           border: "1px solid #BCBCBC",
           padding: "0px",
+          overflowX: "auto",
         }}
       >
         <Table>
@@ -378,8 +389,9 @@ const WorkSheet = () => {
                   </TableCell>
                 </TableRow>
               ))}
-
-            {newRow && (
+          </TableBody>
+        </Table>
+        {/* {newRow && (
               <TableRow>
                 <TableCell
                   style={{ filter: "invert(1)", alignItems: "center" }}
@@ -522,7 +534,7 @@ const WorkSheet = () => {
             alt="Check"
             onClick={handleAddRow}
           />
-        </TableCell>
+        </TableCell> */}
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"

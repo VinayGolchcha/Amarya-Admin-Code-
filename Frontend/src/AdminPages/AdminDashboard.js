@@ -6,6 +6,8 @@ import AdminPerformace from "../Components/AdminPerformace";
 import { Button, List, ListItem } from "@mui/material";
 import AdminActivity from "./AdminActivity";
 import AdminProjectSummy from "./AdminProjectSummy";
+import DashboardPosComp from "../Components/DashboardPosComp";
+import AdminApprovals from "./AdminApprovals";
 
 const suggSum = [
   {
@@ -50,7 +52,7 @@ const AdminDashboard = () => {
     <Box>
       <Typography
         variant="h4"
-        sx={{ 
+        sx={{
           margin: "25px 0px 15px 0px",
           font: {
             lg: "normal normal 400 22px/35px Poppins",
@@ -101,6 +103,7 @@ const AdminDashboard = () => {
         </Box>
       </Box>
       <AdminProjectSummy />
+      <DashboardPosComp />
       <Box sx={{ display: "flex" }}>
         <Box
           sx={{
@@ -238,8 +241,8 @@ const AdminDashboard = () => {
                         fontWeight: "600",
                       }}
                     >
-                      <img src="pin.svg" />
-                      <img src="3dots.svg" />
+                      <img src="icons/pin.svg" />
+                      <img src="icons/3dots.svg" />
                     </Box>
                   </ListItem>
                 );
@@ -264,6 +267,7 @@ const AdminDashboard = () => {
           </Box>
         </Box>
       </Box>
+      <AdminApprovals />
     </Box>
   );
 };
