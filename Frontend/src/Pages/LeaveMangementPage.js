@@ -332,7 +332,7 @@ export default function LeaveMangementPage() {
               >
                 Leave Application{" "}
                 <Box
-                  sx={{ width: { lg: "33%", md: "37%", sm: "40%", xs: "43%" } }}
+                  sx={{ width: { lg: "35%", md: "40%", sm: "40%", xs: "43%" } }}
                 >
                   {/* <Accordion sx={{ margin: "4px 0px", height: "auto" }}>
                     <AccordionSummary
@@ -387,6 +387,14 @@ export default function LeaveMangementPage() {
                   </LocalizationProvider> */}
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
+                      sx={{
+                        margin: "4px 0px",
+                        "&.MuiTextField-root .MuiInputBase-input::placeholder":
+                          {
+                            fontSize:
+                              "14px" /* Adjust the font size as needed */,
+                          },
+                      }}
                       label="From Date"
                       value={fromDate}
                       minDate={currentDate}
@@ -398,6 +406,13 @@ export default function LeaveMangementPage() {
                     />
                     <DatePicker
                       label="To Date"
+                      sx={{
+                        "&.MuiTextField-root .MuiInputBase-input::placeholder":
+                          {
+                            fontSize:
+                              "14px" /* Adjust the font size as needed */,
+                          },
+                      }}
                       value={toDate}
                       minDate={fromDate} // Set the minDate based on fromDate
                       onChange={(newDate) => setToDate(newDate)}
@@ -551,8 +566,12 @@ export default function LeaveMangementPage() {
                 </Accordion> */}
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
-                    sx={{ width: "35%" }}
-                    label={'select "month" and "year"'}
+                    sx={{
+                      width: "35%",
+                      "&.MuiTextField-root .MuiInputBase-input::placeholder": {
+                        fontSize: "14px" /* Adjust the font size as needed */,
+                      },
+                    }}
                     views={["month", "year"]}
                     slotProps={{ textField: { size: "small" } }}
                   />
@@ -581,7 +600,7 @@ export default function LeaveMangementPage() {
                   sx={{
                     width: "100%",
                     padding: "4px 0px",
-                    height: { lg: "330px", md: "362px", sm: "305px" },
+                    height: { lg: "340px", md: "362px", sm: "305px" },
                   }}
                 >
                   <ListItem
