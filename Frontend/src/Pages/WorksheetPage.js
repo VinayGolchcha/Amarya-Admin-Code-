@@ -297,7 +297,7 @@ const WorksheetPage = () => {
             sm: "normal normal 400 16px/25px Racing Sans One",
             xs: "normal normal 400 10px/16px Racing Sans One",
           },
-          color: "#161E54"
+          color: "#161E54",
         }}
       >
         AMEMP00012 - Sanjana Jain
@@ -312,6 +312,7 @@ const WorksheetPage = () => {
           borderRadius: "12px",
           border: "1px solid #BCBCBC",
           padding: "0px",
+          overflowX: "auto",
         }}
       >
         <Table>
@@ -362,15 +363,18 @@ const WorksheetPage = () => {
                       component="img"
                       src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
                       alt="Check"
-                      // onClick={handleSaveRow}
-                      // sx={{ cursor: "pointer" }}
+                      onClick={handleSaveRow}
+                      sx={{ cursor: "pointer" }}
                     />
                   </TableCell>
                 </TableRow>
               ))}
+
             {newRow && (
               <TableRow>
-                <TableCell style={{ filter: "invert(1)" }}>
+                <TableCell
+                  style={{ filter: "invert(1)", alignItems: "center" }}
+                >
                   <Box
                     component="img"
                     src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
@@ -384,7 +388,7 @@ const WorksheetPage = () => {
                     onChange={(e) =>
                       handleNewRowChange("empid", e.target.value)
                     }
-                    sx={{ width: "80px" }}
+                    sx={{ width: "80px", marginTop: "15px" }}
                   />
                 </TableCell>
                 <TableCell>
@@ -413,7 +417,7 @@ const WorksheetPage = () => {
                     type="date"
                     value={newRow.date}
                     onChange={(e) => handleNewRowChange("date", e.target.value)}
-                    sx={{ width: "120px" }}
+                    sx={{ width: "120px", marginTop: "15px" }}
                   />
                 </TableCell>
                 <TableCell>
@@ -465,6 +469,7 @@ const WorksheetPage = () => {
                     onChange={(e) =>
                       handleNewRowChange("description", e.target.value)
                     }
+                    sx={{ marginTop: "15px" }}
                   />
                 </TableCell>
                 <TableCell>
@@ -518,7 +523,7 @@ const WorksheetPage = () => {
           onPageChange={handleChangePage}
         />
       </Box>
-      <Typography
+      {/* <Typography
         variant="h4"
         sx={{
           margin: "25px 0px 20px 10px",
@@ -625,7 +630,7 @@ const WorksheetPage = () => {
           </Button>
         </box>
         <ToastContainer />
-      </Box>
+      </Box> */}
     </Box>
   );
 };
