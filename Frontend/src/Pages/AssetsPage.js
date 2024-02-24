@@ -246,7 +246,8 @@ const AssetsPage = () => {
         <Grid container spacing={3} sx={{ marginBottom: "20px" }}>
           <Grid item xs={4}>
             <TextField
-              variant="filled"
+              variant="outlined"
+              sx={{ backgroundColor: "rgb(250, 250, 250)" }}
               label="Full Name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
@@ -255,8 +256,9 @@ const AssetsPage = () => {
           </Grid>
           <Grid item xs={4}>
             <TextField
-              variant="filled"
+              variant="outlined"
               label="Employee ID"
+              sx={{ backgroundColor: "rgb(250, 250, 250)" }}
               value={employeeID}
               onChange={(e) => setEmployeeID(e.target.value)}
               fullWidth
@@ -282,7 +284,7 @@ const AssetsPage = () => {
               type="date"
               value={todayDate}
               onChange={(e) => setTodayDate(e.target.value)}
-              sx={{ marginLeft: "13%" }}
+              sx={{ marginLeft: "13%", backgroundColor: "rgb(250, 250, 250)" }}
             />
           </Grid>
         </Grid>
@@ -301,7 +303,7 @@ const AssetsPage = () => {
                     xs: "normal normal 600 15px/24px Poppins",
                   },
                   fontWeight: "bold",
-                  marginBottom:"5px"
+                  marginBottom: "5px",
                 }}
               >
                 Type of Request (choose all that apply)
@@ -310,11 +312,12 @@ const AssetsPage = () => {
                 {requestTypes.map((type) => (
                   <FormControlLabel
                     key={type}
-                    sx={{ color: "#4C4C4C", fontFamily: "Poppins" }}
+                    sx={{ color: "#4C4C4C", fontFamily: "Prompt" }}
                     control={
                       <Checkbox
                         checked={selectedRequestTypes.includes(type)}
                         onChange={handleRequestTypeChange}
+                        sx={{ fontFamily: "Prompt" }}
                         value={type}
                       />
                     }
@@ -322,7 +325,7 @@ const AssetsPage = () => {
                   />
                 ))}
                 <FormControlLabel
-                  sx={{ color: "#4C4C4C", fontFamily: "Poppins" }}
+                  sx={{ color: "#4C4C4C", fontFamily: "Prompt" }}
                   control={
                     <Checkbox
                       checked={selectedRequestTypes.includes("Other")}
@@ -332,7 +335,11 @@ const AssetsPage = () => {
                   }
                   label="Other"
                 />
-                <TextField variant="filled" fullWidth />
+                <TextField
+                  sx={{ backgroundColor: "rgb(250, 250, 250)" }}
+                  variant="outlined"
+                  fullWidth
+                />
               </FormGroup>
             </FormControl>
           </Grid>
@@ -348,7 +355,7 @@ const AssetsPage = () => {
                     xs: "normal normal 600 15px/24px Poppins",
                   },
                   fontWeight: "bold",
-                  marginBottom:"5px"
+                  marginBottom: "5px",
                 }}
               >
                 If Hardware (choose from)
@@ -357,11 +364,12 @@ const AssetsPage = () => {
                 {hardwareItems.map((item) => (
                   <FormControlLabel
                     key={item}
-                    sx={{ color: "#4C4C4C", fontFamily: "Poppins" }}
+                    sx={{ color: "#4C4C4C", fontFamily: "Prompt" }}
                     control={
                       <Checkbox
                         checked={selectedHardwareItems.includes(item)}
                         onChange={handleHardwareItemChange}
+                        sx={{ fontFamily: "Prompt" }}
                         value={item}
                       />
                     }
@@ -383,7 +391,7 @@ const AssetsPage = () => {
                     xs: "normal normal 600 15px/24px Poppins",
                   },
                   fontWeight: "bold",
-                  marginBottom:"10px"
+                  marginBottom: "10px",
                 }}
               >
                 New Item/Replacement/Renewal
@@ -395,6 +403,7 @@ const AssetsPage = () => {
                 onChange={handlePurposeChange}
                 fullWidth
                 size="small"
+                sx={{ backgroundColor: "rgb(250, 250, 250)" }}
               >
                 {purposeOptions.map((option) => (
                   <MenuItem key={option} value={option}>
@@ -409,7 +418,12 @@ const AssetsPage = () => {
         {/* Third Row */}
         <Grid container spacing={3} sx={{ marginTop: "35px" }}>
           <Grid item xs={4}>
-            <TextField variant="filled" label="Primary Purpose" fullWidth />
+            <TextField
+              sx={{ backgroundColor: "rgb(250, 250, 250)" }}
+              variant="outlined"
+              label="Primary Purpose"
+              fullWidth
+            />
           </Grid>
         </Grid>
 
@@ -417,8 +431,9 @@ const AssetsPage = () => {
         <Grid container spacing={3} sx={{ marginTop: "1px" }}>
           <Grid item xs={4}>
             <TextField
-              variant="filled"
+              variant="outlined"
               label="Details"
+              sx={{ backgroundColor: "rgb(250, 250, 250)" }}
               multiline
               rows={3}
               value={details}
@@ -448,10 +463,10 @@ const AssetsPage = () => {
             <FormControlLabel
               sx={{
                 font: {
-                  lg: "normal normal 600 18px/26px Poppins",
-                  md: "normal normal 600 16px/26px Poppins",
-                  sm: "normal normal 600 16px/25px Poppins",
-                  xs: "normal normal 600 15px/24px Poppins",
+                  lg: "normal normal 600 18px/26px Prompt",
+                  md: "normal normal 600 16px/26px Prompt",
+                  sm: "normal normal 600 16px/25px Prompt",
+                  xs: "normal normal 600 15px/24px Prompt",
                 },
                 fontWeight: "bold",
                 color: "#4C4C4C",

@@ -81,12 +81,20 @@ const AdminNotificationTab = () => {
   };
 
   const handleAddNotification = (newNotification) => {
-    setNotifications((prevNotifications) => [newNotification, ...prevNotifications]);
+    setNotifications((prevNotifications) => [
+      newNotification,
+      ...prevNotifications,
+    ]);
   };
 
   // const uniqueDates = [...new Set(notifications.map((n) => n.date))];
   // User
- const uniqueDates = ["All Dates", ...new Set(notifications.filter(n => n.type === selectedTab).map((n) => n.date))];
+  const uniqueDates = [
+    "All Dates",
+    ...new Set(
+      notifications.filter((n) => n.type === selectedTab).map((n) => n.date)
+    ),
+  ];
   if (!uniqueDates.includes("All Dates")) {
     uniqueDates.unshift("All Dates"); // Add "All Dates" option if not already present
   }
@@ -95,7 +103,9 @@ const AdminNotificationTab = () => {
     if (selectedDate === "All Dates") {
       return notification.type === selectedTab;
     } else {
-      return notification.type === selectedTab && notification.date === selectedDate;
+      return (
+        notification.type === selectedTab && notification.date === selectedDate
+      );
     }
   });
 
@@ -137,13 +147,13 @@ const AdminNotificationTab = () => {
         <Button
           sx={{
             width: "50%",
-            background:
-              selectedTab === "announcement" ? "#161E54":"none",
+            background: selectedTab === "announcement" ? "#161E54" : "none",
             color: selectedTab === "announcement" ? "white" : "black",
             borderRadius: "50px",
-            border:"none",
-            "&:hover": { // Remove hover effect
-              border:"none"
+            border: "none",
+            "&:hover": {
+              // Remove hover effect
+              border: "none",
             },
           }}
           variant="outlined"
@@ -163,8 +173,9 @@ const AdminNotificationTab = () => {
             background: selectedTab === "activity" ? "#161E54" : "none",
             border: "none",
             borderRadius: "50px",
-            "&:hover": { // Remove hover effect
-              border:"none",
+            "&:hover": {
+              // Remove hover effect
+              border: "none",
             },
           }}
           variant="outlined"
@@ -300,7 +311,10 @@ const AdminNotificationTab = () => {
         >
           NEW EVENT !!!
         </Typography>
-        <ActivityForm onAddNotification={handleAddNotification} />
+        <ActivityForm
+          onAddNotification={handleAddNotification}
+          selectedTab={selectedTab}
+        />
       </Box>
     </div>
   );

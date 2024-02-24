@@ -45,6 +45,38 @@ const EmployeeCountPieChart = () => {
       >
         Employee Count
       </Typography>
+      <Box sx={{ display: "flex", justifyContent: "end", marginTop: "12px" }}>
+        <Box>
+          <Typography
+            component="span"
+            sx={{
+              color: "white",
+              backgroundColor: "rgba(0, 0, 0, 0.4)",
+              padding: "5px 12px",
+              borderRadius: "4px",
+              margin: "0px 5px",
+              fontFamily: "Inter",
+            }}
+          >
+            Location
+          </Typography>
+        </Box>
+        <Box>
+          <Typography
+            component="span"
+            sx={{
+              color: "white",
+              backgroundColor: "rgba(0, 0, 0, 0.4)",
+              padding: "5px 12px",
+              borderRadius: "4px",
+              margin: "0px 5px",
+              fontFamily: "Inter",
+            }}
+          >
+            Team
+          </Typography>
+        </Box>
+      </Box>
       <PieChart width={500} height={300}>
         <Pie
           data={pieChartData}

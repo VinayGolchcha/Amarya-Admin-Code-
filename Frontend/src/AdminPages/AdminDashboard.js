@@ -213,6 +213,7 @@ const AdminDashboard = () => {
                     <Box
                       sx={{
                         height: "100%",
+                        width: "250px",
                         justifyContent: "center",
                         display: "flex",
                         alignItems: "center",

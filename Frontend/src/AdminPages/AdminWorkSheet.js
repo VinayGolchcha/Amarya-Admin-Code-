@@ -631,8 +631,11 @@ const WorkSheet = () => {
         </Typography>
         <TextField
           id="filled-basic"
-          variant="filled"
-          sx={{ margin: "0px 20px 20px 20px" }}
+          variant="outlined"
+          sx={{
+            margin: "0px 20px 20px 20px",
+            backgroundColor: "rgb(250, 250, 250)",
+          }}
           onChange={(e) => handleTextFieldChange(e.target.value)}
         />
         <br />

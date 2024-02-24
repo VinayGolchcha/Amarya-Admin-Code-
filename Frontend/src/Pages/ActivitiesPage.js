@@ -254,7 +254,7 @@ const ActivitiesPage = () => {
                       display: "flex",
                       flexDirection: "column",
                       flex: "1",
-                      width: "300px",
+                      width: "100%",
                       height: "300px",
                       transform: isCardFlipped(activity.id)
                         ? "rotateY(180deg)"
@@ -299,7 +299,7 @@ const ActivitiesPage = () => {
                           {activity.date}
                         </Typography>
                         <Typography
-                          variant="h3"
+                          variant="h4"
                           component="div"
                           color="#121843"
                         >

@@ -79,7 +79,10 @@ const ProjectOverview = () => {
           gutterBottom
           color="#00000099"
           fontWeight="bold"
-          marginLeft="70px"
+          marginLeft="46px"
+          marginTop="15px"
+          fontSize="1.1rem"
+          fontFamily="Poppins"
         >
           Project Overview - 2023
         </Typography>

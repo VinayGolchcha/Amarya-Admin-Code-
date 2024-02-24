@@ -197,6 +197,7 @@ export default function AdminApprovals() {
               fontWeight: "600",
               color: "#00000099",
               margin: "12px 2px",
+              fontSize: "1.1rem",
             }}
           >
             {" "}
@@ -268,20 +269,23 @@ export default function AdminApprovals() {
                     <TableCell
                       component="th"
                       scope="row"
-                      sx={{ fontFamily: "Prompt" }}
+                      sx={{ fontFamily: "Open Sans" }}
                     >
                       {row.sNo}
                     </TableCell>
-                    <TableCell align="left" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {row.clientName}
                     </TableCell>
-                    <TableCell align="left" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {row.projectLead}
                     </TableCell>
-                    <TableCell align="left" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {row.project}
                     </TableCell>
-                    <TableCell align="left" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell
+                      align="left"
+                      sx={{ fontFamily: "Open Sans", minwidth: "119px" }}
+                    >
                       {row?.stats === "Approved" && (
                         <>
                           <img src="Images/circle(1).svg" /> {row.stats}
@@ -308,7 +312,7 @@ export default function AdminApprovals() {
                         </>
                       )}
                     </TableCell>
-                    <TableCell align="left" sx={{ fontFamily: "Prompt" }}>
+                    <TableCell align="left" sx={{ minWidth: "104px" }}>
                       <FileDownloadDoneIcon sx={{ color: "#b1bacb" }} />
                       <NotInterestedIcon sx={{ color: "#b1bacb" }} />
                       <DeleteOutlineIcon sx={{ color: "#b1bacb" }} />
@@ -321,7 +325,7 @@ export default function AdminApprovals() {
                   </TableRow>
                 )}
               </TableBody>
-              <TableFooter>
+              <TableFooter sx={{ boxShadow: "none" }}>
                 <TableRow>
                   <TablePagination
                     rowsPerPageOptions={[

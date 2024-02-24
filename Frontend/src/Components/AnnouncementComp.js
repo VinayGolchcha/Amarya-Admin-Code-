@@ -62,7 +62,7 @@ export default function AnnouncementComp() {
       <Box sx={{ pt: 2, pb: 1 }}>
         <Box
           sx={{
-            backgroundColor: "#E0E0E0",
+            backgroundColor: "rgb(250, 250, 250)",
             borderRadius: "6px",
             padding: "12px 16px 12px 16px",
             color: "#303030",
@@ -73,7 +73,7 @@ export default function AnnouncementComp() {
             justifyContent: "space-between",
           }}
         >
-          <Box sx={{ mr: 1 }}>
+          <Box sx={{ mr: 1, backgroundColor: "rgb(250, 250, 250)" }}>
             <Typography
               sx={{
                 fontFamily: "Poppins",
@@ -105,7 +105,7 @@ export default function AnnouncementComp() {
         </Box>
         <Box
           sx={{
-            backgroundColor: "#E0E0E0",
+            backgroundColor: "rgb(250, 250, 250)",
             borderRadius: "6px",
             padding: "12px 16px 12px 16px",
             color: "#303030",
@@ -115,7 +115,7 @@ export default function AnnouncementComp() {
             alignItems: "center",
           }}
         >
-          <Box sx={{ mr: 1 }}>
+          <Box sx={{ mr: 1, backgroundColor: "rgb(250, 250, 250)" }}>
             <Typography
               sx={{
                 fontFamily: "Poppins",

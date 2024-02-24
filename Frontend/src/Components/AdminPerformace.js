@@ -11,7 +11,16 @@ const CustomBarChart = ({ data }) => {
         boxShadow: "none",
       }}
     >
-      <Typography variant="h4" gutterBottom>
+      <Typography
+        variant="h6"
+        sx={{
+          fontSize: "1.1rem",
+          fontFamily: "Poppins",
+          color: "#00000099",
+          fontWeight: "700",
+        }}
+        gutterBottom
+      >
         Performance
       </Typography>
       <Typography variant="body1" gutterBottom>
