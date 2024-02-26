@@ -312,7 +312,12 @@ const AssetsPage = () => {
                 {requestTypes.map((type) => (
                   <FormControlLabel
                     key={type}
-                    sx={{ color: "#4C4C4C", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#4C4C4C",
+                      "& .css-ahj2mt-MuiTypography-root": {
+                        fontFamily: "Prompt",
+                      },
+                    }}
                     control={
                       <Checkbox
                         checked={selectedRequestTypes.includes(type)}
@@ -364,7 +369,12 @@ const AssetsPage = () => {
                 {hardwareItems.map((item) => (
                   <FormControlLabel
                     key={item}
-                    sx={{ color: "#4C4C4C", fontFamily: "Prompt" }}
+                    sx={{
+                      color: "#4C4C4C",
+                      "& .css-ahj2mt-MuiTypography-root": {
+                        fontFamily: "Prompt",
+                      },
+                    }}
                     control={
                       <Checkbox
                         checked={selectedHardwareItems.includes(item)}
@@ -470,6 +480,9 @@ const AssetsPage = () => {
                 },
                 fontWeight: "bold",
                 color: "#4C4C4C",
+                "& .css-ahj2mt-MuiTypography-root": {
+                  fontFamily: "Prompt",
+                },
               }}
               control={
                 <Checkbox
