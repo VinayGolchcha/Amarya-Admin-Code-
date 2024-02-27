@@ -189,6 +189,7 @@ import {
   MenuItem,
   Input,
   InputLabel,
+  Box,
 } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -204,8 +205,10 @@ function MyForm({ onAddNotification, selectedTab }) {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
+    console.log(selectedFile);
     if (selectedFile && selectedFile.type.match(/image.*/)) {
       setFile(selectedFile);
+      toast.success(`${selectedFile.name} is selected successfully`);
     } else {
       setFile(null);
       toast.error("Please upload a valid image file.");
@@ -312,20 +315,21 @@ function MyForm({ onAddNotification, selectedTab }) {
             multiline
             rows={5}
           />
+
           {selectedTab === "activity" && (
-            <>
+            <Box sx={{ display: "flex" }}>
               <InputLabel
                 htmlFor="file-upload"
                 sx={{
                   marginTop: "5px",
-                  border: "1px solid black",
+                  border: "1px solid rgb(202, 199, 199)",
                   borderRadius: "4px",
                   width: "fit-content",
                   padding: "1px 5px",
                   backgroundColor: "rgb(250, 250, 250)",
                 }}
               >
-                Choose File
+                Choose Image
               </InputLabel>
               <Input
                 id="file-upload"
@@ -334,7 +338,14 @@ function MyForm({ onAddNotification, selectedTab }) {
                 onChange={handleFileChange}
                 sx={{ display: "none" }}
               />
-            </>
+              {file && (
+                <Typography
+                  sx={{ color: "green", marginTop: "5px", padding: "1px 5px" }}
+                >
+                  Image(s) uploaded
+                </Typography>
+              )}
+            </Box>
           )}
         </Grid>
         <Grid

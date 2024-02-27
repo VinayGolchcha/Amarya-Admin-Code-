@@ -64,7 +64,12 @@ const CustomBarChart = ({ data }) => {
               >
                 <Typography
                   variant="body1"
-                  style={{ flex: 1, color: "#222B45", fontWeight: "bold" }}
+                  style={{
+                    flex: 1,
+                    color: "#222B45",
+                    fontWeight: "bold",
+                    fontSize: "0.9rem",
+                  }}
                 >
                   {`${item.performance}%`}
                 </Typography>
@@ -76,6 +81,7 @@ const CustomBarChart = ({ data }) => {
                     marginLeft: "10px",
                     color: "#00000080",
                     fontWeight: "bold",
+                    fontSize: "0.8rem",
                   }}
                 >
                   {`${item.team}`}

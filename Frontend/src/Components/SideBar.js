@@ -41,7 +41,7 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const menu = [
     { text: "Dashboard", link: "dashboard", icon: <DashboardIcon /> },
     { text: "Assets", link: "assets", icon: <PersonAddAlt1Icon /> },
-    { text: "Leave Mgmt", link: "leaves", icon: <InsertInvitationIcon /> },
+    { text: "Leave Planner", link: "leaves", icon: <InsertInvitationIcon /> },
     { text: "Trainings", link: "trainings", icon: <GroupsIcon /> },
     { text: "Worksheet", link: "worksheet", icon: <GroupWorkIcon /> },
   ];

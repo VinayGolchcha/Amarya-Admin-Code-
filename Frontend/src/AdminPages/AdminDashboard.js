@@ -67,7 +67,11 @@ const AdminDashboard = () => {
       </Typography>
       <Box sx={{ display: "flex" }}>
         <Box
-          sx={{ borderRadius: "20px", border: "1px solid rgba(0, 0, 0, 0.30)" }}
+          sx={{
+            borderRadius: "20px",
+            border: "1px solid rgba(0, 0, 0, 0.30)",
+            width: "auto",
+          }}
         >
           <ProjectOverview />
         </Box>
@@ -103,6 +107,7 @@ const AdminDashboard = () => {
         </Box>
       </Box>
       <AdminProjectSummy />
+
       <DashboardPosComp />
       <Box sx={{ display: "flex" }}>
         <Box

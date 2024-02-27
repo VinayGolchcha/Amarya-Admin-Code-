@@ -569,6 +569,7 @@ export default function LeaveMangementPage() {
                         fontSize: "14px" /* Adjust the font size as needed */,
                       },
                     }}
+                    label={"MM/YYYY"}
                     views={["month", "year"]}
                     slotProps={{ textField: { size: "small" } }}
                   />

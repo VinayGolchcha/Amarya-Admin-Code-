@@ -88,12 +88,12 @@ const ProjectOverview = () => {
         </Typography>
         {/* Monthly Project Status Bar Chart */}
         <BarChart
-          width={650}
+          width={550}
           height={400}
           data={allMonthsData}
           margin={{ top: 20, right: 0, left: 0, bottom: 5 }}
         >
-          <CartesianGrid horizontal={true} />/
+          {/* <CartesianGrid horizontal={true} /> */}
           <XAxis dataKey="month" />
           <YAxis />
           <Tooltip />
