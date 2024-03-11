@@ -15,6 +15,9 @@ import {
   TableCell,
   TableBody,
   Checkbox,
+  Select,
+  InputLabel,
+  MenuItem,
 } from "@mui/material";
 
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -46,6 +49,7 @@ export default function LeaveMangementPage() {
   const [fromDate, setFromDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
   const [error, setError] = React.useState("");
+  const [leaveType, setLeaveType] = React.useState("Casual");
   function handleFromDateChange(newDate) {
     setFromDate(newDate);
     // If toDate is selected and it's less than fromDate, reset toDate
@@ -61,7 +65,9 @@ export default function LeaveMangementPage() {
     //   setError("From date cannot be greater than to date");
     // }
   }
-
+  function handleChange(e) {
+    setLeaveType(e.target.value);
+  }
   const currentDate = new Date();
   const rows = [
     {
@@ -454,6 +460,24 @@ export default function LeaveMangementPage() {
                   </Accordion> */}
                 </Box>
               </Box>
+              <InputLabel
+                id="demo-simple-select-label"
+                sx={{ fontSize: "12px" }}
+              >
+                Leave Type
+              </InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={leaveType}
+                label="leaveType"
+                sx={{ width: "100%", backgroundColor: "#fafafa" }}
+                onChange={handleChange}
+              >
+                <MenuItem value={"Casual"}>Casual</MenuItem>
+                <MenuItem value={"Sick"}>Sick</MenuItem>
+              </Select>
+              <br />
               <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
               <TextField
                 variant="outlined"
@@ -464,7 +488,7 @@ export default function LeaveMangementPage() {
               </FormLabel>
               <TextField
                 multiline
-                rows={6}
+                rows={3}
                 variant="outlined"
                 sx={{ width: "100%", backgroundColor: "#fafafa" }}
               />
