@@ -1,0 +1,9 @@
+# Ignore the "node_modules" directory
+node_modules/
+
+# Ignore a specific module or file
+specific_module/
+specific_file.txt
+
+# Use wildcards to ignore files matching a pattern
+*.log         # Ignore all files with the ".log" extension

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+// 
+import React, { useState , useEffect} from "react";
+import axios from "axios";
 import {
   Box,
   Typography,
@@ -14,7 +16,7 @@ import {
   TablePagination,
   IconButton,
 } from "@mui/material";
-import FileDownloadDoneIcon from "@mui/icons-material/FileDownloadDone";
+import FileDownloadDoneIcon from "@mui/icons-material/FileDownloadDone"
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useTheme } from "@mui/material/styles";
@@ -26,6 +28,10 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import PropTypes from "prop-types";
+
+
+
+
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -70,6 +76,9 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
+
+
+  
 
   const handleClick = (newPage) => {
     onPageChange(null, newPage);
@@ -126,48 +135,53 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
+
+
+export default function AdminApprovals() {
+
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  console.log(process.env.REACT_APP_BASE_URL);
+  ///mycode
+// const [status, setStatus] = useState("");
+const [isApproved , setIsApproved] =useState("rejected")
 const rows = [
   {
     sNo: 1,
     clientName: "LEAVE",
     projectLead: "17 Aug, 2020",
     project: "Diwali Holyday and Outing",
-    stats: "Approved",
+    stats: isApproved ,
   },
   {
     sNo: 2,
     clientName: "INVENTORY",
     projectLead: "08 Oct, 2020",
     project: "New Headphones required as old ones are not working",
-    stats: "Approved",
+    stats: isApproved ,
   },
   {
     sNo: 3,
     clientName: "TRAINING",
     projectLead: "27 Jun, 2020",
     project: "Request for react native Training",
-    stats: "Approved",
+    stats: isApproved ,
   },
   {
     sNo: 4,
     clientName: "LEAVE",
     projectLead: "27 Jun, 2020",
     project: "Brother’s Marriage ",
-    stats: "Pending",
+    stats: isApproved ,
   },
   {
     sNo: 5,
     clientName: "INVENTORY",
     projectLead: "23 Jul, 2020",
     project: "Replacement for old keyboard",
-    stats: "Rejected",
+    stats: isApproved ,
   },
 ];
-
-export default function AdminApprovals() {
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -179,6 +193,92 @@ export default function AdminApprovals() {
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+
+
+    // chetan code
+    async function fetchData(status) {
+
+      setIsApproved("approved")
+      // setIsApproved(!isApproved)
+
+      // console.log(isApporved);
+      try {
+        const response = await axios.put(
+         "http://localhost:4000/api/v1/approval/admin/approval",
+          {
+            emp_id: "AMEMP010",
+            item: "sick leave", 
+            foreign_id: "1138",
+            status,
+            request_type: "leave",
+          }
+        );
+        console.log("ress",response);
+  
+        //   // Handle login error
+      } catch (error) {
+        console.log("Error data:", error);
+        // setRes(error.response.data.errors[0]?.msg);
+      }
+      
+    };
+
+    
+    async function rejectData(status) {
+
+      setIsApproved("rejected")
+      // setIsApproved(!isApproved)
+
+      // console.log(isApporved);
+      try {
+        const response = await axios.put(
+         "http://localhost:4000/api/v1/approval/admin/approval",
+          {
+            emp_id: "AMEMP010",
+            item: "sick leave", 
+            foreign_id: "1138",
+            status,
+            request_type: "leave",
+          }
+        );
+        console.log("ress",response);
+  
+        //   // Handle login error
+      } catch (error) {
+        console.log("Error data:", error);
+        // setRes(error.response.data.errors[0]?.msg);
+      }
+      
+    };
+
+    async function deleteData(status) {
+
+      setIsApproved("rejected")
+      // setIsApproved(!isApproved)
+
+      // console.log(isApporved);
+      try {
+        const response = await axios.put(
+         "http://localhost:4000/api/v1/approval/admin/approval",
+          {
+            emp_id: "AMEMP010",
+            item: "sick leave", 
+            foreign_id: "1138",
+            status,
+            request_type: "leave",
+          }
+        );
+        console.log("ress",response);
+  
+        //   // Handle login error
+      } catch (error) {
+        console.log("Error data:", error);
+        // setRes(error.response.data.errors[0]?.msg);
+      }
+      
+    };
+    
   return (
     <div>
       <Box
@@ -242,12 +342,15 @@ export default function AdminApprovals() {
                   </TableCell>
                   <TableCell
                     align="left"
+                    // onChange={(e) => setStatus(e.target.value)}
                     sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                   >
                     Status
                   </TableCell>
                   <TableCell
                     align="left"
+                    ///my code
+                    
                     sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                   >
                     Action
@@ -275,6 +378,7 @@ export default function AdminApprovals() {
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {row.clientName}
+
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {row.projectLead}
@@ -286,7 +390,7 @@ export default function AdminApprovals() {
                       align="left"
                       sx={{ fontFamily: "Open Sans", minwidth: "119px" }}
                     >
-                      {row?.stats === "Approved" && (
+                      {row?.stats === "approved" && (
                         <>
                           <img src="Images/circle(1).svg" /> {row.stats}
                         </>
@@ -306,16 +410,18 @@ export default function AdminApprovals() {
                           {row.stats}
                         </>
                       )}
-                      {row?.stats === "Rejected" && (
+                      {row?.stats === "rejected" && (
                         <>
                           <img src="Images/circle.svg" /> {row.stats}
                         </>
                       )}
                     </TableCell>
                     <TableCell align="left" sx={{ minWidth: "104px" }}>
-                      <FileDownloadDoneIcon sx={{ color: "#b1bacb" }} />
-                      <NotInterestedIcon sx={{ color: "#b1bacb" }} />
-                      <DeleteOutlineIcon sx={{ color: "#b1bacb" }} />
+                      <FileDownloadDoneIcon 
+                      onClick={()=>{fetchData("approved")}}
+                       sx={{ color: "#b1bacb" }} />
+                      <NotInterestedIcon onClick={()=>{rejectData("rejected")}} sx={{ color: "#b1bacb" }} />
+                      <DeleteOutlineIcon onClick={()=>{deleteData("deleted")}} sx={{ color: "#b1bacb" }} />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -355,3 +461,4 @@ export default function AdminApprovals() {
     </div>
   );
 }
+

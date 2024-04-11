@@ -1,8 +1,49 @@
+// 
+
 // LoginPage.js
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, TextField, Button, Paper } from "@mui/material";
+import axios from "axios";
+// import Model from "./Model";
+import "./EmailPop"
+// import { EmailP } from "@mui/icons-material";
+import EmailP from "./EmailPop";
+
+
+
+
 
 const LoginPage = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  //new
+  // const[openModel,setOpenModel]=useState(false)
+  const[openEmailP,setOpenEmailP]=useState(false)
+
+
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/user/login",
+        {
+          username,
+          password,
+        }
+      );
+
+      // Check response status
+      if (response.status === 200) {
+        console.log("Login successful");
+        // Redirect or handle successful login
+      } else {
+        console.error("Login failed");
+        // Handle login error
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   // useEffect(() => {
   //   // Disable scrolling when the component mounts
   //   document.body.style.overflow = "hidden";
@@ -17,14 +58,16 @@ const LoginPage = () => {
       sx={{
         display: "flex",
         flexDirection: { xs: "column-reverse", lg: "row" },
-        // height: "100vh",
+        // height: "10vh",
         background: "#161E54",
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "50px",
-        minHeight: "95vh",
+        // minHeight: "95vh",
+        margin: "20px",
       }}
     >
+      
       {/* Left Side */}
       <Box
         sx={{
@@ -38,7 +81,7 @@ const LoginPage = () => {
         <Paper
           elevation={3}
           sx={{
-            padding: 4, 
+            padding: 4,
             textAlign: "center",
             background: "#161E54",
             boxShadow: "none",
@@ -79,6 +122,7 @@ const LoginPage = () => {
             label="Username"
             variant="standard"
             fullWidth
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             sx={{
@@ -104,6 +148,7 @@ const LoginPage = () => {
             label="Password"
             variant="standard"
             type="password"
+            onChange={(e) => setPassword(e.target.value)}
             fullWidth
           />
           <Typography
@@ -114,7 +159,8 @@ const LoginPage = () => {
               marginLeft: { xs: "30%", md: "45%" },
             }}
           >
-            Forgot/Reset Password?
+            <a  href="#" onClick={()=>{setOpenEmailP(true);}} >Forgot/Reset Password?</a>
+            { openEmailP && <EmailP closeEmailP={setOpenEmailP}/>}
           </Typography>
           <Button
             sx={{
@@ -127,6 +173,7 @@ const LoginPage = () => {
             }}
             variant="contained"
             color="primary"
+            onClick={handleLogin}
           >
             Login
           </Button>
