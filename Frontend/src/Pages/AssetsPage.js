@@ -13,9 +13,10 @@ import {
   DatePicker,
 } from "@mui/material";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Box,
-  Paper,
   Table,
   Button,
   TableBody,
@@ -23,7 +24,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  IconButton,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
@@ -124,7 +124,7 @@ const AssetsPage = () => {
 
   const handleSendAsset = () => {
     const requestData = {
-      emp_id: "AMEMP003",
+      emp_id: "AMEMP002",
       asset_type: selectedRequestTypes.length > 0 ? selectedRequestTypes : "",
       item: selectedHardwareItems.length > 0 ? selectedHardwareItems : "",
       requirement_type: requirement_type.length > 0 ? requirement_type : "",
@@ -140,21 +140,48 @@ const AssetsPage = () => {
       .then((response) => {
         // Handle successful response
         console.log("Data sent successfully:", response.data);
+        toast.success("Asset request sent successfully!", {
+          position: "top-right",
+          autoClose: 3000, // Duration of the toast
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       })
       .catch((error) => {
         // Handle error
         console.error("Error sending data:", error);
+      
+        let errorMessage = 'Failed to send asset request. Please try again later.';
+      
+        if (error.response && error.response.data && error.response.data.errors) {
+          const errorMessages = error.response.data.errors.map(error => error.msg);
+          errorMessage = errorMessages.join('\n');
+        }
+      
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000, // Duration of the toast
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       });
+      
   };
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.post(`${apiUrl}/asset/user-asset`, {
-          emp_id: "AMEMP001",
+          emp_id: "AMEMP002",
         });
         if (response.data.success) {
           setAssetData(response.data.data);
-          console.log(assetData);
+          console.log(response.data.data);
         } else {
           console.error("Error fetching asset data:", response.data.message);
         }
@@ -567,6 +594,8 @@ const AssetsPage = () => {
             Send Request
           </Button>
         </Grid>
+
+        <ToastContainer />
       </Box>
     </div>
   );

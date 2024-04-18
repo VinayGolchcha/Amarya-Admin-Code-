@@ -1,29 +1,40 @@
+//
+
 // LoginPage.js
 import React, { useEffect, useState } from "react";
 import { Box, Typography, TextField, Button, Paper } from "@mui/material";
 import axios from "axios";
+import "./EmailPop";
+// import { EmailP } from "@mui/icons-material";
+import EmailP from "./EmailPop";
 import { useAuth } from "../Components/AuthContext";
 
 const LoginPage = () => {
   const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  //new
+  // const[openModel,setOpenModel]=useState(false)
+  const [openEmailP, setOpenEmailP] = useState(false);
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`${apiUrl}/user/login`, {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/user/login",
+        {
+          username,
+          password,
+        }
+      );
 
+      // Check response status
       if (response.status === 200) {
         console.log("Login successful");
-        // Assuming the response contains user data
-        // console.log(response);
-        login(response.data);
+        // Redirect or handle successful login
       } else {
         console.error("Login failed");
+        // Handle login error
       }
     } catch (error) {
       console.error("Error:", error);
@@ -143,7 +154,15 @@ const LoginPage = () => {
               marginLeft: { xs: "30%", md: "45%" },
             }}
           >
-            Forgot/Reset Password?
+            <a
+              href="#"
+              onClick={() => {
+                setOpenEmailP(true);
+              }}
+            >
+              Forgot/Reset Password?
+            </a>
+            {openEmailP && <EmailP closeEmailP={setOpenEmailP} />}
           </Typography>
           <Button
             sx={{

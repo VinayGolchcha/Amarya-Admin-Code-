@@ -22,12 +22,12 @@ import ActivitiesPage from "./Pages/ActivitiesPage";
 import UserProfilePage from "./Pages/UserProfilePage";
 import AdminDashboard from "./AdminPages/AdminDashboard";
 import AdminAnnouncement from "./Pages/AdminAnnouncement";
+import LoginPage from "./Pages/LoginPage";
 
 import AssetsAdminPage from "./Pages/AssetsAdminPage";
 import WorksheetPage from "./Pages/WorksheetPage";
 import TrainingsPageAdmin from "./Pages/TrainingsPageAdmin";
 import ActivityPage from "./Pages/ActivityPage";
-import LoginPage from "./Pages/LoginPage";
 
 const drawerWidth = 240;
 

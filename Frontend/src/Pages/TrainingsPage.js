@@ -14,6 +14,7 @@ import {
   Paper,
   Checkbox,
 } from "@mui/material";
+import axios from "axios";
 
 const fields = [
   {
@@ -75,7 +76,51 @@ export default function TrainingsPage(props) {
         ? prevSelected.filter((id) => id !== rowId)
         : [...prevSelected, rowId]
     );
-  };
+  }; 
+
+ ///chetan code
+ const [trainingCards, setTrainingCards] = React.useState("");
+
+  React.useEffect(() => {
+    // Axios GET request
+    axios.get('http://localhost:4000/api/v1/training/training-cards')
+      .then(response => {
+        console.log('Training Cards:', response.data.message);
+        // Update state with the fetched data
+        setTrainingCards(response.data.message);
+      })
+      .catch(error => {
+        console.error('Error fetching training cards:', error);
+        // Handle error as needed
+      });
+  }, []);
+
+
+  React.useEffect(() => {
+    // Data to be sent in the request
+    const requestData = {
+      emp_id: "AMEMP003",
+      training_id: "AMTRAN005",
+      request_type: "training",
+      progress_status: "in progress"
+    };
+
+    // Axios POST request
+    axios.post('http://localhost:4000/api/v1/training/request-new-training', requestData)
+      .then(response => {
+        console.log('Response:', response);
+        // Handle response as needed
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Handle error as needed
+      });
+  }, []); // Empty dependency array means this effect runs only once after initial render
+
+  
+
+// 
+
 
   const rows = [
     {
@@ -267,8 +312,10 @@ export default function TrainingsPage(props) {
               return <TrainingCard field={course} i={i} />;
             })}
           </Grid>
+          
         </Box>
       </Box>
+      {/* <div style={{position:"absolute", top:"0", zIndex:"200"}}>{trainingCards}</div> */}
     </Box>
   );
 }

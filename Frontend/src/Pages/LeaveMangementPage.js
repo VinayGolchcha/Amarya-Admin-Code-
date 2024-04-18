@@ -1,3 +1,4 @@
+//
 // LoginPage.js
 import {
   Typography,
@@ -19,7 +20,7 @@ import {
   InputLabel,
   MenuItem,
 } from "@mui/material";
-
+import axios from "axios";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
@@ -48,22 +49,88 @@ export default function LeaveMangementPage() {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [fromDate, setFromDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
+  const [leaveType, setLeaveType] = React.useState("Casual Leave");
+  const [subject, setSubject] = React.useState("");
+  const [body, setBody] = React.useState("");
+  ////
+
+  // new code
   const [error, setError] = React.useState("");
-  const [leaveType, setLeaveType] = React.useState("Casual");
+  const [data, setData] = React.useState(null);
+
+  const [loading, setLoading] = React.useState(true);
+
+  const [errorr, setErrorr] = React.useState(null);
+
+  // const [error, setError]  = React.useState(null);
+  
+
+  // const handleClick = async() => {
+    
+  React.useEffect(() => {
+    async function getData() {
+      try {
+        setLoading(true);
+
+        const response = await axios.get(
+          // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
+          "http://localhost:4000/api/v1/leave/get-all-leave-count/AMEMP010"
+          // "https://localhost:4000/api/v1/training/request-new-training"
+        );
+        console.log(response);
+        setData(response.data);
+
+        setLoading(false);
+      } catch (errorr) {
+        setErrorr(errorr);
+
+        setLoading(false);
+      }
+    }
+    getData();
+  },[]);
+
+  const handleUpdate = async () => {
+    console.log(
+      leaveType + " " + fromDate + " " + toDate + " " + subject + " " + body
+    );
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/leave/leave-request",
+        {
+          emp_id: "AMEMP010",
+          leave_type: leaveType,
+          from_date: fromDate,
+          to_date: toDate,
+          subject: subject,
+          body: body,
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
+  function handleToDateChange(newDate) {
+    const datee = new Date(newDate);
+    const strDatee = datee.toISOString();
+    const formatttedDate = strDatee.split("T")[0];
+
+    setToDate(formatttedDate);
+  }
+
+  ////
   function handleFromDateChange(newDate) {
-    setFromDate(newDate);
+    const date = new Date(newDate);
+    const strDate = date.toISOString();
+    const formattedDate = strDate.split("T")[0];
+    setFromDate(formattedDate);
     // If toDate is selected and it's less than fromDate, reset toDate
     if (toDate && newDate > toDate) {
       setToDate(null);
     }
-    // const selectedDate = new Date(newDate);
-    // console.log(selectedDate);
-    // if (!toDate && selectedDate <= toDate) {
-    //   setFromDate(selectedDate);
-    //   setError("");
-    // } else {
-    //   setError("From date cannot be greater than to date");
-    // }
   }
   function handleChange(e) {
     setLeaveType(e.target.value);
@@ -337,57 +404,6 @@ export default function LeaveMangementPage() {
                 <Box
                   sx={{ width: { lg: "35%", md: "40%", sm: "40%", xs: "43%" } }}
                 >
-                  {/* <Accordion sx={{ margin: "4px 0px", height: "auto" }}>
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      sx={{ minHeight: "30px", height: "30px" }}
-                    >
-                      <Typography
-                        sx={{
-                          fontSize: "0.6rem",
-                          minHeight: "25px",
-                          display: "flex",
-                          flexWrap: "wrap",
-                          alignItems: "center",
-                        }}
-                      >
-                        From Date
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails
-                      sx={{
-                        backgroundColor: "white",
-                        position: "absolute",
-                        zIndex: "1000",
-                      }}
-                    >
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={["DatePicker"]}>
-                          <DatePicker label="Start Date" />
-                        </DemoContainer>
-                      </LocalizationProvider>
-                    </AccordionDetails>
-                  </Accordion> */}
-                  {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoItem components={["DatePicker"]}>
-                      <DatePicker
-                        label="From Date"
-                        value={fromDate}
-                        onChange={handleFromDateChage}
-                        slotProps={{ textField: { size: "small" } }}
-                      />
-                    </DemoItem>
-                  </LocalizationProvider>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoItem components={["DatePicker"]}>
-                      <DatePicker
-                        label="To Date"
-                        value={toDate}
-                        onChange={handleToDateChage}
-                        slotProps={{ textField: { size: "small" } }}
-                      />
-                    </DemoItem>
-                  </LocalizationProvider> */}
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DatePicker
                       sx={{
@@ -418,46 +434,14 @@ export default function LeaveMangementPage() {
                       }}
                       value={toDate}
                       minDate={fromDate} // Set the minDate based on fromDate
-                      onChange={(newDate) => setToDate(newDate)}
+                      // onChange={(newDate) => setToDate(newDate)}
+                      onChange={handleToDateChange}
                       renderInput={(params) => (
                         <TextField {...params} size="small" />
                       )}
                       slotProps={{ textField: { size: "small" } }}
                     />
                   </LocalizationProvider>
-                  {/* <Accordion
-                    sx={{ margin: "4px 0px", height: "auto", width: "auto" }}
-                  >
-                    <AccordionSummary
-                      expandIcon={<ExpandMoreIcon />}
-                      sx={{ minHeight: "30px", height: "30px" }}
-                    >
-                      <Typography
-                        sx={{
-                          fontSize: "0.6rem",
-                          minHeight: "25px",
-                          display: "flex",
-                          flexWrap: "wrap",
-                          alignItems: "center",
-                        }}
-                      >
-                        To Date
-                      </Typography>
-                    </AccordionSummary>
-                    <AccordionDetails
-                      sx={{
-                        backgroundColor: "white",
-                        position: "absolute",
-                        zIndex: "1000",
-                      }}
-                    >
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={["DatePicker"]}>
-                          <DatePicker label="End Date" />
-                        </DemoContainer>
-                      </LocalizationProvider>
-                    </AccordionDetails>
-                  </Accordion> */}
                 </Box>
               </Box>
               <InputLabel
@@ -474,13 +458,14 @@ export default function LeaveMangementPage() {
                 sx={{ width: "100%", backgroundColor: "#fafafa" }}
                 onChange={handleChange}
               >
-                <MenuItem value={"Casual"}>Casual</MenuItem>
-                <MenuItem value={"Sick"}>Sick</MenuItem>
+                <MenuItem value={"Casual leave"}>casual  </MenuItem>
+                <MenuItem value={"Sick leave"}>Sick </MenuItem>
               </Select>
               <br />
               <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
               <TextField
                 variant="outlined"
+                onChange={(e) => setSubject(e.target.value)}
                 sx={{ width: "100%", backgroundColor: "#fafafa" }}
               />
               <FormLabel sx={{ margin: "2px 0px", fontSize: "12px" }}>
@@ -490,6 +475,7 @@ export default function LeaveMangementPage() {
                 multiline
                 rows={3}
                 variant="outlined"
+                onChange={(e) => setBody(e.target.value)}
                 sx={{ width: "100%", backgroundColor: "#fafafa" }}
               />
             </Box>
@@ -508,6 +494,7 @@ export default function LeaveMangementPage() {
                   borderColor: "#E0E0E0E0",
                 },
               }}
+              onClick={handleUpdate}
             >
               Send to admin
             </Button>
@@ -523,21 +510,6 @@ export default function LeaveMangementPage() {
                 borderRadius: "12px",
               }}
             >
-              {/* <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  flexWrap: "wrap",
-                }}
-              >
-                <Typography
-                  variant="subtitle-1"
-                  sx={{  }}
-                >
-                  
-                </Typography>
-                
-              </Box> */}
               <Box
                 sx={{
                   color: "#161E54",
@@ -548,43 +520,6 @@ export default function LeaveMangementPage() {
                 }}
               >
                 Leaves Overview
-                {/* date code starts here */}
-                {/* <Accordion
-                  sx={{
-                    margin: "0",
-                    height: "50px",
-                    zIndex: "1000",
-                    float: "right",
-                    display: "inline-grid",
-                    alignItems: "center",
-                  }}
-                >
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    sx={{ minHeight: "25px", height: "25px", p: 1 }}
-                  >
-                    <Typography
-                      sx={{
-                        fontSize: "0.6rem",
-                        height: "30px",
-                        display: "flex",
-                        alignItems: "center",
-                        color: "gray",
-                      }}
-                    >
-                      {currentDate}
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails
-                    sx={{ backgroundColor: "white", position: "absolute" }}
-                  >
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["DatePicker"]}>
-                        <DatePicker label="Select" size="small" />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  </AccordionDetails>
-                </Accordion> */}
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DatePicker
                     sx={{
@@ -722,6 +657,7 @@ export default function LeaveMangementPage() {
                     src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
                     alt="Check"
                     sx={{ paddingRight: "10px" }}
+                    // onClick= {handleClick}
                   />
                   S.no
                 </TableCell>

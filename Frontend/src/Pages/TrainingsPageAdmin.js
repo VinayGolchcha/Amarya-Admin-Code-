@@ -26,6 +26,7 @@ import {
 import Button from "@mui/material/Button";
 import { pink } from "@mui/material/colors";
 import Filter from "../Components/Filter";
+import axios from "axios";
 
 
 
@@ -224,7 +225,7 @@ let data = [
 ];
 
 
-export default function TrainingsPageAdmin() {
+export default function TrainingsPageAdmin({ trainingId }) {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [courses, setfields] = React.useState(fields);
   const [page, pagechange] = React.useState(0);
@@ -233,6 +234,83 @@ export default function TrainingsPageAdmin() {
   const [courseStatus, setCourseStatus] = React.useState("All");
   let [filteredData, setFilteredData] = React.useState(data);
   const [searchEmp , setSearchEmp] = React.useState("");
+
+  //chetancode
+  const [trainingCards, setTrainingCards] = React.useState([]);
+  
+
+  const [trainingIdd, setTrainingIdd] = React.useState("");
+  const [updatedTraining, setUpdatedTraining] = React.useState({
+    course_description: "HTML, CSS, React JS, Node JS, Express Js, MongoDB",
+    details: "HTML, CSS, React JS, Node JS, Express Js, MongoD"
+  });
+
+  // Function to handle the update operation
+  const handleUpdate = () => {
+    // Log the updated training data
+    // console.log('Updated Training Data:', updatedTraining);
+    
+    // Axios PUT request
+    axios.put(`https://localhost:4000/api/v1/training/admin/update-training/${trainingId}`, updatedTraining)
+
+      .then(response => {
+        console.log('Update Training Response:', response);
+        // Optionally, you can perform any additional actions after successful update
+      })
+      .catch(error => {
+        console.error('Error updating training:', error);
+        // Handle error as needed
+      });
+  };
+
+  // Function to handle the delete operation
+  const handleDelete = async () => {
+    try {
+      const response = await axios.delete('http://localhost:4000/api/v1/training/admin/delete-training', {
+                data: { training_id: "AMTRAN007" } // Include training ID in the request body
+            });
+            console.log(response);
+      
+    } catch (error) {
+      console.log(error.response.data.message);
+    }
+    // Axios DELETE request
+    // await axios.delete("http://localhost:4000/api/v1/training/admin/delete-training",{
+      
+    // training_id : "AMTRAN007",
+    
+    // })
+    
+    //   .then(response => {
+    //     console.log('Delete Training Response:', response);
+    //     // Optionally, you can perform any additional actions after successful deletion
+    //   })
+    //   .catch(error => {
+    //     console.error('Error deleting training:', error);
+    //     // Handle error as needed
+    //   });
+  };
+
+  React.useEffect(() => {
+    // Axios GET request
+    axios.get('http://localhost:4000/api/v1/training/training-cards')
+      .then(response => {
+        console.log('Training Cards:', response);
+        // Update state with the fetched data
+        setTrainingCards(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching training cards:', error);
+        // Handle error as needed
+      });
+  }, []);
+  ///
+
+ 
+
+  
+
+  /////
 
   const handlechangepage = (event, newpage) => {
     pagechange(newpage);
@@ -348,6 +426,7 @@ export default function TrainingsPageAdmin() {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
+                onClick={handleUpdate}
               >
                 Update Training
               </Button>
@@ -364,6 +443,7 @@ export default function TrainingsPageAdmin() {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
+                onClick={handleDelete}
               >
                 Delete Training
               </Button>
