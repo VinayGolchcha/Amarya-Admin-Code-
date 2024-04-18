@@ -28,18 +28,22 @@ const style = {
   fontFamily: "Poppins",
   border: "1px solid #FFFFFF",
   borderRadius: "16px",
+  backgroundColor : "rgb(233, 235, 247)",
   width: { lg: "32%", md: "40%", sm: "50%", xs: "80%" },
 };
 const inputControl = {
-  border: "1px solid black",
+  border: "none",
   borderRadius: "4px",
   height: "31px",
   width: "100%",
   padding: "5px",
+  fontWeight : "500",
   margin: "2px 0px",
 };
 const labelStyle = {
+  fontWeight : "600",
   fontSize: { lg: "1rem", md: "1rem", sm: "1rem", xs: "0.9 rem" },
+  color : "rgb(120, 120, 122)"
 };
 export default function AddNewAssets({
   assetsData,
@@ -96,12 +100,12 @@ export default function AddNewAssets({
               }}
               variant="h6"
             >
-              Add
+              Add Asset
             </Typography>
             <Grid container spacing={2}>
               <Grid item lg={6} md={6} sm={6} xs={6}>
                 <label for="inId" style={labelStyle}>
-                  Inv.Id
+                  Asset Type
                 </label>
                 <br />
                 <input
@@ -113,7 +117,7 @@ export default function AddNewAssets({
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
                 <label for="dop" style={labelStyle}>
-                  D.O.P
+                  Item
                 </label>
                 <br />
                 <input
@@ -125,7 +129,7 @@ export default function AddNewAssets({
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
                 <label for="assingnee" style={labelStyle}>
-                  Assignee
+                  Item Description
                 </label>
                 <br />
                 <input
@@ -137,7 +141,7 @@ export default function AddNewAssets({
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
                 <label for="item" style={labelStyle}>
-                  Item
+                  Model Number
                 </label>
                 <br />
                 <input
@@ -149,7 +153,7 @@ export default function AddNewAssets({
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
                 <label for="description" style={labelStyle}>
-                  Description
+                  Purchase Date
                 </label>
                 <br />
                 <input
@@ -161,7 +165,7 @@ export default function AddNewAssets({
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
                 <label for="isuedfrom" style={labelStyle}>
-                  Issued From
+                  Price
                 </label>
                 <br />
                 <input
@@ -173,7 +177,7 @@ export default function AddNewAssets({
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
                 <label for="issuedtill" style={labelStyle}>
-                  Issued Till
+                  Image url
                 </label>
                 <br />
                 <input
@@ -185,7 +189,7 @@ export default function AddNewAssets({
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
                 <label for="repairs" style={labelStyle}>
-                  Repairs
+                  Warranty Period
                 </label>
                 <br />
                 <input
@@ -195,34 +199,10 @@ export default function AddNewAssets({
                   ref={itemNewRepairs}
                 />
               </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="inwarranty" style={labelStyle}>
-                  In Warranty
-                </label>
-                <br />
-                <input
-                  type="text"
-                  id="inwarranty"
-                  style={inputControl}
-                  ref={itemNewInWarranty}
-                />
-              </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="endwarranty" style={labelStyle}>
-                  End Warranty
-                </label>
-                <br />
-                <input
-                  type="text"
-                  id="endwarranty"
-                  style={inputControl}
-                  ref={itemNewEndWarranty}
-                />
-              </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <div style={{ textAlign: "center", padding: "15px" }}>
-                  <Button variant="contained" color="success">
-                    Submit
+                  <Button variant="contained" color="error">
+                    Save
                   </Button>
                 </div>
               </Grid>
