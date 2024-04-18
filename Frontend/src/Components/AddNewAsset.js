@@ -29,7 +29,8 @@ const style = {
   border: "1px solid #FFFFFF",
   borderRadius: "16px",
   backgroundColor : "rgb(233, 235, 247)",
-  width: { lg: "32%", md: "40%", sm: "50%", xs: "80%" },
+  width: { lg: "55%", md: "45%", sm: "50%", xs: "80%" },
+  padding : {lg : "55px" , md: "45px", sm: "30px", xs: "25px" }
 };
 const inputControl = {
   border: "none",
@@ -95,7 +96,7 @@ export default function AddNewAssets({
                 textAlign: "center",
                 margin: "10px",
                 color: "#121843",
-                fontFamily: "Poppins",
+                fontFamily: "Prosto One",
                 fontWeight: "600",
               }}
               variant="h6"
