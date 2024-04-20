@@ -20,6 +20,7 @@ import axios from "axios";
 const AdminNotificationTab = () => {
   const [selectedTab, setSelectedTab] = useState("announcement");
   const [selectedDate, setSelectedDate] = useState("All Dates"); // State for selected date
+  const[showData,setShowData]= useState([]);
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -79,7 +80,7 @@ const AdminNotificationTab = () => {
     try {
       const response = await axios.get("http://localhost:4000/api/v1/announcement/admin/fetch-announcement");
       // setNotifications(response.data); 
-      console.log(response.data);
+      setShowData(response.data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }

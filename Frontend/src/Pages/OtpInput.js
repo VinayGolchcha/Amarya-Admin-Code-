@@ -23,7 +23,7 @@ const OtpInput = ({ numInputs,onOtpChange }) => {
   };
 
   return (
-    <div>
+    <div className='otpInput-style'>
       {[...Array(numInputs)].map((_, index) => (
         <input
           key={index}
