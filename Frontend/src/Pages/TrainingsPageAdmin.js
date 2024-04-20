@@ -4,6 +4,8 @@ import Typography from "@mui/material/Typography";
 import TrainingCard from "./TrainingCard";
 import Grid from "@mui/material/Grid";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
 import {
   Table,
   TableHead,
@@ -26,58 +28,61 @@ import {
 import Button from "@mui/material/Button";
 import { pink } from "@mui/material/colors";
 import Filter from "../Components/Filter";
+import axios from "axios";
 
 
 
-const fields = [
-  {
-    courseName: "Full Stack",
-    courseDescription:
-      "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
-    color: "#FDEBF9",
-  },
-  {
-    courseName: "DATA SCIENCE",
-    courseDescription:
-      "Topics Covered - Basics of Python, Pandas, Matplotlib, SKlearn, Scipy and ML Regression and Prediction Models.",
-    color: "#F3F8EB",
-  },
-  {
-    courseName: "REACT NATIVE",
-    courseDescription:
-      "Topics Covered - Basics of React, React Native topics and Syntax, Project for Whatsapp Replica with React Native.",
-    color: "#E8F0FB",
-  },
-  {
-    courseName: "VUE JS",
-    courseDescription:
-      "Topics Covered - HTML, CSS, Vue JS, Creating a dynamic Dashboard for professional use at organizational Level.",
-    color: "#F3F8EB",
-  },
-  {
-    courseName: "PYTHON",
-    courseDescription:
-      "Topics Covered - Python Basics, Intermediate and Advanced Python with Django Framework.",
-    color: "#E8F0FB",
-  },
-  {
-    courseName: "SAP ABAP",
-    courseDescription: "Topics Covered - Basics of ABAP Programming Language.",
-    color: "#FDEBF9",
-  },
-  {
-    courseName: "SAP - HR",
-    courseDescription:
-      "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
-    color: "#E8F0FB",
-  },
-  {
-    courseName: "SAP - CDS",
-    courseDescription:
-      "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
-    color: "#F3F8EB",
-  },
-];
+
+
+// const fields = [
+//   {
+//     courseName: trainingCards[0].course_name,
+//     courseDescription:
+//       "Topics Covered -  CSS, React JS, Node JS, Express Js, MongoDB",
+//     color: "#FDEBF9",
+//   },
+//   {
+//     courseName: "DATA SCIENCE",
+//     courseDescription:
+//       "Topics Covered - Basics of Python, Pandas, Matplotlib, SKlearn, Scipy and ML Regression and Prediction Models.",
+//     color: "#F3F8EB",
+//   },
+//   {
+//     courseName: "REACT NATIVE",
+//     courseDescription:
+//       "Topics Covered - Basics of React, React Native topics and Syntax, Project for Whatsapp Replica with React Native.",
+//     color: "#E8F0FB",
+//   },
+//   {
+//     courseName: "VUE JS",
+//     courseDescription:
+//       "Topics Covered - HTML, CSS, Vue JS, Creating a dynamic Dashboard for professional use at organizational Level.",
+//     color: "#F3F8EB",
+//   },
+//   {
+//     courseName: "PYTHON",
+//     courseDescription:
+//       "Topics Covered - Python Basics, Intermediate and Advanced Python with Django Framework.",
+//     color: "#E8F0FB",
+//   },
+//   {
+//     courseName: "SAP ABAP",
+//     courseDescription: "Topics Covered - Basics of ABAP Programming Language.",
+//     color: "#FDEBF9",
+//   },
+//   {
+//     courseName: "SAP - HR",
+//     courseDescription:
+//       "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
+//     color: "#E8F0FB",
+//   },
+//   {
+//     courseName: "SAP - CDS",
+//     courseDescription:
+//       "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
+//     color: "#F3F8EB",
+//   },
+// ];
 
 let data = [
   {
@@ -224,15 +229,61 @@ let data = [
 ];
 
 
-export default function TrainingsPageAdmin() {
+export default function TrainingsPageAdmin({ trainingId }) {
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [courses, setfields] = React.useState(fields);
+  const [courses, setfields] = React.useState([]);
   const [page, pagechange] = React.useState(0);
   const [rowperpage, rowperpagechange] = React.useState(5);
   const [filter, setFilter] = React.useState(false);
   const [courseStatus, setCourseStatus] = React.useState("All");
   let [filteredData, setFilteredData] = React.useState(data);
   const [searchEmp , setSearchEmp] = React.useState("");
+  const [isActiveDeleteButton ,setIsActiveDeleteButton] = React.useState(false);
+
+  
+  //chetancode
+  const [trainingCards, setTrainingCards] = React.useState([]);
+  
+
+  const [trainingIdd, setTrainingIdd] = React.useState("");
+  const [updatedTraining, setUpdatedTraining] = React.useState({
+    course_description: "HTML, CSS, React JS, Node JS, Express Js, MongoDB",
+    details: "HTML, CSS, React JS, Node JS, Express Js, MongoD"
+  });
+
+
+
+  React.useEffect(() => {
+    // Axios GET request
+    axios.get('http://localhost:4000/api/v1/training/training-cards')
+      .then(response => {
+        // console.log("insdeeee");
+        console.log('Training Cards:', response.data.data);
+        setfields(response.data.data);
+      })
+      .catch(error => {
+        console.error('Error fetching training cards:', error);
+      });
+  }, []);
+  ///
+  
+  
+
+  React.useEffect(() => {
+
+    axios.get('http://localhost:4000/api/v1/training/admin/display-all-users-training-data')
+      .then(response => {
+        // console.log( response);
+      
+      })
+      .catch(error => {
+        console.error('Error fetching training cards:', error);
+      });
+  }, []);
+
+  
+
+  /////
 
   const handlechangepage = (event, newpage) => {
     pagechange(newpage);
@@ -314,7 +365,7 @@ export default function TrainingsPageAdmin() {
         >
           <Grid container spacing={2}>
             {courses.map((course) => {
-              return <TrainingCard field={course} />;
+              return <TrainingCard field={course} isActiveDeleteButton={isActiveDeleteButton}  key={course.training_id}  logo= {DeleteOutlineIcon}/>;
             })}
           </Grid>
         </Box>
@@ -348,6 +399,7 @@ export default function TrainingsPageAdmin() {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
+                // onClick={handleUpdate}
               >
                 Update Training
               </Button>
@@ -364,6 +416,7 @@ export default function TrainingsPageAdmin() {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
+                onClick={()=>{setIsActiveDeleteButton(!isActiveDeleteButton)}}
               >
                 Delete Training
               </Button>

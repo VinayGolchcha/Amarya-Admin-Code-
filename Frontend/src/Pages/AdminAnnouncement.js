@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Table,
@@ -15,6 +15,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import ActivityForm from "./ActivityForm";
+import axios from "axios";
 
 const AdminNotificationTab = () => {
   const [selectedTab, setSelectedTab] = useState("announcement");
@@ -70,6 +71,19 @@ const AdminNotificationTab = () => {
     },
     // Add more notifications as needed
   ]);
+  useEffect(() => {
+    fetchData();
+  }, []); 
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/api/v1/announcement/admin/fetch-announcement");
+      // setNotifications(response.data); 
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
