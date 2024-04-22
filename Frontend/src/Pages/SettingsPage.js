@@ -13,6 +13,7 @@ import SettingsLeave from "./SettingsLeave";
 import SettingsProject from "./SettingsProject";
 import SettingsSkiilSet from "./SettingsSkiilSet";
 import SettingsCategory from "./SettingsCategory";
+import SettingsTeams from "./SettingsTeams";
 
 function TextFieldsGrid() {
   const [selectedTab, setSelectedTab] = useState("AddUser");
@@ -141,6 +142,33 @@ function TextFieldsGrid() {
                   "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)",
               },
               backgroundImage:
+                selectedTab === "teams"
+                  ? "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)"
+                  : "none",
+              margin: "0px 10px",
+              borderRadius: "72px",
+            }}
+            onClick={() => {
+              handleTabChange("teams");
+            }}
+          >
+            <Box
+              component="img"
+              src={`${process.env.PUBLIC_URL}/Images/settings/teams-icon.png`}
+              alt="Category"
+              sx={{ margin: "0px 10px", cursor: "pointer" , height : "47px" , width : "38px" }}
+            />
+          </Button>
+          <Button
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              "&:hover": {
+                backgroundImage:
+                  "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)",
+              },
+              backgroundImage:
                 selectedTab === "category"
                   ? "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)"
                   : "none",
@@ -158,7 +186,6 @@ function TextFieldsGrid() {
               sx={{ margin: "0px 10px", cursor: "pointer" }}
             />
           </Button>
-
           <Button
             sx={{
               display: "flex",
@@ -221,6 +248,7 @@ function TextFieldsGrid() {
       {selectedTab === "category" && <SettingsCategory />}
       {selectedTab === "project" && <SettingsProject />}
       {selectedTab === "skillset" && <SettingsSkiilSet />}
+      {selectedTab === "teams" && <SettingsTeams />}
     </div>
   );
 }
