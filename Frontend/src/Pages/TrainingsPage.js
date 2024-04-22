@@ -18,59 +18,59 @@ import {
 } from "@mui/material";
 import axios from "axios";
 
-const fields = [
-  {
-    courseName: "Full Stack",
-    courseDescription:
-      "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
-    color: "#FDEBF9",
-  },
-  {
-    courseName: "DATA SCIENCE",
-    courseDescription:
-      "Topics Covered - Basics of Python, Pandas, Matplotlib, SKlearn, Scipy and ML Regression and Prediction Models.",
-    color: "#F3F8EB",
-  },
-  {
-    courseName: "REACT NATIVE",
-    courseDescription:
-      "Topics Covered - Basics of React, React Native topics and Syntax, Project for Whatsapp Replica with React Native.",
-    color: "#E8F0FB",
-  },
-  {
-    courseName: "VUE JS",
-    courseDescription:
-      "Topics Covered - HTML, CSS, Vue JS, Creating a dynamic Dashboard for professional use at organizational Level.",
-    color: "#F3F8EB",
-  },
-  {
-    courseName: "PYTHON",
-    courseDescription:
-      "Topics Covered - Python Basics, Intermediate and Advanced Python with Django Framework.",
-    color: "#E8F0FB",
-  },
-  {
-    courseName: "SAP ABAP",
-    courseDescription: "Topics Covered - Basics of ABAP Programming Language.",
-    color: "#FDEBF9",
-  },
-  {
-    courseName: "SAP - HR",
-    courseDescription:
-      "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
-    color: "#E8F0FB",
-  },
-  {
-    courseName: "SAP - CDS",
-    courseDescription:
-      "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
-    color: "#F3F8EB",
-  },
-];
+// const fields = [
+//   {
+//     courseName: "Full Stack",
+//     courseDescription:
+//       "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
+//     color: "#FDEBF9",
+//   },
+//   {
+//     courseName: "DATA SCIENCE",
+//     courseDescription:
+//       "Topics Covered - Basics of Python, Pandas, Matplotlib, SKlearn, Scipy and ML Regression and Prediction Models.",
+//     color: "#F3F8EB",
+//   },
+//   {
+//     courseName: "REACT NATIVE",
+//     courseDescription:
+//       "Topics Covered - Basics of React, React Native topics and Syntax, Project for Whatsapp Replica with React Native.",
+//     color: "#E8F0FB",
+//   },
+//   {
+//     courseName: "VUE JS",
+//     courseDescription:
+//       "Topics Covered - HTML, CSS, Vue JS, Creating a dynamic Dashboard for professional use at organizational Level.",
+//     color: "#F3F8EB",
+//   },
+//   {
+//     courseName: "PYTHON",
+//     courseDescription:
+//       "Topics Covered - Python Basics, Intermediate and Advanced Python with Django Framework.",
+//     color: "#E8F0FB",
+//   },
+//   {
+//     courseName: "SAP ABAP",
+//     courseDescription: "Topics Covered - Basics of ABAP Programming Language.",
+//     color: "#FDEBF9",
+//   },
+//   {
+//     courseName: "SAP - HR",
+//     courseDescription:
+//       "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
+//     color: "#E8F0FB",
+//   },
+//   {
+//     courseName: "SAP - CDS",
+//     courseDescription:
+//       "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
+//     color: "#F3F8EB",
+//   },
+// ];
 
 export default function TrainingsPage(props) {
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [courses, setfields] = React.useState(fields);
+  const [courses, setfields] = React.useState([]);
   const handleCheckboxChange = (rowId) => {
     const isSelected = selectedRows.includes(rowId);
     setSelectedRows((prevSelected) =>
@@ -89,7 +89,7 @@ export default function TrainingsPage(props) {
       .then(response => {
         console.log('Training Cards:', response);
         // Update state with the fetched data
-        setTrainingCards(response.data);
+        setfields(response.data.data);
       })
       .catch(error => {
         console.error('Error fetching training cards:', error);
@@ -97,25 +97,6 @@ export default function TrainingsPage(props) {
       });
   }, []);
 
-  
-  // React.useEffect(() => {
-  //   // Axios GET request
-  //   axios.get('http://localhost:4000/api/v1/training/get-user-training')
-  //     .then(response => {
-  //       console.log('Training Cards:', response);
-  //       // Update state with the fetched data
-  //       setTrainingCards(response);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error fetching training cards:', error);
-  //       // Handle error as needed
-  //     });
-  // }, []);
-
-
-
-
-  
 
   
 
@@ -309,7 +290,7 @@ export default function TrainingsPage(props) {
         >
           <Grid container spacing={2}>
             {courses.map((course, i) => {
-              return <TrainingCard field={course} i={i} logo  = {LaunchIcon}  />;
+              return <TrainingCard field={course} i={i} key={course.training_id} logo  = {LaunchIcon}  />;
             })}
           </Grid>
           

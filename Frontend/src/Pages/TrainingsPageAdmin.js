@@ -5,6 +5,10 @@ import TrainingCard from "./TrainingCard";
 import Grid from "@mui/material/Grid";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import Button from "@mui/material/Button";
+import { pink } from "@mui/material/colors";
+import Filter from "../Components/Filter";
+import axios from "axios";
 
 import {
   Table,
@@ -25,10 +29,7 @@ import {
   TextField,
   Alert,
 } from "@mui/material";
-import Button from "@mui/material/Button";
-import { pink } from "@mui/material/colors";
-import Filter from "../Components/Filter";
-import axios from "axios";
+
 
 
 
@@ -273,7 +274,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
 
     axios.get('http://localhost:4000/api/v1/training/admin/display-all-users-training-data')
       .then(response => {
-        // console.log( response);
+        console.log( response);
       
       })
       .catch(error => {

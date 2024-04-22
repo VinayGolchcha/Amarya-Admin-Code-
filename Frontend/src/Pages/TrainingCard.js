@@ -34,7 +34,7 @@ export default function TrainingCard({ field, i, isActiveDeleteButton, logo }) {
         training_id: "AMTRAN005",
         request_type: "training",
         progress_status: "in progress",
-      };
+ };
 
       const response = await axios.post(
         "http://localhost:4000/api/v1/training/request-new-training",
@@ -75,9 +75,12 @@ export default function TrainingCard({ field, i, isActiveDeleteButton, logo }) {
                 color="text.secondary"
                 gutterBottom
               >
-                Training {field.training_id.slice(-2)}
+                Training 
+                {field.training_id.slice(-2)}
                 {isActiveDeleteButton && (
-                  <DeleteOutlineIcon onClick={handleDelete} />
+                  <DeleteOutlineIcon   sx={{
+                    marginLeft:"130px",
+                  }} onClick={handleDelete} />
                 )}
                 <LaunchIcon onClick={handleRequestTraining} />
               </Typography>

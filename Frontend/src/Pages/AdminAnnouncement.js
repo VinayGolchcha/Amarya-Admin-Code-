@@ -80,6 +80,7 @@ const AdminNotificationTab = () => {
     try {
       const response = await axios.get("http://localhost:4000/api/v1/announcement/admin/fetch-announcement");
       // setNotifications(response.data); 
+      console.log(response.data.data);
       setShowData(response.data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
