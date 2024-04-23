@@ -223,7 +223,7 @@ export default function LeaveMangementPage() {
             {data?.map((item , i) => {return (<Card
               sx={{
                 width: "125px",
-                height: "70px",
+                height: "110px",
                 margin: "10px 0px",
                 marginRight: "10px",
                 backgroundColor: "#FFEFE7",
