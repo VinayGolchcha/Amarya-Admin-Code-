@@ -15,13 +15,15 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import EditDeleteIcons from "../Components/EditDeleteIcons";
 import AddEditModal from "../Components/AddEditModal";
 import AddNewAssets from "../Components/AddNewAsset";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -135,71 +137,6 @@ const rows = [
     "YES",
     "14th Dec ‘23"
   ),
-  createData(
-    "AM1201",
-    "14th Jan ‘21",
-    "laptop",
-    "Shubham Soni",
-    "Charger",
-    "Your text here",
-    " 14th Jan ‘21",
-    "Present",
-    "2-time",
-    "No",
-    "15th Jan ‘23"
-  ),
-  createData(
-    "AM1222",
-    "24th Jul ‘21",
-    "laptop",
-    "Harshal Tiwari",
-    "Headphone",
-    "Your text here",
-    "24th Jul ‘21",
-    "Present",
-    "0-time",
-    "YES",
-    "24th Feb ‘23"
-  ),
-  createData(
-    "AM1277",
-    "10th Jun ‘21",
-    "laptop",
-    "Tizil Nema",
-    "Keyboard",
-    "Your text here",
-    "10th Jun ‘21",
-    "18th Aug’23",
-    "1-time",
-    "No",
-    "14th Dec ‘23"
-  ),
-  createData(
-    "AM1220",
-    "15th Dec ‘21",
-    "laptop",
-    "Kishan Chourasiya",
-    "Mouse",
-    "Your text here",
-    "1st Jan ‘21",
-    "Present",
-    "1-time",
-    "YES",
-    "14th Dec ‘23"
-  ),
-  createData(
-    "AM1266",
-    "20th Aug ‘21",
-    "laptop",
-    "Prabhat Gupta",
-    "Stand",
-    "Your text here",
-    "1st Jan ‘21",
-    "Present",
-    "1-time",
-    "YES",
-    "14th Dec ‘23"
-  ),
 ];
 let row;
 export default function AssetsAdminPage() {
@@ -209,6 +146,51 @@ export default function AssetsAdminPage() {
   const [isAdd, setIsAdd] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const [selectedRows, setSelectedRows] = React.useState([]);
+  const apiUrl = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    const fetchAssets = async () => {
+      try {
+        const response = await axios.get(`${apiUrl}/asset/admin/fetch-assets`);
+        if (response.data.success) {
+          const apiAssets = response.data.data.map((asset) => {
+            return createData(
+              asset.asset_id,
+              new Date(asset.purchase_date).toLocaleDateString(),
+              asset.image_url,
+              asset.assignee ? asset.assignee : "-",
+              asset.item,
+              asset.item_description,
+              new Date(asset.issued_from).toLocaleDateString(),
+              asset.issued_till
+                ? new Date(asset.issued_till).toLocaleDateString()
+                : "-",
+              null, // You need to fetch this value from the API or set it accordingly
+              asset.warranty_period > 0 ? "YES" : "NO",
+              // Calculate the warranty end date based on purchase date and warranty period
+              asset.warranty_period
+                ? new Date(
+                    new Date(asset.purchase_date).setFullYear(
+                      new Date(asset.purchase_date).getFullYear() +
+                        asset.warranty_period
+                    )
+                  ).toLocaleDateString()
+                : null
+            );
+          });
+          setAssetsData(apiAssets);
+          // console.log(response.data.data);
+        } else {
+          console.error("Error fetching assets:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching assets:", error);
+      }
+    };
+
+    fetchAssets();
+  }, []);
+
   const handleChange = (e) => {
     const { name, checked } = e.target;
     if (name === "allselect") {
@@ -247,23 +229,43 @@ export default function AssetsAdminPage() {
   };
 
   function handleDelete() {
-    const updatedItems = assetsData.filter((item) => item?.isChecked !== true);
-    setAssetsData(updatedItems);
+    // Filter out the rows that are selected for deletion
+    const selectedIds = selectedRows.map((row) => row.inId);
+    console.log(selectedIds[0]);
+    axios
+    .delete(`${apiUrl}/asset/admin/delete-asset/${selectedIds[0]}`)
+    .then((response) => {
+      if (response.data.success) {
+        setSelectedRows([]);
+        toast.success("Selected asset deleted successfully");
+      } else {
+        const errorMessage = response.data.message || "An error occurred while deleting the asset";
+        console.log(errorMessage);
+        toast.error(errorMessage);
+      }
+    })
+    .catch((error) => {
+      console.error("Error deleting asset:", error);
+      toast.error("An error occurred while deleting the asset");
+    });
+  
+    // const updatedItems = assetsData.filter((item) => item?.isChecked !== true);
+    // setAssetsData(updatedItems);
   }
 
   const renderItemImage = (type) => {
     let imageUrl;
-    if (type === "Laptop") {
+    if (type === "laptop") {
       imageUrl = "images/Laptop.png";
-    } else if (type === "Mouse") {
+    } else if (type === "mouse") {
       imageUrl = "images/Mouse.png";
-    } else if (type === "Stand") {
+    } else if (type === "stand") {
       imageUrl = "images/Stand.png";
-    } else if (type === "Keyboard") {
+    } else if (type === "keyboard") {
       imageUrl = "images/keyboard.png";
-    } else if (type === "Headphone") {
+    } else if (type === "headphone") {
       imageUrl = "images/Headphone.png";
-    } else if (type === "Charger") {
+    } else if (type === "charger") {
       imageUrl = "images/Charger.png";
     }
     return <img src={imageUrl} />;

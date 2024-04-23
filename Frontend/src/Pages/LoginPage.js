@@ -1,26 +1,22 @@
-// 
+//
 
 // LoginPage.js
 import React, { useEffect, useState } from "react";
 import { Box, Typography, TextField, Button, Paper } from "@mui/material";
 import axios from "axios";
-// import Model from "./Model";
-import "./EmailPop"
+import "./EmailPop";
 // import { EmailP } from "@mui/icons-material";
 import EmailP from "./EmailPop";
-
-
-
-
+import { useAuth } from "../Components/AuthContext";
 
 const LoginPage = () => {
+  const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   //new
   // const[openModel,setOpenModel]=useState(false)
-  const[openEmailP,setOpenEmailP]=useState(false)
-
-
+  const [openEmailP, setOpenEmailP] = useState(false);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleLogin = async () => {
     try {
@@ -67,7 +63,6 @@ const LoginPage = () => {
         margin: "20px",
       }}
     >
-      
       {/* Left Side */}
       <Box
         sx={{
@@ -159,8 +154,15 @@ const LoginPage = () => {
               marginLeft: { xs: "30%", md: "45%" },
             }}
           >
-            <a  href="#" onClick={()=>{setOpenEmailP(true);}} >Forgot/Reset Password?</a>
-            { openEmailP && <EmailP closeEmailP={setOpenEmailP}/>}
+            <a
+              href="#"
+              onClick={() => {
+                setOpenEmailP(true);
+              }}
+            >
+              Forgot/Reset Password?
+            </a>
+            {openEmailP && <EmailP closeEmailP={setOpenEmailP} />}
           </Typography>
           <Button
             sx={{

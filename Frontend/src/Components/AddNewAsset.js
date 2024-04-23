@@ -47,7 +47,7 @@ export default function AddNewAssets({
   handleClose,
   open,
 }) {
-  console.log("addnewItem called");
+  // console.log("addnewItem called");
 
   const itemNewInId = useRef("");
   const itemNewDop = useRef("");

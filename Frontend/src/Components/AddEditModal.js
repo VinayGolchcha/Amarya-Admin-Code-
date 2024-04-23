@@ -1,12 +1,13 @@
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Box, Button } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -43,31 +44,61 @@ const inputControl = {
 };
 export default function AddEditModal({ rows }) {
   const [open, setOpen] = useState(false);
-  const itemNewInId = useRef("");
-  const itemNewDop = useRef("");
-  const itemNewAssignee = useRef("");
-  const itemNewItem = useRef("");
-  const itemNewDescription = useRef("");
-  const itemNewIssuedFrom = useRef("");
-  const itemNewIssuedTill = useRef("");
-  const itemNewRepairs = useRef("");
-  const itemNewInWarranty = useRef("");
-  const itemNewEndWarranty = useRef("");
-  function handleSubmit(event) {
-    event.preventDefault();
-    const newItem = [
-      itemNewInId.current.value,
-      itemNewDop.current.value,
-      itemNewAssignee.current.value,
-      itemNewItem.current.value,
-      itemNewDescription.current.value,
-      itemNewIssuedFrom.current.value,
-      itemNewIssuedTill.current.value,
-      itemNewRepairs.current.value,
-      itemNewInWarranty.current.value,
-      itemNewEndWarranty.current.value,
-    ];
+  const [editedData, setEditedData] = useState({
+    inId: rows[0]?.inId || "",
+    dop: rows[0]?.dop || "",
+    assignee: rows[0]?.assignee || "",
+    item: rows[0]?.item || "",
+    description: rows[0]?.description || "",
+    issuedFrom: rows[0]?.issuedFrom || "",
+    issuedTill: rows[0]?.issuedTill || "",
+    repairs: rows[0]?.repairs || "",
+    inWarranty: rows[0]?.inWarranty || "",
+    endWarranty: rows[0]?.endWarranty || "",
+  });
+
+  useEffect(() => {
+    // Populate the edited data with the previous values when the modal opens
+    if (rows.length === 1) {
+      setEditedData({
+        inId: rows[0]?.inId || "",
+        dop: rows[0]?.dop || "",
+        assignee: rows[0]?.assingnee || "", // Corrected property name
+        item: rows[0]?.item || "",
+        description: rows[0]?.description || "",
+        issuedFrom: rows[0]?.issued_From || "", // Corrected property name
+        issuedTill: rows[0]?.issued_Till || "", // Corrected property name
+        repairs: rows[0]?.repairs || "",
+        inWarranty: rows[0]?.in_Warranty || "", // Corrected property name
+        endWarranty: rows[0]?.warranty_End || "", // Corrected property name
+      });
+    }
+  }, [rows]);
+
+  const apiUrl = process.env.REACT_APP_API_URL;
+
+  function handleUpdate() {
+    // Gather updated data from form fields
+    // event.preventDefault();
+    const updatedData = { ...editedData };
+
+    // Send a request to update the asset data
+    // You can use axios or fetch for this
+    console.log(updatedData);
+    axios
+      .put(`${apiUrl}/asset/admin/update-asset/${updatedData.inId}`, updatedData)
+      .then((response) => {
+        // Handle successful update
+        console.log("Asset updated successfully:", response.data);
+        // handleClose(); // Optionally, close the modal
+        setOpen(false);
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error updating asset:", error);
+      });
   }
+
   function handleOpen() {
     console.log(rows);
     if (rows.length === 0) {
@@ -83,9 +114,17 @@ export default function AddEditModal({ rows }) {
     }
   }
 
-  function handleClose() {
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditedData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleClose = () => {
     setOpen(false);
-  }
+  };
 
   return (
     <>
@@ -129,8 +168,10 @@ export default function AddEditModal({ rows }) {
                 <input
                   type="text"
                   id="inId"
+                  name="inId"
                   style={inputControl}
-                  value={rows[0]?.inId}
+                  value={editedData.inId}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
@@ -139,8 +180,10 @@ export default function AddEditModal({ rows }) {
                 <input
                   type="text"
                   id="dop"
+                  name="dop"
                   style={inputControl}
-                  value={rows[0]?.dop}
+                  value={editedData.dop}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
@@ -149,8 +192,10 @@ export default function AddEditModal({ rows }) {
                 <input
                   type="text"
                   id="assignee"
+                  name="assignee"
                   style={inputControl}
-                  value={rows[0]?.assingnee}
+                  value={editedData?.assignee}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
@@ -159,8 +204,10 @@ export default function AddEditModal({ rows }) {
                 <input
                   type="text"
                   id="item"
+                  name="item"
                   style={inputControl}
-                  value={rows[0]?.item}
+                  value={editedData.item}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
@@ -169,66 +216,79 @@ export default function AddEditModal({ rows }) {
                 <input
                   type="text"
                   id="description"
+                  name="description"
                   style={inputControl}
-                  value={rows[0]?.description}
+                  value={editedData.description}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="isuedfrom">Issued From</label>
+                <label htmlFor="isuedfrom">Issued From</label>
                 <br />
                 <input
                   type="text"
                   id="isuedfrom"
+                  name="issuedFrom"
                   style={inputControl}
-                  value={rows[0]?.issued_From}
+                  value={editedData.issuedFrom}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="issuedtill">Issued Till</label>
+                <label htmlFor="issuedtill">Issued Till</label>
                 <br />
                 <input
                   type="text"
                   id="issuedtill"
+                  name="issuedTill"
                   style={inputControl}
-                  value={rows[0]?.issued_Till}
+                  value={editedData.issuedTill}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="repairs">Repairs</label>
+                <label htmlFor="repairs">Repairs</label>
                 <br />
                 <input
                   type="text"
                   id="repairs"
+                  name="repairs"
                   style={inputControl}
-                  value={rows[0]?.repairs}
+                  value={editedData.repairs}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="inwarranty">In Warranty</label>
+                <label htmlFor="inwarranty">In Warranty</label>
                 <br />
                 <input
                   type="text"
                   id="inwarranty"
+                  name="inWarranty"
                   style={inputControl}
-                  value={rows[0]?.in_Warranty}
+                  value={editedData.inWarranty}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="endwarranty">End Warranty</label>
+                <label htmlFor="endwarranty">End Warranty</label>
                 <br />
                 <input
                   type="text"
                   id="endwarranty"
+                  name="endWarranty"
                   style={inputControl}
-                  value={rows[0]?.warranty_End}
+                  value={editedData.endWarranty}
+                  onChange={handleChange}
                 />
               </Grid>
+
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <div style={{ textAlign: "center", padding: "15px" }}>
                   <Button
                     variant="contained"
                     color="success"
-                    onClick={handleClose}
+                    onClick={handleUpdate}
                   >
                     Submit
                   </Button>

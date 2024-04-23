@@ -75,7 +75,7 @@ const MainPage = (props) => {
         }}
       >
         <Routes>
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/" element={<DashboardPage />} />
           <Route path="/assets" element={<AssetsPage />} />
           <Route path="/leaves" element={<LeaveManagementPage />} />
           <Route path="/trainings" element={<TrainingsPage />} />
@@ -90,7 +90,7 @@ const MainPage = (props) => {
           <Route path="/adminworksheet" element={<AdminWorkSheet />} />
           <Route path="/admindashboard" element={<AdminDashboard />} />
           <Route path="/adminAnouncement" element={<AdminAnnouncement />} />
-          <Route path="/activities/:activityId" element={<ActivityPage/>} />
+          <Route path="/activities/:activityId" element={<ActivityPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>
       </Box>
