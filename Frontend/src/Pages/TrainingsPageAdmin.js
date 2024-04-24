@@ -27,6 +27,7 @@ import Button from "@mui/material/Button";
 import { pink } from "@mui/material/colors";
 import Filter from "../Components/Filter";
 import AddTraining from "../Components/AddTraining";
+import UpdateTraining from "../Components/UpdateTraining";
 
 
 
@@ -42,6 +43,8 @@ const fields = [
     courseDescription:
       "Topics Covered - Basics of Python, Pandas, Matplotlib, SKlearn, Scipy and ML Regression and Prediction Models.",
     color: "#F3F8EB",
+    roadmapUrl : "https://www.scaler.com/blog/sde-roadmap/",
+    details : "This course is completed"
   },
   {
     courseName: "REACT NATIVE",
@@ -229,22 +232,28 @@ export default function TrainingsPageAdmin() {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [courses, setfields] = React.useState(fields);
   const [page, pagechange] = React.useState(0);
-  const [open, setOpen] = React.useState(false);
+  const [openAddTraining, setOpenAddTraining] = React.useState(false);
   const [rowperpage, rowperpagechange] = React.useState(5);
   const [filter, setFilter] = React.useState(false);
   const [courseStatus, setCourseStatus] = React.useState("All");
   let [filteredData, setFilteredData] = React.useState(data);
   const [searchEmp , setSearchEmp] = React.useState("");
+  const [open, setOpen] = React.useState(false);
+
   const handleClick = () => {
-    setOpen(!open);
+    setOpen(!open)
   }
 
-  function handleOpen() {
-    setOpen(true);
-  }
-
-  function handleClose() {
+  const handleClose = () => {
     setOpen(false);
+  }
+  const handleAddTrainingClick = () => {
+    setOpenAddTraining(!openAddTraining);
+  }
+
+
+  function handleAddTrainingClose() {
+    setOpenAddTraining(false);
   }
   const handlechangepage = (event, newpage) => {
     pagechange(newpage);
@@ -344,12 +353,12 @@ export default function TrainingsPageAdmin() {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
-                onClick={handleClick}
+                onClick={handleAddTrainingClick}
               >
                 Add Training
               </Button>
               <>
-              <AddTraining handleClose={handleClose} open={open} />
+              <AddTraining handleClose={handleAddTrainingClose} open={openAddTraining} />
               </>
             </Grid>
             <Grid item lg={4} md={6} sm={12} xs={12}>
@@ -364,9 +373,13 @@ export default function TrainingsPageAdmin() {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
+                onClick={handleClick}
               >
                 Update Training
               </Button>
+              <>
+                <UpdateTraining handleClose={handleClose} open={open} selectedObj={fields[1]} />
+              </>
             </Grid>
             <Grid item lg={4} md={6} sm={12} xs={12}>
               <Button
