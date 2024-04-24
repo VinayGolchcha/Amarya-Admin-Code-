@@ -1,6 +1,7 @@
 import { useState, React } from "react";
 import { Box, Typography, Card, Grid, Container, TextField, Button, CardContent, CardMedia, Chip } from "@mui/material";
 import { useTheme } from '@mui/system';
+import { username } from "react-lorem-ipsum";
 
 
 const UserProfilePage = () => {
@@ -13,6 +14,8 @@ const UserProfilePage = () => {
         lastName: 'Jain',
         email: 'abc@mail.com',
         bloodGroup: 'O-',
+        gender : "female" , 
+        username : "Sanjana" ,
         contactNumber: '+91-9865321245',
         dob: new Date('1800-01-01').toISOString().substring(0, 10),
         address: 'APR Conlony Jabalpur',
@@ -30,8 +33,8 @@ const UserProfilePage = () => {
         { type: "text", label: "Contact Number", field: "contactNumber" },
         { type: "date", label: "DOB", field: "dob" },
         { type: "text", label: "Address", field: "address" },
-        { type: "text", label: "City", field: "city" },
-        { type: "text", label: "State", field: "state" },
+        { type: "text", label: "Gender", field: "gender" },
+        { type: "text", label: "Username", field: "username" },
         { type: "text", label: "Emergency Contact Person Name/Address", field: "ecpna" },
         { type: "text", label: "Emergency Contact Number", field: "ecn" }
     ];
@@ -59,10 +62,9 @@ const UserProfilePage = () => {
         currentProject: {
             currentProject: 'Shephertz',
             projectManager:'Sumit Kumar',
-            lastWorkingProject:'BSW J Japan',
             workingTechnologies:'Node Js, Express Js, Mongo DB',
-            timeWithCurrentProject:9,
-            totalCompletedProjects:5
+            startMonth:"Mar 2023",
+            endMonth:"Oct 2023"
         },
         projects: [
             {
@@ -94,10 +96,9 @@ const UserProfilePage = () => {
     const projectDetailsFields = [
         { type: "text", label: "Current Project", field: "currentProject" },
         { type: "text", label: "Project Manager", field: "projectManager" },
-        { type: "text", label: "Last Working Project", field: "lastWorkingProject" },
         { type: "text", label: "Working Technologies", field: "workingTechnologies" },
-        { type: "text", label: "Time With Current Project", field: "timeWithCurrentProject" },
-        { type: "number", label: "Total Completed Projects", field: "totalCompletedProjects" },
+        { type: "text", label: "Start Month", field: "startMonth" },
+        { type: "text", label: "End Month", field: "endMonth" },
     ]
 
     const projectTimelineFields = [
@@ -313,6 +314,7 @@ const UserProfilePage = () => {
                                         />
                                     </Grid>
                                 ))}
+                                <Button type="submit"><img src="/Images/icons8-save-100.png" height="50%" style={{marginTop : "10px"}}/></Button>
                             </Grid>
                             {isFormActive &&
                                 <Button type="submit" variant="contained" color="primary" sx={{marginTop:'20px'}}>
