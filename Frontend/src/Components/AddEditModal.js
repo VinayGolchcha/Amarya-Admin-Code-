@@ -32,15 +32,24 @@ const style = {
   fontFamily: "Poppins",
   border: "1px solid #FFFFFF",
   borderRadius: "16px",
-  width: { lg: "32%", md: "40%", sm: "50%", xs: "80%" },
+  backgroundColor : "rgb(233, 235, 247)",
+  width: { lg: "55%", md: "45%", sm: "50%", xs: "80%" },
+  padding : {lg : "55px" , md: "45px", sm: "30px", xs: "25px" }
 };
 const inputControl = {
-  border: "1px solid black",
+  border: "none",
   borderRadius: "4px",
   height: "31px",
   width: "100%",
   padding: "5px",
+  fontWeight : "500",
   margin: "2px 0px",
+};
+
+const labelStyle = {
+  fontWeight : "600",
+  fontSize: { lg: "1rem", md: "1rem", sm: "1rem", xs: "0.9 rem" },
+  color : "rgb(120, 120, 122)"
 };
 export default function AddEditModal({ rows }) {
   const [open, setOpen] = useState(false);
@@ -154,7 +163,7 @@ export default function AddEditModal({ rows }) {
                 textAlign: "center",
                 margin: "10px",
                 color: "#121843",
-                fontFamily: "Poppins",
+                fontFamily: "Prosto One",
                 fontWeight: "600",
               }}
               variant="h6"
@@ -163,7 +172,7 @@ export default function AddEditModal({ rows }) {
             </Typography>
             <Grid container spacing={2}>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="inId">Inv.Id</label>
+                <label style={labelStyle} for="inId">Asset Type</label>
                 <br />
                 <input
                   type="text"
@@ -175,7 +184,7 @@ export default function AddEditModal({ rows }) {
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="dop">D.O.P</label>
+                <label style={labelStyle} for="dop">Item</label>
                 <br />
                 <input
                   type="text"
@@ -187,7 +196,7 @@ export default function AddEditModal({ rows }) {
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="assignee">Assignee</label>
+                <label style={labelStyle} for="assignee">Item Description</label>
                 <br />
                 <input
                   type="text"
@@ -199,7 +208,7 @@ export default function AddEditModal({ rows }) {
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="item">Item</label>
+                <label style={labelStyle} for="item">Model Number</label>
                 <br />
                 <input
                   type="text"
@@ -211,7 +220,7 @@ export default function AddEditModal({ rows }) {
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="description">Description</label>
+                <label style={labelStyle} for="description">Purchase Date</label>
                 <br />
                 <input
                   type="text"
@@ -223,7 +232,7 @@ export default function AddEditModal({ rows }) {
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label htmlFor="isuedfrom">Issued From</label>
+                <label style={labelStyle} htmlFor="isuedfrom">Price</label>
                 <br />
                 <input
                   type="text"
@@ -235,7 +244,7 @@ export default function AddEditModal({ rows }) {
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label htmlFor="issuedtill">Issued Till</label>
+                <label for="issuedtill">Issued Till</label>
                 <br />
                 <input
                   type="text"
@@ -247,7 +256,7 @@ export default function AddEditModal({ rows }) {
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label htmlFor="repairs">Repairs</label>
+                <label for="repairs">Repairs</label>
                 <br />
                 <input
                   type="text"
@@ -259,36 +268,31 @@ export default function AddEditModal({ rows }) {
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label htmlFor="inwarranty">In Warranty</label>
+                <label for="inwarranty">In Warranty</label>
                 <br />
                 <input
                   type="text"
                   id="inwarranty"
-                  name="inWarranty"
                   style={inputControl}
-                  value={editedData.inWarranty}
-                  onChange={handleChange}
+                  value={rows[0]?.in_Warranty}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label htmlFor="endwarranty">End Warranty</label>
+                <label for="endwarranty">End Warranty</label>
                 <br />
                 <input
                   type="text"
                   id="endwarranty"
-                  name="endWarranty"
                   style={inputControl}
-                  value={editedData.endWarranty}
-                  onChange={handleChange}
+                  value={rows[0]?.warranty_End}
                 />
               </Grid>
-
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <div style={{ textAlign: "center", padding: "15px" }}>
                   <Button
                     variant="contained"
                     color="success"
-                    onClick={handleUpdate}
+                    onClick={handleClose}
                   >
                     Submit
                   </Button>
