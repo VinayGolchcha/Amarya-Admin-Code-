@@ -23,6 +23,7 @@ export default function SettingsSkiilSet() {
   const [originalFormData, setOriginalFormData] = useState([]);
   const len = formData.length;
   const midPoint = Math.floor(formData.length / 2);
+
   useEffect(() => {
     // Fetch skills data when component mounts
     fetchSkills();
