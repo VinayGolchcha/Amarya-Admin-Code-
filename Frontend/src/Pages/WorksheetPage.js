@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -25,30 +25,9 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { format } from "date-fns";
 
-const teams = [
-  { value: "", label: "Select Team" },
-  { value: "FS", label: "Fullstack" },
-  { value: "SAP", label: "SAP" },
-  { value: "DataScience", label: "Data Science" },
-  { value: "HR", label: "HR" },
-  { value: "Admin", label: "Admin" },
-];
-// const categories = [
-//   { value: "", label: "Select Category" },
-//   { value: "ClientProject", label: "Client Project" },
-//   { value: "InternalProject", label: "Internal Project" },
-// ];
-
-// const projects = [
-//   { value: "", label: "Select Project" },
-//   { value: "Shephertz", label: "Shephertz" },
-//   { value: "AdminDashboard", label: "Admin Dashboard" },
-//   { value: "ClothesDistribution", label: "Clothes Distribution" },
-//   { value: "ReactJsProject", label: "React Js Project" },
-// ];
-// const skillsets = ["NodeJS", "ReactJS", "Python", "ML", "Javascript"];
-
 const WorksheetPage = () => {
+  const [teams, setTeams] = useState([]);
+
   const renderTableCells = (rowData) => {
     const cellData = [
       { key: "empid", label: "Emp Id." },
@@ -73,34 +52,20 @@ const WorksheetPage = () => {
             },
           }}
         >
-          {Array.isArray(rowData[cell.key])
-            ? rowData[cell.key].join(", ")
-            : rowData[cell.key]}
+          {
+            cell.key === "skillset" && Array.isArray(rowData[cell.key])
+              ? rowData[cell.key].map((skill) => skill.label).join(", ")
+              : rowData[cell.key]?.label || rowData[cell.key] // Display label if available, otherwise display the value directly
+          }
         </Typography>
       </TableCell>
     ));
   };
-  const [projects, setProjects] = useState([
-    { value: "", label: "Select Project" },
-    { value: "Shephertz", label: "Shephertz" },
-    { value: "AdminDashboard", label: "Admin Dashboard" },
-    { value: "ClothesDistribution", label: "Clothes Distribution" },
-    { value: "ReactJsProject", label: "React Js Project" },
-  ]);
+  const [projects, setProjects] = useState([]);
 
-  const [categories, setCategories] = useState([
-    { value: "", label: "Select Category" },
-    { value: "ClientProject", label: "Client Project" },
-    { value: "InternalProject", label: "Internal Project" },
-  ]);
+  const [categories, setCategories] = useState([]);
 
-  const [skillsets, setSkillsets] = useState([
-    "NodeJS",
-    "ReactJS",
-    "Python",
-    "ML",
-    "Javascript",
-  ]);
+  const [skillsets, setSkillsets] = useState([]);
 
   const [rows, setRows] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -200,24 +165,71 @@ const WorksheetPage = () => {
   //     setEditingRowIndex(index);
   //   };
 
-  const handleSaveRow = () => {
-    if (editingRowIndex !== null) {
-      setRows((prevRows) => {
-        const updatedRows = [...prevRows];
-        updatedRows[editingRowIndex] = {
-          ...updatedRows[editingRowIndex],
-          ...newRow,
-          checkbox: false,
-        };
-        return updatedRows;
-      });
-      setEditingRowIndex(null);
-      setNewRow(null);
-    } else {
-      setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
-      setNewRow(null);
+  const handleSaveRow = async () => {
+    try {
+      if (editingRowIndex !== null) {
+        setRows((prevRows) => {
+          const updatedRows = [...prevRows];
+          updatedRows[editingRowIndex] = {
+            ...updatedRows[editingRowIndex],
+            ...newRow,
+            checkbox: false,
+          };
+          return updatedRows;
+        });
+        setEditingRowIndex(null);
+        setNewRow(null);
+      } else {
+        setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
+        setNewRow(null);
+      }
+
+      const selectedTeam = teams.find((team) => team.label === newRow.team);
+      const teamId = selectedTeam ? selectedTeam._id : null;
+      const selectedCategory = categories.find(
+        (category) => category.label === newRow.category
+      );
+      const categoryId = selectedCategory ? selectedCategory._id : null;
+
+      const skillSetIds = newRow.skillset
+        ? newRow.skillset.map((skill) => skill._id).join(", ")
+        : null;
+
+      // Prepare the data object
+      const postData = {
+        emp_id: "AMEMP019",
+        team_id: teamId,
+        category_id: categoryId,
+        skill_set_id: skillSetIds,
+        description: newRow.description,
+        date: newRow.date,
+      };
+      console.log(postData);
+      // Send the data to the API endpoint
+      const response = await fetch(
+        "https://curious-colt-long-underwear.cyclic.app/api/v1/worksheet/create-worksheet",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postData),
+        }
+      );
+
+      const responseData = await response.json();
+      if (responseData.success) {
+        toast.success("Data submitted successfully!");
+        console.log(responseData);  
+      } else {
+        toast.error("Failed to submit data: " + responseData.message);
+      }
+    } catch (error) {
+      console.error("Error saving row and submitting data:", error);
+      toast.error("An error occurred while saving row and submitting data.");
     }
   };
+
   // const handleSaveRow = () => {
   //   if (editingRowIndex !== null) {
   //     // Existing row editing logic remains the same
@@ -255,10 +267,22 @@ const WorksheetPage = () => {
   const handleNewRowChange = (field, value) => {
     setNewRow((prevNewRow) => ({ ...prevNewRow, [field]: value }));
   };
+  // const handleNewRowChange = (field, value) => {
+  //   if (field === "team") {
+  //     const selectedTeam = teams.find(team => team.value === value);
+  //     setNewRow((prevNewRow) => ({ ...prevNewRow, [field]: selectedTeam }));
+  //   } else if (field === "category") {
+  //     const selectedCategory = categories.find(category => category.value === value);
+  //     setNewRow((prevNewRow) => ({ ...prevNewRow, [field]: selectedCategory }));
+  //   } else {
+  //     setNewRow((prevNewRow) => ({ ...prevNewRow, [field]: value }));
+  //   }
+  // };
 
   const handleSkillsetChange = (selectedSkills) => {
     handleNewRowChange("skillset", selectedSkills);
   };
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const tableHeaders = [
     "Emp Id.",
@@ -270,7 +294,159 @@ const WorksheetPage = () => {
     "Skillset",
     "",
   ];
+  useEffect(() => {
+    fetchTeams();
+    fetchCategories();
+    fetchSkills();
+    fetchProjects();
+    const empId = "AMEMP019"; // Replace this with the actual emp_id
+    fetchWorksheetDataForEmployee(empId);
+  }, []);
 
+  const fetchWorksheetDataForEmployee = async (empId) => {
+    try {
+      // Fetch worksheet data for the specified employee
+      const response = await fetch(`${apiUrl}/worksheet/fetch-user-worksheet/${empId}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+  
+      if (data.success) {
+        // Worksheet data fetched successfully
+        const worksheetData = data.data.map((rowData) => ({
+          empid: rowData.emp_id, // Use emp_id from fetched data
+          team: getTeamNameById(rowData.team_id), // Get team name by id
+          date: formatDate(rowData.created_at), // Use created_at as date
+          category: getCategoryNameById(rowData.category_id), // Get category name by id
+          project: "stocytodoo", // Get project name by id (if available)
+          description: rowData.description,
+          skillset: getSkillsetNameByIds(rowData.skill_set_id), // Get skillset names by ids
+        }));
+        console.log("Worksheet data:", worksheetData);
+        // Set the fetched data to your state variable (e.g., setRows)
+        setRows(worksheetData);
+      } else {
+        console.error("Failed to fetch worksheet data:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching worksheet data:", error);
+    }
+  };
+  // Usage example:
+// Function to get team name by id
+const getTeamNameById = (teamId) => {
+  const team = teams.find((team) => team._id === teamId);
+  return team ? team.label : "Unknown";
+};
+
+// Function to get category name by id
+const getCategoryNameById = (categoryId) => {
+  const category = categories.find((category) => category._id === categoryId);
+  return category ? category.label : "Unknown";
+};
+
+// Function to get project name by id (if available)
+const getProjectNameById = (projectId) => {
+  const project = projects.find((project) => project._id === projectId);
+  return project ? project.label : "Unknown";
+};
+
+// Function to get skillset names by ids
+const getSkillsetNameByIds = (skillsetIds) => {
+  const skillsetNames = skillsets
+    .filter((skill) => skillsetIds.includes(skill._id))
+    .map((skill) => skill.label);
+  return skillsetNames.length > 0 ? skillsetNames.join(", ") : "Unknown";
+};
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+};
+  const fetchProjects = async () => {
+    try {
+      const response = await fetch(
+        "https://curious-colt-long-underwear.cyclic.app/api/v1/project/admin/fetch-all-projects"
+      );
+      const data = await response.json();
+      if (data.success) {
+        const projectOptions = data.data.map(({ _id, project }) => ({
+          _id, // Keep _id separate
+          value: project, // Use the label as the value displayed to the user
+          label: project,
+        }));
+        setProjects([
+          { value: "", label: "Select Project" },
+          ...projectOptions,
+        ]);
+      } else {
+        console.error("Failed to fetch projects:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
+
+  const fetchTeams = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/team/admin/fetch-all-teams`);
+      const data = await response.json();
+      if (data.success) {
+        const teamOptions = data.data.map(({ _id, team }) => ({
+          _id, // Keep _id separate
+          value: team, // Use the label as the value displayed to the user
+          label: team,
+        }));
+        setTeams(teamOptions);
+        // console.log(teamOptions);
+      } else {
+        console.error("Failed to fetch teams:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    }
+  };
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(
+        "https://curious-colt-long-underwear.cyclic.app/api/v1/category/admin/fetch-all-categories"
+      );
+      const data = await response.json();
+      if (data.success) {
+        const categoryOptions = data.data.map(({ _id, category }) => ({
+          _id, // Keep _id separate
+          value: category, // Use the label as the value displayed to the user
+          label: category,
+        }));
+        setCategories(categoryOptions);
+      } else {
+        console.error("Failed to fetch categories:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+  const fetchSkills = async () => {
+    try {
+      const response = await fetch(
+        "https://curious-colt-long-underwear.cyclic.app/api/v1/skillset/admin/fetch-skills"
+      );
+      const data = await response.json();
+      if (data.success) {
+        const skillOptions = data.data.map(({ _id, skill }) => ({
+          _id, // Keep _id separate
+          value: skill, // Use the label as the value displayed to the user
+          label: skill,
+        }));
+        setSkillsets(skillOptions);
+        // console.log(skillOptions);
+      } else {
+        console.error("Failed to fetch skills:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching skills:", error);
+    }
+  };
   return (
     <Box style={{ margin: "20px 20px 20px 20px" }}>
       <Typography
@@ -486,7 +662,7 @@ const WorksheetPage = () => {
                     >
                       {skillsets.map((skill) => (
                         <MenuItem key={skill} value={skill}>
-                          {skill}
+                          {skill.label}
                         </MenuItem>
                       ))}
                     </Select>
@@ -631,6 +807,8 @@ const WorksheetPage = () => {
         </box>
         <ToastContainer />
       </Box> */}
+            <ToastContainer /> {/* Add the ToastContainer here */}
+
     </Box>
   );
 };

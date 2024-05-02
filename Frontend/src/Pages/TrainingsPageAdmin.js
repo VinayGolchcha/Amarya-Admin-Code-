@@ -27,7 +27,7 @@ import Button from "@mui/material/Button";
 import { pink } from "@mui/material/colors";
 import Filter from "../Components/Filter";
 import axios from "axios";
-
+import AddTraining from "../Components/AddTraining";
 
 
 const fields = [
@@ -229,11 +229,15 @@ export default function TrainingsPageAdmin({ trainingId }) {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [courses, setfields] = React.useState(fields);
   const [page, pagechange] = React.useState(0);
+  const [open, setOpen] = React.useState(false);
   const [rowperpage, rowperpagechange] = React.useState(5);
   const [filter, setFilter] = React.useState(false);
   const [courseStatus, setCourseStatus] = React.useState("All");
   let [filteredData, setFilteredData] = React.useState(data);
   const [searchEmp , setSearchEmp] = React.useState("");
+  const handleClick = () => {
+    setOpen(!open);
+  }
 
   //chetancode
   const [trainingCards, setTrainingCards] = React.useState([]);
@@ -312,6 +316,13 @@ export default function TrainingsPageAdmin({ trainingId }) {
 
   /////
 
+  function handleOpen() {
+    setOpen(true);
+  }
+
+  function handleClose() {
+    setOpen(false);
+  }
   const handlechangepage = (event, newpage) => {
     pagechange(newpage);
   };
@@ -410,9 +421,13 @@ export default function TrainingsPageAdmin({ trainingId }) {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
+                onClick={handleClick}
               >
                 Add Training
               </Button>
+              <>
+              <AddTraining handleClose={handleClose} open={open} />
+              </>
             </Grid>
             <Grid item lg={4} md={6} sm={12} xs={12}>
               <Button

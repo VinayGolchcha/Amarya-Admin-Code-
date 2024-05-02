@@ -148,49 +148,48 @@ export default function AssetsAdminPage() {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const apiUrl = process.env.REACT_APP_API_URL;
 
-  useEffect(() => {
-    const fetchAssets = async () => {
-      try {
-        const response = await axios.get(`${apiUrl}/asset/admin/fetch-assets`);
-        if (response.data.success) {
-          const apiAssets = response.data.data.map((asset) => {
-            return createData(
-              asset.asset_id,
-              new Date(asset.purchase_date).toLocaleDateString(),
-              asset.image_url,
-              asset.assignee ? asset.assignee : "-",
-              asset.item,
-              asset.item_description,
-              new Date(asset.issued_from).toLocaleDateString(),
-              asset.issued_till
-                ? new Date(asset.issued_till).toLocaleDateString()
-                : "-",
-              null, // You need to fetch this value from the API or set it accordingly
-              asset.warranty_period > 0 ? "YES" : "NO",
-              // Calculate the warranty end date based on purchase date and warranty period
-              asset.warranty_period
-                ? new Date(
-                    new Date(asset.purchase_date).setFullYear(
-                      new Date(asset.purchase_date).getFullYear() +
-                        asset.warranty_period
-                    )
-                  ).toLocaleDateString()
-                : null
-            );
-          });
-          setAssetsData(apiAssets);
-          // console.log(response.data.data);
-        } else {
-          console.error("Error fetching assets:", response.data.message);
-        }
-      } catch (error) {
-        console.error("Error fetching assets:", error);
+  const fetchAssets = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}/asset/admin/fetch-assets`);
+      if (response.data.success) {
+        const apiAssets = response.data.data.map((asset) => {
+          return createData(
+            asset.asset_id,
+            new Date(asset.purchase_date).toLocaleDateString(),
+            asset.image_url,
+            asset.assignee ? asset.assignee : "-",
+            asset.item,
+            asset.item_description,
+            new Date(asset.issued_from).toLocaleDateString(),
+            asset.issued_till
+              ? new Date(asset.issued_till).toLocaleDateString()
+              : "-",
+            null, // You need to fetch this value from the API or set it accordingly
+            asset.warranty_period > 0 ? "YES" : "NO",
+            // Calculate the warranty end date based on purchase date and warranty period
+            asset.warranty_period
+              ? new Date(
+                  new Date(asset.purchase_date).setFullYear(
+                    new Date(asset.purchase_date).getFullYear() +
+                      asset.warranty_period
+                  )
+                ).toLocaleDateString()
+              : null
+          );
+        });
+        setAssetsData(apiAssets);
+        // console.log(response.data.data);
+      } else {
+        console.error("Error fetching assets:", response.data.message);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching assets:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchAssets();
   }, []);
-
   const handleChange = (e) => {
     const { name, checked } = e.target;
     if (name === "allselect") {
@@ -233,22 +232,25 @@ export default function AssetsAdminPage() {
     const selectedIds = selectedRows.map((row) => row.inId);
     console.log(selectedIds[0]);
     axios
-    .delete(`${apiUrl}/asset/admin/delete-asset/${selectedIds[0]}`)
-    .then((response) => {
-      if (response.data.success) {
-        setSelectedRows([]);
-        toast.success("Selected asset deleted successfully");
-      } else {
-        const errorMessage = response.data.message || "An error occurred while deleting the asset";
-        console.log(errorMessage);
-        toast.error(errorMessage);
-      }
-    })
-    .catch((error) => {
-      console.error("Error deleting asset:", error);
-      toast.error("An error occurred while deleting the asset");
-    });
-  
+      .delete(`${apiUrl}/asset/admin/delete-asset/${selectedIds[0]}`)
+      .then((response) => {
+        if (response.data.success) {
+          fetchAssets();
+          setSelectedRows([]);
+          toast.success("Selected asset deleted successfully");
+        } else {
+          const errorMessage =
+            response.data.message ||
+            "An error occurred while deleting the asset";
+          console.log(errorMessage);
+          toast.error(errorMessage);
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting asset:", error);
+        toast.error("An error occurred while deleting the asset");
+      });
+
     // const updatedItems = assetsData.filter((item) => item?.isChecked !== true);
     // setAssetsData(updatedItems);
   }

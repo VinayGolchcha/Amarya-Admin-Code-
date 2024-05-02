@@ -29,8 +29,7 @@ const style = {
   border: "1px solid #FFFFFF",
   borderRadius: "16px",
   backgroundColor : "rgb(233, 235, 247)",
-  width: { lg: "55%", md: "45%", sm: "50%", xs: "80%" },
-  padding : {lg : "55px" , md: "45px", sm: "30px", xs: "25px" }
+  width: { lg: "32%", md: "40%", sm: "50%", xs: "80%" },
 };
 const inputControl = {
   border: "none",
@@ -42,17 +41,14 @@ const inputControl = {
   margin: "2px 0px",
 };
 const labelStyle = {
-  fontWeight : "600",
   fontSize: { lg: "1rem", md: "1rem", sm: "1rem", xs: "0.9 rem" },
   color : "rgb(120, 120, 122)"
 };
-export default function AddNewAssets({
-  assetsData,
-  handleAdd,
+export default function AddTraining({
   handleClose,
   open,
 }) {
-  // console.log("addnewItem called");
+  console.log("addnewItem called");
 
   const itemNewInId = useRef("");
   const itemNewDop = useRef("");
@@ -65,7 +61,6 @@ export default function AddNewAssets({
   const itemNewInWarranty = useRef("");
   const itemNewEndWarranty = useRef("");
 
-  
   function handleSubmit(event) {
     event.preventDefault();
     const newItem = [
@@ -80,7 +75,7 @@ export default function AddNewAssets({
       itemNewInWarranty.current.value,
       itemNewEndWarranty.current.value,
     ];
-    handleAdd((prevData) => [...prevData, newItem]);
+    // handleAdd((prevData) => [...prevData, newItem]);
   }
   return (
     <>
@@ -102,12 +97,12 @@ export default function AddNewAssets({
               }}
               variant="h6"
             >
-              Add Asset
+              Training 5
             </Typography>
             <Grid container spacing={2}>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
+              <Grid item lg={12} md={12} sm={12} xs={12}>
                 <label for="inId" style={labelStyle}>
-                  Asset Type
+                  Course Name
                 </label>
                 <br />
                 <input
@@ -117,9 +112,9 @@ export default function AddNewAssets({
                   ref={itemNewInId}
                 />
               </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
+              <Grid item lg={12} md={12} sm={12} xs={12}>
                 <label for="dop" style={labelStyle}>
-                  Item
+                  Course Description
                 </label>
                 <br />
                 <input
@@ -129,9 +124,9 @@ export default function AddNewAssets({
                   ref={itemNewDop}
                 />
               </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
+              <Grid item lg={12} md={12} sm={12} xs={12}>
                 <label for="assingnee" style={labelStyle}>
-                  Item Description
+                  Roadmap Url
                 </label>
                 <br />
                 <input
@@ -141,64 +136,25 @@ export default function AddNewAssets({
                   ref={itemNewAssignee}
                 />
               </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="item" style={labelStyle}>
-                  Model Number
+              <Grid item lg={12} md={12} sm={12} xs={12}>
+                <label for="item"  style={labelStyle}>
+                  Deatails
                 </label>
                 <br />
-                <input
+                <textarea
                   type="text"
                   id="item"
-                  style={inputControl}
+                  rows="4" 
+                  cols="50"
+                  style={{border: "none",
+                  borderRadius: "4px",
+                  height: "50px",
+                  width: "100%",
+                  fontWeight : "500",
+                  padding: "5px",
+                  margin: "2px 0px",
+                }}
                   ref={itemNewItem}
-                />
-              </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="description" style={labelStyle}>
-                  Purchase Date
-                </label>
-                <br />
-                <input
-                  type="text"
-                  id="description"
-                  style={inputControl}
-                  ref={itemNewDescription}
-                />
-              </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="isuedfrom" style={labelStyle}>
-                  Price
-                </label>
-                <br />
-                <input
-                  type="text"
-                  id="isuedfrom"
-                  style={inputControl}
-                  ref={itemNewIssuedFrom}
-                />
-              </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="issuedtill" style={labelStyle}>
-                  Image url
-                </label>
-                <br />
-                <input
-                  type="text"
-                  id="issuedtill"
-                  style={inputControl}
-                  ref={itemNewIssuedTill}
-                />
-              </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="repairs" style={labelStyle}>
-                  Warranty Period
-                </label>
-                <br />
-                <input
-                  type="text"
-                  id="repairs"
-                  style={inputControl}
-                  ref={itemNewRepairs}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>

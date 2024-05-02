@@ -32,48 +32,37 @@ const style = {
   fontFamily: "Poppins",
   border: "1px solid #FFFFFF",
   borderRadius: "16px",
-  width: { lg: "32%", md: "40%", sm: "50%", xs: "80%" },
+  backgroundColor: "rgb(233, 235, 247)",
+  width: { lg: "55%", md: "45%", sm: "50%", xs: "80%" },
+  padding: { lg: "55px", md: "45px", sm: "30px", xs: "25px" },
 };
 const inputControl = {
-  border: "1px solid black",
+  border: "none",
   borderRadius: "4px",
   height: "31px",
   width: "100%",
   padding: "5px",
+  fontWeight: "500",
   margin: "2px 0px",
+};
+
+const labelStyle = {
+  fontWeight: "600",
+  fontSize: { lg: "1rem", md: "1rem", sm: "1rem", xs: "0.9 rem" },
+  color: "rgb(120, 120, 122)",
 };
 export default function AddEditModal({ rows }) {
   const [open, setOpen] = useState(false);
   const [editedData, setEditedData] = useState({
-    inId: rows[0]?.inId || "",
-    dop: rows[0]?.dop || "",
-    assignee: rows[0]?.assignee || "",
-    item: rows[0]?.item || "",
-    description: rows[0]?.description || "",
-    issuedFrom: rows[0]?.issuedFrom || "",
-    issuedTill: rows[0]?.issuedTill || "",
-    repairs: rows[0]?.repairs || "",
-    inWarranty: rows[0]?.inWarranty || "",
-    endWarranty: rows[0]?.endWarranty || "",
+    asset_type: "",
+    item: "",
+    purchase_date: "",
+    warranty_period: "",
+    price: "",
+    model_number: "",
+    item_description: "",
+    image_url: "",
   });
-
-  useEffect(() => {
-    // Populate the edited data with the previous values when the modal opens
-    if (rows.length === 1) {
-      setEditedData({
-        inId: rows[0]?.inId || "",
-        dop: rows[0]?.dop || "",
-        assignee: rows[0]?.assingnee || "", // Corrected property name
-        item: rows[0]?.item || "",
-        description: rows[0]?.description || "",
-        issuedFrom: rows[0]?.issued_From || "", // Corrected property name
-        issuedTill: rows[0]?.issued_Till || "", // Corrected property name
-        repairs: rows[0]?.repairs || "",
-        inWarranty: rows[0]?.in_Warranty || "", // Corrected property name
-        endWarranty: rows[0]?.warranty_End || "", // Corrected property name
-      });
-    }
-  }, [rows]);
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -83,18 +72,20 @@ export default function AddEditModal({ rows }) {
     const updatedData = { ...editedData };
 
     // Send a request to update the asset data
-    // You can use axios or fetch for this
     console.log(updatedData);
+    // You can use axios or fetch for this
     axios
-      .put(`${apiUrl}/asset/admin/update-asset/${updatedData.inId}`, updatedData)
+      .put(`${apiUrl}/asset/admin/update-asset/${rows[0]?.inId}`, updatedData)
       .then((response) => {
         // Handle successful update
         console.log("Asset updated successfully:", response.data);
         // handleClose(); // Optionally, close the modal
+        toast.success('Asset updated successfully');
         setOpen(false);
       })
       .catch((error) => {
         // Handle error
+        toast.error('Error updating asset');
         console.error("Error updating asset:", error);
       });
   }
@@ -154,7 +145,7 @@ export default function AddEditModal({ rows }) {
                 textAlign: "center",
                 margin: "10px",
                 color: "#121843",
-                fontFamily: "Poppins",
+                fontFamily: "Prosto One",
                 fontWeight: "600",
               }}
               variant="h6"
@@ -163,43 +154,23 @@ export default function AddEditModal({ rows }) {
             </Typography>
             <Grid container spacing={2}>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="inId">Inv.Id</label>
+                <label style={labelStyle} for="asset_type">
+                  Asset Type
+                </label>
                 <br />
                 <input
                   type="text"
-                  id="inId"
-                  name="inId"
+                  id="asset_type"
+                  name="asset_type"
                   style={inputControl}
-                  value={editedData.inId}
+                  value={editedData.asset_type}
                   onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="dop">D.O.P</label>
-                <br />
-                <input
-                  type="text"
-                  id="dop"
-                  name="dop"
-                  style={inputControl}
-                  value={editedData.dop}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="assignee">Assignee</label>
-                <br />
-                <input
-                  type="text"
-                  id="assignee"
-                  name="assignee"
-                  style={inputControl}
-                  value={editedData?.assignee}
-                  onChange={handleChange}
-                />
-              </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="item">Item</label>
+                <label style={labelStyle} for="item">
+                  Item
+                </label>
                 <br />
                 <input
                   type="text"
@@ -211,83 +182,94 @@ export default function AddEditModal({ rows }) {
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="description">Description</label>
+                <label style={labelStyle} htmlFor="item_description">
+                  Item Description
+                </label>
                 <br />
                 <input
                   type="text"
-                  id="description"
-                  name="description"
+                  id="item_description"
+                  name="item_description"
                   style={inputControl}
-                  value={editedData.description}
+                  value={editedData.item_description}
                   onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label htmlFor="isuedfrom">Issued From</label>
+                <label style={labelStyle} htmlFor="model_number">
+                  Model Number
+                </label>
                 <br />
                 <input
                   type="text"
-                  id="isuedfrom"
-                  name="issuedFrom"
+                  id="model_number"
+                  name="model_number"
                   style={inputControl}
-                  value={editedData.issuedFrom}
+                  value={editedData.model_number}
                   onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label htmlFor="issuedtill">Issued Till</label>
+                <label style={labelStyle} for="purchase_date">
+                  Purchase Date
+                </label>
                 <br />
                 <input
                   type="text"
-                  id="issuedtill"
-                  name="issuedTill"
+                  id="purchase_date"
+                  name="purchase_date"
                   style={inputControl}
-                  value={editedData.issuedTill}
+                  value={editedData.purchase_date}
                   onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label htmlFor="repairs">Repairs</label>
+                <label style={labelStyle} htmlFor="price">
+                  Price
+                </label>
                 <br />
                 <input
                   type="text"
-                  id="repairs"
-                  name="repairs"
+                  id="price"
+                  name="price"
                   style={inputControl}
-                  value={editedData.repairs}
+                  value={editedData.price}
                   onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label htmlFor="inwarranty">In Warranty</label>
+                <label style={labelStyle} htmlFor="image_url">
+                  Image URL
+                </label>
                 <br />
                 <input
                   type="text"
-                  id="inwarranty"
-                  name="inWarranty"
+                  id="image_url"
+                  name="image_url"
                   style={inputControl}
-                  value={editedData.inWarranty}
+                  value={editedData.image_url}
                   onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label htmlFor="endwarranty">End Warranty</label>
+                <label style={labelStyle} for="warranty_period">
+                  Warranty Period
+                </label>
                 <br />
                 <input
                   type="text"
-                  id="endwarranty"
-                  name="endWarranty"
+                  id="warranty_period"
+                  name="warranty_period"
                   style={inputControl}
-                  value={editedData.endWarranty}
+                  value={editedData.warranty_period}
                   onChange={handleChange}
                 />
               </Grid>
-
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <div style={{ textAlign: "center", padding: "15px" }}>
                   <Button
                     variant="contained"
-                    color="success"
+                    color="error"
                     onClick={handleUpdate}
                   >
                     Submit
