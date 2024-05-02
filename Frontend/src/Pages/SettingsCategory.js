@@ -1,21 +1,24 @@
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
 
 export default function SettingsCategory() {
   const [formData, setFormData] = useState([
-    { category: "" },
-    { category: "" },
-    { category: "" },
-    { category: "" },
-    { category: "" },
-    { category: "" },
-    { category: "" },
-    { category: "" },
-    { category: "" },
-    { category: "" },
+    { category: "" , points : "" },
+    { category: "" , points : "" },
+    { category: "" , points : "" },
+    { category: "" , points : "" },
+    { category: "" , points : "" },
+    { category: "" , points : "" },
+    { category: "" , points : "" },
+    { category: "" , points : "" },
+    { category: "" , points : "" },
+    { category: "" , points : "" },
   ]);
+  useEffect(() => {
+
+  },[])
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedInputIndex, setSelectedInputIndex] = useState(null);
@@ -63,8 +66,9 @@ export default function SettingsCategory() {
   return (
     <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
       <Grid container spacing={4}>
-        <Grid item xs={4}>
-          {formData.slice(0, midPoint).map((data, index) => (
+      <Grid item xs={4}>        
+          {formData.map((data, index) => (
+
             <FormControl fullWidth>
               <FormLabel sx={{ color: "black", fontWeight: "600" }}>
                 Category {index + 1}
@@ -84,7 +88,7 @@ export default function SettingsCategory() {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={data.leaveType}
+                value={data.category}
                 onChange={(e) =>
                   handleInputChange(index, "category", e.target.value)
                 }
@@ -92,16 +96,16 @@ export default function SettingsCategory() {
                 disabled={!editMode}
               />
             </FormControl>
-          ))}
-        </Grid>
 
+          ))}
+          </Grid>
         <Grid item xs={4}>
-          {formData.slice(midPoint, len).map((data, index) => (
+        {formData.map((data, index) => (
+
             <FormControl fullWidth>
               <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-                Category {index + midPoint + 1}
+                Points 
               </FormLabel>
-
               <TextField
                 key={index}
                 type="text"
@@ -117,14 +121,16 @@ export default function SettingsCategory() {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={data.gender}
+                value={data.points}
                 onChange={(e) =>
-                  handleInputChange(index, "category", e.target.value)
+                  handleInputChange(index, "points", e.target.value)
                 }
+                onClick={() => handleInputClick(index)}
                 disabled={!editMode}
               />
             </FormControl>
-          ))}
+
+        ))}
         </Grid>
 
         <Grid item xs={4}>

@@ -1,26 +1,64 @@
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
 
 export default function SettingsSkiilSet() {
   const [formData, setFormData] = useState([
-    { skill: "" },
-    { skill: "" },
-    { skill: "" },
-    { skill: "" },
-    { skill: "" },
-    { skill: "" },
-    { skill: "" },
-    { skill: "" },
-    { skill: "" },
-    { skill: "" },
+    { _id: "", skill: "" },
+    { _id: "", skill: "" },
+    { _id: "", skill: "" },
+    { _id: "", skill: "" },
+    { _id: "", skill: "" },
+    { _id: "", skill: "" },
+    { _id: "", skill: "" },
+    { _id: "", skill: "" },
+    { _id: "", skill: "" },
+    { _id: "", skill: "" },
   ]);
+
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedInputIndex, setSelectedInputIndex] = useState(null);
+  const [originalFormData, setOriginalFormData] = useState([]);
   const len = formData.length;
   const midPoint = Math.floor(formData.length / 2);
+
+  useEffect(() => {
+    // Fetch skills data when component mounts
+    fetchSkills();
+  }, []);
+
+  const fetchSkills = () => {
+    // Make a fetch request to the API endpoint
+    fetch(
+      "https://tense-ruby-poncho.cyclic.app/api/v1/skillset/admin/fetch-skills"
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch skills");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (!data || !data.success || !data.data) {
+          throw new Error("Invalid response format");
+        }
+
+        const skills = data.data;
+
+        setFormData(
+          data.data.map((skill) => ({ _id: skill._id, skill: skill.skill }))
+        );
+        setOriginalFormData(skills.map((skill) => ({ ...skill })));
+
+        // console.log(skills);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        // Handle error (e.g., show error message to the user)
+      });
+  };
 
   const handleAddNew = () => {
     setFormData([...formData, { skill: "" }]);
@@ -42,14 +80,46 @@ export default function SettingsSkiilSet() {
       setDeleteMode(true);
     }
   };
-
   const handleSave = () => {
     if (editMode) {
+      // Iterate through formData and extract only the skills that have been edited
+      const editedSkills = formData.filter(
+        (data, index) => data.skill !== originalFormData[index].skill
+      );
+      console.log(editedSkills);
+      // Send API requests to update each edited skill
+      editedSkills.forEach((editedSkill) => {
+        fetch(
+          `https://tense-ruby-poncho.cyclic.app/api/v1/skillSet/admin/update-skill/${editedSkill._id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ skill: editedSkill.skill }), // Send the updated skill value
+          }
+        )
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to update skill");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Skill updated successfully:", data);
+          })
+          .catch((error) => {
+            console.error("Error updating skill:", error);
+          });
+      });
+
+      // After updating all edited skills, reset editMode
       setEditMode(false);
     }
   };
 
   const handleInputChange = (index, fieldName, value) => {
+    console.log(value);
     const newFormData = [...formData];
     newFormData[index][fieldName] = value;
     setFormData(newFormData);
@@ -61,6 +131,7 @@ export default function SettingsSkiilSet() {
       setSelectedInputIndex(index);
     }
   };
+
   return (
     <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
       <Grid container spacing={4}>
@@ -86,7 +157,7 @@ export default function SettingsSkiilSet() {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={data.leaveType}
+                value={data.skill}
                 onChange={(e) =>
                   handleInputChange(index, "skill", e.target.value)
                 }
@@ -119,9 +190,9 @@ export default function SettingsSkiilSet() {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={data.gender}
+                value={data.skill}
                 onChange={(e) =>
-                  handleInputChange(index, "skill", e.target.value)
+                  handleInputChange(index + midPoint, "skill", e.target.value)
                 }
                 disabled={!editMode}
                 onClick={() => handleInputClick(index + midPoint)}
