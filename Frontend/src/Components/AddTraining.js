@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import axios from "axios";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -61,22 +62,46 @@ export default function AddTraining({
   const itemNewInWarranty = useRef("");
   const itemNewEndWarranty = useRef("");
 
-  function handleSubmit(event) {
+  // function handleSubmit(event) {
+  //   event.preventDefault();
+  //   const newItem = [
+  //     itemNewInId.current.value,
+  //     itemNewDop.current.value,
+  //     itemNewAssignee.current.value,
+  //     itemNewItem.current.value,
+  //     itemNewDescription.current.value,
+  //     itemNewIssuedFrom.current.value,
+  //     itemNewIssuedTill.current.value,
+  //     itemNewRepairs.current.value,
+  //     itemNewInWarranty.current.value,
+  //     itemNewEndWarranty.current.value,
+  //   ];
+  //   // handleAdd((prevData) => [...prevData, newItem]);
+  // }
+
+
+  const handleSave = async (event) => {
     event.preventDefault();
-    const newItem = [
-      itemNewInId.current.value,
-      itemNewDop.current.value,
-      itemNewAssignee.current.value,
-      itemNewItem.current.value,
-      itemNewDescription.current.value,
-      itemNewIssuedFrom.current.value,
-      itemNewIssuedTill.current.value,
-      itemNewRepairs.current.value,
-      itemNewInWarranty.current.value,
-      itemNewEndWarranty.current.value,
-    ];
-    // handleAdd((prevData) => [...prevData, newItem]);
-  }
+    const newTrainingData = {
+      // Gather data from form fields
+      course_name: itemNewInId.current.value,
+      course_description: itemNewDop.current.value,
+      roadmap_url: itemNewAssignee.current.value,
+      details: itemNewItem.current.value,
+      // Add other fields as needed
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/training/admin/add-new-training",
+        newTrainingData
+      );
+      console.log("Training added successfully:", response.data);
+    } catch (error) {
+      console.error("Error adding new training:", error);
+    }
+  };
+
   return (
     <>
       <Modal
@@ -86,7 +111,7 @@ export default function AddTraining({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <form onSubmit={handleSubmit}>
+          <form >
             <Typography
               sx={{
                 textAlign: "center",
@@ -159,7 +184,7 @@ export default function AddTraining({
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <div style={{ textAlign: "center", padding: "15px" }}>
-                  <Button variant="contained" color="error">
+                  <Button onClick={handleSave} variant="contained" color="error">
                     Save
                   </Button>
                 </div>

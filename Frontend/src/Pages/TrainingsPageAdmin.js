@@ -3,10 +3,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import TrainingCard from "./TrainingCard";
 import Grid from "@mui/material/Grid";
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Button from "@mui/material/Button";
-
 
 import axios from "axios";
 
@@ -35,8 +34,6 @@ import Filter from "../Components/Filter";
 import AddTraining from "../Components/AddTraining";
 import UpdateTraining from "../Components/UpdateTraining";
 
-
-
 const fields = [
   {
     courseName: "Full Stack",
@@ -49,8 +46,8 @@ const fields = [
     courseDescription:
       "Topics Covered - Basics of Python, Pandas, Matplotlib, SKlearn, Scipy and ML Regression and Prediction Models.",
     color: "#F3F8EB",
-    roadmapUrl : "https://www.scaler.com/blog/sde-roadmap/",
-    details : "This course is completed"
+    roadmapUrl: "https://www.scaler.com/blog/sde-roadmap/",
+    details: "This course is completed",
   },
   {
     courseName: "REACT NATIVE",
@@ -233,7 +230,6 @@ let data = [
   // Add more rows as needed
 ];
 
-
 export default function TrainingsPageAdmin({ trainingId }) {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [courses, setfields] = React.useState([]);
@@ -243,22 +239,22 @@ export default function TrainingsPageAdmin({ trainingId }) {
   const [filter, setFilter] = React.useState(false);
   const [courseStatus, setCourseStatus] = React.useState("All");
   let [filteredData, setFilteredData] = React.useState(data);
-  const [searchEmp , setSearchEmp] = React.useState("");
+  const [searchEmp, setSearchEmp] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [info, setInfo] = React.useState({});
 
-  const [isActiveDeleteButton ,setIsActiveDeleteButton] = React.useState(false);
+  const [isActiveDeleteButton, setIsActiveDeleteButton] = React.useState(false);
 
   const handleClick = () => {
-    setOpen(!open)
-  }
+    setOpen(!open);
+  };
 
   const handleClose = () => {
     setOpen(false);
-  }
+  };
   const handleAddTrainingClick = () => {
     setOpenAddTraining(!openAddTraining);
-  }
-
+  };
 
   function handleAddTrainingClose() {
     setOpenAddTraining(false);
@@ -295,29 +291,46 @@ export default function TrainingsPageAdmin({ trainingId }) {
     });
     setFilteredData(newData);
   }
-  filteredData = filteredData.filter(item =>
+  filteredData = filteredData.filter((item) =>
     item.empid.toLowerCase().includes(searchEmp.toLowerCase())
   );
   function handleFilterEmp(e) {
     setSearchEmp(e.target.value);
-
   }
-  function handleTrId(){
+  function handleTrId() {
     setFilteredData(filteredData.sort((a, b) => a.id - b.id));
   }
 
   React.useEffect(() => {
     // Axios GET request
-    axios.get('http://localhost:4000/api/v1/training/training-cards')
-      .then(response => {
+    axios
+      .get("http://localhost:4000/api/v1/training/training-cards")
+      .then((response) => {
         // console.log("insdeeee");
-        console.log('Training Cards:', response.data.data);
+        console.log("Training Cards:", response.data.data);
         setfields(response.data.data);
       })
-      .catch(error => {
-        console.error('Error fetching training cards:', error);
+      .catch((error) => {
+        console.error("Error fetching training cards:", error);
       });
   }, []);
+
+  React.useEffect(() => {
+    axios
+      .get(
+        "http://localhost:4000/api/v1/training/admin/display-all-users-training-data"
+      )
+      .then((response) => {
+        // console.log( response);
+        console.log(response.data.data);
+        // setFilteredData(response.data)
+        setInfo(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching training cards:", error);
+      });
+  }, []);
+  // console.log("Thisssss",setInfo[1].training_id);
 
   let row;
   // const slicedData = data.slice(page * rowperpage, (page + 1) * rowperpage);
@@ -356,7 +369,14 @@ export default function TrainingsPageAdmin({ trainingId }) {
         >
           <Grid container spacing={2}>
             {courses.map((course) => {
-              return <TrainingCard field={course} isActiveDeleteButton={isActiveDeleteButton}  key={course.training_id}  logo= {DeleteOutlineIcon}/>;
+              return (
+                <TrainingCard
+                  field={course}
+                  isActiveDeleteButton={isActiveDeleteButton}
+                  key={course.training_id}
+                  logo={DeleteOutlineIcon}
+                />
+              );
             })}
           </Grid>
         </Box>
@@ -379,7 +399,10 @@ export default function TrainingsPageAdmin({ trainingId }) {
                 Add Training
               </Button>
               <>
-              <AddTraining handleClose={handleAddTrainingClose} open={openAddTraining} />
+                <AddTraining
+                  handleClose={handleAddTrainingClose}
+                  open={openAddTraining}
+                />
               </>
             </Grid>
             <Grid item lg={4} md={6} sm={12} xs={12}>
@@ -394,12 +417,15 @@ export default function TrainingsPageAdmin({ trainingId }) {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
-                onClick={handleClick}
               >
                 Update Training
               </Button>
               <>
-                <UpdateTraining handleClose={handleClose} open={open} selectedObj={fields[1]} />
+                <UpdateTraining
+                  handleClose={handleClose}
+                  open={open}
+                  selectedObj={fields[1]}
+                />
               </>
             </Grid>
             <Grid item lg={4} md={6} sm={12} xs={12}>
@@ -414,7 +440,9 @@ export default function TrainingsPageAdmin({ trainingId }) {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
-                onClick={()=>{setIsActiveDeleteButton(!isActiveDeleteButton)}}
+                onClick={() => {
+                  setIsActiveDeleteButton(!isActiveDeleteButton);
+                }}
               >
                 Delete Training
               </Button>
@@ -456,7 +484,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
             }
             label="Enable Filter"
             labelPlacement="start"
-            sx={{fontFamily : 'Poppins' , color : '#FF5151'}}
+            sx={{ fontFamily: "Poppins", color: "#FF5151" }}
           />
         </Box>
         <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
@@ -472,7 +500,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
                     height: "40px",
                   }}
                 >
-                  <Box sx={{display : 'flex'}}>
+                  <Box sx={{ display: "flex" }}>
                     <img src="Check.svg" style={{ margin: "-4px 6px" }} />
                     Tr.No
                     {filter && <FilterAltIcon onClick={handleTrId} />}
@@ -487,7 +515,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
                 >
                   Courses
                 </TableCell>
-                 
+
                 <TableCell
                   style={{
                     backgroundColor: "#161e54",
@@ -497,8 +525,8 @@ export default function TrainingsPageAdmin({ trainingId }) {
                 >
                   Employee ID
                 </TableCell>
-             
-              {/* //   style={{
+
+                {/* //   style={{
               //     backgroundColor: "#161e54",
               //     color: "#ffffff",
               //     fontFamily: "Poppins",
@@ -507,7 +535,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
               // >
               //   <TextField id="standard-basic" InputProps={{ sx: { } }}  label="Emp Id" variant="outlined" size="small" onChange={handleFilterEmp} sx={{backgroundColor : 'white'}}/>
               // </TableCell>
-              //   } */} 
+              //   } */}
                 <TableCell
                   style={{
                     backgroundColor: "#161e54",
@@ -522,15 +550,13 @@ export default function TrainingsPageAdmin({ trainingId }) {
                     backgroundColor: "#161e54",
                     color: "#ffffff",
                     fontFamily: "Poppins",
-                    minWidth : '124px',
+                    minWidth: "124px",
                   }}
                 >
-                  Status {
-                    filter && <Filter handleSelect = {handleSelect}/>
-                  }
+                  Status {filter && <Filter handleSelect={handleSelect} />}
                 </TableCell>
-           
-                  {/* // <TableCell
+
+                {/* // <TableCell
                   //   style={{
                   //     backgroundColor: "#161e54",
                   //     color: "#ffffff",
@@ -579,38 +605,46 @@ export default function TrainingsPageAdmin({ trainingId }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredData && filteredData?.map((row,i) =>    {
-                return(           
-               <TableRow key={i}>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    <Checkbox
-                      checked={selectedRows.includes(row.id)}
-                      onChange={() => handleCheckboxChange(row.id)}
-                    />
-                    {row.id}
+              {filteredData &&
+                filteredData?.map((row, i) => {
+                  return (
+                    <TableRow key={i}>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        <Checkbox
+                          checked={selectedRows.includes(row.id)}
+                          onChange={() => handleCheckboxChange(row.id)}
+                        />
+                        {row.id}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.courses}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.empid}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.coursedescription}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.completedinprogress}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.approvedon}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              {filteredData.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={6}>
+                    {" "}
+                    {/* Adjust the colSpan based on the number of columns */}
+                    <Alert severity="warning" sx={{ width: "100%" }}>
+                      No data found.
+                    </Alert>
                   </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.courses}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.empid}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.coursedescription}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.completedinprogress}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.approvedon}
-                  </TableCell>
-                </TableRow>)
- } )} 
- {filteredData.length === 0  && <TableRow><TableCell colSpan={6}> {/* Adjust the colSpan based on the number of columns */}
-        <Alert severity="warning" sx={{ width: '100%' }}>
-          No data found.
-        </Alert>
-      </TableCell></TableRow>}
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
@@ -624,6 +658,12 @@ export default function TrainingsPageAdmin({ trainingId }) {
           onRowsPerPageChange={handleRowsPerPage}
         ></TablePagination> */}
       </Box>
+
+      {/* <ul>
+        {setInfo?.map((info,i) => {
+          <li key= {i}>info.course_description</li>;
+        })}
+      </ul> */}
     </Box>
   );
 }

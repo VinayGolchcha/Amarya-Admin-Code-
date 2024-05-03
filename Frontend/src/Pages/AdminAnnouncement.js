@@ -20,72 +20,75 @@ import axios from "axios";
 const AdminNotificationTab = () => {
   const [selectedTab, setSelectedTab] = useState("announcement");
   const [selectedDate, setSelectedDate] = useState("All Dates"); // State for selected date
-  const[showData,setShowData]= useState([]);
+  const [showData, setShowData] = useState([]);
   const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: "announcement",
-      message: "New announcement: Important update!",
-      date: "12th Dec 2023", // Sample date
-    },
-    {
-      id: 2,
-      type: "announcement",
-      message: "New announcement: Important update!",
-      date: "12th Dec 2023", // Sample date
-    },
-    {
-      id: 3,
-      type: "announcement",
-      message: "New announcement: Important update!",
-      date: "13th Dec 2023", // Sample date
-    },
-    {
-      id: 4,
-      type: "announcement",
-      message: "New announcement: Important update!",
-      date: "12th Dec 2023", // Sample date
-    },
-    {
-      id: 2,
-      type: "activity",
-      message: "Activity: Team building event on Friday",
-      date: "15th Dec 2023", // Sample date
-    },
-    {
-      id: 2,
-      type: "activity",
-      message: "Activity: Team building event on Friday",
-      date: "15th Dec 2023", // Sample date
-    },
-    {
-      id: 3,
-      type: "activity",
-      message: "Activity: Team building event on Friday",
-      date: "16th Dec 2023", // Sample date
-    },
-    {
-      id: 2,
-      type: "activity",
-      message: "Activity: Team building event on Friday",
-      date: "15th Dec 2023", // Sample date
-    },
+    // {
+    //   id: 1,
+    //   type: "announcement",
+    //   message: "New announcement: Important update!",
+    //   date: "12th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 2,
+    //   type: "announcement",
+    //   message: "New announcement: Important update!",
+    //   date: "12th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 3,
+    //   type: "announcement",
+    //   message: "New announcement: Important update!",
+    //   date: "13th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 4,
+    //   type: "announcement",
+    //   message: "New announcement: Important update!",
+    //   date: "12th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 2,
+    //   type: "activity",
+    //   message: "Activity: Team building event on Friday",
+    //   date: "15th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 2,
+    //   type: "activity",
+    //   message: "Activity: Team building event on Friday",
+    //   date: "15th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 3,
+    //   type: "activity",
+    //   message: "Activity: Team building event on Friday",
+    //   date: "16th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 2,
+    //   type: "activity",
+    //   message: "Activity: Team building event on Friday",
+    //   date: "15th Dec 2023", // Sample date
+    // },
     // Add more notifications as needed
   ]);
   useEffect(() => {
-    fetchData();
-  }, []); 
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/v1/announcement/admin/fetch-announcement"
+        );
+        console.log(response.data.data);
+        // setShowData(response.data.data);
+        setNotifications(response.data.data);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get("http://localhost:4000/api/v1/announcement/admin/fetch-announcement");
-      // setNotifications(response.data); 
-      console.log(response.data.data);
-      setShowData(response.data.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);

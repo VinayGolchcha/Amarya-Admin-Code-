@@ -28,6 +28,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import NotificationPopUp from "./NotificationPopUp";
 import { useAuth } from "./AuthContext";
+import axios from "axios";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -90,6 +91,57 @@ const NavBar = ({ handleDrawerToggle }) => {
   const [addTask, setAddTask] = React.useState("");
   const [searchQuery, setSearchQuery] = React.useState("");
 
+  
+
+  const handleAddStickyNote = () => {
+    // Send a POST request to the API
+    axios.post('http://localhost:4000/api/v1/stickynotes/add-stickynotes', {
+      emp_id: "AIEMP1001",
+      note: addTask,
+    })
+    .then(response => {
+      // Handle success response if needed
+      console.log('Sticky note added:', response.data);
+      // Update the state or perform any other actions
+    })
+    .catch(error => {
+      // Handle error
+      console.error('Error adding sticky note:', error);
+    });
+  };
+
+
+
+
+  const handleGetNotes = async ()=>{
+    try{
+
+      const response = await axios.post("http://localhost:4000/api/v1/stickynotes/get-user-notes",{
+        emp_id : "AIEMP1001",
+      })
+      console.log(response.data)
+    }catch(error)  {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteStickyNote = (noteId) => {
+    // Send a DELETE request to the API
+    axios
+      .post("http://localhost:4000/api/v1/stickynotes/delete-stickynotes", {
+        data: { _id: noteId },
+      })
+      .then((response) => {
+        console.log("Sticky note deleted:", response.data);
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error deleting sticky note:", error);
+      });
+  };
+
+
+
   const handleSearch = () => {
     // Navigate to the page based on the search query
     navigate(`/${searchQuery}`);
@@ -104,6 +156,8 @@ const NavBar = ({ handleDrawerToggle }) => {
   }
 
   function handleDelete(index) {
+    const noteId = index; // Assuming the note id is the same as the index
+    handleDeleteStickyNote(noteId);
     setStickeyNotes((prevStickyNotes) => {
       const newStickyNotes = [...prevStickyNotes];
       newStickyNotes.splice(index, 1);
@@ -114,12 +168,14 @@ const NavBar = ({ handleDrawerToggle }) => {
     if (e.key === "Enter") {
       setStickeyNotes((prevStickyNotes) => [...prevStickyNotes, addTask]);
       setAddTask("");
+      handleAddStickyNote();
     }
   }
   const [anchorE2, setAnchorE2] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorE2(anchorE2 ? null : event.currentTarget);
+    handleGetNotes();
   };
 
   const open = Boolean(anchorE2);
@@ -393,7 +449,7 @@ const NavBar = ({ handleDrawerToggle }) => {
                           >
                             {item}{" "}
                             <Box>
-                              <CloseIcon onClick={() => handleDelete(index)} />
+                              <CloseIcon onClick={() => handleDelete(stickeyNotes?._id)} />
                             </Box>
                           </Typography>
                         </Box>

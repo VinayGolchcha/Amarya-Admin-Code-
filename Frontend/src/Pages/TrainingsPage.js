@@ -71,6 +71,7 @@ import axios from "axios";
 export default function TrainingsPage(props) {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [courses, setfields] = React.useState([]);
+  const[coursess,setCoursess]=React.useState([]);
   const handleCheckboxChange = (rowId) => {
     const isSelected = selectedRows.includes(rowId);
     setSelectedRows((prevSelected) =>
@@ -81,7 +82,21 @@ export default function TrainingsPage(props) {
   }; 
 
  ///chetan code
- const [trainingCards, setTrainingCards] = React.useState("");
+//  const [trainingCards, setTrainingCards] = React.useState("");
+ React.useEffect(() => {
+  axios.post('http://localhost:4000/api/v1/training/get-user-training', {
+    emp_id: "AMEMP003"
+  })
+    .then(response => {
+      console.log('User Training Data:', response.data);
+      setCoursess(response.data.data); // Assuming response.data contains the course data
+    })
+    .catch(error => {
+      console.error('Error fetching user training data:', error);
+    });
+}, []);
+
+ 
 
   React.useEffect(() => {
     // Axios GET request
@@ -254,7 +269,7 @@ export default function TrainingsPage(props) {
                     {row.id}
                   </TableCell>
                   <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.empid}
+                    {row.training_id}
                   </TableCell>
                   <TableCell style={{ fontFamily: "Poppins" }}>
                     {row.courses}
