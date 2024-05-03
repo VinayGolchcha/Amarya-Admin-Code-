@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Table,
@@ -15,6 +15,8 @@ import {
   MenuItem,
 } from "@mui/material";
 import ActivityForm from "./ActivityForm";
+import axios, { toFormData } from 'axios';
+import { toast } from "react-toastify";
 
 const AdminNotificationTab = () => {
   const [selectedTab, setSelectedTab] = useState("announcement");
@@ -71,6 +73,33 @@ const AdminNotificationTab = () => {
     // Add more notifications as needed
   ]);
 
+  const fetchNotification = async () => {
+    try{
+      const resData = await axios.get(`${process.env.REACT_APP_API_URI}${selectedTab}/admin/fetch-${selectedTab}`);
+      setNotifications(resData.data.data);
+    }catch(error){
+      console.log(error);
+      toast.error(error.message);
+    }
+
+  }
+
+  const handleAddAnnouncement = async (body) => {
+    try{
+      const res = await axios.post(`${process.env.REACT_APP_API_URI}announcement/admin/add-announcement`, body)
+      console.log(res);
+      toast.success(res.data.message);
+      fetchNotification();
+    }catch(error){
+      toast.error(error.response.data.errors[0].msg);
+    }
+  }
+
+  
+  useEffect(() => {
+    fetchNotification();
+  },[selectedTab]);
+
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
   };
@@ -92,25 +121,25 @@ const AdminNotificationTab = () => {
   const uniqueDates = [
     "All Dates",
     ...new Set(
-      notifications.filter((n) => n.type === selectedTab).map((n) => n.date)
+      notifications.filter((n) => n.type === selectedTab).map((n) => n.from_date)
     ),
   ];
   if (!uniqueDates.includes("All Dates")) {
     uniqueDates.unshift("All Dates"); // Add "All Dates" option if not already present
   }
 
-  const filteredNotifications = notifications.filter((notification) => {
+  const filteredNotifications = notifications?.filter((notification) => {
     if (selectedDate === "All Dates") {
-      return notification.type === selectedTab;
+      return true;
     } else {
       return (
-        notification.type === selectedTab && notification.date === selectedDate
+        true && notification?.from_date === selectedDate
       );
     }
   });
 
   const notificationPairs = [];
-  for (let i = 0; i < filteredNotifications.length; i += 2) {
+  for (let i = 0; i < filteredNotifications?.length; i += 2) {
     const pair = [
       filteredNotifications[i],
       filteredNotifications[i + 1] || null, // Handle odd number of notifications
@@ -246,7 +275,7 @@ const AdminNotificationTab = () => {
           </TableHead>
           <TableBody>
             {notificationPairs.map((pair, index) => (
-              <TableRow key={index}>
+              <TableRow >
                 {pair.map((notification, index) => (
                   <TableCell
                     key={index}
@@ -263,7 +292,7 @@ const AdminNotificationTab = () => {
                           paddingLeft: "15px",
                         }}
                       >
-                        {notification.message}
+                        {notification?.description?.slice(0,15)}...
                         <div
                           style={{
                             position: "absolute",
@@ -275,14 +304,18 @@ const AdminNotificationTab = () => {
                             fontWeight: "600",
                           }}
                         >
-                          {notification.date}
+                          {new Date(notification?.from_date).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: '2-digit',
+                            year: 'numeric'
+                          })}
                         </div>
                       </div>
                     )}
                   </TableCell>
                 ))}
               </TableRow>
-            ))}
+             ))} 
           </TableBody>
         </Table>
       </TableContainer>
@@ -314,6 +347,7 @@ const AdminNotificationTab = () => {
         <ActivityForm
           onAddNotification={handleAddNotification}
           selectedTab={selectedTab}
+          handleAddAnnouncement = {handleAddAnnouncement}
         />
       </Box>
     </div>
