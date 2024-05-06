@@ -91,42 +91,35 @@ const NavBar = ({ handleDrawerToggle }) => {
   const [addTask, setAddTask] = React.useState("");
   const [searchQuery, setSearchQuery] = React.useState("");
 
-  
-
   const handleAddStickyNote = () => {
-    // Send a POST request to the API
-    axios.post('http://localhost:4000/api/v1/stickynotes/add-stickynotes', {
-      emp_id: "AIEMP1001",
-      note: addTask,
-    })
-    .then(response => {
-      // Handle success response if needed
-      console.log('Sticky note added:', response.data);
-      // Update the state or perform any other actions
-    })
-    .catch(error => {
-      // Handle error
-      console.error('Error adding sticky note:', error);
-    });
+    axios
+      .post("http://localhost:4000/api/v1/stickynotes/add-stickynotes", {
+        emp_id: "AIEMP1001",
+        note: addTask,
+      })
+      .then((response) => {
+        console.log("Sticky note added:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error adding sticky note:", error);
+      });
   };
 
-
-
-
-  const handleGetNotes = async ()=>{
-    try{
-
-      const response = await axios.post("http://localhost:4000/api/v1/stickynotes/get-user-notes",{
-        emp_id : "AIEMP1001",
-      })
-      console.log(response.data)
-    }catch(error)  {
+  const handleGetNotes = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/api/v1/stickynotes/get-user-notes",
+        {
+          emp_id: "AIEMP1001",
+        }
+      );
+      console.log(response.data);
+    } catch (error) {
       console.log(error);
     }
   };
 
   const handleDeleteStickyNote = (noteId) => {
-    // Send a DELETE request to the API
     axios
       .post("http://localhost:4000/api/v1/stickynotes/delete-stickynotes", {
         data: { _id: noteId },
@@ -135,15 +128,11 @@ const NavBar = ({ handleDrawerToggle }) => {
         console.log("Sticky note deleted:", response.data);
       })
       .catch((error) => {
-        // Handle error
         console.error("Error deleting sticky note:", error);
       });
   };
 
-
-
   const handleSearch = () => {
-    // Navigate to the page based on the search query
     navigate(`/${searchQuery}`);
   };
 
@@ -202,7 +191,6 @@ const NavBar = ({ handleDrawerToggle }) => {
     handleMobileMenuClose();
   };
   const handleLogOut = () => {
-    
     logout();
     navigate("/login");
   };
@@ -449,7 +437,9 @@ const NavBar = ({ handleDrawerToggle }) => {
                           >
                             {item}{" "}
                             <Box>
-                              <CloseIcon onClick={() => handleDelete(stickeyNotes?._id)} />
+                              <CloseIcon
+                                onClick={() => handleDelete(stickeyNotes?._id)}
+                              />
                             </Box>
                           </Typography>
                         </Box>
@@ -460,40 +450,40 @@ const NavBar = ({ handleDrawerToggle }) => {
               </div>
             </IconButton>
             {userData && ( // Conditional rendering for user profile information
-            <>
-              <IconButton
-                size="large"
-                aria-label="show 4 new mails"
-                color="inherit"
-                sx={{ marginRight: 1 }}
-              >
-                <Avatar
-                  alt={userData.username}
-                  src={userData.profile_picture}
-                />
-              </IconButton>
-              <IconButton
-                disableRipple
-                onMouseDown={handleProfileMenuOpen}
-                onMouseUp={toggleArrow}
-                size="small"
-                color="inherit"
-                sx={{ marginRight: 1 }}
-              >
-                <div>
-                  <Typography sx={{ display: "flex" }}>
-                    {userData.username}
-                    {console.log(userData.username)}
-                    {arrow ? (
-                      <KeyboardArrowUpIcon />
-                    ) : (
-                      <KeyboardArrowDownIcon />
-                    )}
-                  </Typography>
-                </div>
-              </IconButton>
-            </>
-          )}
+              <>
+                <IconButton
+                  size="large"
+                  aria-label="show 4 new mails"
+                  color="inherit"
+                  sx={{ marginRight: 1 }}
+                >
+                  <Avatar
+                    alt={userData.username}
+                    src={userData.profile_picture}
+                  />
+                </IconButton>
+                <IconButton
+                  disableRipple
+                  onMouseDown={handleProfileMenuOpen}
+                  onMouseUp={toggleArrow}
+                  size="small"
+                  color="inherit"
+                  sx={{ marginRight: 1 }}
+                >
+                  <div>
+                    <Typography sx={{ display: "flex" }}>
+                      {userData.username}
+                      {console.log(userData.username)}
+                      {arrow ? (
+                        <KeyboardArrowUpIcon />
+                      ) : (
+                        <KeyboardArrowDownIcon />
+                      )}
+                    </Typography>
+                  </div>
+                </IconButton>
+              </>
+            )}
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton

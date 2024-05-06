@@ -81,7 +81,6 @@ const AdminNotificationTab = () => {
         console.log(response.data.data);
         // setShowData(response.data.data);
         setNotifications(response.data.data);
-
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -264,14 +263,14 @@ const AdminNotificationTab = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {notificationPairs.map((pair, index) => (
+            {notifications.map((pair, index) => (
               <TableRow key={index}>
-                {pair.map((notification, index) => (
+                {notifications.map((notification, index) => (
                   <TableCell
                     key={index}
                     style={{ padding: "8px", width: "50%" }}
                   >
-                    {notification && (
+                    {notifications && (
                       <div
                         style={{
                           background: "white",
@@ -282,7 +281,7 @@ const AdminNotificationTab = () => {
                           paddingLeft: "15px",
                         }}
                       >
-                        {notification.message}
+                        {notification?.title}
                         <div
                           style={{
                             position: "absolute",
@@ -294,7 +293,7 @@ const AdminNotificationTab = () => {
                             fontWeight: "600",
                           }}
                         >
-                          {notification.date}
+                          {notification?.date}
                         </div>
                       </div>
                     )}

@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import axios from "axios";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -28,7 +29,7 @@ const style = {
   fontFamily: "Poppins",
   border: "1px solid #FFFFFF",
   borderRadius: "16px",
-  backgroundColor : "rgb(233, 235, 247)",
+  backgroundColor: "rgb(233, 235, 247)",
   width: { lg: "32%", md: "40%", sm: "50%", xs: "80%" },
 };
 const inputControl = {
@@ -37,19 +38,14 @@ const inputControl = {
   height: "31px",
   width: "100%",
   padding: "5px",
-  fontWeight : "500",
+  fontWeight: "500",
   margin: "2px 0px",
 };
 const labelStyle = {
   fontSize: { lg: "1rem", md: "1rem", sm: "1rem", xs: "0.9 rem" },
-  color : "rgb(120, 120, 122)"
+  color: "rgb(120, 120, 122)",
 };
-export default function UpdateTraining({
-  handleClose,
-  open,
-  selectedObj
-}) {
-
+export default function UpdateTraining({ handleClose, open, selectedObj }) {
   const itemNewInId = useRef("");
   const itemNewDop = useRef("");
   const itemNewAssignee = useRef("");
@@ -75,8 +71,12 @@ export default function UpdateTraining({
       itemNewInWarranty.current.value,
       itemNewEndWarranty.current.value,
     ];
+
     // handleAdd((prevData) => [...prevData, newItem]);
   }
+
+  console.log(selectedObj);
+
   return (
     <>
       <Modal
@@ -110,7 +110,7 @@ export default function UpdateTraining({
                   id="inId"
                   style={inputControl}
                   ref={itemNewInId}
-                  value={selectedObj?.courseName}
+                  value={selectedObj?.course_name}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -123,7 +123,7 @@ export default function UpdateTraining({
                   id="dop"
                   style={inputControl}
                   ref={itemNewDop}
-                  value={selectedObj?.courseDescription}
+                  value={selectedObj?.course_description}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -136,27 +136,28 @@ export default function UpdateTraining({
                   id="assignee"
                   style={inputControl}
                   ref={itemNewAssignee}
-                  value={selectedObj?.roadmapUrl}
+                  value={selectedObj?.roadmap_url}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
-                <label for="item"  style={labelStyle}>
+                <label for="item" style={labelStyle}>
                   Deatails
                 </label>
                 <br />
                 <textarea
                   type="text"
                   id="item"
-                  rows="4" 
+                  rows="4"
                   cols="50"
-                  style={{border: "none",
-                  borderRadius: "4px",
-                  height: "50px",
-                  width: "100%",
-                  fontWeight : "500",
-                  padding: "5px",
-                  margin: "2px 0px",
-                }}
+                  style={{
+                    border: "none",
+                    borderRadius: "4px",
+                    height: "50px",
+                    width: "100%",
+                    fontWeight: "500",
+                    padding: "5px",
+                    margin: "2px 0px",
+                  }}
                   ref={itemNewItem}
                   value={selectedObj?.details}
                 />

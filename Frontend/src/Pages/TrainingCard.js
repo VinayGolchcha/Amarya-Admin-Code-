@@ -3,13 +3,14 @@ import Grid from "@mui/material/Grid";
 import CardContent from "@mui/material/CardContent";
 import LaunchIcon from "@mui/icons-material/Launch";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditIcon from '@mui/icons-material/Edit';
 import Typography from "@mui/material/Typography";
 import { Card } from "@mui/material";
 import ReactCardFlip from "react-card-flip";
 import { useState } from "react";
 import axios from "axios";
 
-export default function TrainingCard({ field, i, isActiveDeleteButton, logo }) {
+export default function TrainingCard({ field, i, isActiveDeleteButton, logo ,isEdit, setOpen ,open , setSelectedField}) {
   const [isFLip, setIsFlip] = useState(false);
   const dynamicColor = field.color;
   function handleFlip(val) {
@@ -26,6 +27,13 @@ export default function TrainingCard({ field, i, isActiveDeleteButton, logo }) {
       console.error("Error deleting training:", error); // Handle error as needed
     }
   };
+
+
+  const handleEdit =(val)=>{
+    setOpen(!open)
+    setSelectedField(val)
+  }
+
 
   const handleRequestTraining = async () => {
     try {
@@ -82,6 +90,7 @@ export default function TrainingCard({ field, i, isActiveDeleteButton, logo }) {
                     marginLeft:"130px",
                   }} onClick={handleDelete} />
                 )}
+                {isEdit && ( <EditIcon sx={{marginLeft:"120px",}} onClick={() => handleEdit(field)}/>)}
                 <LaunchIcon onClick={handleRequestTraining} />
               </Typography>
               <Typography

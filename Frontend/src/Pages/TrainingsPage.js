@@ -1,4 +1,3 @@
-// LoginPage.js
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -48,30 +47,11 @@ import axios from "axios";
 //     courseDescription:
 //       "Topics Covered - Python Basics, Intermediate and Advanced Python with Django Framework.",
 //     color: "#E8F0FB",
-//   },
-//   {
-//     courseName: "SAP ABAP",
-//     courseDescription: "Topics Covered - Basics of ABAP Programming Language.",
-//     color: "#FDEBF9",
-//   },
-//   {
-//     courseName: "SAP - HR",
-//     courseDescription:
-//       "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
-//     color: "#E8F0FB",
-//   },
-//   {
-//     courseName: "SAP - CDS",
-//     courseDescription:
-//       "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
-//     color: "#F3F8EB",
-//   },
-// ];
 
 export default function TrainingsPage(props) {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [courses, setfields] = React.useState([]);
-  const[coursess,setCoursess]=React.useState([]);
+  const [coursess, setCoursess] = React.useState([]);
   const handleCheckboxChange = (rowId) => {
     const isSelected = selectedRows.includes(rowId);
     setSelectedRows((prevSelected) =>
@@ -79,44 +59,36 @@ export default function TrainingsPage(props) {
         ? prevSelected.filter((id) => id !== rowId)
         : [...prevSelected, rowId]
     );
-  }; 
+  };
 
- ///chetan code
-//  const [trainingCards, setTrainingCards] = React.useState("");
- React.useEffect(() => {
-  axios.post('http://localhost:4000/api/v1/training/get-user-training', {
-    emp_id: "AMEMP003"
-  })
-    .then(response => {
-      console.log('User Training Data:', response.data);
-      setCoursess(response.data.data); // Assuming response.data contains the course data
-    })
-    .catch(error => {
-      console.error('Error fetching user training data:', error);
-    });
-}, []);
-
- 
-
+  ///vb code
   React.useEffect(() => {
-    // Axios GET request
-    axios.get('http://localhost:4000/api/v1/training/training-cards')
-      .then(response => {
-        console.log('Training Cards:', response);
-        // Update state with the fetched data
-        setfields(response.data.data);
+    axios
+      .post("http://localhost:4000/api/v1/training/get-user-training", {
+        emp_id: "AMEMP003",
       })
-      .catch(error => {
-        console.error('Error fetching training cards:', error);
-        // Handle error as needed
+      .then((response) => {
+        console.log("User Training Data:", response.data);
+        setCoursess(response.data.data); // Assuming response.data contains the course data
+      })
+      .catch((error) => {
+        console.error("Error fetching user training data:", error);
       });
   }, []);
 
+  React.useEffect(() => {
+    axios
+      .get("http://localhost:4000/api/v1/training/training-cards")
+      .then((response) => {
+        console.log("Training Cards:", response);
+        setfields(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching training cards:", error);
+      });
+  }, []);
 
-  
-
-// 
-
+  //
 
   const rows = [
     {
@@ -129,7 +101,6 @@ export default function TrainingsPage(props) {
       approvedrejected: "Approved",
       manager: "HR",
     },
-    // Add more rows as needed
   ];
   let row;
 
@@ -256,41 +227,42 @@ export default function TrainingsPage(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    <Box
-                      component="img"
-                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                      alt="Check"
-                      style={{ filter: "invert(1)" }}
-                      sx={{ paddingRight: "9px" }}
-                    />
-                    {row.id}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.training_id}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.courses}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.coursedescription}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.completedinprogress}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.approvedon}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.approvedrejected}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.manager}
-                  </TableCell>
-                </TableRow>
-              ))}
+              {coursess &&
+                coursess?.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell style={{ fontFamily: "Poppins" }}>
+                      <Box
+                        component="img"
+                        src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                        alt="Check"
+                        style={{ filter: "invert(1)" }}
+                        sx={{ paddingRight: "9px" }}
+                      />
+                      {row.id}
+                    </TableCell>
+                    <TableCell style={{ fontFamily: "Poppins" }}>
+                      {row.training_id}
+                    </TableCell>
+                    <TableCell style={{ fontFamily: "Poppins" }}>
+                      {row?.course_name}
+                    </TableCell>
+                    <TableCell style={{ fontFamily: "Poppins" }}>
+                      {row?.course_description}
+                    </TableCell>
+                    <TableCell style={{ fontFamily: "Poppins" }}>
+                      {row?.progress_status}
+                    </TableCell>
+                    <TableCell style={{ fontFamily: "Poppins" }}>
+                      {row.approvedon}
+                    </TableCell>
+                    <TableCell style={{ fontFamily: "Poppins" }}>
+                      {row?.status}
+                    </TableCell>
+                    <TableCell style={{ fontFamily: "Poppins" }}>
+                      {row.manager}
+                    </TableCell>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -305,10 +277,16 @@ export default function TrainingsPage(props) {
         >
           <Grid container spacing={2}>
             {courses.map((course, i) => {
-              return <TrainingCard field={course} i={i} key={course.training_id} logo  = {LaunchIcon}  />;
+              return (
+                <TrainingCard
+                  field={course}
+                  i={i}
+                  key={course.training_id}
+                  logo={LaunchIcon}
+                />
+              );
             })}
           </Grid>
-          
         </Box>
       </Box>
       {/* <div style={{position:"absolute", top:"0", zIndex:"200"}}>{trainingCards}</div> */}

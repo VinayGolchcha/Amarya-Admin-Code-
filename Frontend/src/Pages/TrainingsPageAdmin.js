@@ -6,6 +6,7 @@ import Grid from "@mui/material/Grid";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Button from "@mui/material/Button";
+import EditIcon from "@mui/icons-material/Edit";
 
 import axios from "axios";
 
@@ -238,12 +239,14 @@ export default function TrainingsPageAdmin({ trainingId }) {
   const [rowperpage, rowperpagechange] = React.useState(5);
   const [filter, setFilter] = React.useState(false);
   const [courseStatus, setCourseStatus] = React.useState("All");
-  let [filteredData, setFilteredData] = React.useState(data);
+  let [filteredData, setFilteredData] = React.useState([]);
   const [searchEmp, setSearchEmp] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const [info, setInfo] = React.useState({});
+
+  const [selectedField, setSelectedField] = React.useState({});
 
   const [isActiveDeleteButton, setIsActiveDeleteButton] = React.useState(false);
+  const [isEdit, setIsEdit] = React.useState(false);
 
   const handleClick = () => {
     setOpen(!open);
@@ -291,9 +294,9 @@ export default function TrainingsPageAdmin({ trainingId }) {
     });
     setFilteredData(newData);
   }
-  filteredData = filteredData.filter((item) =>
-    item.empid.toLowerCase().includes(searchEmp.toLowerCase())
-  );
+  // filteredData = filteredData.filter((item) =>
+  //   item.empid.toLowerCase().includes(searchEmp.toLowerCase())
+  // );
   function handleFilterEmp(e) {
     setSearchEmp(e.target.value);
   }
@@ -324,7 +327,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
         // console.log( response);
         console.log(response.data.data);
         // setFilteredData(response.data)
-        setInfo(response.data.data);
+        setFilteredData(response.data.data);
       })
       .catch((error) => {
         console.error("Error fetching training cards:", error);
@@ -371,8 +374,12 @@ export default function TrainingsPageAdmin({ trainingId }) {
             {courses.map((course) => {
               return (
                 <TrainingCard
+                  setOpen={setOpen}
+                  open={open}
                   field={course}
+                  setSelectedField={setSelectedField}
                   isActiveDeleteButton={isActiveDeleteButton}
+                  isEdit={isEdit}
                   key={course.training_id}
                   logo={DeleteOutlineIcon}
                 />
@@ -417,6 +424,10 @@ export default function TrainingsPageAdmin({ trainingId }) {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
+                // onClick={handleClick}
+                onClick={() => {
+                  setIsEdit(!isEdit);
+                }}
               >
                 Update Training
               </Button>
@@ -424,7 +435,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
                 <UpdateTraining
                   handleClose={handleClose}
                   open={open}
-                  selectedObj={fields[1]}
+                  selectedObj={selectedField}
                 />
               </>
             </Grid>
@@ -614,19 +625,19 @@ export default function TrainingsPageAdmin({ trainingId }) {
                           checked={selectedRows.includes(row.id)}
                           onChange={() => handleCheckboxChange(row.id)}
                         />
-                        {row.id}
+                        {row?.training_id}
                       </TableCell>
                       <TableCell style={{ fontFamily: "Poppins" }}>
-                        {row.courses}
+                        {row?.course_name}
                       </TableCell>
                       <TableCell style={{ fontFamily: "Poppins" }}>
-                        {row.empid}
+                        {row?.emp_id}
                       </TableCell>
                       <TableCell style={{ fontFamily: "Poppins" }}>
-                        {row.coursedescription}
+                        {row?.course_description}
                       </TableCell>
                       <TableCell style={{ fontFamily: "Poppins" }}>
-                        {row.completedinprogress}
+                        {row?.progress_status}
                       </TableCell>
                       <TableCell style={{ fontFamily: "Poppins" }}>
                         {row.approvedon}
