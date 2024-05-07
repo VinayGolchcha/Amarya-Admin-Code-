@@ -90,6 +90,8 @@ const NavBar = ({ handleDrawerToggle }) => {
   const [addIcon, setAddIcon] = React.useState(false);
   const [addTask, setAddTask] = React.useState("");
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [stickeyNotesData , setStickeyNotesData]=React.useState([]);
+  
 
   const handleAddStickyNote = () => {
     axios
@@ -114,23 +116,21 @@ const NavBar = ({ handleDrawerToggle }) => {
         }
       );
       console.log(response.data);
+      setStickeyNotesData(response.data.data)
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleDeleteStickyNote = (noteId) => {
-    axios
-      .post("http://localhost:4000/api/v1/stickynotes/delete-stickynotes", {
-        data: { _id: noteId },
-      })
-      .then((response) => {
-        console.log("Sticky note deleted:", response.data);
-      })
-      .catch((error) => {
-        console.error("Error deleting sticky note:", error);
-      });
+  const handleDeleteStickyNote = async (noteId) => {
+    try {
+     const response = await axios.delete(`http://localhost:4000/api/v1/stickynotes/delete-stickynotes/${noteId}`);
+      console.log(response);
+    } catch (error) {
+      console.error("Error deleting sticky note:", error);
+    }
   };
+
 
   const handleSearch = () => {
     navigate(`/${searchQuery}`);
@@ -144,15 +144,15 @@ const NavBar = ({ handleDrawerToggle }) => {
     setAddTask(event.target.value);
   }
 
-  function handleDelete(index) {
-    const noteId = index; // Assuming the note id is the same as the index
-    handleDeleteStickyNote(noteId);
-    setStickeyNotes((prevStickyNotes) => {
-      const newStickyNotes = [...prevStickyNotes];
-      newStickyNotes.splice(index, 1);
-      return newStickyNotes;
-    });
-  }
+
+    function handleDelete(noteId) {
+      handleDeleteStickyNote(noteId);
+      setStickeyNotes((prevStickyNotes) => {
+        return prevStickyNotes.filter((note) => note._id !== noteId);
+       
+      });
+    }
+  
   function handleKeyDown(e) {
     if (e.key === "Enter") {
       setStickeyNotes((prevStickyNotes) => [...prevStickyNotes, addTask]);
@@ -411,10 +411,12 @@ const NavBar = ({ handleDrawerToggle }) => {
                         />
                       )}
                     </Box>
-                    {stickeyNotes.map((item, index) => {
+                    {stickeyNotesData.map((note) => {
                       return (
                         <Box
-                          key={index}
+                          key={
+                            note._id
+                          }
                           sx={{
                             p: 1,
                             width: "380px",
@@ -435,10 +437,11 @@ const NavBar = ({ handleDrawerToggle }) => {
                               fontFamily: "Lato",
                             }}
                           >
-                            {item}{" "}
+                            {/* {item}{" "} */}
+                            {note.note}
                             <Box>
                               <CloseIcon
-                                onClick={() => handleDelete(stickeyNotes?._id)}
+                                onClick={() => handleDelete(note._id)}
                               />
                             </Box>
                           </Typography>

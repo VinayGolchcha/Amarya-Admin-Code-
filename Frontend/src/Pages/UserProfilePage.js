@@ -1,6 +1,7 @@
-import { useState, React } from "react";
+import { useState, React, useEffect } from "react";
 import { Box, Typography, Card, Grid, Container, TextField, Button, CardContent, CardMedia, Chip } from "@mui/material";
 import { useTheme } from '@mui/system';
+import axios from "axios";
 
 
 const UserProfilePage = () => {
@@ -9,7 +10,7 @@ const UserProfilePage = () => {
     const isFormActive = false;
 
     const [formData, setFormData] = useState({
-        firstName: 'Sanjana',
+        first_name: 'Sanjana',
         lastName: 'Jain',
         email: 'abc@mail.com',
         bloodGroup: 'O-',
@@ -21,6 +22,8 @@ const UserProfilePage = () => {
         ecpna: 'None',
         ecn: '0',
     });
+
+
 
     const inputFields = [
         { type: "text", label: "First Name", field: "firstName" },
@@ -35,6 +38,26 @@ const UserProfilePage = () => {
         { type: "text", label: "Emergency Contact Person Name/Address", field: "ecpna" },
         { type: "text", label: "Emergency Contact Number", field: "ecn" }
     ];
+    const[userData,setUserData]=useState();
+
+    useEffect(() => {
+        fetchUserProfile();
+    }, []);
+
+    const fetchUserProfile = async () => {
+        try {
+            const response = await axios.post("http://localhost:4000/api/v1/user/get-user-profile", {
+                emp_id: "AMEMP002"
+            });
+            // Assuming the API response contains user profile data, you can handle it here
+            console.log("hii",response.data.data[0][0]); // Log the response data to see what you receive
+            setUserData(response.data.data.data[0][0]);
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+        }
+    };
+
+   
 
     const cardsData = [
         {
@@ -108,6 +131,8 @@ const UserProfilePage = () => {
         { type: "text", label: "Team", field: "team" },
     ]
 
+ 
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -153,7 +178,7 @@ const UserProfilePage = () => {
                                             variant="outlined"
                                             type={item.type}
                                             name={item.field}
-                                            value={formData[item.field]}
+                                            value={userData ? userData[item.field] : ''}
                                             onChange={handleChange}
                                             disabled={!isFormActive}
                                             sx={{

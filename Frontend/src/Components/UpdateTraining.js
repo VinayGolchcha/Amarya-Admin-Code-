@@ -56,22 +56,39 @@ export default function UpdateTraining({ handleClose, open, selectedObj }) {
   const itemNewRepairs = useRef("");
   const itemNewInWarranty = useRef("");
   const itemNewEndWarranty = useRef("");
+    //  const newItem = [
+    //   itemNewInId.current.value,
+    //   itemNewDop.current.value,
+    //   itemNewAssignee.current.value,
+    //   itemNewItem.current.value,
+    //   itemNewDescription.current.value,
+    //   itemNewIssuedFrom.current.value,
+    //   itemNewIssuedTill.current.value,
+    //   itemNewRepairs.current.value,
+    //   itemNewInWarranty.current.value,
+    //   itemNewEndWarranty.current.value,
+    // ];
+
 
   function handleSubmit(event) {
     event.preventDefault();
-    const newItem = [
-      itemNewInId.current.value,
-      itemNewDop.current.value,
-      itemNewAssignee.current.value,
-      itemNewItem.current.value,
-      itemNewDescription.current.value,
-      itemNewIssuedFrom.current.value,
-      itemNewIssuedTill.current.value,
-      itemNewRepairs.current.value,
-      itemNewInWarranty.current.value,
-      itemNewEndWarranty.current.value,
-    ];
+    const updatedData = {
+      course_description: itemNewDop.current.value,
+      details: itemNewItem.current.value,
+    };
+    try {
+      const response = axios.put(
+        `http://localhost:4000/api/v1/training/admin/update-training/${selectedObj.id}`,
+        updatedData
+      );
+       console.log("Update successful:", response.data);
+       handleClose();
+    } 
+    catch (error) {
+      console.error("Error updating training:", error);
+    }
 
+ 
     // handleAdd((prevData) => [...prevData, newItem]);
   }
 
@@ -86,7 +103,7 @@ export default function UpdateTraining({ handleClose, open, selectedObj }) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <form onSubmit={handleSubmit}>
+          <form>
             <Typography
               sx={{
                 textAlign: "center",
@@ -110,7 +127,7 @@ export default function UpdateTraining({ handleClose, open, selectedObj }) {
                   id="inId"
                   style={inputControl}
                   ref={itemNewInId}
-                  value={selectedObj?.course_name}
+                  defaultValue={selectedObj?.course_name}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -123,7 +140,7 @@ export default function UpdateTraining({ handleClose, open, selectedObj }) {
                   id="dop"
                   style={inputControl}
                   ref={itemNewDop}
-                  value={selectedObj?.course_description}
+                  defaultValue={selectedObj?.course_description}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -136,7 +153,7 @@ export default function UpdateTraining({ handleClose, open, selectedObj }) {
                   id="assignee"
                   style={inputControl}
                   ref={itemNewAssignee}
-                  value={selectedObj?.roadmap_url}
+                  defaultValue={selectedObj?.roadmap_url}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -159,12 +176,16 @@ export default function UpdateTraining({ handleClose, open, selectedObj }) {
                     margin: "2px 0px",
                   }}
                   ref={itemNewItem}
-                  value={selectedObj?.details}
+                  defaultValue={selectedObj?.details}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <div style={{ textAlign: "center", padding: "15px" }}>
-                  <Button variant="contained" color="error">
+                  <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    color="error"
+                  >
                     Save
                   </Button>
                 </div>
