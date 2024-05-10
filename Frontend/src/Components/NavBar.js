@@ -357,9 +357,10 @@ const NavBar = ({ handleDrawerToggle }) => {
                   id={id}
                   open={open}
                   anchorEl={anchorE2}
-                  sx={{ marginTop: "20px", position: "relative" }}
+                  sx={{ marginTop: "20px", position: "relative", overflowY:"auto",}}
                   placement="bottom-start"
                 >
+                  
                   <Box
                     sx={{
                       bgcolor: "#FFEBEB",

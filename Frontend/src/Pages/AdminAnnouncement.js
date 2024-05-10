@@ -21,6 +21,8 @@ const AdminNotificationTab = () => {
   const [selectedTab, setSelectedTab] = useState("announcement");
   const [selectedDate, setSelectedDate] = useState("All Dates"); // State for selected date
   const [showData, setShowData] = useState([]);
+  const apiUrl= process.env.REACT_APP_API_URI ;
+  console.log(apiUrl);
   const [notifications, setNotifications] = useState([
     // {
     //   id: 1,
@@ -74,11 +76,12 @@ const AdminNotificationTab = () => {
   ]);
   useEffect(() => {
     const fetchData = async () => {
+      console.log(apiUrl);
       try {
         const response = await axios.get(
-          "http://localhost:4000/api/v1/announcement/admin/fetch-announcement"
+          `${apiUrl}/announcement/fetch-announcement` 
         );
-        console.log(response.data.data);
+        console.log(response);
         // setShowData(response.data.data);
         setNotifications(response.data.data);
       } catch (error) {
@@ -107,12 +110,21 @@ const AdminNotificationTab = () => {
 
   // const uniqueDates = [...new Set(notifications.map((n) => n.date))];
   // User
-  const uniqueDates = [
-    "All Dates",
-    ...new Set(
-      notifications.filter((n) => n.type === selectedTab).map((n) => n.date)
-    ),
-  ];
+  const uniqueDates = notifications
+  ? [
+      "All Dates",
+      ...new Set(
+        notifications
+          .filter((n) => n.type === selectedTab)
+          .map((n) => n.date)
+      ),
+    ]
+  : ["All Dates"];
+
+if (!uniqueDates.includes("All Dates")) {
+  uniqueDates.unshift("All Dates"); // Add "All Dates" option if not already present
+}
+
   if (!uniqueDates.includes("All Dates")) {
     uniqueDates.unshift("All Dates"); // Add "All Dates" option if not already present
   }
