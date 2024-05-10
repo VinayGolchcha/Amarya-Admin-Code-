@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -8,20 +8,22 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveIcon from "@mui/icons-material/Remove";
+import dayjs from "dayjs";
 
 export default function SettingsProject() {
   const [formData, setFormData] = useState([
     {
-      projectName: "",
-      clienName: "",
-      projectLead: "",
-      projecManager: "",
-      startofproject: "",
-      endofproject: "",
-      projectStatus: "",
-      category: "",
+      "Project Name": "",
+      "Client Name": "",
+      "Project Lead": "",
+      "Project Manager": "",
+      "Start Of The Project": null,
+      "End Of The Project": null,
+      "Project Status": "",
+      Categor: "",
     },
   ]);
+
   const labels = [
     "Project Name",
     "Client Name",
@@ -35,6 +37,49 @@ export default function SettingsProject() {
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedInputIndex, setSelectedInputIndex] = useState(null);
+  const apiUrl = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = () => {
+    // Fetch projects from API
+    fetch(
+      `${apiUrl}/project/fetch-all-projects`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const adjustedData = data.data.map((item) => {
+          const currentYear = new Date().getFullYear();
+          const capitalizeFirstLetter = (str) => {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+          };
+          const startMonth = item.start_month
+            ? `${capitalizeFirstLetter(item.start_month)} ${currentYear}`
+            : null;
+          const endMonth = item.end_month
+            ? `${capitalizeFirstLetter(item.end_month)} ${currentYear}`
+            : null;
+
+          console.log("Start month:", startMonth);
+          // console.log("End month:", item.end_month);
+          return {
+            "Project Name": item.project,
+            "Client Name": item.client_name,
+            "Project Lead": item.project_lead,
+            "Project Manager": item.project_lead,
+            "Start Of The Project": startMonth,
+            "End Of The Project": endMonth,
+            "Project Status": item.project_status,
+            Category: item.category,
+          };
+        });
+        setFormData(adjustedData);
+        console.log(data);
+      })
+      .catch((error) => console.error("Error fetching projects:", error));
+  };
 
   const handleAddNew = () => {
     setFormData([
@@ -44,8 +89,8 @@ export default function SettingsProject() {
         clienName: "",
         projectLead: "",
         projecManager: "",
-        startofproject: "",
-        endofproject: "",
+        startOfProject: null,
+        endOfProject: null,
         projectStatus: "",
         category: "",
       },
@@ -74,10 +119,41 @@ export default function SettingsProject() {
       setEditMode(false);
     }
   };
-
   const handleInputChange = (index, fieldName, value) => {
     const newFormData = [...formData];
-    newFormData[index][fieldName] = value;
+    const newDataItem = { ...newFormData[index] };
+
+    // Map the fieldName to the corresponding key in the data
+    switch (fieldName) {
+      case "Project Name":
+        newDataItem.project = value;
+        break;
+      case "Client Name":
+        newDataItem.client_name = value;
+        break;
+      case "Project Lead":
+        newDataItem.project_lead = value;
+        break;
+      case "Project Manager":
+        newDataItem.project_manager = value;
+        break;
+      case "Start Of The Project":
+        newDataItem.start_month = value;
+        break;
+      case "End Of The Project":
+        newDataItem.end_month = value;
+        break;
+      case "Project Status":
+        newDataItem.project_status = value;
+        break;
+      case "Category":
+        newDataItem.category = value;
+        break;
+      default:
+        break;
+    }
+
+    newFormData[index] = newDataItem;
     setFormData(newFormData);
   };
 
@@ -123,6 +199,7 @@ export default function SettingsProject() {
                         <DatePicker
                           label={'"month" , "year"'}
                           views={["month", "year"]}
+                          value={dayjs(data[item]) || ""} // Accessing the value using the label as the key
                           sx={{
                             "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
                               borderWidth: "2px",
@@ -131,8 +208,8 @@ export default function SettingsProject() {
                             },
                             margin: "10px 0px",
                           }}
-                          onChange={(e) =>
-                            handleInputChange(index, item, e.target.value)
+                          onChange={(date) =>
+                            handleInputChange(index, item, date)
                           }
                           onClick={() => handleInputClick(index)}
                         />
@@ -145,6 +222,7 @@ export default function SettingsProject() {
                         <DatePicker
                           label={'"month", "year"'}
                           views={["month", "year"]}
+                          value={dayjs(data[item]) || ""} // Accessing the value using the label as the key
                           sx={{
                             "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
                               borderWidth: "2px",
@@ -153,8 +231,8 @@ export default function SettingsProject() {
                             },
                             margin: "10px 0px",
                           }}
-                          onChange={(e) =>
-                            handleInputChange(index, item, e.target.value)
+                          onChange={(date) =>
+                            handleInputChange(index, item, date)
                           }
                           onClick={() => handleInputClick(index)}
                         />
@@ -165,6 +243,7 @@ export default function SettingsProject() {
                     item !== "Start Of The Project" && (
                       <TextField
                         key={index}
+                        value={data[item]} // Set the value to the date from data
                         type="text"
                         fullWidth
                         sx={{
@@ -178,9 +257,8 @@ export default function SettingsProject() {
                         InputLabelProps={{
                           shrink: true,
                         }}
-                        value={data.item}
-                        onChange={(e) =>
-                          handleInputChange(index, item, e.target.value)
+                        onChange={(date) =>
+                          handleInputChange(index, item, date)
                         }
                         onClick={() => handleInputClick(index)}
                         // disabled={!editMode}

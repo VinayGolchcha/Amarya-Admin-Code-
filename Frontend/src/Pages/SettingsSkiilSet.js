@@ -1,9 +1,7 @@
-import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import Grid from "@mui/material/Grid";
-import { Button, FormControl, FormLabel, TextField } from "@mui/material";
+import { Box, Button, FormControl, FormLabel, Grid, TextField } from "@mui/material";
 
-export default function SettingsSkiilSet() {
+export default function SettingsSkillSet() {
   const [formData, setFormData] = useState([
     { _id: "", skill: "" },
     { _id: "", skill: "" },
@@ -23,17 +21,14 @@ export default function SettingsSkiilSet() {
   const [originalFormData, setOriginalFormData] = useState([]);
   const len = formData.length;
   const midPoint = Math.floor(formData.length / 2);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    // Fetch skills data when component mounts
     fetchSkills();
   }, []);
 
   const fetchSkills = () => {
-    // Make a fetch request to the API endpoint
-    fetch(
-      "https://tense-ruby-poncho.cyclic.app/api/v1/skillset/admin/fetch-skills"
-    )
+    fetch(`${apiUrl}/skillset/fetch-skills`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch skills");
@@ -47,16 +42,12 @@ export default function SettingsSkiilSet() {
 
         const skills = data.data;
 
-        setFormData(
-          data.data.map((skill) => ({ _id: skill._id, skill: skill.skill }))
-        );
-        setOriginalFormData(skills.map((skill) => ({ ...skill })));
+        setFormData(skills.map((skill) => ({ _id: skill._id, skill: skill.skill })));
+        setOriginalFormData([...skills]);
 
-        // console.log(skills);
       })
       .catch((error) => {
         console.error("Error:", error);
-        // Handle error (e.g., show error message to the user)
       });
   };
 
@@ -71,62 +62,115 @@ export default function SettingsSkiilSet() {
 
   const handleDelete = () => {
     if (deleteMode) {
-      const newFormData = [...formData];
-      newFormData.splice(selectedInputIndex, 1);
-      setFormData(newFormData);
-      setSelectedInputIndex(null);
-      setDeleteMode(false);
-    } else {
-      setDeleteMode(true);
-    }
-  };
-  const handleSave = () => {
-    if (editMode) {
-      // Iterate through formData and extract only the skills that have been edited
-      const editedSkills = formData.filter(
-        (data, index) => data.skill !== originalFormData[index].skill
-      );
-      console.log(editedSkills);
-      // Send API requests to update each edited skill
-      editedSkills.forEach((editedSkill) => {
-        fetch(
-          `https://tense-ruby-poncho.cyclic.app/api/v1/skillSet/admin/update-skill/${editedSkill._id}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ skill: editedSkill.skill }), // Send the updated skill value
-          }
-        )
+      if (selectedInputIndex !== null) {
+        const skillId = formData[selectedInputIndex]._id;
+        fetch(`${apiUrl}/skillSet/admin/delete-skill/${skillId}`, {
+          method: "DELETE",
+        })
           .then((response) => {
             if (!response.ok) {
-              throw new Error("Failed to update skill");
+              throw new Error("Failed to delete skill");
             }
             return response.json();
           })
           .then((data) => {
-            console.log("Skill updated successfully:", data);
+            console.log("Skill deleted successfully:", data);
+            const newFormData = [...formData];
+            newFormData.splice(selectedInputIndex, 1);
+            setFormData(newFormData);
+            setSelectedInputIndex(null);
+            setDeleteMode(false);
           })
           .catch((error) => {
-            console.error("Error updating skill:", error);
+            console.error("Error deleting skill:", error);
           });
-      });
-
-      // After updating all edited skills, reset editMode
-      setEditMode(false);
+      } else {
+        setDeleteMode(false);
+      }
+    } else {
+      setDeleteMode(true);
+      setEditMode(true); // Enable all text fields
     }
   };
 
+ const handleSave = () => {
+  if (editMode) {
+    const editedSkills = formData.filter(
+      (data, index) => data && originalFormData[index] && data.skill !== originalFormData[index].skill
+    );
+    const newSkills = formData.filter((data) => data && !data._id && data.skill);
+ 
+    console.log(formData);
+    console.log(originalFormData);
+    // Update existing skills
+    editedSkills.forEach((editedSkill) => {
+      fetch(`${apiUrl}/skillSet/admin/update-skill/${editedSkill._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ skill: editedSkill.skill }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to update skill");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Skill updated successfully:", data);
+        })
+        .catch((error) => {
+          console.error("Error updating skill:", error);
+        });
+    });
+
+    // Create new skills
+    newSkills.forEach((newSkill) => {
+      fetch(`${apiUrl}/skillSet/admin/create-skill`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ skill: newSkill.skill }),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to create skill");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log("Skill created successfully:", data);
+          // Update the form data with the newly created skill ID
+          const updatedFormData = [...formData];
+          const index = updatedFormData.findIndex(
+            (item) => item && item.skill === newSkill.skill
+          );
+          if (index !== -1) {
+            updatedFormData[index] = {
+              _id: data.skill._id,
+              skill: data.skill.skill,
+            };
+            setFormData(updatedFormData);
+          }
+        })
+        .catch((error) => {
+          console.error("Error creating skill:", error);
+        });
+    });
+
+    setEditMode(false);
+  }
+};
+
   const handleInputChange = (index, fieldName, value) => {
-    console.log(value);
     const newFormData = [...formData];
     newFormData[index][fieldName] = value;
     setFormData(newFormData);
   };
 
   const handleInputClick = (index) => {
-    console.log(index);
     if (deleteMode) {
       setSelectedInputIndex(index);
     }
@@ -206,7 +250,7 @@ export default function SettingsSkiilSet() {
             sx={{
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center ",
+              justifyContent: "center",
               width: "100%",
               height: "100%",
               gap: "40px",

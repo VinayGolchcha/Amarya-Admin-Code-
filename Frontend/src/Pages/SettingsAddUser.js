@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
 import { Box, Button, Typography } from "@mui/material";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SettingsAddUser() {
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -38,6 +40,7 @@ export default function SettingsAddUser() {
     experience: 0,
     completed_projects: 0,
     teams: 0,
+    gender: "male",
   });
 
   const handleChange = (event) => {
@@ -48,33 +51,77 @@ export default function SettingsAddUser() {
     }));
   };
 
+  useEffect(() => {
+    // Fetch user data from the API
+    const fetchUserData = async () => {
+      try {
+        const empId = "AMEMP026"; // Example employee ID
+        const response = await axios.get(
+          `${apiUrl}/user/get-user-profile/${empId}`
+        );
+        const userData = response.data.data[0][0]; // Extracting user data from the response
+        setFormData({
+          ...formData,
+          username: userData.username,
+          first_name: userData.first_name,
+          last_name: userData.last_name,
+          email: userData.email,
+          password: userData.password,
+          state_name: "Madhya Pradesh",
+          city_name: userData.city_name,
+          profile_picture: userData.profile_picture,
+          blood_group: userData.blood_group,
+          mobile_number: userData.mobile_number,
+          emergency_contact_number: userData.emergency_contact_number,
+          emergency_contact_person_info: userData.emergency_contact_person_info,
+          address: userData.address,
+          dob: userData.dob,
+          designation: userData.designation,
+          designationType: userData.designation_type,
+          joining_date: userData.joining_date,
+          experience: userData.experience,
+          completed_projects: userData.completed_projects,
+          teams: userData.teams,
+          gender: userData.gender,
+        });
+        
+        console.log(userData);
+      } catch (error) {
+        console.error("Error fetching user data:", error.message);
+        toast.error("Error fetching user data. Please try again later.");
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Convert keys from camelCase to snake_case
-    // const formDataSnakeCase = Object.fromEntries(
-    //   Object.entries(formData).map(([key, value]) => [
-    //     key.replace(/[A-Z]/g, "_$&").toLowerCase(),
-    //     value,
-    //   ])
-    // );
-
     console.log(formData);
+
     try {
-      // Make HTTP POST request to the API URL using Axios
       const response = await axios.post(
         `${apiUrl}/user/admin/register`,
         formData
       );
-
       console.log("User data saved successfully!", response.data);
+      toast.success("User data saved successfully!");
     } catch (error) {
       console.error("Error saving user data:", error.message);
+      if (error.response && error.response.data && error.response.data.errors) {
+        error.response.data.errors.forEach((error) => {
+          toast.error(error.msg);
+        });
+      } else {
+        toast.error("An error occurred. Please try again later.");
+      }
     }
   };
 
   return (
     <div style={{ margin: "20px 50px 50px 20px" }}>
+      <ToastContainer />
       <Grid container spacing={3.5}>
         {[...Array(5)].map((_, rowIndex) => (
           <Grid container item spacing={8} key={rowIndex}>
@@ -83,6 +130,8 @@ export default function SettingsAddUser() {
                 {rowIndex === 0 && colIndex === 0 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.first_name}
+
                     label="First Name"
                     name="first_name"
                     fullWidth
@@ -97,6 +146,7 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 0 && colIndex === 1 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.last_name}
                     label="Last Name"
                     name="last_name"
                     fullWidth
@@ -111,6 +161,8 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 0 && colIndex === 2 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.designation}
+
                     select
                     label="Designation"
                     name="designation"
@@ -132,6 +184,8 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 1 && colIndex === 0 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.email}
+
                     name="email"
                     label="Email"
                     fullWidth
@@ -146,6 +200,7 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 1 && colIndex === 1 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.username}
                     name="username"
                     label="Username"
                     fullWidth
@@ -161,6 +216,7 @@ export default function SettingsAddUser() {
                   <TextField
                     onChange={handleChange}
                     select
+                    value={formData.designation_type}
                     label="Designation Type"
                     name="designation_type"
                     fullWidth
@@ -181,6 +237,7 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 2 && colIndex === 0 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.mobile_number}
                     label="Contact Number"
                     name="mobile_number"
                     fullWidth
@@ -195,6 +252,7 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 2 && colIndex === 1 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.password}
                     label="Password"
                     name="password"
                     type="password"
@@ -210,6 +268,7 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 2 && colIndex === 2 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.joining_data}
                     label="Joining Date"
                     name="joining_date"
                     type="date"
@@ -228,6 +287,7 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 3 && colIndex === 0 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.emergency_contact_person_info}
                     label="Emergency Contact Person Name"
                     name="emergency_contact_person_info"
                     fullWidth
@@ -242,6 +302,8 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 3 && colIndex === 1 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.emergency_contact_number}
+                    
                     label="Emergency Contact Number"
                     name="emergency_contact_number"
                     fullWidth
@@ -256,6 +318,7 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 3 && colIndex === 2 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.teams}
                     name="teams"
                     label="Team"
                     fullWidth
@@ -270,6 +333,7 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 4 && colIndex === 0 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.city_name}
                     select
                     label="City"
                     name="city_name"
@@ -291,6 +355,8 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 4 && colIndex === 1 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.dob}
+
                     label="Date of Birth"
                     name="dob"
                     type="date"
@@ -309,6 +375,8 @@ export default function SettingsAddUser() {
                 ) : rowIndex === 4 && colIndex === 2 ? (
                   <TextField
                     onChange={handleChange}
+                    value={formData.experience}
+
                     label="Experience"
                     name="experience"
                     fullWidth
@@ -330,6 +398,7 @@ export default function SettingsAddUser() {
           <Grid item xs={8}>
             <TextField
               onChange={handleChange}
+              value={formData.address}
               label="Address"
               name="address"
               fullWidth
@@ -345,6 +414,8 @@ export default function SettingsAddUser() {
           <Grid item xs={4}>
             <TextField
               onChange={handleChange}
+              value={formData.completed_projects}
+
               label="Completed Projects"
               name="completed_projects"
               fullWidth

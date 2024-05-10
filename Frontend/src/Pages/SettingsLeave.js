@@ -1,18 +1,53 @@
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SettingsLeave() {
   const [formData, setFormData] = useState([
-    { leaveType: "", gender: "", count: "" },
+    {
+      leave_type: "",
+      gender: "",
+      leave_count: "",
+      _id: null,
+      leave_type_id: null,
+    },
   ]);
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedInputIndex, setSelectedInputIndex] = useState(null);
+  const [originalFormData, setOriginalFormData] = useState([]);
+
+  const apiUrl = process.env.REACT_APP_API_URL;
+
+  useEffect(() => {
+    fetchLeaveData();
+  }, []);
+
+  const fetchLeaveData = () => {
+    fetch(`${apiUrl}/leave/fetch-leave-type-and-count`)
+      .then((response) => response.json())
+      .then((data) => {
+        const categories = data.data;
+        setFormData(
+          data.data.map((data) => ({
+            leave_type: data.leave_type,
+            gender: data.gender,
+            leave_count: data.leave_count,
+            _id: data._id,
+            leave_type_id: data.leave_type_id,
+          }))
+        );
+        setOriginalFormData([...categories]);
+        // console.log(formData);
+      })
+      .catch((error) => console.error("Error fetching leave data:", error));
+  };
 
   const handleAddNew = () => {
-    setFormData([...formData, { leaveType: "", gender: "", count: "" }]);
+    setFormData([...formData, { leave_type: "", gender: "", leave_count: "" }]);
     setEditMode(true);
   };
 
@@ -22,18 +57,116 @@ export default function SettingsLeave() {
 
   const handleDelete = () => {
     if (deleteMode) {
-      const newFormData = [...formData];
-      newFormData.splice(selectedInputIndex, 1);
-      setFormData(newFormData);
-      setSelectedInputIndex(null);
-      setDeleteMode(false);
+      if (selectedInputIndex !== null) {
+        const leaveId = formData[selectedInputIndex]._id;
+        const leaveTypeId = formData[selectedInputIndex].leave_type_id;
+        fetch(
+          `${apiUrl}/leave/admin/delete-leave-type-and-count/${leaveId}/${leaveTypeId}`,
+          {
+            method: "DELETE",
+          }
+        )
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to delete leave type");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            const newFormData = [...formData];
+            newFormData.splice(selectedInputIndex, 1);
+            setFormData(newFormData);
+            setSelectedInputIndex(null);
+            setDeleteMode(false);
+          })
+          .catch((error) => {
+            console.error("Error deleting leave type:", error);
+          });
+      } else {
+        setDeleteMode(false);
+      }
     } else {
       setDeleteMode(true);
+      setEditMode(true);
     }
   };
 
   const handleSave = () => {
     if (editMode) {
+      const editedleaves = formData.filter(
+        (data, index) =>
+          data &&
+          originalFormData[index] &&
+          data.leave_count !== originalFormData[index].leave_count
+      );
+
+      console.log(editedleaves);
+      editedleaves.forEach((item) => {
+        console.log(item);
+        const leaveId = item._id;
+        const leaveTypeId = item.leave_type_id;
+        fetch(
+          `${apiUrl}/leave/admin/update-leave-type-and-count/${leaveId}/${leaveTypeId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              leave_type: item.leave_type,
+              gender: item.gender,
+              leave_count: item.leave_count,
+            }),
+          }
+        )
+          .then((response) => {
+            if (!response.ok) {
+              toast.error(response.message || "Leave Type Crea successfully");
+
+              throw new Error("Failed to update leave type");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Leave type updated successfully:", data);
+            toast.success(data.message || "Leave Type updated successfully");
+          })
+          .catch((error) => {
+            console.error("Error updating leave type:", error);
+          });
+      });
+
+      const newLeaves = formData.filter((data) => !data._id);
+      newLeaves.forEach((item) => {
+        fetch(`${apiUrl}/leave/admin/add-leave-type-and-count`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            leave_type: item.leave_type,
+            gender: item.gender,
+            leave_count: item.leave_count,
+            description: "Testing",
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to create leave type");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Leave type created successfully:", data);
+            toast.success(data.message || "Leave Type Crea successfully");
+
+            // Optionally update the form data with the newly created leave type ID
+          })
+          .catch((error) => {
+            console.error("Error creating leave type:", error);
+          });
+      });
+
       setEditMode(false);
     }
   };
@@ -73,9 +206,9 @@ export default function SettingsLeave() {
                 InputLabelProps={{
                   shrink: true,
                 }}
-                value={data.leaveType}
+                value={data.leave_type}
                 onChange={(e) =>
-                  handleInputChange(index, "leaveType", e.target.value)
+                  handleInputChange(index, "leave_type", e.target.value)
                 }
                 onClick={() => handleInputClick(index)}
                 disabled={!editMode}
@@ -109,6 +242,7 @@ export default function SettingsLeave() {
                 onChange={(e) =>
                   handleInputChange(index, "gender", e.target.value)
                 }
+                onClick={() => handleInputClick(index)}
                 disabled={!editMode}
               />
             ))}
@@ -132,10 +266,11 @@ export default function SettingsLeave() {
                   },
                   margin: "10px 0px",
                 }}
-                value={data.count}
+                value={data.leave_count}
                 onChange={(e) =>
-                  handleInputChange(index, "count", e.target.value)
+                  handleInputChange(index, "leave_count", e.target.value)
                 }
+                onClick={() => handleInputClick(index)}
                 disabled={!editMode}
               />
             ))}

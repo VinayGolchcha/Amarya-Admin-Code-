@@ -312,7 +312,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
 
  
 
-  
+    
 
   /////
 
@@ -441,7 +441,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
-                onClick={handleUpdate}
+                onClick={handleClick}
               >
                 Update Training
               </Button>
