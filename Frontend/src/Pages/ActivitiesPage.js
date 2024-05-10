@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
 import { Link } from "react-router-dom";
 // import CardComponenet from "../Components/AnnouncementCard";
@@ -7,6 +7,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { LoremIpsum } from "react-lorem-ipsum";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 export const activities = [
   {
@@ -120,6 +122,22 @@ const ActivitiesPage = () => {
   const [flippedCards, setFlippedCards] = useState([]);
 
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [activiyData , setActivityData] = useState([]);
+
+  const fetchNotification = async () => {
+    try{
+      const resData = await axios.get(`${process.env.REACT_APP_API_URI}activity/fetch-activity`);
+      setActivityData(resData.data.data);
+      console.log(resData.data.data)
+    }catch(error){
+      console.log(error);
+      toast.error(error.message);
+    }
+  }
+  useEffect(()=> {
+    fetchNotification();
+  },[])
+
   const handleHoverIn = (id) => {
     setHoveredCard(id);
   };
@@ -161,7 +179,7 @@ const ActivitiesPage = () => {
       </Typography>
       <Box display="flex" flexWrap="wrap" justifyContent="center">
         <Grid container spacing={1}>
-          {activities.map((activity, index) => (
+          {activiyData?.map((activity, index) => (
             <Grid key={activity.id} item xs={12} sm={12} md={6} lg={3}>
               <Box
                 sx={{
@@ -173,7 +191,7 @@ const ActivitiesPage = () => {
                 }}
                 gap={1}
               >
-                <Link to={`/activities/${activity.id}`}>
+                <Link to={`/activities/${activity._id}`}>
                   <Card
                     style={{
                       flex: "0 0 calc(25% - 16px)",
@@ -193,7 +211,7 @@ const ActivitiesPage = () => {
                       {...sliderSettings}
                       sx={{ minHeight: "300px", height: "100%" }}
                     >
-                      {activity.images.map((image, index) => (
+                      {activities[0].images.map((image, index) => (
                         <div
                           key={index}
                           style={{ minHeight: "300px", height: "100%" }}
@@ -241,13 +259,13 @@ const ActivitiesPage = () => {
                     backgroundColor: "#e8f0fb",
                     border: "solid 1px #74787e",
                     borderRadius: "0",
-                    transform: isCardFlipped(activity.id)
+                    transform: isCardFlipped(activity._id)
                       ? "rotateY(180deg)"
                       : "rotateY(0)",
                     transition: "transform 0.6s ease",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleCardClick(activity.id)}
+                  onClick={() => handleCardClick(activity._id)}
                 >
                   <CardContent
                     style={{
@@ -256,12 +274,12 @@ const ActivitiesPage = () => {
                       flex: "1",
                       width: "100%",
                       height: "300px",
-                      transform: isCardFlipped(activity.id)
+                      transform: isCardFlipped(activity._id)
                         ? "rotateY(180deg)"
                         : "rotateY(0deg)",
                     }}
                   >
-                    {isCardFlipped(activity.id) ? (
+                    {isCardFlipped(activity._id) ? (
                       <Box
                         sx={{
                           padding: "0px 10px",
@@ -277,7 +295,7 @@ const ActivitiesPage = () => {
                           {activity.title}
                         </Typography>
                         <Typography sx={{ paddingTop: "5px" }} variant="body2">
-                          {activity.content}
+                          {activity.description}
                         </Typography>
                       </Box>
                     ) : (
@@ -296,7 +314,7 @@ const ActivitiesPage = () => {
                           color="#74787e"
                           sx={{ fontWeight: "700" }}
                         >
-                          {activity.date}
+                          {activity?.from_date?.split('T')[0]}
                         </Typography>
                         <Typography
                           variant="h4"

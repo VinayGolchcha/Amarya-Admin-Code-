@@ -28,34 +28,37 @@ function MyForm({ onAddNotification, selectedTab , handleAddAnnouncement }) {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     console.log(selectedFile);
-    if (selectedFile && selectedFile.type.match(/image.*/)) {
-      setFile(selectedFile);
-      toast.success(`${selectedFile.name} is selected successfully`);
-    } else {
-      setFile(null);
-      toast.error("Please upload a valid image file.");
-    }
+    // top be implemented when the photoes are uploaded successfully
+    // if (selectedFile && selectedFile.type.match(/image.*/)) {
+    //   setFile(selectedFile);
+    //   toast.success(`${selectedFile.name} is selected successfully`);
+    // } else {
+    //   setFile(null);
+    //   toast.error("Please upload a valid image file.");
+    // }
   };
 
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log(eventTypeElement.current.value)
     const body = {
       event_type: eventTypeElement.current.value,
       priority: priorityElement.current.value,
       from_date: fromDateElement.current.value,
       to_date: toDateElement.current.value,
       title: titleElement.current.value,
-      description: descriptionElement.current.value
+      description: descriptionElement.current.value,
+      image_data : "https://www.pexels.com/photo/macbook-beside-iphone-on-white-linen-3201772/"
   }
   handleAddAnnouncement(body);
 
     // Check if fromDate, description, and file are empty
   
-    if(body.event_type === 'activity' && !file){
-      toast.error("Please fill all the fields and upload the image");
-      return;
-    }
+    // if(body.event_type === 'activity' && !file){
+    //   toast.error("Please fill all the fields and upload the image");
+    //   return;
+    // }
 
     if (!fromDateElement || !descriptionElement) {
       toast.error("Please fill all the fields" );
