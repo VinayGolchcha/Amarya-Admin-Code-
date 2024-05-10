@@ -9,16 +9,18 @@ function Model({ closeModel }) {
 
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirm_password] = useState("");
+  const savedEmail = localStorage.getItem("userEmail");
   
 
   const handleUpdate = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/user/update-password",
+        "http://localhost:4000/api/v1/user/update-password",
         {
         
           password,
           confirm_password,
+          email: savedEmail,
         }
       );
       console.log(response);
@@ -26,7 +28,7 @@ function Model({ closeModel }) {
      
       //   // Handle login error
     } catch (error) {
-      console.log("Error data:", error.response.data.errors[0]?.msg);
+      console.log("Error data:", error);
       // setRes(error.response.data.errors[0]?.msg);
     }
   };
@@ -182,7 +184,7 @@ function Model({ closeModel }) {
               }}
               variant="contained"
               color="primary"
-              // onClick={handleUpdate}
+              onClick={handleUpdate}
               
             >
               Update Password

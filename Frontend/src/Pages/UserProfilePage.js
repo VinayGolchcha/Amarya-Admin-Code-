@@ -1,6 +1,7 @@
-import { useState, React } from "react";
+import { useState, React, useEffect } from "react";
 import { Box, Typography, Card, Grid, Container, TextField, Button, CardContent, CardMedia, Chip } from "@mui/material";
 import { useTheme } from '@mui/system';
+import axios from "axios";
 import { username } from "react-lorem-ipsum";
 
 
@@ -10,34 +11,79 @@ const UserProfilePage = () => {
     const isFormActive = false;
 
     const [formData, setFormData] = useState({
-        firstName: 'Sanjana',
-        lastName: 'Jain',
+        first_name:"",
+        last_name: 'Jain',
         email: 'abc@mail.com',
-        bloodGroup: 'O-',
+        blood_group: 'O-',
         gender : "female" , 
         username : "Sanjana" ,
-        contactNumber: '+91-9865321245',
+        contact_number: '+91-9865321245',
         dob: new Date('1800-01-01').toISOString().substring(0, 10),
         address: 'APR Conlony Jabalpur',
         city: 'Jabalpur',
         state: 'Madhya Pradesh',
-        ecpna: 'None',
-        ecn: '0',
+        emergency_contact_person_info: 'None',
+        emergency_contact_number: '0',
     });
 
+
+
     const inputFields = [
-        { type: "text", label: "First Name", field: "firstName" },
-        { type: "text", label: "Last name", field: "lastName" },
+        { type: "text", label: "First Name", field: "first_name" },
+        { type: "text", label: "Last name", field: "last_name" },
         { type: "email", label: "Email", field: "email" },
-        { type: "text", label: "Blood Group", field: "bloodGroup" },
-        { type: "text", label: "Contact Number", field: "contactNumber" },
+        { type: "text", label: "Blood Group", field: "blood_group" },
+        { type: "text", label: "Contact Number", field: "contact_number" },
         { type: "date", label: "DOB", field: "dob" },
         { type: "text", label: "Address", field: "address" },
         { type: "text", label: "Gender", field: "gender" },
         { type: "text", label: "Username", field: "username" },
-        { type: "text", label: "Emergency Contact Person Name/Address", field: "ecpna" },
-        { type: "text", label: "Emergency Contact Number", field: "ecn" }
+        { type: "text", label: "Emergency Contact Person Name/Address", field: "emergency_contact_person_info" },
+        { type: "text", label: "Emergency Contact Number", field: "emergency_contact_number" }
     ];
+    
+
+    const [projectData, setProjectData] = useState({
+        project_id: 1113,
+        emp_id: "AMEMP003",
+        team_id: 1113,
+        tech: "vue.js",
+        project_manager: "shubham",
+        start_month: "20-01-2024",
+        end_month: "20-08-2024",
+        status: "in review"
+    });
+
+    const handleSaveProject = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post("http://localhost:4000/api/v1/project/create-user-project", projectData);
+            console.log("API response:", response);
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserProfile();
+    }, []);
+
+    const fetchUserProfile = async () => {
+        try {
+            const response = await axios.post("http://localhost:4000/api/v1/user/get-user-profile", {
+                emp_id: "AMEMP002"
+            });
+            console.log(response.data.data[0][0]); 
+            setFormData(response.data.data[0][0]);
+        } catch (error) {
+            console.error("Error fetching user profile:", error);
+        }
+    };
+
+
+
+    
+   
 
     const cardsData = [
         {
@@ -109,6 +155,8 @@ const UserProfilePage = () => {
         { type: "text", label: "Team", field: "team" },
     ]
 
+ 
+
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -154,7 +202,7 @@ const UserProfilePage = () => {
                                             variant="outlined"
                                             type={item.type}
                                             name={item.field}
-                                            value={formData[item.field]}
+                                            value={formData ? formData[item.field] : ''}
                                             onChange={handleChange}
                                             disabled={!isFormActive}
                                             sx={{
@@ -314,10 +362,10 @@ const UserProfilePage = () => {
                                         />
                                     </Grid>
                                 ))}
-                                <Button type="submit"><img src="/Images/icons8-save-100.png" height="50%" style={{marginTop : "10px"}}/></Button>
+                                <Button onClick={handleSaveProject} type="submit"><img src="/Images/icons8-save-100.png" height="50%" style={{marginTop : "10px"}}/></Button>
                             </Grid>
                             {isFormActive &&
-                                <Button type="submit" variant="contained" color="primary" sx={{marginTop:'20px'}}>
+                                <Button  type="submit" variant="contained" color="primary" sx={{marginTop:'20px'}}>
                                     SAVE
                                 </Button>
                             }

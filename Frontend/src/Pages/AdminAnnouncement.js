@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Table,
@@ -15,61 +15,82 @@ import {
   MenuItem,
 } from "@mui/material";
 import ActivityForm from "./ActivityForm";
+import axios from "axios";
 
 const AdminNotificationTab = () => {
   const [selectedTab, setSelectedTab] = useState("announcement");
   const [selectedDate, setSelectedDate] = useState("All Dates"); // State for selected date
+  const [showData, setShowData] = useState([]);
+  const apiUrl= process.env.REACT_APP_API_URI ;
+  console.log(apiUrl);
   const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      type: "announcement",
-      message: "New announcement: Important update!",
-      date: "12th Dec 2023", // Sample date
-    },
-    {
-      id: 2,
-      type: "announcement",
-      message: "New announcement: Important update!",
-      date: "12th Dec 2023", // Sample date
-    },
-    {
-      id: 3,
-      type: "announcement",
-      message: "New announcement: Important update!",
-      date: "13th Dec 2023", // Sample date
-    },
-    {
-      id: 4,
-      type: "announcement",
-      message: "New announcement: Important update!",
-      date: "12th Dec 2023", // Sample date
-    },
-    {
-      id: 2,
-      type: "activity",
-      message: "Activity: Team building event on Friday",
-      date: "15th Dec 2023", // Sample date
-    },
-    {
-      id: 2,
-      type: "activity",
-      message: "Activity: Team building event on Friday",
-      date: "15th Dec 2023", // Sample date
-    },
-    {
-      id: 3,
-      type: "activity",
-      message: "Activity: Team building event on Friday",
-      date: "16th Dec 2023", // Sample date
-    },
-    {
-      id: 2,
-      type: "activity",
-      message: "Activity: Team building event on Friday",
-      date: "15th Dec 2023", // Sample date
-    },
+    // {
+    //   id: 1,
+    //   type: "announcement",
+    //   message: "New announcement: Important update!",
+    //   date: "12th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 2,
+    //   type: "announcement",
+    //   message: "New announcement: Important update!",
+    //   date: "12th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 3,
+    //   type: "announcement",
+    //   message: "New announcement: Important update!",
+    //   date: "13th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 4,
+    //   type: "announcement",
+    //   message: "New announcement: Important update!",
+    //   date: "12th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 2,
+    //   type: "activity",
+    //   message: "Activity: Team building event on Friday",
+    //   date: "15th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 2,
+    //   type: "activity",
+    //   message: "Activity: Team building event on Friday",
+    //   date: "15th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 3,
+    //   type: "activity",
+    //   message: "Activity: Team building event on Friday",
+    //   date: "16th Dec 2023", // Sample date
+    // },
+    // {
+    //   id: 2,
+    //   type: "activity",
+    //   message: "Activity: Team building event on Friday",
+    //   date: "15th Dec 2023", // Sample date
+    // },
     // Add more notifications as needed
   ]);
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log(apiUrl);
+      try {
+        const response = await axios.get(
+          `${apiUrl}/announcement/fetch-announcement` 
+        );
+        console.log(response);
+        // setShowData(response.data.data);
+        setNotifications(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
@@ -89,12 +110,21 @@ const AdminNotificationTab = () => {
 
   // const uniqueDates = [...new Set(notifications.map((n) => n.date))];
   // User
-  const uniqueDates = [
-    "All Dates",
-    ...new Set(
-      notifications.filter((n) => n.type === selectedTab).map((n) => n.date)
-    ),
-  ];
+  const uniqueDates = notifications
+  ? [
+      "All Dates",
+      ...new Set(
+        notifications
+          .filter((n) => n.type === selectedTab)
+          .map((n) => n.date)
+      ),
+    ]
+  : ["All Dates"];
+
+if (!uniqueDates.includes("All Dates")) {
+  uniqueDates.unshift("All Dates"); // Add "All Dates" option if not already present
+}
+
   if (!uniqueDates.includes("All Dates")) {
     uniqueDates.unshift("All Dates"); // Add "All Dates" option if not already present
   }
@@ -245,14 +275,14 @@ const AdminNotificationTab = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {notificationPairs.map((pair, index) => (
+            {notifications.map((pair, index) => (
               <TableRow key={index}>
-                {pair.map((notification, index) => (
+                {notifications.map((notification, index) => (
                   <TableCell
                     key={index}
                     style={{ padding: "8px", width: "50%" }}
                   >
-                    {notification && (
+                    {notifications && (
                       <div
                         style={{
                           background: "white",
@@ -263,7 +293,7 @@ const AdminNotificationTab = () => {
                           paddingLeft: "15px",
                         }}
                       >
-                        {notification.message}
+                        {notification?.title}
                         <div
                           style={{
                             position: "absolute",
@@ -275,7 +305,7 @@ const AdminNotificationTab = () => {
                             fontWeight: "600",
                           }}
                         >
-                          {notification.date}
+                          {notification?.date}
                         </div>
                       </div>
                     )}

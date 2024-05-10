@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.otpInput-style{
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  
+}
+.input-varifiy-otp{
+    width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    margin-left: 5px;
+    
+}
+.input-varifiy-otp:first-child {
+  margin-left:125px; /* Remove left margin for all inputs except the first one */
+}
+ 

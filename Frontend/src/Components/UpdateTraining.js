@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import axios from "axios";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -28,7 +29,7 @@ const style = {
   fontFamily: "Poppins",
   border: "1px solid #FFFFFF",
   borderRadius: "16px",
-  backgroundColor : "rgb(233, 235, 247)",
+  backgroundColor: "rgb(233, 235, 247)",
   width: { lg: "32%", md: "40%", sm: "50%", xs: "80%" },
 };
 const inputControl = {
@@ -37,19 +38,14 @@ const inputControl = {
   height: "31px",
   width: "100%",
   padding: "5px",
-  fontWeight : "500",
+  fontWeight: "500",
   margin: "2px 0px",
 };
 const labelStyle = {
   fontSize: { lg: "1rem", md: "1rem", sm: "1rem", xs: "0.9 rem" },
-  color : "rgb(120, 120, 122)"
+  color: "rgb(120, 120, 122)",
 };
-export default function UpdateTraining({
-  handleClose,
-  open,
-  selectedObj
-}) {
-
+export default function UpdateTraining({ handleClose, open, selectedObj }) {
   const itemNewInId = useRef("");
   const itemNewDop = useRef("");
   const itemNewAssignee = useRef("");
@@ -60,23 +56,44 @@ export default function UpdateTraining({
   const itemNewRepairs = useRef("");
   const itemNewInWarranty = useRef("");
   const itemNewEndWarranty = useRef("");
+    //  const newItem = [
+    //   itemNewInId.current.value,
+    //   itemNewDop.current.value,
+    //   itemNewAssignee.current.value,
+    //   itemNewItem.current.value,
+    //   itemNewDescription.current.value,
+    //   itemNewIssuedFrom.current.value,
+    //   itemNewIssuedTill.current.value,
+    //   itemNewRepairs.current.value,
+    //   itemNewInWarranty.current.value,
+    //   itemNewEndWarranty.current.value,
+    // ];
+
 
   function handleSubmit(event) {
     event.preventDefault();
-    const newItem = [
-      itemNewInId.current.value,
-      itemNewDop.current.value,
-      itemNewAssignee.current.value,
-      itemNewItem.current.value,
-      itemNewDescription.current.value,
-      itemNewIssuedFrom.current.value,
-      itemNewIssuedTill.current.value,
-      itemNewRepairs.current.value,
-      itemNewInWarranty.current.value,
-      itemNewEndWarranty.current.value,
-    ];
+    const updatedData = {
+      course_description: itemNewDop.current.value,
+      details: itemNewItem.current.value,
+    };
+    try {
+      const response = axios.put(
+        `http://localhost:4000/api/v1/training/admin/update-training/${selectedObj.id}`,
+        updatedData
+      );
+       console.log("Update successful:", response.data);
+       handleClose();
+    } 
+    catch (error) {
+      console.error("Error updating training:", error);
+    }
+
+ 
     // handleAdd((prevData) => [...prevData, newItem]);
   }
+
+  console.log(selectedObj);
+
   return (
     <>
       <Modal
@@ -86,7 +103,7 @@ export default function UpdateTraining({
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <form onSubmit={handleSubmit}>
+          <form>
             <Typography
               sx={{
                 textAlign: "center",
@@ -110,7 +127,7 @@ export default function UpdateTraining({
                   id="inId"
                   style={inputControl}
                   ref={itemNewInId}
-                  value={selectedObj?.courseName}
+                  defaultValue={selectedObj?.course_name}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -123,7 +140,7 @@ export default function UpdateTraining({
                   id="dop"
                   style={inputControl}
                   ref={itemNewDop}
-                  value={selectedObj?.courseDescription}
+                  defaultValue={selectedObj?.course_description}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -136,34 +153,39 @@ export default function UpdateTraining({
                   id="assignee"
                   style={inputControl}
                   ref={itemNewAssignee}
-                  value={selectedObj?.roadmapUrl}
+                  defaultValue={selectedObj?.roadmap_url}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
-                <label for="item"  style={labelStyle}>
+                <label for="item" style={labelStyle}>
                   Deatails
                 </label>
                 <br />
                 <textarea
                   type="text"
                   id="item"
-                  rows="4" 
+                  rows="4"
                   cols="50"
-                  style={{border: "none",
-                  borderRadius: "4px",
-                  height: "50px",
-                  width: "100%",
-                  fontWeight : "500",
-                  padding: "5px",
-                  margin: "2px 0px",
-                }}
+                  style={{
+                    border: "none",
+                    borderRadius: "4px",
+                    height: "50px",
+                    width: "100%",
+                    fontWeight: "500",
+                    padding: "5px",
+                    margin: "2px 0px",
+                  }}
                   ref={itemNewItem}
-                  value={selectedObj?.details}
+                  defaultValue={selectedObj?.details}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <div style={{ textAlign: "center", padding: "15px" }}>
-                  <Button variant="contained" color="error">
+                  <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    color="error"
+                  >
                     Save
                   </Button>
                 </div>

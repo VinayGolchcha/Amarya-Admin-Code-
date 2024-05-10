@@ -5,22 +5,32 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import "./../App.css";
 import Model from "./Model";
+import OtpInput from "./OtpInput";
 
 function OtpP({ closeOtpP }) {
     const [otp, setOtp] = useState("");
      const[openModel,setOpenModel]=useState(false)
+     const [email, setEmail] = useState("");
+     // Retrieve saved email from local storage
+    const savedEmail = localStorage.getItem("userEmail");
 
 const handleUpdate = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/user/update-password",
+        "http://localhost:4000/api/v1/user/verify-email-for-password-update",
         {
          otp,
+         email: savedEmail,
         }
       );
       console.log(response);
+      if (response.data.success) {
+        setOpenModel(true);
+    } else {
+        console.error('Email is incorrect');
+    }
      } catch (error) {
-      console.log("Error data:", error.response.data.errors[0]?.msg);
+      console.log("Error data:", error);
     
     }
   };
@@ -86,7 +96,8 @@ const handleUpdate = async () => {
              Please Enter The OTP Sent To Your Email To <br></br>
             Complete The Verification process
             </p>  
-        <TextField
+            <OtpInput numInputs={4} onOtpChange={setOtp} />
+        {/* <TextField
               id="filled-basic"
               variant="filled"
               inputProps={{ maxLength: 1 }} 
@@ -149,14 +160,14 @@ const handleUpdate = async () => {
                 borderRadius: "5px",
                 border: "1px solid #FF5151",
                 backgroundColor: "white",
-              }}
-            />
+              }} */}
+            {/* /> */}
             <br></br>
             <br></br>
            
             <Button
               sx={{
-                marginTop: "10px",
+                marginTop: "4px",
                 width: "50%", // Set button width to 100%
                 background: "#FF5151",
 
@@ -169,8 +180,8 @@ const handleUpdate = async () => {
               }}
               variant="contained"
               color="primary"
-            //   onClick={handleUpdate}
-              onClick={()=>setOpenModel(true)}
+              onClick={handleUpdate}
+              // onClick={()=>setOpenModel(true)}
           
             >
               Verify otp

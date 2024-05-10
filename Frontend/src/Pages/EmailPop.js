@@ -1,5 +1,5 @@
 import { TextField, Button } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./../App.css";
 import OtpP from "./OtpPop";
@@ -9,24 +9,35 @@ import CloseIcon from '@mui/icons-material/Close';
 
 function EmailP({ closeEmailP }) {
     const [email, setEmail] = useState("");
-    const[openOtpP,setOpenOtpP]=useState(false)
+    const[openOtpP,setOpenOtpP]=useState(false);
+    // const[storeEmail,setStoreEmail]=useState("");
+    // console.log(email);
 
 const handleUpdate = async () => {
   
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/user/update-password",
+        "http://localhost:4000/api/v1/user/send-otp-password-verification",
         {
          email,
         }
       );
       console.log(response);
+      if (response.data.success) {
+        localStorage.setItem('userEmail', email);
+
+        setOpenOtpP(true);
+    } else {
+        console.error('Email is incorrect');
+    }
      } catch (error) {
-      console.log("Error data:", error.response.data.errors[0]?.msg);
+      console.log("Error data:", error);
     
     }
     
   };
+
+
   return (
     <>
       <div
@@ -120,8 +131,8 @@ const handleUpdate = async () => {
               }}
               variant="contained"
               color="primary"
-              // onClick={handleUpdate}
-           onClick={()=>setOpenOtpP(true)}
+              onClick={handleUpdate}
+          
           
              
               

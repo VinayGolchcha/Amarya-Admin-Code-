@@ -49,11 +49,11 @@ export default function LeaveMangementPage() {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [fromDate, setFromDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
-  const [leaveType, setLeaveType] = React.useState("Casual Leave");
+  const [leaveType, setLeaveType] = React.useState("casual leave");
   const [subject, setSubject] = React.useState("");
   const [body, setBody] = React.useState("");
   ////
-
+  
   // new code
   const [error, setError] = React.useState("");
   const [data, setData] = React.useState(null);
@@ -64,9 +64,8 @@ export default function LeaveMangementPage() {
 
   // const [error, setError]  = React.useState(null);
   
-
+ console.log(data)
   // const handleClick = async() => {
-    
   React.useEffect(() => {
     async function getData() {
       try {
@@ -77,8 +76,8 @@ export default function LeaveMangementPage() {
           "http://localhost:4000/api/v1/leave/get-all-leave-count/AMEMP010"
           // "https://localhost:4000/api/v1/training/request-new-training"
         );
-        console.log(response);
-        setData(response.data);
+
+        setData(response?.data.data);
 
         setLoading(false);
       } catch (errorr) {
@@ -142,8 +141,8 @@ export default function LeaveMangementPage() {
       startDate: "13-03-21",
       endDate: "15-03-21",
       days: "2",
-      leaveType: "Casual",
-      extendedLeave: "Casual",
+      leaveType: "casual",
+      extendedLeave: "casual",
       approvedrejected: "Approved",
       manager: "HR",
     },
@@ -221,10 +220,10 @@ export default function LeaveMangementPage() {
             }}
             spacing={2}
           >
-            <Card
+            {data?.map((item , i) => {return (<Card
               sx={{
                 width: "125px",
-                height: "70px",
+                height: "110px",
                 margin: "10px 0px",
                 marginRight: "10px",
                 backgroundColor: "#FFEFE7",
@@ -232,109 +231,15 @@ export default function LeaveMangementPage() {
               }}
             >
               <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Annual
+                {item?.leave_type}
               </Typography>
               <CardContent sx={{ padding: "0px" }}>
                 <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>10</strong>/10
+                  <strong style={{ fontSize: "1.5rem" }}>{item?.leave_taken_count}</strong>/{item?.leave_count}
                 </Typography>
               </CardContent>
-            </Card>
-            <Card
-              sx={{
-                width: "125px",
-                height: "70px",
-                margin: "10px 0px",
-                marginRight: "10px",
-                backgroundColor: "#FFEFE7",
-                padding: "3px 3px 3px 15px",
-              }}
-            >
-              <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Casual
-              </Typography>
-              <CardContent sx={{ padding: "0px" }}>
-                <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>02</strong>/05
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card
-              sx={{
-                width: "125px",
-                height: "70px",
-                margin: "10px 0px",
-                marginRight: "10px",
-                backgroundColor: "#FFEFE7",
-                padding: "3px 3px 3px 15px",
-              }}
-            >
-              <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Sick
-              </Typography>
-              <CardContent sx={{ padding: "0px" }}>
-                <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>02</strong>/05
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card
-              sx={{
-                width: "125px",
-                height: "70px",
-                margin: "10px 0px",
-                marginRight: "10px",
-                backgroundColor: "#FFEFE7",
-                padding: "3px 3px 3px 15px",
-              }}
-            >
-              <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Unpaid
-              </Typography>
-              <CardContent sx={{ padding: "0px" }}>
-                <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>02</strong>/05
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card
-              sx={{
-                width: "125px",
-                height: "70px",
-                margin: "10px 0px",
-                marginRight: "10px",
-                backgroundColor: "#FFEFE7",
-                padding: "3px 3px 3px 15px",
-              }}
-            >
-              <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Half-day
-              </Typography>
-              <CardContent sx={{ padding: "0px" }}>
-                <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>02</strong>/05
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card
-              sx={{
-                width: "125px",
-                height: "70px",
-                margin: "10px 0px",
-                marginRight: "10px",
-                backgroundColor: "#F3F8EB",
-                padding: "3px 3px 3px 15px",
-              }}
-            >
-              <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Remaining
-              </Typography>
-              <CardContent sx={{ padding: "0px" }}>
-                <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>03</strong>/15
-                </Typography>
-              </CardContent>
-            </Card>
+            </Card>)})}
+            
           </Box>
           <Typography
             variant="h6"
@@ -458,7 +363,7 @@ export default function LeaveMangementPage() {
                 sx={{ width: "100%", backgroundColor: "#fafafa" }}
                 onChange={handleChange}
               >
-                <MenuItem value={"Casual leave"}>casual  </MenuItem>
+                <MenuItem value={"casual leave"}>casual  </MenuItem>
                 <MenuItem value={"Sick leave"}>Sick </MenuItem>
               </Select>
               <br />
