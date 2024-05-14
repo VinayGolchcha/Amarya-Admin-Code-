@@ -39,7 +39,7 @@ const sanitizedMonthlyData = monthlyData.map((month) => ({
   inProgress: month.inProgress || 0,
 }));
 
-const ProjectOverview = () => {
+const ProjectOverview = ({ }) => {
   const allMonthsData = monthlyData.map((monthData) => ({
     month: monthData.month,
     started: monthData.started,

@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import ActivityForm from "./ActivityForm";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AdminNotificationTab = () => {
   const [selectedTab, setSelectedTab] = useState("announcement");
@@ -316,7 +317,7 @@ const AdminNotificationTab = () => {
           NEW EVENT !!!
         </Typography>
         <ActivityForm
-          onAddNotification={handleAddNotification}
+          onAddNotification={handleAddAnnouncement}
           selectedTab={selectedTab}
         />
       </Box>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import ProjectOverview from "../Components/ProjectOverview";
 import EmployeeCountPieChart from "../Components/AdminPieChart";
@@ -8,6 +8,7 @@ import AdminActivity from "./AdminActivity";
 import AdminProjectSummy from "./AdminProjectSummy";
 import DashboardPosComp from "../Components/DashboardPosComp";
 import AdminApprovals from "./AdminApprovals";
+import axios from "axios";
 
 const suggSum = [
   {
@@ -47,7 +48,58 @@ const announceNoti = [
     description: "Outing schedule for every departement",
   },
 ];
-const AdminDashboard = () => {
+
+let monthsData = [
+  ["Jan", 0] 
+  ["Feb", 0] ,
+  ["Mar", 0] ,
+  ["Apr", 0] ,
+  ["May" , 0] ,
+  ["June", 0] ,
+  ["July", 0] ,
+  ["Aug", 0] ,
+  ["Sep", 0] ,
+  ["Oct", 0] ,
+  ["Nov", 0] ,                            
+  ["Dec", 0] 
+]
+const AdminDashboard = () => {                                                      
+  const [projects ,setProjects] = useState();
+  const [projectWithMonth , setProjectWithMonth] = useState([]);
+  const [loading , setLoading] = useState(true);
+  const monthsProjects = (projects) => {
+    const array =[]
+    const projectsByMonth = new Map();
+    projects?.forEach(project => {
+      // Extracting month from "Jan 24" format
+      const startMonth = project.start_month.split(" ")[0].toLowerCase().slice(0,3);
+      projectsByMonth[startMonth] = (projectsByMonth[startMonth] || 0) + 1;
+  });
+  array.push(projectsByMonth);
+  const projectStatus = new Map();
+    projects?.forEach(project => {
+      // Extracting month from "Jan 24" format
+      const projectstatus = project.project_status;
+      projectStatus[projectstatus] = (projectStatus[projectstatus] || 0) + 1;
+  });
+  array.push(projectStatus);
+  console.log(array);
+  setProjectWithMonth(array);
+  }
+  const fectchApi = async () => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/project/fetch-all-projects`);
+      setLoading(false);
+      console.log(res)
+      setProjects(res?.data.data);
+    }catch(err){
+      console.log(err);
+    }
+  }
+  useEffect(() => {
+    fectchApi()
+    monthsProjects(projects)
+  } , [])
   return (
     <Box>
       <Typography
@@ -73,7 +125,7 @@ const AdminDashboard = () => {
             width: "auto",
           }}
         >
-          <ProjectOverview />
+          <ProjectOverview projectWithMonth = {projectWithMonth}/>
         </Box>
         <Box
           sx={{
