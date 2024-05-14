@@ -24,81 +24,64 @@ const AdminNotificationTab = () => {
   const apiUrl= process.env.REACT_APP_API_URI ;
   console.log(apiUrl);
   const [notifications, setNotifications] = useState([
-    // {
-    //   id: 1,
-    //   type: "announcement",
-    //   message: "New announcement: Important update!",
-    //   date: "12th Dec 2023", // Sample date
-    // },
-    // {
-    //   id: 2,
-    //   type: "announcement",
-    //   message: "New announcement: Important update!",
-    //   date: "12th Dec 2023", // Sample date
-    // },
-    // {
-    //   id: 3,
-    //   type: "announcement",
-    //   message: "New announcement: Important update!",
-    //   date: "13th Dec 2023", // Sample date
-    // },
-    // {
-    //   id: 4,
-    //   type: "announcement",
-    //   message: "New announcement: Important update!",
-    //   date: "12th Dec 2023", // Sample date
-    // },
-    // {
-    //   id: 2,
-    //   type: "activity",
-    //   message: "Activity: Team building event on Friday",
-    //   date: "15th Dec 2023", // Sample date
-    // },
-    // {
-    //   id: 2,
-    //   type: "activity",
-    //   message: "Activity: Team building event on Friday",
-    //   date: "15th Dec 2023", // Sample date
-    // },
-    // {
-    //   id: 3,
-    //   type: "activity",
-    //   message: "Activity: Team building event on Friday",
-    //   date: "16th Dec 2023", // Sample date
-    // },
-    // {
-    //   id: 2,
-    //   type: "activity",
-    //   message: "Activity: Team building event on Friday",
-    //   date: "15th Dec 2023", // Sample date
-    // },
+    
     // Add more notifications as needed
   ]);
-  useEffect(() => {
-    const fetchData = async () => {
-      console.log(apiUrl);
-      try {
-        const response = await axios.get(
-          `${apiUrl}/announcement/fetch-announcement` 
-        );
-        console.log(response);
-        // setShowData(response.data.data);
-        setNotifications(response.data.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+  const [uniqueDates , setuniqueDates] = useState(["All Dates"])
 
-    fetchData();
-  }, []);
+
+  const fetchNotification = async () => {
+    try{
+      const resData = await axios.get(`${process.env.REACT_APP_API_URI}${selectedTab}/fetch-${selectedTab}`);
+      setNotifications(resData.data.data);
+      console.log(resData.data.data)
+    }catch(error){
+      console.log(error);
+      toast.error(error.message);
+    }
+
+  }
+
+  const filterActiviyByDate = async () => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}${selectedTab}/filter-${selectedTab}-by-date/2024-05-09`);
+      const responseData = res.data.data
+      setNotifications(responseData);
+      console.log(notifications);
+    }catch(error){
+      console.log(error);
+      toast.error(error.message);
+    }
+  }
+
+  const handleAddAnnouncement = async (body) => {
+    try{
+      const res = await axios.post(`${process.env.REACT_APP_API_URI}${selectedTab}/admin/add-${selectedTab}`, body)
+      console.log(res);
+      toast.success(res.data.message);
+      fetchNotification();
+    }catch(error){
+      toast.error(error.response.data.errors[0].msg);
+    }
+  }
+
+  
+  useEffect(() => {
+    fetchNotification();
+    setuniqueDates([...new Set(notifications?.map(notification => notification.from_date))])
+  },[selectedTab]);
+  
+  useEffect(() => {
+    setuniqueDates([...new Set(notifications?.map(notification => notification.from_date))]);
+  }, [notifications]);
 
   const handleDateChange = (event) => {
     setSelectedDate(event.target.value);
+    filterActiviyByDate();
   };
 
   const handleTabChange = (tab) => {
-    setSelectedTab(tab);
-    setSelectedDate("All Dates"); // Reset date filter to "All Dates"
+    setSelectedTab(tab);// Reset date filter to "All Dates"
   };
 
   const handleAddNotification = (newNotification) => {
@@ -110,31 +93,22 @@ const AdminNotificationTab = () => {
 
   // const uniqueDates = [...new Set(notifications.map((n) => n.date))];
   // User
-  const uniqueDates = notifications
-  ? [
-      "All Dates",
-      ...new Set(
-        notifications
-          .filter((n) => n.type === selectedTab)
-          .map((n) => n.date)
-      ),
-    ]
-  : ["All Dates"];
-
-if (!uniqueDates.includes("All Dates")) {
-  uniqueDates.unshift("All Dates"); // Add "All Dates" option if not already present
-}
-
-  if (!uniqueDates.includes("All Dates")) {
-    uniqueDates.unshift("All Dates"); // Add "All Dates" option if not already present
-  }
-
-  const filteredNotifications = notifications.filter((notification) => {
+  // const uniqueDates = [
+  //   "All Dates",
+  //   ...new Set(
+  //     notifications?.filter((n) => n.type === selectedTab).map((n) => n.created_at?.split('T')[0])
+  //   ),
+  // ];
+  // if (!uniqueDates.includes("All Dates")) {
+  //   uniqueDates.unshift("All Dates"); // Add "All Dates" option if not already present
+  // }
+  // console.log()
+  const filteredNotifications = notifications?.filter((notification) => {
     if (selectedDate === "All Dates") {
       return notification.type === selectedTab;
     } else {
       return (
-        notification.type === selectedTab && notification.date === selectedDate
+        true && notification?.created_at === selectedDate
       );
     }
   });

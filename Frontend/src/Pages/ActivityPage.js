@@ -84,7 +84,7 @@
 
 // export default ActivityPage;
 
-import { React, useState } from "react";
+import { React, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -95,12 +95,37 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { activities } from "./ActivitiesPage";
+import axios from "axios";
+import { toast } from "react-toastify";
+export const activity = {
+  images: [
+    "/Images/activities/activity1/1.jpg",
+    "/Images/activities/activity1/2.jpg",
+    "/Images/activities/activity1/3.jpg",
+    "/Images/activities/activity1/4.jpg",
+  ],
+}
 
 const ActivityPage = () => {
   const { activityId } = useParams();
   const activity = activities.find((obj) => obj.id === parseInt(activityId));
   const [sliderIndex, setSliderIndex] = useState(0);
+  const [activityData , setActivityData] = useState({});
 
+  const fechActivityById = async () => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}activity/user/get-activity/${activityId}`);
+      console.log(res);
+      setActivityData(res.data.data[0]);
+    }catch(err){
+      console.log(err);
+      toast.error(err);
+    }
+  }
+
+  useEffect(() => {
+    fechActivityById()
+  },[activityId]);
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -131,10 +156,9 @@ const ActivityPage = () => {
         sx={{ color: "#ff5151", textAlign: "center" }}
         gutterBottom
       >
-        {activity?.title}
+        {activityData?.title}
       </Typography>
       <Box
-        display="flex"
         flexWrap="wrap"
         justifyContent="center"
         sx={{ width: "100%" }}
@@ -190,7 +214,9 @@ const ActivityPage = () => {
             }}
           />
         </Card>
-        {activity?.content}
+        <Box sx={{display : "flex" , justifyContent : "center"}}>
+          {activityData?.description}
+        </Box>
       </Box>
     </Box>
   );
