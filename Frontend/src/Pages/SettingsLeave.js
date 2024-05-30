@@ -11,6 +11,7 @@ export default function SettingsLeave() {
       leave_type: "",
       gender: "",
       leave_count: "",
+      description: "",
       _id: null,
       leave_type_id: null,
     },
@@ -36,12 +37,13 @@ export default function SettingsLeave() {
             leave_type: data.leave_type,
             gender: data.gender,
             leave_count: data.leave_count,
+            description: data.description,
             _id: data._id,
             leave_type_id: data.leave_type_id,
           }))
         );
         setOriginalFormData([...categories]);
-        // console.log(formData);
+        console.log(data);
       })
       .catch((error) => console.error("Error fetching leave data:", error));
   };
@@ -147,7 +149,7 @@ export default function SettingsLeave() {
             leave_type: item.leave_type,
             gender: item.gender,
             leave_count: item.leave_count,
-            description: "Testing",
+            description: item.description,
           }),
         })
           .then((response) => {
@@ -183,9 +185,9 @@ export default function SettingsLeave() {
     }
   };
   return (
-    <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
+    <Box sx={{ flexGrow: 1, m: "25px 0px 20px 5px" }}>
       <Grid container spacing={4}>
-        <Grid item xs={3}>
+        <Grid item xs={2.5}>
           <FormControl fullWidth>
             <FormLabel sx={{ color: "black", fontWeight: "600" }}>
               Leave Type
@@ -217,7 +219,7 @@ export default function SettingsLeave() {
           </FormControl>
         </Grid>
 
-        <Grid item xs={3}>
+        <Grid item xs={1.5}>
           <FormControl fullWidth>
             <FormLabel sx={{ color: "black", fontWeight: "600" }}>
               Gender
@@ -249,7 +251,7 @@ export default function SettingsLeave() {
           </FormControl>
         </Grid>
 
-        <Grid item xs={3}>
+        <Grid item xs={1}>
           <FormControl fullWidth>
             <FormLabel sx={{ color: "black", fontWeight: "600" }}>
               Count
@@ -276,8 +278,38 @@ export default function SettingsLeave() {
             ))}
           </FormControl>
         </Grid>
-
-        <Grid item xs={3}>
+        <Grid item xs={3.5}>
+          <FormControl fullWidth>
+            <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+              Description
+            </FormLabel>
+            {formData.map((data, index) => (
+              <TextField
+                key={index}
+                type="text"
+                fullWidth
+                sx={{
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderWidth: "2px",
+                    borderColor: "#b3b3b3",
+                    borderRadius: "10px",
+                  },
+                  margin: "10px 0px",
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={data.description}
+                onChange={(e) =>
+                  handleInputChange(index, "description", e.target.value)
+                }
+                onClick={() => handleInputClick(index)}
+                disabled={!editMode}
+              />
+            ))}
+          </FormControl>
+        </Grid>
+        <Grid item xs={2}>
           <Box
             sx={{
               display: "flex",
