@@ -27,6 +27,7 @@ import AssetsAdminPage from "./Pages/AssetsAdminPage";
 import WorksheetPage from "./Pages/WorksheetPage";
 import TrainingsPageAdmin from "./Pages/TrainingsPageAdmin";
 import ActivityPage from "./Pages/ActivityPage";
+import PolicyPage from "./AdminPages/PolicyPage";
 
 const drawerWidth = 240;
 

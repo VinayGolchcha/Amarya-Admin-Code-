@@ -15,71 +15,115 @@ import {
   MenuItem,
 } from "@mui/material";
 import ActivityForm from "./ActivityForm";
-import axios, { toFormData } from 'axios';
+import axios from 'axios';
 import { toast } from "react-toastify";
 
 const AdminNotificationTab = () => {
   const [selectedTab, setSelectedTab] = useState("announcement");
   const [selectedDate, setSelectedDate] = useState("All Dates"); // State for selected date
-  const [notifications, setNotifications] = useState([
-    
-    // Add more notifications as needed
-  ]);
-  const [uniqueDates , setuniqueDates] = useState(["All Dates"])
+  const [notifications, setNotifications] = useState([]);
+  const [uniqueDates , setUniqueDates] = useState(["All Dates"]);
+  const [edit , setEdit] = useState(false);
+  const [selectedNoti , setSelectedNoti] = useState({});
+  const [file , setFile] = useState([]);
 
+  
+  const handleEditSelection = (obj) => {
+    const isEdit = !edit;
+    setEdit(isEdit);
+    if(isEdit){
+      setSelectedNoti(obj);
+    }else{
+      setSelectedNoti({});
+    }
+  };
+
+  const handleDeleteNotification = async(id) => {
+    console.log(id);
+    try {
+      const response = await axios.delete(`${process.env.REACT_APP_API_URI}/${selectedTab}/admin/delete-${selectedTab}/${id}`);
+      fetchNotification();
+      toast.warning(response.data.message);
+    } catch (err) {
+      console.log(err);
+      toast.error(err.message);
+    }
+  };
 
   const fetchNotification = async () => {
-    try{
-      const resData = await axios.get(`${process.env.REACT_APP_API_URI}${selectedTab}/fetch-${selectedTab}`);
+    try {
+      const resData = await axios.get(`${process.env.REACT_APP_API_URI}/${selectedTab}/fetch-${selectedTab}`);
       setNotifications(resData.data.data);
-      console.log(resData.data.data)
-    }catch(error){
+    } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
+  };
 
-  }
-
-  const filterActiviyByDate = async () => {
-    try{
-      const res = await axios.get(`${process.env.REACT_APP_API_URI}${selectedTab}/filter-${selectedTab}-by-date/2024-05-09`);
-      const responseData = res.data.data
-      setNotifications(responseData);
-      console.log(notifications);
-    }catch(error){
+  const filterActiviyByDate = async (date) => {
+    try {
+      if (date === "All Dates") {
+        fetchNotification();
+      } else {
+        const res = await axios.get(`${process.env.REACT_APP_API_URI}/${selectedTab}/filter-${selectedTab}-by-date/${date}`);
+        setNotifications(res.data.data);
+        toast.success("Notifications are filtered");
+      }
+    } catch (error) {
       console.log(error);
       toast.error(error.message);
     }
-  }
+  };
 
   const handleAddAnnouncement = async (body) => {
-    try{
-      const res = await axios.post(`${process.env.REACT_APP_API_URI}${selectedTab}/admin/add-${selectedTab}`, body)
+    try {
+      const formData = new FormData();
+      Object.keys(body).forEach((key) => {
+        formData.append(key , body[key]);
+      })
+      file.forEach((f) => {
+        formData.append("files" , f);
+      })
+      const res = await axios.post(`${process.env.REACT_APP_API_URI}/${selectedTab}/admin/add-${selectedTab}`, selectedTab === "activity" ? formData : body);
       console.log(res);
       toast.success(res.data.message);
       fetchNotification();
-    }catch(error){
-      toast.error(error.response.data.errors[0].msg);
+    } catch (error) {
+      toast.error(error?.response?.data?.errors[0]?.msg);
     }
-  }
+  };
 
+  const handeleEditAnnouncement = async (body , id) => {
+    try {
+      const res = await axios.put(`${process.env.REACT_APP_API_URI}/${selectedTab}/admin/update-${selectedTab}/${id}`, body);
+      console.log(res);
+      toast.success(res.data.message);
+      fetchNotification();
+    } catch (error) {
+      toast.error(error?.response?.data?.errors[0].msg);
+    }
+  };
   
   useEffect(() => {
     fetchNotification();
-    setuniqueDates([...new Set(notifications?.map(notification => notification.from_date))])
-  },[selectedTab]);
-  
+    setEdit(false);
+  }, [selectedTab]);
+
   useEffect(() => {
-    setuniqueDates([...new Set(notifications?.map(notification => notification.from_date))]);
+    setUniqueDates(["All Dates", ...new Set(notifications?.map(notification => notification?.created_at?.split("T")[0]))]);
   }, [notifications]);
 
   const handleDateChange = (event) => {
-    setSelectedDate(event.target.value);
-    filterActiviyByDate();
+    const newDate = event.target.value;
+    setSelectedDate(newDate);
+    filterActiviyByDate(newDate);
   };
 
   const handleTabChange = (tab) => {
-    setSelectedTab(tab);// Reset date filter to "All Dates"
+    setSelectedNoti({});
+    setEdit(false);
+    setSelectedTab(tab);
+    setSelectedDate("All Dates"); // Reset date filter to "All Dates"
   };
 
   const handleAddNotification = (newNotification) => {
@@ -89,35 +133,20 @@ const AdminNotificationTab = () => {
     ]);
   };
 
-  // const uniqueDates = [...new Set(notifications.map((n) => n.date))];
-  // User
-  // const uniqueDates = [
-  //   "All Dates",
-  //   ...new Set(
-  //     notifications?.filter((n) => n.type === selectedTab).map((n) => n.created_at?.split('T')[0])
-  //   ),
-  // ];
-  // if (!uniqueDates.includes("All Dates")) {
-  //   uniqueDates.unshift("All Dates"); // Add "All Dates" option if not already present
-  // }
-  // console.log()
   const filteredNotifications = notifications?.filter((notification) => {
     if (selectedDate === "All Dates") {
       return true;
     } else {
-      return (
-        true && notification?.created_at === selectedDate
-      );
+      return notification?.created_at?.split("T")[0] === selectedDate;
     }
   });
 
   const notificationPairs = [];
   for (let i = 0; i < filteredNotifications?.length; i += 2) {
-    const pair = [
+    notificationPairs.push([
       filteredNotifications[i],
       filteredNotifications[i + 1] || null, // Handle odd number of notifications
-    ];
-    notificationPairs.push(pair);
+    ]);
   }
 
   return (
@@ -248,7 +277,7 @@ const AdminNotificationTab = () => {
           </TableHead>
           <TableBody>
             {notificationPairs.map((pair, index) => (
-              <TableRow >
+              <TableRow key={index}>
                 {pair.map((notification, index) => (
                   <TableCell
                     key={index}
@@ -265,9 +294,25 @@ const AdminNotificationTab = () => {
                           paddingLeft: "15px",
                         }}
                       >
-                        {notification?.description?.slice(0,15)}...
+                        {notification?.description?.slice(0, 15)}...
                         <div
                           style={{
+                            position: "absolute",
+                            top: "0",
+                            right: "15%",
+                            background: "#fff",
+                            padding: "8px",
+                            borderRadius: "12px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          {new Date(notification?.created_at).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: '2-digit',
+                            year: 'numeric'
+                          })}
+                        </div>
+                        <div style={{
                             position: "absolute",
                             top: "0",
                             right: "0",
@@ -275,13 +320,10 @@ const AdminNotificationTab = () => {
                             padding: "8px",
                             borderRadius: "12px",
                             fontWeight: "600",
-                          }}
-                        >
-                          {new Date(notification?.from_date).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: '2-digit',
-                            year: 'numeric'
-                          })}
+                            height : "100%"
+                          }}>
+                          <img src="Images/icons8-edit-30.png" alt="edit-icon" style={{height : "100%" , cursor : "pointer"}} onClick={() => handleEditSelection(notification)}/>
+                          <img src="Images/icons8-delete-trash-24.png" alt="delete-icon" style={{height : "100%" , cursor : "pointer"}} onClick={() => handleDeleteNotification(notification?._id)}/>
                         </div>
                       </div>
                     )}
@@ -315,16 +357,19 @@ const AdminNotificationTab = () => {
             },
           }}
         >
-          NEW EVENT !!!
+          {edit === false ? <>NEW EVENT !!!</> : <>Edit EVENT !!!</>}
         </Typography>
         <ActivityForm
           onAddNotification={handleAddNotification}
           selectedTab={selectedTab}
-          handleAddAnnouncement = {handleAddAnnouncement}
+          handleAddAnnouncement={edit === false ? handleAddAnnouncement : handeleEditAnnouncement}
+          selectedNoti={selectedNoti}
+          edit={edit}
+          isEdit={setEdit}
         />
       </Box>
     </div>
   );
-};
+}
 
 export default AdminNotificationTab;

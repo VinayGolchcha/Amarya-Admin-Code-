@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import ProjectOverview from "../Components/ProjectOverview";
 import EmployeeCountPieChart from "../Components/AdminPieChart";
@@ -8,6 +8,7 @@ import AdminActivity from "./AdminActivity";
 import AdminProjectSummy from "./AdminProjectSummy";
 import DashboardPosComp from "../Components/DashboardPosComp";
 import AdminApprovals from "./AdminApprovals";
+import axios from "axios";
 
 const suggSum = [
   {
@@ -48,6 +49,45 @@ const announceNoti = [
   },
 ];
 const AdminDashboard = () => {
+  const [projectOverview , setProjectOverview] = useState([]);
+  const [feedback , setFeedback] = useState([]);
+  const [projects , setProjects] = useState([]);
+  const [onGoingProjects , setOnGoingProjects] = useState(null);
+  const [totalProjects , setTotalProjects] = useState(null);
+  const fetchFeedback = async () => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/userDashboard/admin/fetch-user-feedback`)
+      setFeedback(res?.data?.data);
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  const fetchProjects = async () => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/project/fetch-all-projects`);
+      setProjects(res?.data?.data);
+      const fecthedProjects = res?.data?.data
+      const inprogress = 0 ;
+      const projectInProgress = fecthedProjects.filter((item) => item.project_status === "In Progress");
+      setOnGoingProjects(projectInProgress.length);
+      setTotalProjects(res?.data?.data?.length);
+      setOnGoingProjects()
+    }catch(err){
+      console.log(err);
+    }
+  }
+  const dateFormat = (date) => {
+    const reqFormat = new Date(date);
+    const dateList = reqFormat.toString().split(" ");
+    const stringFormat = dateList[2]+"th"+" "+ dateList[1]+" " + dateList[3];
+    return stringFormat;
+  }
+  
+  useEffect(()=> {
+    fetchFeedback();
+    fetchProjects();
+  },[])
   return (
     <Box>
       <Typography
@@ -73,7 +113,7 @@ const AdminDashboard = () => {
             width: "auto",
           }}
         >
-          <ProjectOverview />
+          <ProjectOverview onGoingProjects={onGoingProjects} totalProjects = {totalProjects}/>
         </Box>
         <Box
           sx={{
@@ -106,7 +146,7 @@ const AdminDashboard = () => {
           <AdminActivity />
         </Box>
       </Box>
-      <AdminProjectSummy />
+      <AdminProjectSummy projects = {projects}/>
 
       <DashboardPosComp />
       <Box sx={{ display: "flex" }}>
@@ -133,7 +173,7 @@ const AdminDashboard = () => {
           </Typography>
           <Box sx={{ padding: "0px 8px 8px 8px" }}>
             <List sx={{ paddingBottom: "4px" }}>
-              {suggSum.map((item) => {
+              {feedback?.map((item) => {
                 return (
                   <ListItem
                     sx={{
@@ -171,7 +211,8 @@ const AdminDashboard = () => {
                         fontWeight: "600",
                       }}
                     >
-                      {item.date}
+                      
+                      {dateFormat(item.date)}
                     </Typography>
                   </ListItem>
                 );

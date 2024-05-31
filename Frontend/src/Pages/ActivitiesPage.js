@@ -126,12 +126,21 @@ const ActivitiesPage = () => {
 
   const fetchNotification = async () => {
     try{
-      const resData = await axios.get(`${process.env.REACT_APP_API_URI}activity/fetch-activity`);
+      const resData = await axios.get(`${process.env.REACT_APP_API_URI}/activity/fetch-activity`);
       setActivityData(resData.data.data);
       console.log(resData.data.data)
     }catch(error){
       console.log(error);
       toast.error(error.message);
+    }
+  }
+
+  const fetchFeedback = async () => {
+    try{
+      const res = axios.get(`${process.env.REACT_APP_API_URI}/userDashboard/admin/fetch-user-feedback`)
+      console.log(res);
+    }catch(err){
+      console.log(err);
     }
   }
   useEffect(()=> {

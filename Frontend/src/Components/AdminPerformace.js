@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Typography, Paper, Box } from "@mui/material";
+import axios from "axios";
 
 const CustomBarChart = ({ data }) => {
   return (
@@ -42,7 +43,7 @@ const CustomBarChart = ({ data }) => {
             borderRadius: "4px",
           }}
         >
-          {data.map((item, index) => (
+          {data?.map((item, index) => (
             <div
               key={index}
               style={{
@@ -71,7 +72,7 @@ const CustomBarChart = ({ data }) => {
                     fontSize: "0.9rem",
                   }}
                 >
-                  {`${item.performance}%`}
+                  {`${item?.team_performance_percent}%`}
                 </Typography>
                 <Typography
                   variant="body1"
@@ -84,7 +85,7 @@ const CustomBarChart = ({ data }) => {
                     fontSize: "0.8rem",
                   }}
                 >
-                  {`${item.team}`}
+                  {`${item?.team_name?.toUpperCase()}`}
                 </Typography>
               </div>
               <div
@@ -119,7 +120,22 @@ const CustomBarChart = ({ data }) => {
 };
 
 const AdminPerformance = () => {
+  const [teamperformance , setTeamPerformance] = useState([]);
+  const fetchPerformance = async () => {
+    try{
+      const res = await axios.get(`https://amarya-admin-backend-code.onrender.com/api/v1/worksheet/admin/calculate-team-performance`);
+      console.log(res);
+      setTeamPerformance(res?.data?.data);
+    }catch(err){
+      console.log(err);
+    }
+  }
+  useEffect(() => {
+    fetchPerformance();
+  },[]);
+
   // Sample data for performance graph
+  
   const teamPerformanceData = [
     { team: "Full Stack Team", performance: 92 },
     { team: "Data Science Team", performance: 40 },
@@ -129,7 +145,7 @@ const AdminPerformance = () => {
     // ... add data for other teams
   ];
 
-  return <CustomBarChart data={teamPerformanceData} />;
+  return <CustomBarChart data={teamperformance} />;
 };
 
 export default AdminPerformance;
