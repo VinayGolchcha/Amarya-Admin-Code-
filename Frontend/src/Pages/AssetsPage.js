@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Typography,
   TextField,
@@ -12,9 +12,11 @@ import {
   Grid,
   DatePicker,
 } from "@mui/material";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   Box,
-  Paper,
   Table,
   Button,
   TableBody,
@@ -22,9 +24,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  IconButton,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useAuth } from "../Components/AuthContext";
 
 const AssetsPage = () => {
   const [fullName, setFullName] = useState("");
@@ -32,9 +34,14 @@ const AssetsPage = () => {
   const [todayDate, setTodayDate] = useState("");
   const [selectedRequestTypes, setSelectedRequestTypes] = useState([]);
   const [selectedHardwareItems, setSelectedHardwareItems] = useState([]);
-  const [selectedPurpose, setSelectedPurpose] = useState("");
+  const [requirement_type, setRequirementType] = useState("");
   const [details, setDetails] = useState("");
   const [declarationChecked, setDeclarationChecked] = useState(false);
+  const [primary_purpose, setPrimaryPurposeChange] = useState("");
+  const [assetData, setAssetData] = useState([]);
+  const { user } = useAuth();
+
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const requestTypes = [
     "Hardware",
@@ -62,19 +69,27 @@ const AssetsPage = () => {
     "Manager",
     "In Warranty",
   ];
-  const tableContent = [
-    {
-      srno: "1",
-      name: "Rohit",
-      item: "Laptop",
-      invtid: "AMIL016",
-      issuedfrom: "1st Jan `21",
-      issuedtill: "Present",
-      approvedrejected: "approved",
-      manager: "HR",
-      inwarranty: "Yes",
-    },
-  ];
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const formattedDate = date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+    return formattedDate;
+  };
+  const tableContent = assetData.map((data, index) => ({
+    srno: index + 1,
+    name: data.name,
+    item: data.item,
+    invtid: data.asset_id,
+    issuedfrom: formatDate(data.issued_from),
+    issuedtill: formatDate(data.issued_till),
+    approvedrejected: data.status,
+    manager: "HR", // You may need to fill this data if available in your fetched data
+    inwarranty: data.warranty_period > 0 ? "Yes" : "No",
+  }));
+
   const formatKey = (header) => {
     return header.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
   };
@@ -87,18 +102,18 @@ const AssetsPage = () => {
     return formattedRow;
   });
 
-  console.log(formattedContent);
-
   const handleRequestTypeChange = (event) => {
     setSelectedRequestTypes(event.target.value);
   };
-
+  const handlePrimaryPurpos = (event) => {
+    setPrimaryPurposeChange(event.target.value);
+  };
   const handleHardwareItemChange = (event) => {
     setSelectedHardwareItems(event.target.value);
   };
 
-  const handlePurposeChange = (event) => {
-    setSelectedPurpose(event.target.value);
+  const handleRequirementTypeChange = (event) => {
+    setRequirementType(event.target.value);
   };
 
   const handleDetailsChange = (event) => {
@@ -108,6 +123,95 @@ const AssetsPage = () => {
   const handleDeclarationChange = (event) => {
     setDeclarationChecked(event.target.checked);
   };
+
+  const handleSendAsset = () => {
+    const requestData = {
+      emp_id: "AMEMP002",
+      asset_type: selectedRequestTypes.length > 0 ? selectedRequestTypes : "",
+      item: selectedHardwareItems.length > 0 ? selectedHardwareItems : "",
+      requirement_type: requirement_type.length > 0 ? requirement_type : "",
+      primary_purpose: primary_purpose,
+      request_type: "Inventory",
+      details: details,
+    };
+
+    console.log(requestData);
+
+    axios
+      .post(`${apiUrl}/asset/asset-request`, requestData, {
+        headers: {
+          "x-access-token": user?.token,
+        },
+      })
+      .then((response) => {
+        // Handle successful response
+        console.log("Data sent successfully:", response.data);
+        toast.success("Asset request sent successfully!", {
+          position: "top-right",
+          autoClose: 3000, // Duration of the toast
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      })
+      .catch((error) => {
+        // Handle error
+        console.error("Error sending data:", error);
+
+        let errorMessage =
+          "Failed to send asset request. Please try again later.";
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
+          const errorMessages = error.response.data.errors.map(
+            (error) => error.msg
+          );
+          errorMessage = errorMessages.join("\n");
+        }
+
+        toast.error(errorMessage, {
+          position: "top-right",
+          autoClose: 5000, // Duration of the toast
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.post(
+          `${apiUrl}/asset/user-asset`,
+          {
+            emp_id: "AMEMP002",
+          },
+          {
+            headers: {
+              "x-access-token": user?.token,
+            },
+          }
+        );
+        if (response.data.success) {
+          setAssetData(response.data.data);
+          console.log(response.data.data);
+        } else {
+          console.error("Error fetching asset data:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error fetching asset data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <div style={{ margin: "20px 50px 20px 50px" }}>
@@ -409,8 +513,8 @@ const AssetsPage = () => {
               <Select
                 labelId="purpose-label"
                 id="purpose"
-                value={selectedPurpose}
-                onChange={handlePurposeChange}
+                value={requirement_type}
+                onChange={handleRequirementTypeChange}
                 fullWidth
                 size="small"
                 sx={{ backgroundColor: "rgb(250, 250, 250)" }}
@@ -433,6 +537,8 @@ const AssetsPage = () => {
               variant="outlined"
               label="Primary Purpose"
               fullWidth
+              value={primary_purpose}
+              onChange={handlePrimaryPurpos}
             />
           </Grid>
         </Grid>
@@ -503,10 +609,13 @@ const AssetsPage = () => {
               color: "white",
               border: "4px",
             }}
+            onClick={handleSendAsset}
           >
             Send Request
           </Button>
         </Grid>
+
+        <ToastContainer />
       </Box>
     </div>
   );

@@ -39,7 +39,7 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const navigate = useNavigate();
 
   const menu = [
-    { text: "Dashboard", link: "dashboard", icon: <DashboardIcon /> },
+    { text: "Dashboard", link: "", icon: <DashboardIcon /> },
     { text: "Assets", link: "assets", icon: <PersonAddAlt1Icon /> },
     { text: "Leave Planner", link: "leaves", icon: <InsertInvitationIcon /> },
     { text: "Trainings", link: "trainings", icon: <GroupsIcon /> },

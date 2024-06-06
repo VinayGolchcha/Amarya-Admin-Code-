@@ -22,6 +22,7 @@ import ActivitiesPage from "./Pages/ActivitiesPage";
 import UserProfilePage from "./Pages/UserProfilePage";
 import AdminDashboard from "./AdminPages/AdminDashboard";
 import AdminAnnouncement from "./Pages/AdminAnnouncement";
+import LoginPage from "./Pages/LoginPage";
 
 import AssetsAdminPage from "./Pages/AssetsAdminPage";
 import WorksheetPage from "./Pages/WorksheetPage";
@@ -75,7 +76,7 @@ const MainPage = (props) => {
         }}
       >
         <Routes>
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/" element={<DashboardPage />} />
           <Route path="/assets" element={<AssetsPage />} />
           <Route path="/leaves" element={<LeaveManagementPage />} />
           <Route path="/trainings" element={<TrainingsPage />} />
@@ -91,6 +92,7 @@ const MainPage = (props) => {
           <Route path="/admindashboard" element={<AdminDashboard />} />
           <Route path="/adminAnouncement" element={<AdminAnnouncement />} />
           <Route path="/activities/:activityId" element={<ActivityPage />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </Box>
     </Box>
