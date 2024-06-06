@@ -17,6 +17,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
+  IconButton,
 } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import AddIcon from "@mui/icons-material/Add";
@@ -24,6 +25,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { format } from "date-fns";
+import { useAuth } from "../Components/AuthContext";
 
 const WorksheetPage = () => {
   const [teams, setTeams] = useState([]);
@@ -39,7 +41,7 @@ const WorksheetPage = () => {
       { key: "skillset", label: "Skillset" },
     ];
 
-    return cellData.map((cell, index) => (
+    return cellData?.map((cell, index) => (
       <TableCell key={index}>
         <Typography
           sx={{
@@ -72,7 +74,6 @@ const WorksheetPage = () => {
   const rowsPerPage = 5;
 
   const [newRow, setNewRow] = useState(null);
-  const [editingRowIndex, setEditingRowIndex] = useState(null);
   const [textValue, setTextValue] = useState("");
 
   const handleChangePage = (event, newPage) => {
@@ -84,6 +85,8 @@ const WorksheetPage = () => {
     console.log(field + "hey");
     setSelectedOption(field);
   };
+
+  const { user } = useAuth();
 
   const handleTextFieldChange = (field) => {
     console.log(field + "hey");
@@ -138,51 +141,11 @@ const WorksheetPage = () => {
       skillset: [],
     });
   };
-  // const handleAddRow = () => {
-  //   if (newRow !== null) {
-  //     return;
-  //   }
-  //   const randomId = Math.floor(Math.random() * 1000);
-  //   const today = format(new Date(), "yyyy-MM-dd");
-
-  //   const newRowData = {
-  //     empid: randomId,
-  //     team: "",
-  //     date: today,
-  //     category: "",
-  //     project: "",
-  //     description: "",
-  //     skillset: [],
-  //   };
-
-  //   setRows((prevRows) => [newRowData, ...prevRows]);
-  //   setNewRow({ ...newRowData }); // Update newRow with a copy of newRowData
-  //   setEditingRowIndex(0); // Set to 0 for the newly added row
-  //   setCurrentPage(0);
-  // };
-
-  //   const handleEditRow = (index) => {
-  //     setEditingRowIndex(index);
-  //   };
 
   const handleSaveRow = async () => {
     try {
-      if (editingRowIndex !== null) {
-        setRows((prevRows) => {
-          const updatedRows = [...prevRows];
-          updatedRows[editingRowIndex] = {
-            ...updatedRows[editingRowIndex],
-            ...newRow,
-            checkbox: false,
-          };
-          return updatedRows;
-        });
-        setEditingRowIndex(null);
-        setNewRow(null);
-      } else {
-        setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
-        setNewRow(null);
-      }
+      setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
+      setNewRow(null);
 
       const selectedTeam = teams.find((team) => team.label === newRow.team);
       const teamId = selectedTeam ? selectedTeam._id : null;
@@ -195,32 +158,38 @@ const WorksheetPage = () => {
         ? newRow.skillset.map((skill) => skill._id).join(", ")
         : null;
 
+      const selectedProject = projects.find(
+        (project) => project.label === newRow.project
+      );
+      console.log(selectedProject);
+      const projectId = selectedProject ? selectedProject.project_id : null;
+      console.log(projectId);
+
       // Prepare the data object
       const postData = {
-        emp_id: "AMEMP019",
+        emp_id: "AMEMP031",
         team_id: teamId,
         category_id: categoryId,
         skill_set_id: skillSetIds,
+        project_id: projectId,
         description: newRow.description,
         date: newRow.date,
       };
       console.log(postData);
       // Send the data to the API endpoint
-      const response = await fetch(
-        "https://curious-colt-long-underwear.cyclic.app/api/v1/worksheet/create-worksheet",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(postData),
-        }
-      );
+      const response = await fetch(`${apiUrl}/worksheet/create-worksheet`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": user?.token,
+        },
+        body: JSON.stringify(postData),
+      });
 
       const responseData = await response.json();
       if (responseData.success) {
         toast.success("Data submitted successfully!");
-        console.log(responseData);  
+        console.log(responseData);
       } else {
         toast.error("Failed to submit data: " + responseData.message);
       }
@@ -230,54 +199,10 @@ const WorksheetPage = () => {
     }
   };
 
-  // const handleSaveRow = () => {
-  //   if (editingRowIndex !== null) {
-  //     // Existing row editing logic remains the same
-  //     setRows((prevRows) => {
-  //       const updatedRows = [...prevRows];
-  //       updatedRows[editingRowIndex] = { ...updatedRows[editingRowIndex], ...newRow, checkbox: false };
-  //       return updatedRows;
-  //     });
-  //     setEditingRowIndex(null);
-  //     setNewRow(null);
-  //     console.log("In");
-  //   } else {
-  //     // Check if a row with the same empid and date exists
-  //     const existingRowIndex = rows.findIndex(
-  //       (row) => row.empid === newRow.empid && row.date === newRow.date
-  //     );
-
-  //     if (existingRowIndex !== -1) {
-  //       // If the row exists, merge the data into that row
-  //       setRows((prevRows) => {
-  //         const mergedRow = { ...prevRows[existingRowIndex], ...newRow, checkbox: false };
-  //         const updatedRows = [...prevRows];
-  //         updatedRows[existingRowIndex] = mergedRow;
-  //         return updatedRows;
-  //       });
-  //     } else {
-  //       // If the row does not exist, add a new row to the state
-  //       setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
-  //     }
-
-  //     setNewRow(null);
-  //   }
-  // };
 
   const handleNewRowChange = (field, value) => {
     setNewRow((prevNewRow) => ({ ...prevNewRow, [field]: value }));
   };
-  // const handleNewRowChange = (field, value) => {
-  //   if (field === "team") {
-  //     const selectedTeam = teams.find(team => team.value === value);
-  //     setNewRow((prevNewRow) => ({ ...prevNewRow, [field]: selectedTeam }));
-  //   } else if (field === "category") {
-  //     const selectedCategory = categories.find(category => category.value === value);
-  //     setNewRow((prevNewRow) => ({ ...prevNewRow, [field]: selectedCategory }));
-  //   } else {
-  //     setNewRow((prevNewRow) => ({ ...prevNewRow, [field]: value }));
-  //   }
-  // };
 
   const handleSkillsetChange = (selectedSkills) => {
     handleNewRowChange("skillset", selectedSkills);
@@ -295,35 +220,74 @@ const WorksheetPage = () => {
     "",
   ];
   useEffect(() => {
-    fetchTeams();
-    fetchCategories();
-    fetchSkills();
-    fetchProjects();
-    const empId = "AMEMP019"; // Replace this with the actual emp_id
-    fetchWorksheetDataForEmployee(empId);
-  }, []);
+    const fetchData = async () => {
+      try {
+        // Fetch teams, categories, skills, and projects concurrently
+        const [teamsData, categoriesData, skillsData, projectsData] =
+          await Promise.all([
+            fetchTeams(),
+            fetchCategories(),
+            fetchSkills(),
+            fetchProjects(),
+          ]);
+
+        // Set fetched data to state
+        setTeams(teamsData);
+        setCategories(categoriesData);
+        setSkillsets(skillsData);
+        setProjects(projectsData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array to run once on mount
+
+  useEffect(() => {
+    // Check if all data is fetched successfully
+    if (
+      teams?.length > 0 &&
+      categories?.length > 0 &&
+      skillsets?.length > 0 &&
+      projects?.length > 0
+    ) {
+      const empId = "AMEMP031"; // Replace this with the actual emp_id
+      fetchWorksheetDataForEmployee(empId);
+    } else {
+      console.error("Failed to fetch all required data.");
+    }
+  }, [teams, categories, skillsets, projects]); // Dependency on teams, categories, skills, and projects
 
   const fetchWorksheetDataForEmployee = async (empId) => {
     try {
       // Fetch worksheet data for the specified employee
-      const response = await fetch(`${apiUrl}/worksheet/fetch-user-worksheet/${empId}`);
+      const response = await fetch(
+        `${apiUrl}/worksheet/fetch-user-worksheet/${empId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": user?.token, // Add your custom headers here
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
-  
+
       if (data.success) {
         // Worksheet data fetched successfully
-        const worksheetData = data.data.map((rowData) => ({
+        const worksheetData = data?.data.map((rowData) => ({
           empid: rowData.emp_id, // Use emp_id from fetched data
           team: getTeamNameById(rowData.team_id), // Get team name by id
           date: formatDate(rowData.created_at), // Use created_at as date
           category: getCategoryNameById(rowData.category_id), // Get category name by id
-          project: "stocytodoo", // Get project name by id (if available)
+          project: getProjectNameById(rowData.project_id), // Get project name by id (if available)
           description: rowData.description,
           skillset: getSkillsetNameByIds(rowData.skill_set_id), // Get skillset names by ids
         }));
-        console.log("Worksheet data:", worksheetData);
         // Set the fetched data to your state variable (e.g., setRows)
         setRows(worksheetData);
       } else {
@@ -334,51 +298,59 @@ const WorksheetPage = () => {
     }
   };
   // Usage example:
-// Function to get team name by id
-const getTeamNameById = (teamId) => {
-  const team = teams.find((team) => team._id === teamId);
-  return team ? team.label : "Unknown";
-};
+  // Function to get team name by id
+  const handleEditClick = () => {};
+  const getTeamNameById = (teamId) => {
+    const team = teams.find((team) => team._id === teamId);
+    return team?.label;
+  };
 
-// Function to get category name by id
-const getCategoryNameById = (categoryId) => {
-  const category = categories.find((category) => category._id === categoryId);
-  return category ? category.label : "Unknown";
-};
+  // Function to get category name by id
+  const getCategoryNameById = (categoryId) => {
+    const category = categories.find((category) => category._id === categoryId);
+    return category?.label;
+  };
 
-// Function to get project name by id (if available)
-const getProjectNameById = (projectId) => {
-  const project = projects.find((project) => project._id === projectId);
-  return project ? project.label : "Unknown";
-};
+  // Function to get project name by id (if available)
+  const getProjectNameById = (projectId) => {
+    const project = projects.find(
+      (project) => project.project_id === projectId
+    );
+    return project ? project.label : "Unknown";
+  };
 
-// Function to get skillset names by ids
-const getSkillsetNameByIds = (skillsetIds) => {
-  const skillsetNames = skillsets
-    .filter((skill) => skillsetIds.includes(skill._id))
-    .map((skill) => skill.label);
-  return skillsetNames.length > 0 ? skillsetNames.join(", ") : "Unknown";
-};
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-};
+  // Function to get skillset names by ids
+  const getSkillsetNameByIds = (skillsetIds) => {
+    const skillsetNames = skillsets
+      .filter((skill) => skillsetIds.includes(skill._id))
+      .map((skill) => skill.label);
+    return skillsetNames.length > 0 ? skillsetNames.join(", ") : "Unknown";
+  };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  };
   const fetchProjects = async () => {
     try {
-      const response = await fetch(
-        "https://curious-colt-long-underwear.cyclic.app/api/v1/project/admin/fetch-all-projects"
-      );
+      const response = await fetch(`${apiUrl}/project/fetch-all-projects`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": user?.token, // Add your custom headers here
+        },
+      });
       const data = await response.json();
       if (data.success) {
-        const projectOptions = data.data.map(({ _id, project }) => ({
-          _id, // Keep _id separate
+        const projectOptions = data?.data?.map(({ project_id, project }) => ({
+          project_id, // Keep _id separate
           value: project, // Use the label as the value displayed to the user
           label: project,
         }));
-        setProjects([
-          { value: "", label: "Select Project" },
-          ...projectOptions,
-        ]);
+        setProjects(projectOptions);
+        console.log("project:", projectOptions); // Log fetched teams
+        return projectOptions;
       } else {
         console.error("Failed to fetch projects:", data.message);
       }
@@ -389,16 +361,23 @@ const formatDate = (dateString) => {
 
   const fetchTeams = async () => {
     try {
-      const response = await fetch(`${apiUrl}/team/admin/fetch-all-teams`);
+      const response = await fetch(`${apiUrl}/team/fetch-all-teams`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": user?.token, // Add your custom headers here
+        },
+      });
       const data = await response.json();
       if (data.success) {
-        const teamOptions = data.data.map(({ _id, team }) => ({
+        const teamOptions = data?.data?.map(({ _id, team }) => ({
           _id, // Keep _id separate
           value: team, // Use the label as the value displayed to the user
           label: team,
         }));
         setTeams(teamOptions);
-        // console.log(teamOptions);
+        console.log("Teams:", teamOptions); // Log fetched teams
+        return teamOptions;
       } else {
         console.error("Failed to fetch teams:", data.message);
       }
@@ -408,17 +387,23 @@ const formatDate = (dateString) => {
   };
   const fetchCategories = async () => {
     try {
-      const response = await fetch(
-        "https://curious-colt-long-underwear.cyclic.app/api/v1/category/admin/fetch-all-categories"
-      );
+      const response = await fetch(`${apiUrl}/category/fetch-all-categories`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": user?.token, // Add your custom headers here
+        },
+      });
       const data = await response.json();
       if (data.success) {
-        const categoryOptions = data.data.map(({ _id, category }) => ({
+        const categoryOptions = data?.data?.map(({ _id, category }) => ({
           _id, // Keep _id separate
           value: category, // Use the label as the value displayed to the user
           label: category,
         }));
         setCategories(categoryOptions);
+        console.log("category:", categoryOptions); // Log fetched teams
+        return categoryOptions;
       } else {
         console.error("Failed to fetch categories:", data.message);
       }
@@ -428,18 +413,23 @@ const formatDate = (dateString) => {
   };
   const fetchSkills = async () => {
     try {
-      const response = await fetch(
-        "https://curious-colt-long-underwear.cyclic.app/api/v1/skillset/admin/fetch-skills"
-      );
+      const response = await fetch(`${apiUrl}/skillset/fetch-skills`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": user?.token, // Add your custom headers here
+        },
+      });
       const data = await response.json();
       if (data.success) {
-        const skillOptions = data.data.map(({ _id, skill }) => ({
+        const skillOptions = data?.data?.map(({ _id, skill }) => ({
           _id, // Keep _id separate
           value: skill, // Use the label as the value displayed to the user
           label: skill,
         }));
         setSkillsets(skillOptions);
-        // console.log(skillOptions);
+        console.log("skill:", skillOptions); // Log fetched teams
+        return skillOptions;
       } else {
         console.error("Failed to fetch skills:", data.message);
       }
@@ -501,7 +491,7 @@ const formatDate = (dateString) => {
                   alt="Check"
                 />
               </TableCell>
-              {tableHeaders.map((header, index) => (
+              {tableHeaders?.map((header, index) => (
                 <TableCell
                   key={index}
                   align="left"
@@ -523,7 +513,10 @@ const formatDate = (dateString) => {
           </TableHead>
           <TableBody sx={{}}>
             {rows
-              .slice(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage)
+              ?.slice(
+                currentPage * rowsPerPage,
+                (currentPage + 1) * rowsPerPage
+              )
               .map((row, index) => (
                 <TableRow key={index}>
                   <TableCell style={{ filter: "invert(1)" }}>
@@ -535,13 +528,16 @@ const formatDate = (dateString) => {
                   </TableCell>
                   {renderTableCells(row)}
                   <TableCell>
-                    <Box
-                      component="img"
-                      src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
-                      alt="Check"
-                      onClick={handleSaveRow}
-                      sx={{ cursor: "pointer" }}
-                    />
+                    {/* <IconButton onClick={() => handleEditClick()}>
+                      <EditIcon />
+                    </IconButton> */}
+                      <Box
+                    component="img"
+                    src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
+                    alt="Check"
+                    // onClick={handleSaveRow}
+                    sx={{ cursor: "pointer" }}
+                  />
                   </TableCell>
                 </TableRow>
               ))}
@@ -579,7 +575,7 @@ const formatDate = (dateString) => {
                       sx={{ width: "100px" }}
                       variant="standard"
                     >
-                      {teams.map((team) => (
+                      {teams?.map((team) => (
                         <MenuItem key={team.value} value={team.value}>
                           {team.label}
                         </MenuItem>
@@ -609,7 +605,7 @@ const formatDate = (dateString) => {
                       variant="standard"
                       sx={{ width: "120px" }}
                     >
-                      {categories.map((category) => (
+                      {categories?.map((category) => (
                         <MenuItem key={category.value} value={category.value}>
                           {category.label}
                         </MenuItem>
@@ -630,7 +626,7 @@ const formatDate = (dateString) => {
                       sx={{ width: "100px" }}
                       variant="standard"
                     >
-                      {projects.map((project) => (
+                      {projects?.map((project) => (
                         <MenuItem key={project.value} value={project.value}>
                           {project.label}
                         </MenuItem>
@@ -660,7 +656,7 @@ const formatDate = (dateString) => {
                       sx={{ width: "100px" }}
                       variant="standard"
                     >
-                      {skillsets.map((skill) => (
+                      {skillsets?.map((skill) => (
                         <MenuItem key={skill} value={skill}>
                           {skill.label}
                         </MenuItem>
@@ -807,8 +803,7 @@ const formatDate = (dateString) => {
         </box>
         <ToastContainer />
       </Box> */}
-            <ToastContainer /> {/* Add the ToastContainer here */}
-
+      <ToastContainer /> {/* Add the ToastContainer here */}
     </Box>
   );
 };

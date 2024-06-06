@@ -9,8 +9,11 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveIcon from "@mui/icons-material/Remove";
 import dayjs from "dayjs";
+import { useAuth } from "../Components/AuthContext";
 
 export default function SettingsProject() {
+  const { user } = useAuth();
+
   const [formData, setFormData] = useState([
     {
       "Project Name": "",
@@ -45,9 +48,13 @@ export default function SettingsProject() {
 
   const fetchProjects = () => {
     // Fetch projects from API
-    fetch(
-      `${apiUrl}/project/fetch-all-projects`
-    )
+    fetch(`${apiUrl}/project/fetch-all-projects`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": user?.token,
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         const adjustedData = data.data.map((item) => {
@@ -73,6 +80,8 @@ export default function SettingsProject() {
             "End Of The Project": endMonth,
             "Project Status": item.project_status,
             Category: item.category,
+            category_id: item.category_id,
+            project_id: item.project_id,
           };
         });
         setFormData(adjustedData);
@@ -102,15 +111,40 @@ export default function SettingsProject() {
     setEditMode(!editMode);
   };
 
-  const handleDelete = () => {
-    if (deleteMode) {
-      const newFormData = [...formData];
-      newFormData.splice(selectedInputIndex, 1);
-      setFormData(newFormData);
-      setSelectedInputIndex(null);
-      setDeleteMode(false);
+  const handleDelete = (index) => {
+    // Check if deleteMode is enabled and an index is selected
+    if (index !== null) {
+      console.log(formData);
+      const projectToDelete = formData[index];
+      const { project_id, category_id } = projectToDelete;
+      const id = project_id;
+      console.log("hellO");
+      fetch(`${apiUrl}/project/admin/delete-project/${id}/${category_id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json", 
+          "x-access-token": user?.token,
+        },
+      })
+        .then((response) => response.json())  
+        .then((data) => {
+          if (data.success) {
+            // If successful, remove the project from the formData array
+            const newFormData = [...formData];
+            newFormData.splice(index, 1);
+            setFormData(newFormData);
+            setSelectedInputIndex(null);
+            setDeleteMode(false);
+          } else {
+            // Handle error if delete request fails
+            console.error("Error deleting project:", data.error);
+          }
+        })
+        .catch((error) => console.error("Error deleting project:", error));
     } else {
+      // Enable delete mode if not already enabled
       setDeleteMode(true);
+      setSelectedInputIndex(index);
     }
   };
 
@@ -173,101 +207,104 @@ export default function SettingsProject() {
               margin: "10px 0px",
             }}
           >
+            
+            <Grid container spacing={4}>
             <RemoveIcon
-              color="action"
-              onClick={handleDelete}
-              sx={{
-                borderRadius: "50px",
-                backgroundColor: "rgb(222, 225, 231)",
-                width: "30px",
-                height: "30px",
-                margin: "0px 2px",
-                padding: "4px",
-              }}
-            />
-          </Box>
-          <Grid container spacing={4}>
-            {labels.map((item, i) => (
-              <Grid item xs={4}>
-                <FormControl fullWidth>
-                  <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-                    {item}
-                  </FormLabel>
-                  {item === "Start Of The Project" && (
-                    <>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label={'"month" , "year"'}
-                          views={["month", "year"]}
-                          value={dayjs(data[item]) || ""} // Accessing the value using the label as the key
-                          sx={{
-                            "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
-                              borderWidth: "2px",
-                              borderColor: "#b3b3b3",
-                              borderRadius: "10px",
-                            },
-                            margin: "10px 0px",
-                          }}
-                          onChange={(date) =>
-                            handleInputChange(index, item, date)
-                          }
-                          onClick={() => handleInputClick(index)}
-                        />
-                      </LocalizationProvider>
-                    </>
-                  )}
-                  {item === "End Of The Project" && (
-                    <>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
-                          label={'"month", "year"'}
-                          views={["month", "year"]}
-                          value={dayjs(data[item]) || ""} // Accessing the value using the label as the key
-                          sx={{
-                            "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
-                              borderWidth: "2px",
-                              borderColor: "#b3b3b3",
-                              borderRadius: "10px",
-                            },
-                            margin: "10px 0px",
-                          }}
-                          onChange={(date) =>
-                            handleInputChange(index, item, date)
-                          }
-                          onClick={() => handleInputClick(index)}
-                        />
-                      </LocalizationProvider>
-                    </>
-                  )}
-                  {item !== "End Of The Project" &&
-                    item !== "Start Of The Project" && (
-                      <TextField
-                        key={index}
-                        value={data[item]} // Set the value to the date from data
-                        type="text"
-                        fullWidth
-                        sx={{
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderWidth: "2px",
-                            borderColor: "#b3b3b3",
-                            borderRadius: "10px",
-                          },
-                          margin: "10px 0px",
-                        }}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        onChange={(date) =>
-                          handleInputChange(index, item, date)
-                        }
-                        onClick={() => handleInputClick(index)}
-                        // disabled={!editMode}
-                      />
+                color="action"
+                onClick={() => handleDelete(index)} // Pass the index to handleDelete
+                sx={{
+                  borderRadius: "50px",
+                  backgroundColor: "rgb(222, 225, 231)",
+                  width: "30px",
+                  height: "30px",
+                  margin: "0px 2px 50px 10px",
+                  padding: "4px",
+                }}
+              />
+              {labels.map((item, i) => (
+                <Grid item xs={4}>
+                  <FormControl fullWidth>
+                    <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                      {item}
+                    </FormLabel>
+                    {item === "Start Of The Project" && (
+                      <>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label={'"month" , "year"'}
+                            views={["month", "year"]}
+                            value={dayjs(data[item]) || ""} // Accessing the value using the label as the key
+                            sx={{
+                              "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline":
+                                {
+                                  borderWidth: "2px",
+                                  borderColor: "#b3b3b3",
+                                  borderRadius: "10px",
+                                },
+                              margin: "10px 0px",
+                            }}
+                            onChange={(date) =>
+                              handleInputChange(index, item, date)
+                            }
+                            onClick={() => handleInputClick(index)}
+                          />
+                        </LocalizationProvider>
+                      </>
                     )}
-                </FormControl>
-              </Grid>
-            ))}
-          </Grid>
+                    {item === "End Of The Project" && (
+                      <>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label={'"month", "year"'}
+                            views={["month", "year"]}
+                            value={dayjs(data[item]) || ""} // Accessing the value using the label as the key
+                            sx={{
+                              "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline":
+                                {
+                                  borderWidth: "2px",
+                                  borderColor: "#b3b3b3",
+                                  borderRadius: "10px",
+                                },
+                              margin: "10px 0px",
+                            }}
+                            onChange={(date) =>
+                              handleInputChange(index, item, date)
+                            }
+                            onClick={() => handleInputClick(index)}
+                          />
+                        </LocalizationProvider>
+                      </>
+                    )}
+                    {item !== "End Of The Project" &&
+                      item !== "Start Of The Project" && (
+                        <TextField
+                          key={index}
+                          value={data[item]} // Set the value to the date from data
+                          type="text"
+                          fullWidth
+                          sx={{
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderWidth: "2px",
+                              borderColor: "#b3b3b3",
+                              borderRadius: "10px",
+                            },
+                            margin: "10px 0px",
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(date) =>
+                            handleInputChange(index, item, date)
+                          }
+                          onClick={() => handleInputClick(index)}
+                          // disabled={!editMode}
+                        />
+                      )}
+                  </FormControl>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
         </>
       ))}
       <Box

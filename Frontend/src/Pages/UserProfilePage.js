@@ -1,4 +1,4 @@
-import { useState, useEffect, React } from "react";
+import { useState, useEffect, React, useContext } from "react";
 import axios from "axios";
 import {
   Box,
@@ -15,11 +15,14 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useTheme } from "@mui/system";
+import { AuthProvider, useAuth } from "../Components/AuthContext";
 
 const UserProfilePage = () => {
   const theme = useTheme();
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditing2, setIsEditing2] = useState(false);
+  // const [file,setFile] = useState("");
 
   //   const [formData, setFormData] = useState({
   //     firstName: "",
@@ -35,8 +38,9 @@ const UserProfilePage = () => {
   //     state: "Madhya Pradesh",
   //     ecpna: "None",
   //     ecn: "0",
-  //   });
-
+  //   });a
+  const { user } = useAuth();
+  console.log(user);
   const [formData, setFormData] = useState({
     username: "",
     first_name: "",
@@ -45,8 +49,7 @@ const UserProfilePage = () => {
     password: "",
     state_name: "Madhya Pradesh",
     city_name: "",
-    profile_picture:
-      "https://www.google.com/imgres?q=image%20url&imgurl=https%3A%2F%2Fd27jswm5an3efw.cloudfront.net%2Fapp%2Fuploads%2F2019%2F08%2Fimage-url-3.jpg&imgrefurl=https%3A%2F%2Fwww.canto.com%2Fblog%2Fimage-url%2F&docid=aKW_r6CRcOAGeM&tbnid=v5iXxFTM6IuVGM&vet=12ahUKEwjU1oieqaOGAxVmsFYBHSmlCLgQM3oECGEQAA..i&w=800&h=824&hcb=2&ved=2ahUKEwjU1oieqaOGAxVmsFYBHSmlCLgQM3oECGEQAA",
+    file: "https://www.google.com/imgres?q=image%20url&imgurl=https%3A%2F%2Fd27jswm5an3efw.cloudfront.net%2Fapp%2Fuploads%2F2019%2F08%2Fimage-url-3.jpg&imgrefurl=https%3A%2F%2Fwww.canto.com%2Fblog%2Fimage-url%2F&docid=aKW_r6CRcOAGeM&tbnid=v5iXxFTM6IuVGM&vet=12ahUKEwjU1oieqaOGAxVmsFYBHSmlCLgQM3oECGEQAA..i&w=800&h=824&hcb=2&ved=2ahUKEwjU1oieqaOGAxVmsFYBHSmlCLgQM3oECGEQAA",
     blood_group: "",
     mobile_number: "",
     emergency_contact_number: "",
@@ -104,26 +107,25 @@ const UserProfilePage = () => {
 
   const [projectsData, setProjectsData] = useState({
     currentProject: {
-      currentProject: "Shephertz",
-      projectManager: "Sumit Kumar",
-      workingTechnologies: "Node Js, Express Js, Mongo DB",
-      startMonth: "Mar 2023",
-      endMonth: "Oct 2023",
+      project_id: 1113,
+      emp_id: "AMEMP031",
+      tech: "node js, express js, and MYSQL",
+      team_id: 1111,
+      start_month: "04/24",
+      end_month: "11/24",
+      project_manager: "Sumit Kumar",
     },
     projects: [],
   });
   const projectDetailsFields = [
-    { type: "text", label: "Current Project", field: "currentProject" },
-    { type: "text", label: "Project Manager", field: "projectManager" },
-    {
-      type: "text",
-      label: "Working Technologies",
-      field: "workingTechnologies",
-    },
-    { type: "text", label: "Start Month", field: "startMonth" },
-    { type: "text", label: "End Month", field: "endMonth" },
+    { type: "text", label: "Project ID", field: "project_id" },
+    // { type: "text", label: "Current Project", field: "current_project" },
+    { type: "text", label: "Technology", field: "tech" },
+    // { type: "text", label: "Team ID", field: "team_id" },
+    { type: "text", label: "Start Month", field: "start_month" },
+    { type: "text", label: "End Month", field: "end_month" },
+    { type: "text", label: "Project Manager", field: "project_manager" },
   ];
-
   const projectTimelineFields = [
     { type: "text", label: "Started on", field: "start_month" },
     { type: "text", label: "Completed on", field: "end_month" },
@@ -138,14 +140,106 @@ const UserProfilePage = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    setFormData({
-      ...formData,
-      [name]: files ? files[0] : value,
-    });
+    if (files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: files[0],
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
-  const handleEditClick = () => {
-    setIsEditing(true);
+  const handleChange2 = (e) => {
+    const { name, value } = e.target;
+    setProjectsData((prevState) => ({
+      ...prevState,
+      currentProject: {
+        ...prevState.currentProject,
+        [name]: value,
+      },
+    }));
   };
+
+  const handleEditClick = (flag) => {
+    if (flag === "UP") {
+      setIsEditing(true);
+    } else if (flag === "PD") {
+      setIsEditing2(true);
+    }
+  };
+  const handleCreateProject = async () => {
+    try {
+      const response = await axios.post(
+        `${apiUrl}/project/create-user-project`,
+        projectsData.currentProject
+      );
+      console.log("Project created successfully:", response.data);
+      // Optionally, you can perform additional actions after project creation
+    } catch (error) {
+      console.error("Error creating project:", error.message);
+    }
+    setIsEditing(false);
+  };
+  const fetchUserProject = async () => {
+    try {
+      const empId = "AMEMP031"; // Example employee ID
+      const response = await axios.get(
+        `https://amarya-admin-backend-code.onrender.com/api/v1/project/fetch-user-project/${empId}`,
+        {
+          headers: {
+            "x-access-token": user?.token,
+          },
+        }
+      );
+      // setProjectsData(response.data);
+      const fetchedProject = response.data.data[0]; // Assuming only one project is fetched
+      setProjectsData((prevState) => ({
+        ...prevState,
+        currentProject: {
+          project_id: fetchedProject.project_id,
+          emp_id: fetchedProject.emp_id,
+          tech: fetchedProject.tech,
+          team_id: fetchedProject.team_id,
+          start_month: fetchedProject.start_month,
+          end_month: fetchedProject.end_month,
+          project_manager: fetchedProject.project_manager,
+        },
+      }));
+      console.log(fetchedProject);
+    } catch (error) {
+      console.error("Error fetching user project:", error.message);
+    }
+  };
+
+  const handleUpdateProject = async () => {
+    if (isEditing2 === false) return;
+
+    try {
+      const empId = "AMEMP031"; // Example employee ID
+      const projectId = projectsData.currentProject.project_id;
+      const response = await axios.put(
+        `https://amarya-admin-backend-code.onrender.com/api/v1/project/update-user-project/${empId}/${projectId}`,
+        projectsData.currentProject,
+        {
+          headers: {
+            "x-access-token": user?.token,
+          },
+        }
+      );
+      if (response.data.success) {
+        console.log("Project updated successfully:", response.data);
+        setIsEditing2(false);
+      } else {
+        console.error("Error updating project:", response.data.message);
+      }
+    } catch (error) {
+      console.error("Error updating project:", error.message);
+    }
+  };
+
   const handleDoubleClick = (field) => {
     // document.getElementById("test").disabled = false;
     console.log("hello");
@@ -182,11 +276,16 @@ const UserProfilePage = () => {
     try {
       const empId = "AMEMP031"; // Example employee ID
       const response = await axios.get(
-        `https://amarya-admin-backend-code.onrender.com/api/v1/project/fetch-user-project-timeline/${empId}`
+        `https://amarya-admin-backend-code.onrender.com/api/v1/project/fetch-user-project-timeline/${empId}`,
+        {
+          headers: {
+            "x-access-token": user?.token,
+          },
+        }
       );
-      setProjectsData(prevState => ({
+      setProjectsData((prevState) => ({
         ...prevState,
-        projects: response.data.data
+        projects: response.data.data,
       }));
       console.log(projectsData);
     } catch (error) {
@@ -194,64 +293,92 @@ const UserProfilePage = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const empId = "AMEMP026"; // Example employee ID
-        const response = await axios.get(
-          `${apiUrl}/user/get-user-profile/${empId}`
-        );
-        const userData = response.data.data[0][0]; // Extracting user data from the response
-        setFormData({
-          ...formData,
-          username: userData.username,
-          first_name: userData.first_name,
-          last_name: userData.last_name,
-          email: userData.email,
-          password: userData.password,
-          state_name: "Madhya Pradesh",
-          city_name: userData.city_name,
-          profile_picture: userData.profile_picture,
-          blood_group: userData.blood_group,
-          mobile_number: userData.mobile_number,
-          emergency_contact_number: userData.emergency_contact_number,
-          emergency_contact_person_info: userData.emergency_contact_person_info,
-          address: userData.address,
-          dob: formatDateString(userData.dob.split("T")[0]),
-          designation: userData.designation,
-          designation_type: userData.designation_type,
-          joining_date: formatDateString(userData.joining_date.split("T")[0]),
-          experience: userData.experience,
-          completed_projects: userData.completed_projects,
-          teams: userData.teams,
-          gender: userData.gender,
-        });
-        console.log(formData);
-      } catch (error) {
-        console.error("Error fetching user data:", error.message);
-        // toast.error("Error fetching user data. Please try again later.");
-      }
-    };
+  const fetchUserData = async () => {
+    try {
+      const empId = "AMEMP031"; // Example employee ID
+      const response = await axios.post(
+        `https://amarya-admin-backend-code.onrender.com/api/v1/user/get-user-profile/${empId}`,
+        {
+          headers: {
+            // "Content-Type": "multipart/form-data",
+            "x-access-token": user?.token,
+          },
+        }
+      );
+      const userData = response.data.data[0][0]; // Extracting user data from the response
+      setFormData({
+        ...formData,
+        username: userData.username,
+        first_name: userData.first_name,
+        last_name: userData.last_name,
+        email: userData.email,
+        password: userData.password,
+        state_name: "Madhya Pradesh",
+        city_name: userData.city_name,
+        file: userData.profile_picture,
+        blood_group: userData.blood_group,
+        mobile_number: userData.mobile_number,
+        emergency_contact_number: userData.emergency_contact_number,
+        emergency_contact_person_info: userData.emergency_contact_person_info,
+        address: userData.address,
+        dob: formatDateString(userData.dob.split("T")[0]),
+        designation: userData.designation,
+        designation_type: userData.designation_type,
+        joining_date: formatDateString(userData.joining_date.split("T")[0]),
+        experience: userData.experience,
+        completed_projects: userData.completed_projects,
+        teams: userData.teams,
+        gender: userData.gender,
+        public_id: userData.public_id === null ? "" : userData.public_id,
+      });
+      console.log(userData);
+    } catch (error) {
+      console.error("Error fetching user data:", error.message);
+      // toast.error("Error fetching user data. Please try again later.");
+    }
+  };
 
+  useEffect(() => {
     fetchUserData();
     fetchProjectTimeline();
-  }, 
-  []);
+    fetchUserProject();
+  }, []);
 
+  function formatDate2(inputDate) {
+    // Split the input date by the appropriate delimiter
+    const parts = inputDate.split(/[\/\-]/);
+
+    // Rearrange the parts to match the desired format (YYYY-MM-DD)
+    const formattedDate = `${parts[2]}-${parts[0].padStart(
+      2,
+      "0"
+    )}-${parts[1].padStart(2, "0")}`;
+    console.log(formattedDate);
+    return formattedDate;
+  }
   const handleUserUpdate = async (e) => {
     e.preventDefault();
     const formDataToSend = new FormData();
-    for (const key in formData) {
-      console.log(key + " " + formData[key]);
-      formDataToSend.append(key, formData[key]);
+    formDataToSend.append("designation", formData.designation);
+    formDataToSend.append("joining_date", formatDate2(formData.joining_date));
+    formDataToSend.append("experience", formData.experience);
+    formDataToSend.append("public_id", formData.public_id);
+    if (formData.file) {
+      formDataToSend.append("file", formData.file);
     }
 
-    
     try {
+      const id = "AMEMP031";
+
       const response = await axios.put(
-        `${apiUrl}/user/admin/update-user-profile/AMEMP002`,
+        `https://amarya-admin-backend-code.onrender.com/api/v1/user/update-user-profile/${id}`,
         formDataToSend,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-access-token": user?.token,
+          },
+        }
       );
       console.log(response.data);
       setIsEditing(false);
@@ -324,7 +451,7 @@ const UserProfilePage = () => {
             gutterBottom
           >
             User profile
-            <IconButton onClick={handleEditClick}>
+            <IconButton onClick={() => handleEditClick("UP")}>
               <EditIcon />
             </IconButton>
           </Typography>
@@ -332,7 +459,7 @@ const UserProfilePage = () => {
           <Container maxWidth="md" sx={{ padding: "0 !important" }}>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={1}>
-                {inputFields.map((item, index) => (
+                {inputFields?.map((item, index) => (
                   <Grid item xs={12} md={index === 6 ? 12 : 6} key={index}>
                     <Typography
                       variant="subtitle1"
@@ -341,32 +468,32 @@ const UserProfilePage = () => {
                     >
                       {item.label}
                     </Typography>
-                      <TextField
-                        fullWidth
-                        variant="outlined"
-                        type={item.type}
-                        name={item.field}
-                        value={
-                          item.field === "dob"
-                            ? formatDateForInput(formData[item.field])
-                            : formData[item.field]
-                        }
-                        onChange={handleChange}
-                        disabled={!isEditing}
-                        sx={{
-                          [theme.breakpoints.up("md")]: {
-                            width: index === 6 ? "90%" : "80%",
-                          },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderWidth: "2px",
-                            borderColor: "#b3b3b3",
-                            borderRadius: "10px",
-                          },
-                        }}
-                      />
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      type={item.type}
+                      name={item.field}
+                      value={
+                        item.field === "dob"
+                          ? formatDateForInput(formData[item.field])
+                          : formData[item.field]
+                      }
+                      onChange={handleChange}
+                      disabled={!isEditing}
+                      sx={{
+                        [theme.breakpoints.up("md")]: {
+                          width: index === 6 ? "90%" : "80%",
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderWidth: "2px",
+                          borderColor: "#b3b3b3",
+                          borderRadius: "10px",
+                        },
+                      }}
+                    />
                   </Grid>
                 ))}
-                      <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={6}>
                   <Typography
                     variant="subtitle1"
                     gutterBottom
@@ -378,7 +505,7 @@ const UserProfilePage = () => {
                     fullWidth
                     variant="outlined"
                     type="file"
-                    name="profile_picture"
+                    name="file"
                     onChange={handleChange}
                     disabled={!isEditing}
                     sx={{
@@ -491,10 +618,11 @@ const UserProfilePage = () => {
                       </Typography>
                     </div>
                   </CardContent>
-                  <CardMedia
+                  <Box
                     component="img"
                     height="200"
-                    image="/Images/profile.jpg"
+                    src={formData.file}
+                    // image={formData.profile_picture}
                     alt="green iguana"
                     sx={{
                       objectFit: "cover",
@@ -519,7 +647,7 @@ const UserProfilePage = () => {
                   />
                 </Box>
                 <Grid container spacing={2} sx={{ display: "flex" }}>
-                  {cardsData.map((item) => (
+                  {cardsData?.map((item) => (
                     <Grid
                       item
                       xs={12}
@@ -574,11 +702,14 @@ const UserProfilePage = () => {
             gutterBottom
           >
             Project Details
+            <IconButton onClick={() => handleEditClick("PD")}>
+              <EditIcon />
+            </IconButton>
           </Typography>
           <Container sx={{ padding: "0 !important", marginTop: "10px" }}>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={1}>
-                {projectDetailsFields.map((item, index) => (
+                {projectDetailsFields?.map((item, index) => (
                   <Grid item xs={12} md={4} key={index}>
                     <Typography
                       variant="subtitle1"
@@ -592,12 +723,9 @@ const UserProfilePage = () => {
                       variant="outlined"
                       type={item.type}
                       name={item.field}
-                      value={projectsData.currentProject[item.field]}
-                      onChange={handleChange}
-                      onDoubleClick={() => handleDoubleClick(item.field)}
-                      onBlur={() => handleBlur(item.field)}
-                      onKeyPress={(e) => handleKeyPress(e, item.field)}
-                      disabled={!isEditing[item.field]}
+                      value={projectsData?.currentProject[item.field]}
+                      onChange={handleChange2}
+                      disabled={!isEditing2}
                       sx={{
                         [theme.breakpoints.up("md")]: {
                           width: "80%",
@@ -611,6 +739,33 @@ const UserProfilePage = () => {
                     />
                   </Grid>
                 ))}
+                <Button
+                  onClick={handleUpdateProject}
+                  sx={{ display: "flex", flexDirection: "column" }}
+                >
+                  <img
+                    src="/Images/icons8-edit-64.png"
+                    height="50%"
+                    style={{ marginTop: "10px" }}
+                  />
+                  <Typography sx={{ color: "#B3B3B3", fontWeight: "600" }}>
+                    Edit
+                  </Typography>
+                </Button>
+
+                <Button
+                  onClick={handleCreateProject}
+                  sx={{ display: "flex", flexDirection: "column" }}
+                >
+                  <img
+                    src="/Images/icons8-save-100.png"
+                    height="50%"
+                    style={{ marginTop: "10px" }}
+                  />
+                  <Typography sx={{ color: "#B3B3B3", fontWeight: "600" }}>
+                    Save
+                  </Typography>
+                </Button>
               </Grid>
             </form>
           </Container>
@@ -632,7 +787,7 @@ const UserProfilePage = () => {
           </Typography>
           <Container sx={{ padding: "0 !important", marginTop: "10px" }}>
             <form onSubmit={handleSubmit}>
-              {projectsData?.projects.map((project, index) => (
+              {projectsData?.projects?.map((project, index) => (
                 <Grid container spacing={1} key={project.id}>
                   {projectTimelineFields.map((item, index) => (
                     <Grid
@@ -667,7 +822,7 @@ const UserProfilePage = () => {
                         onDoubleClick={handleDoubleClick}
                         onBlur={() => handleBlur(item.field)}
                         onKeyPress={(e) => handleKeyPress(e, item.field)}
-                        disabled={!isEditing}
+                        disabled
                         sx={{
                           [theme.breakpoints.up("md")]: {
                             width: "80%",

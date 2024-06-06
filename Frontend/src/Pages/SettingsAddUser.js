@@ -26,8 +26,6 @@ export default function SettingsAddUser() {
     password: "",
     state_name: "Madhya Pradesh",
     city_name: "",
-    profile_picture:
-      "https://www.google.com/imgres?q=image%20url&imgurl=https%3A%2F%2Fd27jswm5an3efw.cloudfront.net%2Fapp%2Fuploads%2F2019%2F08%2Fimage-url-3.jpg&imgrefurl=https%3A%2F%2Fwww.canto.com%2Fblog%2Fimage-url%2F&docid=aKW_r6CRcOAGeM&tbnid=v5iXxFTM6IuVGM&vet=12ahUKEwjU1oieqaOGAxVmsFYBHSmlCLgQM3oECGEQAA..i&w=800&h=824&hcb=2&ved=2ahUKEwjU1oieqaOGAxVmsFYBHSmlCLgQM3oECGEQAA",
     blood_group: "",
     mobile_number: "",
     emergency_contact_number: "",
@@ -41,16 +39,24 @@ export default function SettingsAddUser() {
     completed_projects: 0,
     teams: 0,
     gender: "",
+    file: "",
+
   });
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    console.log(`Field ${name} changed to ${value}`); // Log field change
-   
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (files) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: files[0],
+      }));
+      console.log(files[0]);
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const formatDateString = (dateString) => {
@@ -63,47 +69,6 @@ export default function SettingsAddUser() {
     return `${year}-${month}-${day}`;
   };
 
-  // useEffect(() => {
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const empId = "AMEMP026"; // Example employee ID
-  //       const response = await axios.get(
-  //         `${apiUrl}/user/get-user-profile/${empId}`
-  //       );
-  //       const userData = response.data.data[0][0]; // Extracting user data from the response
-  //       setFormData({
-  //         ...formData,
-  //         username: userData.username,
-  //         first_name: userData.first_name,
-  //         last_name: userData.last_name,
-  //         email: userData.email,
-  //         password: userData.password,
-  //         state_name: "Madhya Pradesh",
-  //         city_name: userData.city_name,
-  //         profile_picture: userData.profile_picture,
-  //         blood_group: userData.blood_group,
-  //         mobile_number: userData.mobile_number,
-  //         emergency_contact_number: userData.emergency_contact_number,
-  //         emergency_contact_person_info: userData.emergency_contact_person_info,
-  //         address: userData.address,
-  //         dob: formatDateString(userData.dob.split("T")[0]),
-  //         designation: userData.designation,
-  //         designation_type: userData.designation_type,
-  //         joining_date: formatDateString(userData.joining_date.split("T")[0]),
-  //         experience: userData.experience,
-  //         completed_projects: userData.completed_projects,
-  //         teams: userData.teams,
-  //         gender: userData.gender,
-  //       });
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error.message);
-  //       toast.error("Error fetching user data. Please try again later.");
-  //     }
-  //   };
-
-  //   fetchUserData();
-  // }, []);
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     const updatedFormData = {
@@ -112,11 +77,24 @@ export default function SettingsAddUser() {
       joining_date: formData.joining_date,
     };
 
+    // Create a new FormData instance
+    const formDataToSend = new FormData();
+    for (const key in updatedFormData) {
+      if (updatedFormData.hasOwnProperty(key)) {
+        formDataToSend.append(key, updatedFormData[key]);
+      }
+    }
+
     console.log("submit Data:", updatedFormData);
     try {
       const response = await axios.post(
         `${apiUrl}/user/admin/register`,
-        updatedFormData
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
       toast.success("User data saved successfully!");
     } catch (error) {
@@ -436,18 +414,21 @@ export default function SettingsAddUser() {
             </Grid>
             <Grid item xs={4}>
               <TextField
-                onChange={handleChange}
-                value={formData.completed_projects}
-                label="Completed Projects"
-                name="completed_projects"
                 fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                }}
+                variant="outlined"
+                type="file"
+                name="file"
+                onChange={handleChange}
+                // sx={{
+                //   [theme.breakpoints.up("md")]: {
+                //     width: "80%",
+                //   },
+                //   "& .MuiOutlinedInput-notchedOutline": {
+                //     borderWidth: "2px",
+                //     borderColor: "#b3b3b3",
+                //     borderRadius: "10px",
+                //   },
+                // }}
               />
             </Grid>
           </Grid>

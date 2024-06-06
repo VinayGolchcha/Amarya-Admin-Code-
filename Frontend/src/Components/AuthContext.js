@@ -1,61 +1,60 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }) => {
-  const [userData, setUserData] = useState(null);
+const safeJSONParse = (value, defaultValue) => {
+  try {
+    return value ? JSON.parse(value) : defaultValue;
+  } catch (e) {
+    console.error("Error parsing JSON:", e);
+    return defaultValue;
+  }
+};
 
-  const login = (response) => {
-    // Check if response is successful and contains data
-    if (
-      response &&
-      response.success &&
-      response.data &&
-      response.data.length > 0
-    ) {
-      // Extract user ID and token from the response data
-      const { user_id, token, profile_picture, username } = response.data[0];
-      // Store user data in the state
-      setUserData({ user_id, token, profile_picture, username });
-      console.log(user_id);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(() => safeJSONParse(localStorage.getItem("user"), null));
+
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
+
+  const login = (userData) => {
+    if (userData) {
+      const { user_id, token, profile_picture, user_name } = userData;
+      const userDetails = { user_id, token, profile_picture, user_name };
+      setUser(userDetails);
+      localStorage.setItem("user", JSON.stringify(userDetails));
     } else {
       console.error("Login failed: Invalid response format");
     }
   };
 
   const logout = async () => {
-    // Clear user data upon logout
+    if (!user) return;
 
-    // Call logout API
     try {
-      if (userData && userData.user_id) {
-        const response = await axios.get(
-          `https://blushing-teal-clothes.cyclic.app/api/v1/user/logout/${userData.user_id}`,
-          {
-            // Include any headers if needed
-          }
-        );
+      const response = await axios.get(
+        `https://amarya-admin-backend-code.onrender.com/api/v1/user/logout/${user.user_id}`
+      );
 
-        // Check if logout request was successful
-        if (response.status === 200) {
-          console.log("Logged out successfully");
-          setUserData(null);
-          console.log(userData.user_id);
-        } else {
-          console.error("Failed to logout:", response.statusText);
-        }
+      if (response.status === 200) {
+        setUser(null);
+        localStorage.removeItem("user");
+        console.log("Logout successful");
       } else {
-        console.error("User data is missing.");
+        console.error("Failed to logout:", response.statusText);
       }
     } catch (error) {
       console.error("Error occurred while logging out:", error);
     }
   };
+
   return (
-    <AuthContext.Provider value={{ userData, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

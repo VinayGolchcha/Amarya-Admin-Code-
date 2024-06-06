@@ -21,7 +21,7 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/user/login",
+        "https://amarya-admin-backend-code.onrender.com/api/v1/user/login",
         {
           username,
           password,
@@ -32,6 +32,7 @@ const LoginPage = () => {
       if (response.status === 200) {
         console.log("Login successful");
         // Redirect or handle successful login
+        login(response.data.data[0]); // Pass user data to login function
       } else {
         console.error("Login failed");
         // Handle login error

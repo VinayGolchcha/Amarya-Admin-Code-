@@ -26,6 +26,7 @@ import {
   TableRow,
 } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useAuth } from "../Components/AuthContext";
 
 const AssetsPage = () => {
   const [fullName, setFullName] = useState("");
@@ -38,6 +39,7 @@ const AssetsPage = () => {
   const [declarationChecked, setDeclarationChecked] = useState(false);
   const [primary_purpose, setPrimaryPurposeChange] = useState("");
   const [assetData, setAssetData] = useState([]);
+  const { user } = useAuth();
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -136,7 +138,11 @@ const AssetsPage = () => {
     console.log(requestData);
 
     axios
-      .post(`${apiUrl}/asset/asset-request`, requestData)
+      .post(`${apiUrl}/asset/asset-request`, requestData, {
+        headers: {
+          "x-access-token": user?.token,
+        },
+      })
       .then((response) => {
         // Handle successful response
         console.log("Data sent successfully:", response.data);
@@ -153,14 +159,21 @@ const AssetsPage = () => {
       .catch((error) => {
         // Handle error
         console.error("Error sending data:", error);
-      
-        let errorMessage = 'Failed to send asset request. Please try again later.';
-      
-        if (error.response && error.response.data && error.response.data.errors) {
-          const errorMessages = error.response.data.errors.map(error => error.msg);
-          errorMessage = errorMessages.join('\n');
+
+        let errorMessage =
+          "Failed to send asset request. Please try again later.";
+
+        if (
+          error.response &&
+          error.response.data &&
+          error.response.data.errors
+        ) {
+          const errorMessages = error.response.data.errors.map(
+            (error) => error.msg
+          );
+          errorMessage = errorMessages.join("\n");
         }
-      
+
         toast.error(errorMessage, {
           position: "top-right",
           autoClose: 5000, // Duration of the toast
@@ -171,14 +184,21 @@ const AssetsPage = () => {
           progress: undefined,
         });
       });
-      
   };
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.post(`${apiUrl}/asset/user-asset`, {
-          emp_id: "AMEMP002",
-        });
+        const response = await axios.post(
+          `${apiUrl}/asset/user-asset`,
+          {
+            emp_id: "AMEMP002",
+          },
+          {
+            headers: {
+              "x-access-token": user?.token,
+            },
+          }
+        );
         if (response.data.success) {
           setAssetData(response.data.data);
           console.log(response.data.data);
