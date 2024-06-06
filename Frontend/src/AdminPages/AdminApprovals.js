@@ -137,51 +137,51 @@ TablePaginationActions.propTypes = {
 
 
 
-export default function AdminApprovals() {
+// export default function AdminApprovals() {
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  console.log(process.env.REACT_APP_BASE_URL);
-  ///mycode
-// const [status, setStatus] = useState("");
-const [isApproved , setIsApproved] =useState("rejected")
-const rows = [
-  {
-    sNo: 1,
-    clientName: "LEAVE",
-    projectLead: "17 Aug, 2020",
-    project: "Diwali Holyday and Outing",
-    stats: isApproved ,
-  },
-  {
-    sNo: 2,
-    clientName: "INVENTORY",
-    projectLead: "08 Oct, 2020",
-    project: "New Headphones required as old ones are not working",
-    stats: isApproved ,
-  },
-  {
-    sNo: 3,
-    clientName: "TRAINING",
-    projectLead: "27 Jun, 2020",
-    project: "Request for react native Training",
-    stats: isApproved ,
-  },
-  {
-    sNo: 4,
-    clientName: "LEAVE",
-    projectLead: "27 Jun, 2020",
-    project: "Brother’s Marriage ",
-    stats: isApproved ,
-  },
-  {
-    sNo: 5,
-    clientName: "INVENTORY",
-    projectLead: "23 Jul, 2020",
-    project: "Replacement for old keyboard",
-    stats: isApproved ,
-  },
-];
+//   const [page, setPage] = useState(0);
+//   const [rowsPerPage, setRowsPerPage] = useState(5);
+//   console.log(process.env.REACT_APP_BASE_URL);
+//   ///mycode
+// // const [status, setStatus] = useState("");
+// const [isApproved , setIsApproved] =useState("rejected")
+// const rows = [
+//   {
+//     sNo: 1,
+//     clientName: "LEAVE",
+//     projectLead: "17 Aug, 2020",
+//     project: "Diwali Holyday and Outing",
+//     stats: isApproved ,
+//   },
+//   {
+//     sNo: 2,
+//     clientName: "INVENTORY",
+//     projectLead: "08 Oct, 2020",
+//     project: "New Headphones required as old ones are not working",
+//     stats: isApproved ,
+//   },
+//   {
+//     sNo: 3,
+//     clientName: "TRAINING",
+//     projectLead: "27 Jun, 2020",
+//     project: "Request for react native Training",
+//     stats: isApproved ,
+//   },
+//   {
+//     sNo: 4,
+//     clientName: "LEAVE",
+//     projectLead: "27 Jun, 2020",
+//     project: "Brother’s Marriage ",
+//     stats: isApproved ,
+//   },
+//   {
+//     sNo: 5,
+//     clientName: "INVENTORY",
+//     projectLead: "23 Jul, 2020",
+//     project: "Replacement for old keyboard",
+//     stats: isApproved ,
+//   },
+// ];
 
 export default function AdminApprovals({approvalData}) {
   const [page, setPage] = useState(0);
@@ -370,12 +370,10 @@ export default function AdminApprovals({approvalData}) {
               <TableBody>
                 {(rowsPerPage > 0
                   ? approvalData?.slice(
-                  ? approvalData?.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
                   : rows
-                )?.map((row , i) => (
                 )?.map((row , i) => (
                   <TableRow
                     key={row.sNo}
@@ -412,7 +410,6 @@ export default function AdminApprovals({approvalData}) {
                         </>
                       )}
                       {row?.status === "pending" && (
-                      {row?.status === "pending" && (
                         <>
                           <span
                             style={{
@@ -425,10 +422,8 @@ export default function AdminApprovals({approvalData}) {
                             }}
                           ></span>{" "}
                           {row.status}
-                          {row.status}
                         </>
                       )}
-                      {row?.stats === "rejected" && (
                       {row?.stats === "rejected" && (
                         <>
                           <img src="Images/circle.svg" /> {row.stats}
