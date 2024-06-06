@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Paper, Typography, Box } from "@mui/material";
 import { PieChart, Pie, Cell, Legend, Tooltip } from "recharts";
 
-const EmployeeCountPieChart = () => {
+const EmployeeCountPieChart = ({teamEmployeeCount}) => {
   const [chartWidth, setChartWidth] = useState(0);
   const [chartHeight, setChartHeight] = useState(0);
 
@@ -29,7 +29,7 @@ const EmployeeCountPieChart = () => {
     setChartHeight(newHeight);
   };
 
-  const employeeLocationData = [
+  const employeeTeamData = [
     { location: "Location A", employees: 30 },
     { location: "Location B", employees: 15 },
     { location: "Location B", employees: 20 },
@@ -37,9 +37,9 @@ const EmployeeCountPieChart = () => {
     // ... add data for other locations
   ];
 
-  const pieChartData = employeeLocationData.map((locationData) => ({
-    name: locationData.location,
-    value: locationData.employees,
+  const pieChartData = teamEmployeeCount?.map((locationData) => ({
+    name: locationData.team,
+    value: locationData.employee_count,
   }));
 
   // Colors for the Pie Chart
@@ -115,7 +115,7 @@ const EmployeeCountPieChart = () => {
           fill="#8884d8"
           label
         >
-          {pieChartData.map((entry, index) => (
+          {pieChartData?.map((entry, index) => (
             <Cell
               key={`cell-${index}`}
               fill={pieChartColors[index % pieChartColors.length]}

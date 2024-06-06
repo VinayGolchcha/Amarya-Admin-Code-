@@ -29,13 +29,9 @@ const AdminNotificationTab = () => {
 
   
   const handleEditSelection = (obj) => {
-    const isEdit = !edit;
-    setEdit(isEdit);
-    if(isEdit){
+    setEdit(true);
       setSelectedNoti(obj);
-    }else{
-      setSelectedNoti({});
-    }
+    console.log(selectedNoti)
   };
 
   const handleDeleteNotification = async(id) => {
@@ -81,9 +77,13 @@ const AdminNotificationTab = () => {
       Object.keys(body).forEach((key) => {
         formData.append(key , body[key]);
       })
-      file.forEach((f) => {
-        formData.append("files" , f);
-      })
+      if(selectedTab === "activity"){
+        const files = body.files;
+        files.forEach((f) => {
+          formData.append("files" , f);
+        })
+      }
+      
       const res = await axios.post(`${process.env.REACT_APP_API_URI}/${selectedTab}/admin/add-${selectedTab}`, selectedTab === "activity" ? formData : body);
       console.log(res);
       toast.success(res.data.message);
@@ -100,7 +100,7 @@ const AdminNotificationTab = () => {
       toast.success(res.data.message);
       fetchNotification();
     } catch (error) {
-      toast.error(error?.response?.data?.errors[0].msg);
+      toast.error(error?.response?.data?.errors?.[0].msg);
     }
   };
   
@@ -121,7 +121,6 @@ const AdminNotificationTab = () => {
 
   const handleTabChange = (tab) => {
     setSelectedNoti({});
-    setEdit(false);
     setSelectedTab(tab);
     setSelectedDate("All Dates"); // Reset date filter to "All Dates"
   };

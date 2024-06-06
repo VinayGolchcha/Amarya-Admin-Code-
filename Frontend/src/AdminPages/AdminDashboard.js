@@ -54,6 +54,9 @@ const AdminDashboard = () => {
   const [projects , setProjects] = useState([]);
   const [onGoingProjects , setOnGoingProjects] = useState(null);
   const [totalProjects , setTotalProjects] = useState(null);
+  const [approvalData , setApprovalData] = useState([]);
+  const [activityAnnoucements , setActivityAnnoucements] = useState([]);
+  const [apiData , setApidata] = useState([]);
   const fetchFeedback = async () => {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/userDashboard/admin/fetch-user-feedback`)
@@ -62,7 +65,26 @@ const AdminDashboard = () => {
       console.log(err);
     }
   }
+  const fetchApprovalData = async () => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/fetch-approval-data`);
+      setApprovalData(res?.data?.data);
+      console.log(approvalData);
+    }catch(err){
+      console.log(err);
+    }
+  }
 
+  const fecthActAnn = async() => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/fetch-activity-announcement`);
+      setActivityAnnoucements(res?.data?.data);
+      console.log(activityAnnoucements);
+    }catch(err){
+      console.log(err);
+    }
+
+  }
   const fetchProjects = async () => {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/project/fetch-all-projects`);
@@ -77,16 +99,28 @@ const AdminDashboard = () => {
       console.log(err);
     }
   }
+  const adminDashboardApi = async() => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/admin-dashboard`)
+      setApidata(res?.data?.data);
+      console.log(res);
+    }catch(err){
+      console.log(err);
+    }
+  }
   const dateFormat = (date) => {
     const reqFormat = new Date(date);
     const dateList = reqFormat.toString().split(" ");
-    const stringFormat = dateList[2]+"th"+" "+ dateList[1]+" " + dateList[3];
+    const stringFormat = dateList[2]+" "+ dateList[1]+" " + dateList[3];
     return stringFormat;
   }
   
   useEffect(()=> {
     fetchFeedback();
     fetchProjects();
+    fetchApprovalData();
+    fecthActAnn();
+    adminDashboardApi();
   },[])
   return (
     <Box>
@@ -113,7 +147,7 @@ const AdminDashboard = () => {
             width: "auto",
           }}
         >
-          <ProjectOverview onGoingProjects={onGoingProjects} totalProjects = {totalProjects}/>
+          <ProjectOverview apiData = {apiData}/>
         </Box>
         <Box
           sx={{
@@ -135,7 +169,7 @@ const AdminDashboard = () => {
             width: "50%",
           }}
         >
-          <EmployeeCountPieChart />
+          <EmployeeCountPieChart teamEmployeeCount = {apiData?.get_employee_team_count}/>
         </Box>
         <Box
           sx={{
@@ -143,10 +177,10 @@ const AdminDashboard = () => {
             marginTop: "30px",
           }}
         >
-          <AdminActivity />
+          <AdminActivity activityAnnoucements = {activityAnnoucements?.activity_data}/>
         </Box>
       </Box>
-      <AdminProjectSummy projects = {projects}/>
+      <AdminProjectSummy projects = {apiData?.project_details}/>
 
       <DashboardPosComp />
       <Box sx={{ display: "flex" }}>
@@ -243,7 +277,7 @@ const AdminDashboard = () => {
           </Box>
           <Box sx={{ margin: "0px 8px 8px 8px", marginTop: "1.5%" }}>
             <List sx={{ paddingBottom: "0px" }}>
-              {announceNoti.map((item) => {
+              {activityAnnoucements?.announcement_data?.map((item) => {
                 return (
                   <ListItem
                     sx={{
@@ -314,7 +348,7 @@ const AdminDashboard = () => {
           </Box>
         </Box>
       </Box>
-      <AdminApprovals />
+      <AdminApprovals approvalData = {approvalData}/>
     </Box>
   );
 };

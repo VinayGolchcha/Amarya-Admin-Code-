@@ -257,6 +257,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios';
+import CloseIcon from '@mui/icons-material/Close';
 
 function MyForm({ onAddNotification, selectedTab, handleAddAnnouncement, selectedNoti , isEdit , edit }) {
   const [files, setFiles] = useState([]); // State for uploaded file
@@ -266,41 +267,51 @@ function MyForm({ onAddNotification, selectedTab, handleAddAnnouncement, selecte
   const [description, setDescription] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-
+  const [publicIds , setPublicIds] = useState([]);
+  console.log(edit);
   useEffect(() => {
-    if (Object.keys(selectedNoti).length > 0 && edit) {
       setEventType(selectedNoti.event_type);
       setTitle(selectedNoti.title);
       setPriority(selectedNoti.priority);
       setDescription(selectedNoti.description);
       setFromDate(selectedNoti.from_date ? new Date(selectedNoti.from_date).toISOString().split('T')[0] : "");
       setToDate(selectedNoti.to_date ? new Date(selectedNoti.to_date).toISOString().split('T')[0] : "");
-    }
+      setFiles(selectedNoti?.images);
   }, [selectedNoti]);
+
+  const handleDeletePics = (id) => {
+    console.log("handle Delete pics is calling")
+    publicIds.push(id)
+    console.log(publicIds);
+  }
+
+  const handleDeleteEditImageSelection = (id) => {
+    handleDeletePics(id);
+  }
 
   const handleFileChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
-    console.log(selectedFiles);
-    const validFiles =[];
-    let invalid = false;
+    setFiles(selectedFiles);
+    // const validFiles =[];
+    // let invalid = false;
 
-    selectedFiles.forEach((file) => {
-      if(file.type.match(/image.*/)){
-        validFiles.push(file);
-        toast.success(`${file.name} is selected successfully`);
-      }else{
-        invalid = true
-        toast.error(`${file.name} is not a valid image file.`);
-      }
-    })
-    if(validFiles.length > 0){
-      setFiles(validFiles);
-    }else{
-      setFiles([]);
-    }
-    if (invalid) {
-      toast.error("Some files were not valid images and were not uploaded.");
-    }
+    // selectedFiles.forEach((file) => {
+    //   if(file.type.match(/image.*/)){
+    //     validFiles.push(file);
+    //     toast.success(`${file.name} is selected successfully`);
+    //   }else{
+    //     invalid = true
+    //     toast.error(`${file.name} is not a valid image file.`);
+    //   }
+    // })
+    // if(validFiles.length > 0){
+    //   setFiles(validFiles);
+    // }else{
+    //   setFiles([]);
+    // }
+    // if (invalid) {
+    //   toast.error("Some files were not valid images and were not uploaded.");
+    // }
 
   };
 
@@ -309,7 +320,7 @@ function MyForm({ onAddNotification, selectedTab, handleAddAnnouncement, selecte
     let body ;
     if(selectedTab === "announcement"){
       body = {
-        event_type: eventType,
+        event_type: "announcement",
         priority,
         from_date: fromDate,
         to_date: toDate,
@@ -318,7 +329,7 @@ function MyForm({ onAddNotification, selectedTab, handleAddAnnouncement, selecte
       };
     }else {
      body = {
-        event_type: eventType,
+        event_type: "activity",
         priority,
         from_date: fromDate,
         to_date: toDate,
@@ -327,9 +338,11 @@ function MyForm({ onAddNotification, selectedTab, handleAddAnnouncement, selecte
         files : files
        }
     }
-    
-    Object.keys(selectedNoti).length === 0 ? handleAddAnnouncement(body, selectedNoti._id) : handleAddAnnouncement(body);
-    isEdit(!edit);
+    if(edit){
+      body.public_ids = publicIds
+    }
+    console.log(body);
+    edit === false ? handleAddAnnouncement(body, selectedNoti._id) : handleAddAnnouncement(body);
     if (!fromDate || !description) {
       toast.error("Please fill all the fields");
       return;
@@ -363,27 +376,16 @@ function MyForm({ onAddNotification, selectedTab, handleAddAnnouncement, selecte
   return (
     <form onSubmit={handleSubmit}>
       <Grid container spacing={2} sx={{ padding: "20px" }}>
-        <Grid item xs={12}>
-          <Typography
-            variant="body1"
-            marginBottom="-10px"
-            color="#686868"
-            fontWeight="500"
-          >
-            Event Type:
-          </Typography>
-        </Grid>
         <Grid item xs={6}>
-          <FormControl variant="outlined" fullWidth>
-            <Select
-              value={ eventType }
-              onChange={(e) => setEventType(e.target.value)}
-              sx={{ minWidth: 120, backgroundColor: "rgb(250, 250, 250)" }}
-            >
-              <MenuItem value="announcement">Announcement</MenuItem>
-              <MenuItem value="activity">Activity</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField
+            label=" Event Type"
+            value={ selectedTab }
+            disabled
+            onChange={(e) => setEventType(selectedTab)}
+            sx={{ backgroundColor: "rgb(250, 250, 250)" }}
+            variant="outlined"
+            fullWidth
+          />
         </Grid>
         <Grid item xs={6}>
           <TextField
@@ -417,39 +419,52 @@ function MyForm({ onAddNotification, selectedTab, handleAddAnnouncement, selecte
             rows={5}
           />
 
-          {selectedTab === "activity" && (
-            <Box sx={{ display: 'flex' }}>
-                <InputLabel
-                  htmlFor="file-upload"
-                  sx={{
-                    marginTop: '5px',
-                    border: '1px solid rgb(202, 199, 199)',
-                    borderRadius: '4px',
-                    width: 'fit-content',
-                    padding: '1px 5px',
-                    backgroundColor: 'rgb(250, 250, 250)',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Choose Images
-                </InputLabel>
-                <Input
-                  id="file-upload"
-                  type="file"
-                  multiple
-                  accept=".jpg, .jpeg, .png"
-                  onChange={handleFileChange}
-                  sx={{ display: 'none' }}
-                />
-                {files.length > 0 && (
-                  <Typography
-                    sx={{ color: 'green', marginTop: '5px', padding: '1px 5px' }}
-                  >
-                    {files.length} Image(s) uploaded
-                  </Typography>
-                )}
-            </Box>
+{selectedTab === "activity" && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
+          <InputLabel
+            htmlFor="file-upload"
+            sx={{
+              marginTop: '5px',
+              border: '1px solid rgb(202, 199, 199)',
+              borderRadius: '4px',
+              width: 'fit-content',
+              padding: '1px 5px',
+              backgroundColor: 'rgb(250, 250, 250)',
+              cursor: 'pointer',
+            }}
+          >
+            Choose Images
+          </InputLabel>
+          <Input
+            id="file-upload"
+            type="file"
+            accept=".jpg, .jpeg, .png"
+            onChange={handleFileChange}
+            sx={{ display: 'none' }}
+            multiple
+          />
+          {files?.length > 0 && (!edit) && (
+            <Typography
+              sx={{ color: 'green', marginTop: '5px', padding: '1px 5px' }}
+            >
+              {files.length} Image(s) uploaded
+            </Typography>
           )}
+          {files?.length > 0 && (files?.map((item) => {
+            return(
+              <Typography
+              sx={{ color: 'green', marginTop: '5px', padding: '1px 5px' , display : "flex"}}
+            >
+             <Box
+             >{item?.original_filename}</Box>
+             <Box>
+               <CloseIcon onClick={handleDeleteEditImageSelection(item?.public_id)}/>
+             </Box>
+            </Typography>);
+          }))
+          }
+        </Box>
+      )}
         </Grid>
         <Grid
           container

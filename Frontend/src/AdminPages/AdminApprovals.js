@@ -164,7 +164,7 @@ const rows = [
   },
 ];
 
-export default function AdminApprovals() {
+export default function AdminApprovals({approvalData}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -244,6 +244,12 @@ export default function AdminApprovals() {
                     align="left"
                     sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                   >
+                    Body
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                  >
                     Status
                   </TableCell>
                   <TableCell
@@ -256,12 +262,12 @@ export default function AdminApprovals() {
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? rows.slice(
+                  ? approvalData?.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
                   : rows
-                ).map((row) => (
+                )?.map((row , i) => (
                   <TableRow
                     key={row.sNo}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -271,27 +277,30 @@ export default function AdminApprovals() {
                       scope="row"
                       sx={{ fontFamily: "Open Sans" }}
                     >
-                      {row.sNo}
+                      {i+1}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
-                      {row.clientName}
+                      {row?.request_type}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
-                      {row.projectLead}
+                      {row.request_date}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
-                      {row.project}
+                      {row.subject}
+                    </TableCell>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
+                      {row.body}
                     </TableCell>
                     <TableCell
                       align="left"
                       sx={{ fontFamily: "Open Sans", minwidth: "119px" }}
                     >
-                      {row?.stats === "Approved" && (
+                      {row?.status === "approved" && (
                         <>
                           <img src="Images/circle(1).svg" /> {row.stats}
                         </>
                       )}
-                      {row?.stats === "Pending" && (
+                      {row?.status === "pending" && (
                         <>
                           <span
                             style={{
@@ -303,10 +312,10 @@ export default function AdminApprovals() {
                               backgroundColor: "rgb(255, 180, 94)",
                             }}
                           ></span>{" "}
-                          {row.stats}
+                          {row.status}
                         </>
                       )}
-                      {row?.stats === "Rejected" && (
+                      {row?.stats === "rejected" && (
                         <>
                           <img src="Images/circle.svg" /> {row.stats}
                         </>

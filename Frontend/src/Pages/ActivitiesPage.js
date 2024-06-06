@@ -135,14 +135,7 @@ const ActivitiesPage = () => {
     }
   }
 
-  const fetchFeedback = async () => {
-    try{
-      const res = axios.get(`${process.env.REACT_APP_API_URI}/userDashboard/admin/fetch-user-feedback`)
-      console.log(res);
-    }catch(err){
-      console.log(err);
-    }
-  }
+
   useEffect(()=> {
     fetchNotification();
   },[])

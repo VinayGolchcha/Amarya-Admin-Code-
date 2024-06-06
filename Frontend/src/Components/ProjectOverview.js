@@ -39,11 +39,45 @@ const sanitizedMonthlyData = monthlyData.map((month) => ({
   inProgress: month.inProgress || 0,
 }));
 
-const ProjectOverview = ({onGoingProjects , totalProjects}) => {
-  const allMonthsData = monthlyData.map((monthData) => ({
+const ProjectOverview = ({ apiData }) => {
+  console.log(apiData);
+  const projectByMonth = apiData?.live_projects_data?.map((item) => {
+    const month = item?.month_start?.toLowerCase();
+    
+    if (month.includes("january")) {
+      return { month : "Jan", liveproject: item?.live_projects };
+    } else if (month.includes("february")) {
+      return { month : "Feb" , liveproject : item?.live_projects };
+    } else if (month.includes("march")) {
+      return { month : "Mar" , liveproject : item?.live_projects };
+    } else if (month.includes("april")) {
+      return { month : "April" , liveproject : item?.live_projects  };
+    } else if (month.includes("may")) {
+      return { month : "May" , liveproject : item?.live_projects };
+    } else if (month.includes("june")) {
+      return { month : "June" , liveproject : item?.live_projects  };
+    } else if (month.includes("july")) {
+      return {month : "Jul" , liveproject : item?.live_projects  };
+    } else if (month.includes("august")) {
+      return {month : "Aug" , liveproject : item?.live_projects};
+    } else if (month.includes("september")) {
+      return {month : "Sep" , liveproject : item?.live_projects  };
+    } else if (month.includes("october")) {
+      return {month : "Oct" , liveproject : item?.live_projects  };
+    } else if (month.includes("november")) {
+      return {month : "Nov" , liveproject : item?.live_projects };
+    } else if (month.includes("december")) {
+      return {month : "Dec" , liveproject : item?.live_projects};
+    }
+
+    return item;
+  });
+  const onGoingProjects = apiData?.project_details?.filter((item) => (item?.project_status?.toLowerCase() === "in progress"));
+  console.log(onGoingProjects);
+  console.log(projectByMonth);
+  const allMonthsData = projectByMonth?.map((monthData) => ({
     month: monthData.month,
-    started: monthData.started,
-    inProgress: monthData.inProgress || 0, // Ensure inProgress is defined, default to 0
+    liveproject: monthData.liveproject, // Ensure inProgress is defined, default to 0
   }));
 
   const dataKeys = Object.keys(sanitizedMonthlyData[0]).filter(
@@ -62,6 +96,8 @@ const ProjectOverview = ({onGoingProjects , totalProjects}) => {
     (total, team) => total + team.employees,
     0
   );
+  const employeeWithClientCount = apiData?.employee_count_with_team?.find(item => item.employee_with_client_count !== undefined)?.employee_with_client_count;
+  const totalEmployeeCount = apiData?.employee_count_with_team?.find(item => item.total_employee_count !== undefined)?.total_employee_count;
 
   return (
     <Box>
@@ -98,7 +134,7 @@ const ProjectOverview = ({onGoingProjects , totalProjects}) => {
           <YAxis />
           <Tooltip />
           {/* <Legend /> */}
-          <Bar dataKey="started" fill="#1024AF" name="Projects Started" />
+          <Bar dataKey="liveproject" fill="#1024AF" name="live project" />
         </BarChart>
         {/* Team-wise Project and Employee Count */}
       </Paper>
@@ -131,7 +167,8 @@ const ProjectOverview = ({onGoingProjects , totalProjects}) => {
               },
             }}
           >
-            {onGoingProjects} <br />
+            {onGoingProjects?.length}
+             <br />
             Ongoing Projects
           </Typography>
         </Box>
@@ -203,7 +240,7 @@ const ProjectOverview = ({onGoingProjects , totalProjects}) => {
               },
             }}
           >
-            {totalEmployees}/50 <br />
+            {employeeWithClientCount}/{totalEmployeeCount} <br />
             Total Employees
           </Typography>
         </Box>
