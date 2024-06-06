@@ -183,7 +183,7 @@ export default function PolicyPage() {
                 onChange={(event) => setSelectedPolicy(event.target.value)}
                 IconComponent={() => (<img src="Images/policy/dropdown.png" alt="drow down" width = "20px" style={ { marginRight : "4%"}}/>)}
               >
-                {policies.map((item, index) => (
+                {policies?.map((item, index) => (
                   <MenuItem key={item?._id} value={item?._id}>
                     {item?.policy_heads.toString().split(",")[0]}...
                   </MenuItem>

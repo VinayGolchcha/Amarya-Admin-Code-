@@ -230,7 +230,7 @@ const PoliciesPage = () => {
                     }}
                   >
                     <ul style={{ marginTop: "0px" }}>
-                      {policyheading.map((item , i) => (<li key={i} style={{fontWeight : "600"}}>{item}</li>))}
+                      {policyheading?.map((item , i) => (<li key={i} style={{fontWeight : "600"}}>{item}</li>))}
                     </ul>
                   </Box>
                 </Grid>
