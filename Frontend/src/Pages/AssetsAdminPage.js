@@ -153,8 +153,13 @@ export default function AssetsAdminPage() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+<<<<<<< HEAD
 
   console.log(user);
+=======
+  
+ console.log(user);
+>>>>>>> 4dbe98c (worked on role access)
   const fetchAssets = async () => {
     try {
       const response = await axios.get(`${apiUrl}/asset/admin/fetch-assets`, {
@@ -191,7 +196,11 @@ export default function AssetsAdminPage() {
           );
         });
         setAssetsData(apiAssets);
+<<<<<<< HEAD
         console.log(apiAssets);
+=======
+        console.log(apiAssets, "kdsfk;k");
+>>>>>>> 4dbe98c (worked on role access)
       } else {
         console.error("Error fetching assets:", response.data.message);
       }
@@ -273,7 +282,11 @@ export default function AssetsAdminPage() {
   }
 
   const renderItemImage = (photoUrl) => {
+<<<<<<< HEAD
     // console.log(photoUrl);
+=======
+    console.log(photoUrl);
+>>>>>>> 4dbe98c (worked on role access)
     return (
       <img
         src={photoUrl}

@@ -37,7 +37,6 @@ const MainPage = (props) => {
   const [mobileOpen, setMobileOpen] = React.useState(true);
   const { user } = useAuth(); // Using useAuth hook to access user data
   const role = user?.role;
-  console.log(user);
   if (!user) {
     return <LoginPage />;
   }

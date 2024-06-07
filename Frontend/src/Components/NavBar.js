@@ -416,7 +416,11 @@ const NavBar = ({ handleDrawerToggle }) => {
                   size="large"
                   aria-label="show 4 new mails"
                   color="inherit"
+<<<<<<< HEAD
                   sx={{ marginRight: -1 }}
+=======
+                  sx={{ marginRight: 1 }}
+>>>>>>> 4dbe98c (worked on role access)
                 >
                   <Avatar
                     alt={user.username}
