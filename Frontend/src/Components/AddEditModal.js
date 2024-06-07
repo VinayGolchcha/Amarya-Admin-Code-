@@ -1,13 +1,14 @@
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Box, Button } from "@mui/material";
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
+import { useAuth } from "./AuthContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -36,6 +37,7 @@ const style = {
   width: { lg: "55%", md: "45%", sm: "50%", xs: "80%" },
   padding: { lg: "55px", md: "45px", sm: "30px", xs: "25px" },
 };
+
 const inputControl = {
   border: "none",
   borderRadius: "4px",
@@ -51,7 +53,11 @@ const labelStyle = {
   fontSize: { lg: "1rem", md: "1rem", sm: "1rem", xs: "0.9 rem" },
   color: "rgb(120, 120, 122)",
 };
+
 export default function AddEditModal({ rows }) {
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+
   const [open, setOpen] = useState(false);
   const [editedData, setEditedData] = useState({
     asset_type: "",
@@ -62,36 +68,59 @@ export default function AddEditModal({ rows }) {
     model_number: "",
     item_description: "",
     image_url: "",
+    file: null,
   });
 
   const apiUrl = process.env.REACT_APP_API_URL;
+  console.log(rows);
+
+  useEffect(() => {
+    if (rows.length === 1) {
+      const rowData = rows[0];
+      setEditedData({
+        asset_type: rowData.asset_type || "",
+        item: rowData.item || "",
+        purchase_date: rowData.dop || "",
+        warranty_period: rowData.warranty_period || "",
+        price: rowData.price || "",
+        model_number: rowData.model_number || "",
+        item_description: rowData.description || "",
+        image_url: rowData.photo || "",
+      });
+    }
+  }, [rows]);
 
   function handleUpdate() {
-    // Gather updated data from form fields
-    // event.preventDefault();
-    const updatedData = { ...editedData };
+    const formData = new FormData();
+    formData.append("asset_type", editedData.asset_type);
+    formData.append("item", editedData.item);
+    formData.append("purchase_date", editedData.purchase_date);
+    formData.append("warranty_period", editedData.warranty_period);
+    formData.append("price", editedData.price);
+    formData.append("model_number", editedData.model_number);
+    formData.append("item_description", editedData.item_description);
+    if (editedData.file) {
+      formData.append("file", editedData.file);
+    }
 
-    // Send a request to update the asset data
-    console.log(updatedData);
-    // You can use axios or fetch for this
     axios
-      .put(`${apiUrl}/asset/admin/update-asset/${rows[0]?.inId}`, updatedData)
+      .put(`${apiUrl}/asset/admin/update-asset/${rows[0]?.inId}`, formData, {
+        headers: {
+          "x-access-token": token,
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((response) => {
-        // Handle successful update
-        console.log("Asset updated successfully:", response.data);
-        // handleClose(); // Optionally, close the modal
-        toast.success('Asset updated successfully');
+        toast.success("Asset updated successfully");
         setOpen(false);
       })
       .catch((error) => {
-        // Handle error
-        toast.error('Error updating asset');
+        toast.error("Error updating asset");
         console.error("Error updating asset:", error);
       });
   }
 
   function handleOpen() {
-    console.log(rows);
     if (rows.length === 0) {
       toast.warning("Please select the row to edit the record", {
         position: "top-right",
@@ -99,18 +128,25 @@ export default function AddEditModal({ rows }) {
     } else if (rows.length === 1) {
       setOpen(true);
     } else if (rows.length > 1) {
-      toast.warning("Cannot edit the multiple records", {
+      toast.warning("Cannot edit multiple records", {
         position: "top-right",
       });
     }
   }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditedData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    const { name, value, files } = e.target;
+    if (files) {
+      setEditedData((prevState) => ({
+        ...prevState,
+        file: files[0],
+      }));
+    } else {
+      setEditedData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   };
 
   const handleClose = () => {
@@ -154,7 +190,7 @@ export default function AddEditModal({ rows }) {
             </Typography>
             <Grid container spacing={2}>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label style={labelStyle} for="asset_type">
+                <label style={labelStyle} htmlFor="asset_type">
                   Asset Type
                 </label>
                 <br />
@@ -168,7 +204,7 @@ export default function AddEditModal({ rows }) {
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label style={labelStyle} for="item">
+                <label style={labelStyle} htmlFor="item">
                   Item
                 </label>
                 <br />
@@ -210,12 +246,12 @@ export default function AddEditModal({ rows }) {
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label style={labelStyle} for="purchase_date">
+                <label style={labelStyle} htmlFor="purchase_date">
                   Purchase Date
                 </label>
                 <br />
                 <input
-                  type="text"
+                  type="date"
                   id="purchase_date"
                   name="purchase_date"
                   style={inputControl}
@@ -229,7 +265,7 @@ export default function AddEditModal({ rows }) {
                 </label>
                 <br />
                 <input
-                  type="text"
+                  type="number"
                   id="price"
                   name="price"
                   style={inputControl}
@@ -239,25 +275,24 @@ export default function AddEditModal({ rows }) {
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
                 <label style={labelStyle} htmlFor="image_url">
-                  Image URL
+                  Image
                 </label>
                 <br />
                 <input
-                  type="text"
+                  type="file"
                   id="image_url"
-                  name="image_url"
+                  name="file"
                   style={inputControl}
-                  value={editedData.image_url}
                   onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label style={labelStyle} for="warranty_period">
+                <label style={labelStyle} htmlFor="warranty_period">
                   Warranty Period
                 </label>
                 <br />
                 <input
-                  type="text"
+                  type="number"
                   id="warranty_period"
                   name="warranty_period"
                   style={inputControl}

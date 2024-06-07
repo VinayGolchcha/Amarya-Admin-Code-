@@ -8,6 +8,7 @@ import "./EmailPop";
 // import { EmailP } from "@mui/icons-material";
 import EmailP from "./EmailPop";
 import { useAuth } from "../Components/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -17,6 +18,7 @@ const LoginPage = () => {
   // const[openModel,setOpenModel]=useState(false)
   const [openEmailP, setOpenEmailP] = useState(false);
   const apiUrl = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
@@ -33,6 +35,7 @@ const LoginPage = () => {
         console.log("Login successful");
         // Redirect or handle successful login
         login(response.data.data[0]); // Pass user data to login function
+        navigate("/");
       } else {
         console.error("Login failed");
         // Handle login error

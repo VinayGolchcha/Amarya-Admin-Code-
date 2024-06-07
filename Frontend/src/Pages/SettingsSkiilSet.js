@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, FormControl, FormLabel, Grid, TextField } from "@mui/material";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  Grid,
+  TextField,
+} from "@mui/material";
+import { useAuth } from "../Components/AuthContext";
 
 export default function SettingsSkillSet() {
   const [formData, setFormData] = useState([
@@ -22,13 +30,21 @@ export default function SettingsSkillSet() {
   const len = formData.length;
   const midPoint = Math.floor(formData.length / 2);
   const apiUrl = process.env.REACT_APP_API_URL;
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   useEffect(() => {
     fetchSkills();
   }, []);
 
   const fetchSkills = () => {
-    fetch(`${apiUrl}/skillset/fetch-skills`)
+    fetch(`${apiUrl}/skillset/fetch-skills`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": user?.token,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch skills");
@@ -42,9 +58,10 @@ export default function SettingsSkillSet() {
 
         const skills = data.data;
 
-        setFormData(skills.map((skill) => ({ _id: skill._id, skill: skill.skill })));
+        setFormData(
+          skills.map((skill) => ({ _id: skill._id, skill: skill.skill }))
+        );
         setOriginalFormData([...skills]);
-
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -66,6 +83,10 @@ export default function SettingsSkillSet() {
         const skillId = formData[selectedInputIndex]._id;
         fetch(`${apiUrl}/skillSet/admin/delete-skill/${skillId}`, {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
         })
           .then((response) => {
             if (!response.ok) {
@@ -93,76 +114,83 @@ export default function SettingsSkillSet() {
     }
   };
 
- const handleSave = () => {
-  if (editMode) {
-    const editedSkills = formData.filter(
-      (data, index) => data && originalFormData[index] && data.skill !== originalFormData[index].skill
-    );
-    const newSkills = formData.filter((data) => data && !data._id && data.skill);
- 
-    console.log(formData);
-    console.log(originalFormData);
-    // Update existing skills
-    editedSkills.forEach((editedSkill) => {
-      fetch(`${apiUrl}/skillSet/admin/update-skill/${editedSkill._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ skill: editedSkill.skill }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to update skill");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log("Skill updated successfully:", data);
-        })
-        .catch((error) => {
-          console.error("Error updating skill:", error);
-        });
-    });
+  const handleSave = () => {
+    if (editMode) {
+      const editedSkills = formData.filter(
+        (data, index) =>
+          data &&
+          originalFormData[index] &&
+          data.skill !== originalFormData[index].skill
+      );
+      const newSkills = formData.filter(
+        (data) => data && !data._id && data.skill
+      );
 
-    // Create new skills
-    newSkills.forEach((newSkill) => {
-      fetch(`${apiUrl}/skillSet/admin/create-skill`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ skill: newSkill.skill }),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Failed to create skill");
-          }
-          return response.json();
+      console.log(formData);
+      console.log(originalFormData);
+      // Update existing skills
+      editedSkills.forEach((editedSkill) => {
+        fetch(`${apiUrl}/skillSet/admin/update-skill/${editedSkill._id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
+          body: JSON.stringify({ skill: editedSkill.skill }),
         })
-        .then((data) => {
-          console.log("Skill created successfully:", data);
-          // Update the form data with the newly created skill ID
-          const updatedFormData = [...formData];
-          const index = updatedFormData.findIndex(
-            (item) => item && item.skill === newSkill.skill
-          );
-          if (index !== -1) {
-            updatedFormData[index] = {
-              _id: data.skill._id,
-              skill: data.skill.skill,
-            };
-            setFormData(updatedFormData);
-          }
-        })
-        .catch((error) => {
-          console.error("Error creating skill:", error);
-        });
-    });
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to update skill");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Skill updated successfully:", data);
+          })
+          .catch((error) => {
+            console.error("Error updating skill:", error);
+          });
+      });
 
-    setEditMode(false);
-  }
-};
+      // Create new skills
+      newSkills.forEach((newSkill) => {
+        fetch(`${apiUrl}/skillSet/admin/create-skill`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
+          body: JSON.stringify({ skill: newSkill.skill }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to create skill");
+            }
+            return response.json();
+          })
+          .then((data) => {
+            console.log("Skill created successfully:", data);
+            // Update the form data with the newly created skill ID
+            const updatedFormData = [...formData];
+            const index = updatedFormData.findIndex(
+              (item) => item && item.skill === newSkill.skill
+            );
+            if (index !== -1) {
+              updatedFormData[index] = {
+                _id: data.skill._id,
+                skill: data.skill.skill,
+              };
+              setFormData(updatedFormData);
+            }
+          })
+          .catch((error) => {
+            console.error("Error creating skill:", error);
+          });
+      });
+
+      setEditMode(false);
+    }
+  };
 
   const handleInputChange = (index, fieldName, value) => {
     const newFormData = [...formData];

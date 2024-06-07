@@ -76,7 +76,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const NavBar = ({ handleDrawerToggle }) => {
   const { logout } = useAuth();
-  const { userData } = useAuth();
+  const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -146,7 +146,6 @@ const NavBar = ({ handleDrawerToggle }) => {
     handleMobileMenuClose();
   };
   const handleLogOut = () => {
-    
     logout();
     navigate("/login");
   };
@@ -403,41 +402,41 @@ const NavBar = ({ handleDrawerToggle }) => {
                 </Popper>
               </div>
             </IconButton>
-            {userData && ( // Conditional rendering for user profile information
-            <>
-              <IconButton
-                size="large"
-                aria-label="show 4 new mails"
-                color="inherit"
-                sx={{ marginRight: 1 }}
-              >
-                <Avatar
-                  alt={userData.username}
-                  src={userData.profile_picture}
-                />
-              </IconButton>
-              <IconButton
-                disableRipple
-                onMouseDown={handleProfileMenuOpen}
-                onMouseUp={toggleArrow}
-                size="small"
-                color="inherit"
-                sx={{ marginRight: 1 }}
-              >
-                <div>
-                  <Typography sx={{ display: "flex" }}>
-                    {userData.username}
-                    {console.log(userData.username)}
-                    {arrow ? (
-                      <KeyboardArrowUpIcon />
-                    ) : (
-                      <KeyboardArrowDownIcon />
-                    )}
-                  </Typography>
-                </div>
-              </IconButton>
-            </>
-          )}
+            {user && ( // Conditional rendering for user profile information
+              <>
+                <IconButton
+                  size="large"
+                  aria-label="show 4 new mails"
+                  color="inherit"
+                  sx={{ marginRight: 1 }}
+                >
+                  <Avatar
+                    alt={user.username}
+                    src={user.profile_picture}
+                  />
+                </IconButton>
+                <IconButton
+                  disableRipple
+                  onMouseDown={handleProfileMenuOpen}
+                  onMouseUp={toggleArrow}
+                  size="small"
+                  color="inherit"
+                  sx={{ marginRight: 1 }}
+                >
+                  <div>
+                    <Typography sx={{ display: "flex" }}>
+                      {user.username}
+                      {console.log(user.username)}
+                      {arrow ? (
+                        <KeyboardArrowUpIcon />
+                      ) : (
+                        <KeyboardArrowDownIcon />
+                      )}
+                    </Typography>
+                  </div>
+                </IconButton>
+              </>
+            )}
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
             <IconButton

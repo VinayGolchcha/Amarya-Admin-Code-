@@ -10,11 +10,14 @@ import Badge from "@mui/material/Badge";
 import NotificationContext from "../ContextProvider/NotificationContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "./AuthContext";
 
 export default function NotificationPopUp() {
   const navigate = useNavigate();
   const { notifications, setNotifications } = useContext(NotificationContext);
   const apiUrl = process.env.REACT_APP_API_URL;
+  const {user} = useAuth();
+  const token = encodeURIComponent(user?.token || ""); 
 
   useEffect(() => {
     if (notifications.length === 0) {

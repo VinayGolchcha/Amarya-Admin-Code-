@@ -25,6 +25,7 @@ import AddNewAssets from "../Components/AddNewAsset";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
+import { useAuth } from "../Components/AuthContext";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -147,16 +148,23 @@ export default function AssetsAdminPage() {
   const [open, setOpen] = React.useState(false);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const apiUrl = process.env.REACT_APP_API_URL;
-
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+  
+ console.log(user);
   const fetchAssets = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/asset/admin/fetch-assets`);
+      const response = await axios.get(`${apiUrl}/asset/admin/fetch-assets`, {
+        headers: {
+          "x-access-token": token,
+        },
+      });
       if (response.data.success) {
         const apiAssets = response.data.data.map((asset) => {
           return createData(
             asset.asset_id,
             new Date(asset.purchase_date).toLocaleDateString(),
-            asset.image_url,
+            asset.image_url, // Use the correct field for the image URL
             asset.assignee ? asset.assignee : "-",
             asset.item,
             asset.item_description,
@@ -178,7 +186,7 @@ export default function AssetsAdminPage() {
           );
         });
         setAssetsData(apiAssets);
-        // console.log(response.data.data);
+        console.log(apiAssets, "kdsfk;k");
       } else {
         console.error("Error fetching assets:", response.data.message);
       }
@@ -232,7 +240,11 @@ export default function AssetsAdminPage() {
     const selectedIds = selectedRows.map((row) => row.inId);
     console.log(selectedIds[0]);
     axios
-      .delete(`${apiUrl}/asset/admin/delete-asset/${selectedIds[0]}`)
+      .delete(`${apiUrl}/asset/admin/delete-asset/${selectedIds[0]}`, {
+        headers: {
+          "x-access-token": token,
+        },
+      })
       .then((response) => {
         if (response.data.success) {
           fetchAssets();
@@ -255,23 +267,17 @@ export default function AssetsAdminPage() {
     // setAssetsData(updatedItems);
   }
 
-  const renderItemImage = (type) => {
-    let imageUrl;
-    if (type === "laptop") {
-      imageUrl = "images/Laptop.png";
-    } else if (type === "mouse") {
-      imageUrl = "images/Mouse.png";
-    } else if (type === "stand") {
-      imageUrl = "images/Stand.png";
-    } else if (type === "keyboard") {
-      imageUrl = "images/keyboard.png";
-    } else if (type === "headphone") {
-      imageUrl = "images/Headphone.png";
-    } else if (type === "charger") {
-      imageUrl = "images/Charger.png";
-    }
-    return <img src={imageUrl} />;
+  const renderItemImage = (photoUrl) => {
+    console.log(photoUrl);
+    return (
+      <img
+        src={photoUrl}
+        alt="Asset"
+        style={{ width: "50px", height: "50px" }}
+      />
+    );
   };
+
   return (
     <>
       <Box
@@ -433,11 +439,11 @@ export default function AssetsAdminPage() {
                       sx={{ fontFamily: "Poppins" }}
                     >
                       {/* <Box
-                        component="img"
-                        src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                        alt="Check"
-                        style={{ filter: "invert(1)" }}
-                      /> */}
+                          component="img"
+                          src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                          alt="Check"
+                          style={{ filter: "invert(1)" }}
+                        /> */}
                       <input
                         type="checkbox"
                         name={row.inId}
@@ -458,7 +464,7 @@ export default function AssetsAdminPage() {
                       align="center"
                       sx={{ fontFamily: "Poppins", padding: "8px" }}
                     >
-                      {renderItemImage(row.item)}
+                      {renderItemImage(row.photo)}
                     </TableCell>
                     <TableCell
                       align="center"
@@ -514,11 +520,11 @@ export default function AssetsAdminPage() {
               <TableRow>
                 <TableCell colSpan={12} sx={{ textAlign: "center" }}>
                   {/* <Box
-                    component="img"
-                    src={`${process.env.PUBLIC_URL}/Images/Add_ring_duotone.png`}
-                    alt="add"
-                    onClick={handleOpen}
-                  /> */}
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Add_ring_duotone.png`}
+                      alt="add"
+                      onClick={handleOpen}
+                    /> */}
                   <AddOutlinedIcon
                     onClick={handleOpen}
                     color="action"
