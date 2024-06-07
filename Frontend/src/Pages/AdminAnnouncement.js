@@ -17,6 +17,7 @@ import {
 import ActivityForm from "./ActivityForm";
 import axios from 'axios';
 import { toast } from "react-toastify";
+import { useAuth } from "../Components/AuthContext";
 
 const AdminNotificationTab = () => {
   const [selectedTab, setSelectedTab] = useState("announcement");
@@ -26,8 +27,8 @@ const AdminNotificationTab = () => {
   const [edit , setEdit] = useState(false);
   const [selectedNoti , setSelectedNoti] = useState({});
   const [file , setFile] = useState([]);
-
-  
+  const {user} = useAuth();
+   
   const handleEditSelection = (obj) => {
     setEdit(true);
       setSelectedNoti(obj);
@@ -37,7 +38,11 @@ const AdminNotificationTab = () => {
   const handleDeleteNotification = async(id) => {
     console.log(id);
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_API_URI}/${selectedTab}/admin/delete-${selectedTab}/${id}`);
+      const response = await axios.delete(`${process.env.REACT_APP_API_URI}/${selectedTab}/admin/delete-${selectedTab}/${id}` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
       fetchNotification();
       toast.warning(response.data.message);
     } catch (err) {
@@ -48,7 +53,11 @@ const AdminNotificationTab = () => {
 
   const fetchNotification = async () => {
     try {
-      const resData = await axios.get(`${process.env.REACT_APP_API_URI}/${selectedTab}/fetch-${selectedTab}`);
+      const resData = await axios.get(`${process.env.REACT_APP_API_URI}/${selectedTab}/fetch-${selectedTab}` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
       setNotifications(resData.data.data);
     } catch (error) {
       console.log(error);
@@ -61,7 +70,11 @@ const AdminNotificationTab = () => {
       if (date === "All Dates") {
         fetchNotification();
       } else {
-        const res = await axios.get(`${process.env.REACT_APP_API_URI}/${selectedTab}/filter-${selectedTab}-by-date/${date}`);
+        const res = await axios.get(`${process.env.REACT_APP_API_URI}/${selectedTab}/filter-${selectedTab}-by-date/${date}` , {
+          headers : {
+            "x-access-token" : user?.token
+          }
+        });
         setNotifications(res.data.data);
         toast.success("Notifications are filtered");
       }
@@ -84,23 +97,35 @@ const AdminNotificationTab = () => {
         })
       }
       
-      const res = await axios.post(`${process.env.REACT_APP_API_URI}/${selectedTab}/admin/add-${selectedTab}`, selectedTab === "activity" ? formData : body);
+      const res = await axios.post(`${process.env.REACT_APP_API_URI}/${selectedTab}/admin/add-${selectedTab}`, selectedTab === "activity" ? formData : body , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
       console.log(res);
       toast.success(res.data.message);
       fetchNotification();
+      setEdit(false);
+      selectedNoti({});
     } catch (error) {
       toast.error(error?.response?.data?.errors[0]?.msg);
     }
   };
 
   const handeleEditAnnouncement = async (body , id) => {
+    
     try {
-      const res = await axios.put(`${process.env.REACT_APP_API_URI}/${selectedTab}/admin/update-${selectedTab}/${id}`, body);
+      const res = await axios.put(`${process.env.REACT_APP_API_URI}/${selectedTab}/admin/update-${selectedTab}/${id}`, body , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      }
+      );
       console.log(res);
       toast.success(res.data.message);
       fetchNotification();
     } catch (error) {
-      toast.error(error?.response?.data?.errors?.[0].msg);
+      toast.error(error?.response?.data?.errors);
     }
   };
   
@@ -322,9 +347,10 @@ const AdminNotificationTab = () => {
                             height : "100%"
                           }}>
                           <img src="Images/icons8-edit-30.png" alt="edit-icon" style={{height : "100%" , cursor : "pointer"}} onClick={() => handleEditSelection(notification)}/>
-                          <img src="Images/icons8-delete-trash-24.png" alt="delete-icon" style={{height : "100%" , cursor : "pointer"}} onClick={() => handleDeleteNotification(notification?._id)}/>
+                          <img src="Images/icons8-delete-trash-24.png" alt="delete-icon" style={{height : "100%" , cursor : "pointer"}} onClick={() => handleDeleteNotification(notification?.event_type === "activity" ? notification?.activity_id : notification?._id)}/>
                         </div>
                       </div>
+                      
                     )}
                   </TableCell>
                 ))}

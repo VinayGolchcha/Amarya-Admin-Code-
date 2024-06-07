@@ -17,6 +17,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { useAuth } from '../Components/AuthContext';
 
 
 export default function PolicyPage() {
@@ -25,6 +26,7 @@ export default function PolicyPage() {
   const [file, setFile] = useState([]);
   const [policies , setPolicies] = useState([]);
   const [selectedPolicy , setSelectedPolicy] = useState(null);
+  const {user} = useAuth();
   const [policyContents, setPolicyContents] = React.useState('Welcome, Purpose, Human Resource Policy, Equal Employment Policy, Dress code Policy, Attendance Policy, Leave Policy, Learning and Development Policy, Prevention of Sexual Harassment Policy, Employee Separation Policy, Cooperative Social Responsibility Policy, Energizing Work Relation Policy');
 
   const handleChange = (event) => {
@@ -48,7 +50,11 @@ export default function PolicyPage() {
       // file?.forEach((f) => {
       //   formData.append("file" , f);
       // })
-      const res = await axios.post(`${process.env.REACT_APP_API_URI}/policy/admin/add-policy` , formData);
+      const res = await axios.post(`${process.env.REACT_APP_API_URI}/policy/admin/add-policy` , formData , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
       console.log(res);
       toast.success(res?.data?.message);
       fecthPolicies()
@@ -58,7 +64,11 @@ export default function PolicyPage() {
   }
   const fecthPolicies = async () => {
     try{
-      const response = await axios.get(`${process.env.REACT_APP_API_URI}/policy/fetch-policy`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URI}/policy/fetch-policy` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
       console.log(response);
       setPolicies(response?.data?.data);
       console.log(policies);
@@ -103,7 +113,11 @@ export default function PolicyPage() {
       return;
     }else{
     try{
-      const res = await axios.delete(`${process.env.REACT_APP_API_URI}/policy/admin/delete-policy/${id}`);
+      const res = await axios.delete(`${process.env.REACT_APP_API_URI}/policy/admin/delete-policy/${id}` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
       console.log(res);
       fecthPolicies();
       toast.error(res?.data?.message);

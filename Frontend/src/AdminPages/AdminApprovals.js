@@ -1,5 +1,5 @@
 // 
-import React, { useState , useEffect} from "react";
+import React, { useState , useEffect, useContext} from "react";
 import axios from "axios";
 import {
   Box,
@@ -28,6 +28,8 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import PropTypes from "prop-types";
+import { useAuth } from "../Components/AuthContext";
+
 
 
 
@@ -186,6 +188,10 @@ TablePaginationActions.propTypes = {
 export default function AdminApprovals({approvalData}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [isApproved , setIsApproved] =useState("rejected");
+  const rows =[];
+  // const {user} = useContext(useAuth);
+  // console.log(user);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -197,7 +203,7 @@ export default function AdminApprovals({approvalData}) {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - approvalData?.length) : 0;
 
 
 
@@ -283,6 +289,12 @@ export default function AdminApprovals({approvalData}) {
       }
       
     };
+  const formattedDate =  (date) => {
+    const newdate = new Date(date);
+    const dateInStr = newdate.toString().split(" ");
+    const reqFormat = dateInStr[2] +" " + dateInStr[1] + " " + dateInStr [3];
+    return reqFormat;
+  }
     
   return (
     <div>
@@ -390,14 +402,12 @@ export default function AdminApprovals({approvalData}) {
                       {row?.request_type}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
-                      {row.request_date}
+                      {formattedDate(row.request_date)}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {row.subject}
-                      {row.subject}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
-                      {row.body}
                       {row.body}
                     </TableCell>
                     <TableCell

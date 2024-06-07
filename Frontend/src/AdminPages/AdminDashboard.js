@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import ProjectOverview from "../Components/ProjectOverview";
 import EmployeeCountPieChart from "../Components/AdminPieChart";
@@ -9,6 +9,7 @@ import AdminProjectSummy from "./AdminProjectSummy";
 import DashboardPosComp from "../Components/DashboardPosComp";
 import AdminApprovals from "./AdminApprovals";
 import axios from "axios";
+import { useAuth } from '../Components/AuthContext';
 
 const suggSum = [
   {
@@ -57,9 +58,15 @@ const AdminDashboard = () => {
   const [approvalData , setApprovalData] = useState([]);
   const [activityAnnoucements , setActivityAnnoucements] = useState([]);
   const [apiData , setApidata] = useState([]);
+  const {user} = useAuth();
+  console.log(user);
   const fetchFeedback = async () => {
     try{
-      const res = await axios.get(`${process.env.REACT_APP_API_URI}/userDashboard/admin/fetch-user-feedback`)
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/userDashboard/admin/fetch-user-feedback` , {
+        headers : {
+          "x-access-token" : user?.token,
+        }
+      })
       setFeedback(res?.data?.data);
     }catch(err){
       console.log(err);
@@ -67,7 +74,11 @@ const AdminDashboard = () => {
   }
   const fetchApprovalData = async () => {
     try{
-      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/fetch-approval-data`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/fetch-approval-data` , {
+        headers : {
+          "x-access-token" : user?.token,
+        }
+      });
       setApprovalData(res?.data?.data);
       console.log(approvalData);
     }catch(err){
@@ -77,7 +88,11 @@ const AdminDashboard = () => {
 
   const fecthActAnn = async() => {
     try{
-      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/fetch-activity-announcement`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/fetch-activity-announcement` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
       setActivityAnnoucements(res?.data?.data);
       console.log(activityAnnoucements);
     }catch(err){
@@ -87,7 +102,11 @@ const AdminDashboard = () => {
   }
   const fetchProjects = async () => {
     try{
-      const res = await axios.get(`${process.env.REACT_APP_API_URI}/project/fetch-all-projects`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/project/fetch-all-projects` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
       setProjects(res?.data?.data);
       const fecthedProjects = res?.data?.data
       const inprogress = 0 ;
@@ -101,7 +120,11 @@ const AdminDashboard = () => {
   }
   const adminDashboardApi = async() => {
     try{
-      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/admin-dashboard`)
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/admin-dashboard` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      })
       setApidata(res?.data?.data);
       console.log(res);
     }catch(err){

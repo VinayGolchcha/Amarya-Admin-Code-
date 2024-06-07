@@ -1,10 +1,11 @@
 // LoginPage.js
 import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import PolicyTable from "../Components/PolicyTable";
 import axios from 'axios';
 
 import { Buffer } from 'buffer';
+import { useAuth } from "../Components/AuthContext";
 const headingStyle = {
   margin: "2px 0px",
 };
@@ -58,10 +59,16 @@ const PoliciesPage = () => {
   const [policy , setPolicy] = useState([]);
   const [policyheading , setPolicyheading] = useState([]);
   const [isLoading , setisLoading] = useState(false);
+  const {user} = useAuth();
+  console.log(user);
 
   const fetchPolicy = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URI}/policy/fetch-policy`);
+      const response = await axios.get(`${process.env.REACT_APP_API_URI}/policy/fetch-policy` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
       setPolicy(response?.data?.data);
       console.log(response?.data?.data?.[0]?.policy_heads);
       setPolicyheading(response?.data?.data?.[0]?.policy_heads.split(","));

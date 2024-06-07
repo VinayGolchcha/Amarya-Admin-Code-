@@ -253,6 +253,7 @@ import {
   Input,
   InputLabel,
   Box,
+  FormLabel,
 } from "@mui/material";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -342,7 +343,8 @@ function MyForm({ onAddNotification, selectedTab, handleAddAnnouncement, selecte
       body.public_ids = publicIds
     }
     console.log(body);
-    edit === false ? handleAddAnnouncement(body, selectedNoti._id) : handleAddAnnouncement(body);
+    console.log("selected activty id" , selectedNoti?.activity_id)
+    edit === true ? handleAddAnnouncement(body, selectedTab !== "activity" ? selectedNoti._id : selectedNoti?.activity_id) : handleAddAnnouncement(body);
     if (!fromDate || !description) {
       toast.error("Please fill all the fields");
       return;
@@ -371,6 +373,7 @@ function MyForm({ onAddNotification, selectedTab, handleAddAnnouncement, selecte
     setFromDate("");
     setToDate("");
     setDescription("");
+    isEdit(false);
   };
 
   return (
@@ -421,7 +424,7 @@ function MyForm({ onAddNotification, selectedTab, handleAddAnnouncement, selecte
 
 {selectedTab === "activity" && (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'start' }}>
-          <InputLabel
+          {/* <InputLabel
             htmlFor="file-upload"
             sx={{
               marginTop: '5px',
@@ -434,15 +437,43 @@ function MyForm({ onAddNotification, selectedTab, handleAddAnnouncement, selecte
             }}
           >
             Choose Images
-          </InputLabel>
-          <Input
+          </InputLabel> */}
+          {/* <Input
             id="file-upload"
             type="file"
             accept=".jpg, .jpeg, .png"
             onChange={handleFileChange}
             sx={{ display: 'none' }}
-            multiple
-          />
+            multiple 
+            
+          /> */}
+          {/* <TextField
+            variant="outlined"
+            sx={{
+              "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline" : {
+                borderWidth : "0px" ,
+                borderBottom : "0px"
+              }
+            }}
+            fullWidth
+            InputProps={{
+              inputComponent: Input,
+              inputProps: {
+                type: 'file',
+                multiple: true,
+                onChange: handleFileChange,
+              },
+            }}
+          /> */}
+          <FormControl fullWidth >
+            <Input
+              id="file-input"
+              type="file"
+              inputProps={{ multiple: true }}
+              onChange={handleFileChange}
+              disableUnderline
+            />
+          </FormControl>
           {files?.length > 0 && (!edit) && (
             <Typography
               sx={{ color: 'green', marginTop: '5px', padding: '1px 5px' }}

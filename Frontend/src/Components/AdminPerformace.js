@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Typography, Paper, Box } from "@mui/material";
 import axios from "axios";
+import { useAuth } from "./AuthContext";
 
 const CustomBarChart = ({ data }) => {
   return (
@@ -121,9 +122,14 @@ const CustomBarChart = ({ data }) => {
 
 const AdminPerformance = () => {
   const [teamperformance , setTeamPerformance] = useState([]);
+  const {user} = useAuth();
   const fetchPerformance = async () => {
     try{
-      const res = await axios.get(`https://amarya-admin-backend-code.onrender.com/api/v1/worksheet/admin/calculate-team-performance`);
+      const res = await axios.get(`https://amarya-admin-backend-code.onrender.com/api/v1/worksheet/admin/calculate-team-performance` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
       console.log(res);
       setTeamPerformance(res?.data?.data);
     }catch(err){
