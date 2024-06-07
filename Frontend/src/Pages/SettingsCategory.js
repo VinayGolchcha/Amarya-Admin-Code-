@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
+import { useAuth } from "../Components/AuthContext";
 
 export default function SettingsCategory() {
   const [formData, setFormData] = useState([
@@ -24,13 +25,20 @@ export default function SettingsCategory() {
   const len = formData.length;
   const midPoint = Math.floor(formData.length / 2);
   const apiUrl = process.env.REACT_APP_API_URL;
+  const {user} = useAuth();
 
   useEffect(() => {
     fetchCategories();
   }, []);
 
   const fetchCategories = () => {
-    fetch(`${apiUrl}/category/fetch-all-categories`)
+    fetch(`${apiUrl}/category/fetch-all-categories`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": user?.token,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch categories");

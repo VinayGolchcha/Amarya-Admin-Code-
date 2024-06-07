@@ -29,6 +29,8 @@ import { useAuth } from "../Components/AuthContext";
 
 const WorksheetPage = () => {
   const [teams, setTeams] = useState([]);
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   const renderTableCells = (rowData) => {
     const cellData = [
@@ -85,8 +87,6 @@ const WorksheetPage = () => {
     console.log(field + "hey");
     setSelectedOption(field);
   };
-
-  const { user } = useAuth();
 
   const handleTextFieldChange = (field) => {
     console.log(field + "hey");
@@ -181,7 +181,8 @@ const WorksheetPage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": user?.token,
+          "x-access-token":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQU1FTVAwMzIiLCJuYW1lIjoic2FuamFuYSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzE3NjYzMTA2LCJleHAiOjE3MjY2NjMxMDZ9.2SR73mJRK7Rprq6e3mrLMYj6RjAIfI_gCyw9vA4Fy8c",
         },
         body: JSON.stringify(postData),
       });
@@ -198,7 +199,6 @@ const WorksheetPage = () => {
       toast.error("An error occurred while saving row and submitting data.");
     }
   };
-
 
   const handleNewRowChange = (field, value) => {
     setNewRow((prevNewRow) => ({ ...prevNewRow, [field]: value }));
@@ -268,7 +268,7 @@ const WorksheetPage = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": user?.token, // Add your custom headers here
+            "x-access-token": token, // Add your custom headers here
           },
         }
       );
@@ -338,7 +338,7 @@ const WorksheetPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": user?.token, // Add your custom headers here
+          "x-access-token": token, // Add your custom headers here
         },
       });
       const data = await response.json();
@@ -365,7 +365,7 @@ const WorksheetPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": user?.token, // Add your custom headers here
+          "x-access-token": token, // Add your custom headers here
         },
       });
       const data = await response.json();
@@ -391,7 +391,7 @@ const WorksheetPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": user?.token, // Add your custom headers here
+          "x-access-token": token, // Add your custom headers here
         },
       });
       const data = await response.json();
@@ -417,7 +417,7 @@ const WorksheetPage = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": user?.token, // Add your custom headers here
+          "x-access-token": token, // Add your custom headers here
         },
       });
       const data = await response.json();
@@ -531,13 +531,13 @@ const WorksheetPage = () => {
                     {/* <IconButton onClick={() => handleEditClick()}>
                       <EditIcon />
                     </IconButton> */}
-                      <Box
-                    component="img"
-                    src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
-                    alt="Check"
-                    // onClick={handleSaveRow}
-                    sx={{ cursor: "pointer" }}
-                  />
+                    <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
+                      alt="Check"
+                      // onClick={handleSaveRow}
+                      sx={{ cursor: "pointer" }}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

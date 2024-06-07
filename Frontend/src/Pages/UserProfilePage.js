@@ -22,6 +22,7 @@ const UserProfilePage = () => {
 
   const [isEditing, setIsEditing] = useState(false);
   const [isEditing2, setIsEditing2] = useState(false);
+
   // const [file,setFile] = useState("");
 
   //   const [formData, setFormData] = useState({
@@ -40,7 +41,8 @@ const UserProfilePage = () => {
   //     ecn: "0",
   //   });a
   const { user } = useAuth();
-  console.log(user);
+  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+
   const [formData, setFormData] = useState({
     username: "",
     first_name: "",
@@ -185,12 +187,12 @@ const UserProfilePage = () => {
   };
   const fetchUserProject = async () => {
     try {
-      const empId = "AMEMP031"; // Example employee ID
+      const empId = user.user_id; // Example employee ID
       const response = await axios.get(
         `https://amarya-admin-backend-code.onrender.com/api/v1/project/fetch-user-project/${empId}`,
         {
           headers: {
-            "x-access-token": user?.token,
+            "x-access-token": token,
           },
         }
       );
@@ -218,14 +220,14 @@ const UserProfilePage = () => {
     if (isEditing2 === false) return;
 
     try {
-      const empId = "AMEMP031"; // Example employee ID
+      const empId = user.user_id; // Example employee ID
       const projectId = projectsData.currentProject.project_id;
       const response = await axios.put(
         `https://amarya-admin-backend-code.onrender.com/api/v1/project/update-user-project/${empId}/${projectId}`,
         projectsData.currentProject,
         {
           headers: {
-            "x-access-token": user?.token,
+            "x-access-token": token,
           },
         }
       );
@@ -274,12 +276,12 @@ const UserProfilePage = () => {
 
   const fetchProjectTimeline = async () => {
     try {
-      const empId = "AMEMP031"; // Example employee ID
+      const empId = user.user_id; // Example employee ID
       const response = await axios.get(
         `https://amarya-admin-backend-code.onrender.com/api/v1/project/fetch-user-project-timeline/${empId}`,
         {
           headers: {
-            "x-access-token": user?.token,
+            "x-access-token": token,
           },
         }
       );
@@ -295,13 +297,17 @@ const UserProfilePage = () => {
 
   const fetchUserData = async () => {
     try {
-      const empId = "AMEMP031"; // Example employee ID
+      const empId = user.user_id; // Example employee ID
+
+      // console.log(empId);
       const response = await axios.post(
         `https://amarya-admin-backend-code.onrender.com/api/v1/user/get-user-profile/${empId}`,
+        // Request body
+        {},
+        // Request configuration object
         {
           headers: {
-            // "Content-Type": "multipart/form-data",
-            "x-access-token": user?.token,
+            "x-access-token":token
           },
         }
       );
@@ -360,7 +366,8 @@ const UserProfilePage = () => {
     e.preventDefault();
     const formDataToSend = new FormData();
     formDataToSend.append("designation", formData.designation);
-    formDataToSend.append("joining_date", formatDate2(formData.joining_date));
+    // formDataToSend.append("joining_date", formatDate2(formData.joining_date));
+    formDataToSend.append("username", formData.username);
     formDataToSend.append("experience", formData.experience);
     formDataToSend.append("public_id", formData.public_id);
     if (formData.file) {
@@ -368,7 +375,7 @@ const UserProfilePage = () => {
     }
 
     try {
-      const id = "AMEMP031";
+      const id = user.user_id;
 
       const response = await axios.put(
         `https://amarya-admin-backend-code.onrender.com/api/v1/user/update-user-profile/${id}`,
@@ -376,7 +383,7 @@ const UserProfilePage = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            "x-access-token": user?.token,
+            "x-access-token": token,
           },
         }
       );

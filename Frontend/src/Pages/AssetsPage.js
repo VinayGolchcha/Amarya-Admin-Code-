@@ -126,7 +126,7 @@ const AssetsPage = () => {
 
   const handleSendAsset = () => {
     const requestData = {
-      emp_id: "AMEMP002",
+      emp_id: user?.user_id,
       asset_type: selectedRequestTypes.length > 0 ? selectedRequestTypes : "",
       item: selectedHardwareItems.length > 0 ? selectedHardwareItems : "",
       requirement_type: requirement_type.length > 0 ? requirement_type : "",
@@ -191,7 +191,7 @@ const AssetsPage = () => {
         const response = await axios.post(
           `${apiUrl}/asset/user-asset`,
           {
-            emp_id: "AMEMP002",
+            emp_id: user?.user_id,
           },
           {
             headers: {
@@ -352,9 +352,9 @@ const AssetsPage = () => {
             <TextField
               variant="outlined"
               sx={{ backgroundColor: "rgb(250, 250, 250)" }}
-              label="Full Name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              label="username"
+              value={user?.user_name}
+              disabled
               fullWidth
             />
           </Grid>
@@ -363,8 +363,8 @@ const AssetsPage = () => {
               variant="outlined"
               label="Employee ID"
               sx={{ backgroundColor: "rgb(250, 250, 250)" }}
-              value={employeeID}
-              onChange={(e) => setEmployeeID(e.target.value)}
+              value={user?.user_id}
+              disabled
               fullWidth
             />
           </Grid>

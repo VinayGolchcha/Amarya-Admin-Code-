@@ -1,9 +1,10 @@
 import Modal from "@mui/material/Modal";
 import { Box, Button, Typography } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import { useAuth } from "./AuthContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -28,9 +29,9 @@ const style = {
   fontFamily: "Poppins",
   border: "1px solid #FFFFFF",
   borderRadius: "16px",
-  backgroundColor : "rgb(233, 235, 247)",
+  backgroundColor: "rgb(233, 235, 247)",
   width: { lg: "55%", md: "45%", sm: "50%", xs: "80%" },
-  padding : {lg : "55px" , md: "45px", sm: "30px", xs: "25px" }
+  padding: { lg: "55px", md: "45px", sm: "30px", xs: "25px" },
 };
 const inputControl = {
   border: "none",
@@ -38,13 +39,13 @@ const inputControl = {
   height: "31px",
   width: "100%",
   padding: "5px",
-  fontWeight : "500",
+  fontWeight: "500",
   margin: "2px 0px",
 };
 const labelStyle = {
-  fontWeight : "600",
+  fontWeight: "600",
   fontSize: { lg: "1rem", md: "1rem", sm: "1rem", xs: "0.9 rem" },
-  color : "rgb(120, 120, 122)"
+  color: "rgb(120, 120, 122)",
 };
 export default function AddNewAssets({
   assetsData,
@@ -52,7 +53,9 @@ export default function AddNewAssets({
   handleClose,
   open,
 }) {
-  // console.log("addnewItem called");
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   const itemNewInId = useRef("");
   const itemNewDop = useRef("");
@@ -64,24 +67,42 @@ export default function AddNewAssets({
   const itemNewRepairs = useRef("");
   const itemNewInWarranty = useRef("");
   const itemNewEndWarranty = useRef("");
+  const fileInputRef = useRef(null);
 
-  
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    const newItem = [
-      itemNewInId.current.value,
-      itemNewDop.current.value,
-      itemNewAssignee.current.value,
-      itemNewItem.current.value,
-      itemNewDescription.current.value,
-      itemNewIssuedFrom.current.value,
-      itemNewIssuedTill.current.value,
-      itemNewRepairs.current.value,
-      itemNewInWarranty.current.value,
-      itemNewEndWarranty.current.value,
-    ];
-    handleAdd((prevData) => [...prevData, newItem]);
+
+    const formData = new FormData();
+    formData.append("asset_type", itemNewInId.current.value);
+    formData.append("item", itemNewDop.current.value);
+    formData.append("purchase_date", itemNewDescription.current.value);
+    formData.append("warranty_period", itemNewRepairs.current.value);
+    formData.append("price", itemNewIssuedFrom.current.value);
+    formData.append("model_number", itemNewItem.current.value);
+    formData.append("item_description", itemNewAssignee.current.value);
+    formData.append("file", fileInputRef.current.files[0]);
+
+    try {
+      const response = await fetch(`${apiUrl}/asset/admin/create-asset`, {
+        method: "POST",
+        headers: {
+          "x-access-token": token, // Add your custom headers here
+        },
+        body:formData
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const newItem = await response.json();
+      handleAdd((prevData) => [...prevData, newItem]);
+      handleClose();  
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+    }
   }
+
   return (
     <>
       <Modal
@@ -106,7 +127,7 @@ export default function AddNewAssets({
             </Typography>
             <Grid container spacing={2}>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="inId" style={labelStyle}>
+                <label htmlFor="inId" style={labelStyle}>
                   Asset Type
                 </label>
                 <br />
@@ -118,7 +139,7 @@ export default function AddNewAssets({
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="dop" style={labelStyle}>
+                <label htmlFor="dop" style={labelStyle}>
                   Item
                 </label>
                 <br />
@@ -130,7 +151,7 @@ export default function AddNewAssets({
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="assingnee" style={labelStyle}>
+                <label htmlFor="assignee" style={labelStyle}>
                   Item Description
                 </label>
                 <br />
@@ -142,7 +163,7 @@ export default function AddNewAssets({
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="item" style={labelStyle}>
+                <label htmlFor="item" style={labelStyle}>
                   Model Number
                 </label>
                 <br />
@@ -154,19 +175,20 @@ export default function AddNewAssets({
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="description" style={labelStyle}>
+                <label htmlFor="description" style={labelStyle}>
                   Purchase Date
                 </label>
                 <br />
                 <input
-                  type="text"
+                  type="date"
                   id="description"
                   style={inputControl}
                   ref={itemNewDescription}
                 />
+                
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="isuedfrom" style={labelStyle}>
+                <label htmlFor="isuedfrom" style={labelStyle}>
                   Price
                 </label>
                 <br />
@@ -178,19 +200,19 @@ export default function AddNewAssets({
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="issuedtill" style={labelStyle}>
-                  Image url
+                <label htmlFor="issuedtill" style={labelStyle}>
+                  Image
                 </label>
                 <br />
                 <input
-                  type="text"
+                  type="file"
                   id="issuedtill"
                   style={inputControl}
-                  ref={itemNewIssuedTill}
+                  ref={fileInputRef}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="repairs" style={labelStyle}>
+                <label htmlFor="repairs" style={labelStyle}>
                   Warranty Period
                 </label>
                 <br />
@@ -203,7 +225,7 @@ export default function AddNewAssets({
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <div style={{ textAlign: "center", padding: "15px" }}>
-                  <Button variant="contained" color="error">
+                  <Button variant="contained" color="error" type="submit">
                     Save
                   </Button>
                 </div>

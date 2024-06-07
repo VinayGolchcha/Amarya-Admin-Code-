@@ -4,6 +4,7 @@ import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../Components/AuthContext";
 
 export default function SettingsLeave() {
   const [formData, setFormData] = useState([
@@ -22,13 +23,20 @@ export default function SettingsLeave() {
   const [originalFormData, setOriginalFormData] = useState([]);
 
   const apiUrl = process.env.REACT_APP_API_URL;
-
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); 
   useEffect(() => {
     fetchLeaveData();
   }, []);
 
   const fetchLeaveData = () => {
-    fetch(`${apiUrl}/leave/fetch-leave-type-and-count`)
+    fetch(`${apiUrl}/leave/fetch-leave-type-and-count`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": user?.token,
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         const categories = data.data;
@@ -66,6 +74,10 @@ export default function SettingsLeave() {
           `${apiUrl}/leave/admin/delete-leave-type-and-count/${leaveId}/${leaveTypeId}`,
           {
             method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              "x-access-token": token,
+            },
           }
         )
           .then((response) => {

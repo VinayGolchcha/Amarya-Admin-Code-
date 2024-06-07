@@ -2,13 +2,23 @@ import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  Select,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../Components/AuthContext";
 
 export default function SettingsAddUser() {
   const apiUrl = process.env.REACT_APP_API_URL;
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || "");
 
   const designationOptions = ["Web Developer", "Sap Developer", "ML Developer"];
   const designationTypeOptions = [
@@ -17,6 +27,7 @@ export default function SettingsAddUser() {
     "Intern",
   ];
   const cityOptions = ["Jabalpur", "Satna", "Delhi"];
+  const [team, setTeams] = useState([]);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -37,15 +48,27 @@ export default function SettingsAddUser() {
     joining_date: "",
     experience: 0,
     completed_projects: 0,
-    teams: 0,
+    team_id: 0,
     gender: "",
     file: "",
-
   });
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (files) {
+  
+    if (name === 'team_id') {
+      // Extract the team_id from the selected option
+      const selectedTeam = team.find((team) => team.label === value);
+      if (selectedTeam) {
+        setFormData((prevState) => ({
+          ...prevState,
+          [name]: selectedTeam._id, // Set the team_id instead of the value
+        }));
+        console.log(selectedTeam);
+      } else {
+        console.error('Selected team not found');
+      }
+    } else if (files) {
       setFormData((prevState) => ({
         ...prevState,
         [name]: files[0],
@@ -58,7 +81,11 @@ export default function SettingsAddUser() {
       }));
     }
   };
+  
 
+  useEffect(() => {
+    fetchTeams();
+  }, []);
   const formatDateString = (dateString) => {
     const [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
@@ -69,12 +96,39 @@ export default function SettingsAddUser() {
     return `${year}-${month}-${day}`;
   };
 
+  const fetchTeams = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/team/fetch-all-teams`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token, // Add your custom headers here
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        const teamOptions = data?.data?.map(({ _id, team }) => ({
+          _id, // Keep _id separate
+          value: team, // Use the label as the value displayed to the user
+          label: team,
+        }));
+        setTeams(teamOptions);
+        console.log("Teams:", teamOptions); // Log fetched teams
+        return teamOptions;
+      } else {
+        console.error("Failed to fetch teams:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    }
+  };
   const handleSubmit = async (event) => {
     event.preventDefault();
     const updatedFormData = {
       ...formData,
       dob: formData.dob,
       joining_date: formData.joining_date,
+      team_id:formData.team
     };
 
     // Create a new FormData instance
@@ -93,6 +147,7 @@ export default function SettingsAddUser() {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            "x-access-token": token, // Add your custom headers here
           },
         }
       );
@@ -311,9 +366,10 @@ export default function SettingsAddUser() {
                   ) : rowIndex === 3 && colIndex === 2 ? (
                     <TextField
                       onChange={handleChange}
-                      value={formData.teams}
-                      name="teams"
+                      // value={formDatateam}
+                      select
                       label="Team"
+                      name="team_id"
                       fullWidth
                       sx={{
                         "& .MuiOutlinedInput-notchedOutline": {
@@ -322,7 +378,13 @@ export default function SettingsAddUser() {
                           borderRadius: "10px",
                         },
                       }}
-                    />
+                    >
+                      {team?.map((team) => (
+                        <MenuItem key={team.value} value={team.value}>
+                          {team.label}
+                        </MenuItem>
+                      ))}
+                    </TextField>
                   ) : rowIndex === 4 && colIndex === 0 ? (
                     <Grid item xs={12}>
                       <TextField

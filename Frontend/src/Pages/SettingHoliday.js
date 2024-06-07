@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
+import { useAuth } from "../Components/AuthContext";
 
 export default function SettingHoliday() {
   const [formData, setFormData] = useState([
@@ -21,6 +22,8 @@ export default function SettingHoliday() {
     "Saturday",
   ];
   const apiUrl = process.env.REACT_APP_API_URL;
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   useEffect(() => {
     fetchHolidayData();
@@ -28,7 +31,14 @@ export default function SettingHoliday() {
 
   const fetchHolidayData = () => {
     fetch(
-      "https://amarya-admin-backend-code.onrender.com/api/v1/leave/fetch-holiday-list"
+      "https://amarya-admin-backend-code.onrender.com/api/v1/leave/fetch-holiday-list",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": user?.token,
+        },
+      }
     )
       .then((response) => response.json())
       .then((data) => {
@@ -90,6 +100,10 @@ export default function SettingHoliday() {
           `https://amarya-admin-backend-code.onrender.com/api/v1/leave/admin/delete-holiday/${holidayId}`,
           {
             method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              "x-access-token": token,
+            },
           }
         )
           .then((response) => {
@@ -142,6 +156,7 @@ export default function SettingHoliday() {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              "x-access-token": token,
             },
             body: JSON.stringify({
               date: editedHoliday.date,
@@ -173,6 +188,7 @@ export default function SettingHoliday() {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "x-access-token": token,
             },
             body: JSON.stringify({
               date: formattedDate,
