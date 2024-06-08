@@ -35,6 +35,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { useAuth } from "../Components/AuthContext";
+import { ToastContainer, toast } from "react-toastify";
+import Alert from '@mui/material/Alert';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -52,6 +55,7 @@ export default function LeaveMangementPage() {
   const [leaveType, setLeaveType] = React.useState("Casual Leave");
   const [subject, setSubject] = React.useState("");
   const [body, setBody] = React.useState("");
+  const [rows , setRows] = React.useState([]);
   ////
 
   // new code
@@ -61,12 +65,26 @@ export default function LeaveMangementPage() {
   const [loading, setLoading] = React.useState(true);
 
   const [errorr, setErrorr] = React.useState(null);
+  const {user} = useAuth();
+  const today = new Date();
 
   // const [error, setError]  = React.useState(null);
   
 
   // const handleClick = async() => {
     
+  const getUserLeaves = async() => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/leave/user-all-leave-data` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
+      setRows(res?.data?.data);
+    }catch(err){
+      console.log(err);
+    }
+  }
   React.useEffect(() => {
     async function getData() {
       try {
@@ -74,11 +92,14 @@ export default function LeaveMangementPage() {
 
         const response = await axios.get(
           // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
-          "http://localhost:4000/api/v1/leave/get-all-leave-count/AMEMP010"
+          `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data/${user?.user_id}` , {
+            headers : {
+              "x-access-token" : user?.token
+            }
+          }
           // "https://localhost:4000/api/v1/training/request-new-training"
         );
-        console.log(response);
-        setData(response.data);
+        setData(response?.data?.data);
 
         setLoading(false);
       } catch (errorr) {
@@ -88,26 +109,31 @@ export default function LeaveMangementPage() {
       }
     }
     getData();
+    getUserLeaves()
   },[]);
 
   const handleUpdate = async () => {
-    console.log(
-      leaveType + " " + fromDate + " " + toDate + " " + subject + " " + body
-    );
+
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/leave/leave-request",
+        `${process.env.REACT_APP_API_URI}/leave/leave-request`,
         {
-          emp_id: "AMEMP010",
+          emp_id: user?.user_id,
           leave_type: leaveType,
           from_date: fromDate,
           to_date: toDate,
           subject: subject,
           body: body,
+        } , {
+          headers : {
+              "x-access-token" : user?.token
+            }
+          
         }
       );
-      console.log(response);
+
+      toast.success(response?.data?.message);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -121,6 +147,12 @@ export default function LeaveMangementPage() {
     setToDate(formatttedDate);
   }
 
+  const formattedDate = (date) => {
+    const newDate = new Date(date);
+    const datestr = newDate.toString().split(" ");
+    return datestr[2] + " " + datestr[1];
+    
+  } 
   ////
   function handleFromDateChange(newDate) {
     const date = new Date(newDate);
@@ -136,19 +168,7 @@ export default function LeaveMangementPage() {
     setLeaveType(e.target.value);
   }
   const currentDate = new Date();
-  const rows = [
-    {
-      id: 1,
-      startDate: "13-03-21",
-      endDate: "15-03-21",
-      days: "2",
-      leaveType: "Casual",
-      extendedLeave: "Casual",
-      approvedrejected: "Approved",
-      manager: "HR",
-    },
-    // Add more rows as needed
-  ];
+
   let row;
   return (
     <>
@@ -161,6 +181,7 @@ export default function LeaveMangementPage() {
           borderRadius: "10px",
         }}
       >
+        <ToastContainer/>
         <Typography
           sx={{
             margin: "12px 0px",
@@ -187,7 +208,7 @@ export default function LeaveMangementPage() {
             color: "#121843",
           }}
         >
-          AMEMP00012 - Sanjana Jain
+          {user?.user_id} - {user?.user_name}
         </Typography>
         <Box
           sx={{
@@ -209,7 +230,7 @@ export default function LeaveMangementPage() {
               lineHeight: "25px",
             }}
           >
-            Today’s Date 15th Sept 2021
+            Today’s Date {today.toString().split(" ")[2] }{today.toString().split(" ")[1]} {today.toString().split(" ")[3]}
           </Typography>
           <Box
             sx={{
@@ -221,120 +242,30 @@ export default function LeaveMangementPage() {
             }}
             spacing={2}
           >
-            <Card
+            {data?.user_data?.map((item) => (<Card
               sx={{
+                minHeight : "110px" ,
+                minWidth : "144px",
                 width: "125px",
                 height: "70px",
                 margin: "10px 0px",
                 marginRight: "10px",
                 backgroundColor: "#FFEFE7",
                 padding: "3px 3px 3px 15px",
+                display : "flex" , 
+                flexDirection : "column" ,
+                justifyContent : "space-between"
               }}
             >
               <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Annual
+                {item?.leave_type}
               </Typography>
               <CardContent sx={{ padding: "0px" }}>
                 <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>10</strong>/10
+                  <strong style={{ fontSize: "1.5rem" }}>{item?.leave_taken_count}</strong>/{item?.leave_count}
                 </Typography>
               </CardContent>
-            </Card>
-            <Card
-              sx={{
-                width: "125px",
-                height: "70px",
-                margin: "10px 0px",
-                marginRight: "10px",
-                backgroundColor: "#FFEFE7",
-                padding: "3px 3px 3px 15px",
-              }}
-            >
-              <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Casual
-              </Typography>
-              <CardContent sx={{ padding: "0px" }}>
-                <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>02</strong>/05
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card
-              sx={{
-                width: "125px",
-                height: "70px",
-                margin: "10px 0px",
-                marginRight: "10px",
-                backgroundColor: "#FFEFE7",
-                padding: "3px 3px 3px 15px",
-              }}
-            >
-              <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Sick
-              </Typography>
-              <CardContent sx={{ padding: "0px" }}>
-                <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>02</strong>/05
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card
-              sx={{
-                width: "125px",
-                height: "70px",
-                margin: "10px 0px",
-                marginRight: "10px",
-                backgroundColor: "#FFEFE7",
-                padding: "3px 3px 3px 15px",
-              }}
-            >
-              <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Unpaid
-              </Typography>
-              <CardContent sx={{ padding: "0px" }}>
-                <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>02</strong>/05
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card
-              sx={{
-                width: "125px",
-                height: "70px",
-                margin: "10px 0px",
-                marginRight: "10px",
-                backgroundColor: "#FFEFE7",
-                padding: "3px 3px 3px 15px",
-              }}
-            >
-              <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Half-day
-              </Typography>
-              <CardContent sx={{ padding: "0px" }}>
-                <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>02</strong>/05
-                </Typography>
-              </CardContent>
-            </Card>
-            <Card
-              sx={{
-                width: "125px",
-                height: "70px",
-                margin: "10px 0px",
-                marginRight: "10px",
-                backgroundColor: "#F3F8EB",
-                padding: "3px 3px 3px 15px",
-              }}
-            >
-              <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                Remaining
-              </Typography>
-              <CardContent sx={{ padding: "0px" }}>
-                <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>03</strong>/15
-                </Typography>
-              </CardContent>
-            </Card>
+            </Card>))}
           </Box>
           <Typography
             variant="h6"
@@ -345,7 +276,7 @@ export default function LeaveMangementPage() {
               lineHeight: "25px",
             }}
           >
-            Holidays List 2021
+            Holidays List {today.toString().split(" ")[3]}
           </Typography>
           <Card
             sx={{
@@ -363,15 +294,7 @@ export default function LeaveMangementPage() {
                 paddingLeft: "1rem",
               }}
             >
-              <li style={{ fontFamily: "poppins" }}>13th March - Holi</li>
-              <li style={{ fontFamily: "poppins" }}>23rd Aug - Rakhi</li>
-              <li style={{ fontFamily: "poppins" }}>
-                15th Aug - Independence Day
-              </li>
-              <li style={{ fontFamily: "poppins" }}>
-                2nd Oct - Gandhi Jayanti
-              </li>
-              <li style={{ fontFamily: "poppins" }}>8th Nov - Diwali</li>
+              {data?.holiday_list_data?.map((item) => (<li style={{ fontFamily: "poppins" }}>{formattedDate(item?.date)} - {item?.holiday}</li>))}
             </ol>
           </Card>
         </Box>
@@ -727,7 +650,14 @@ export default function LeaveMangementPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {rows?.length === 0 ?
+              (<TableRow >
+                <TableCell colSpan={8}>
+                  <Alert severity="warning">Data not found.</Alert>
+                </TableCell>
+                
+              </TableRow>) : 
+              (rows?.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell
                     style={{ fontFamily: "Poppins", minWidth: "110px" }}
@@ -777,7 +707,7 @@ export default function LeaveMangementPage() {
                     {row.manager}
                   </TableCell>
                 </TableRow>
-              ))}
+              )))}
             </TableBody>
           </Table>
         </TableContainer>

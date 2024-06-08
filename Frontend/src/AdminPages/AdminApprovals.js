@@ -1,6 +1,4 @@
-// 
-import React, { useState , useEffect, useContext} from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import {
   Box,
   Typography,
@@ -16,7 +14,7 @@ import {
   TablePagination,
   IconButton,
 } from "@mui/material";
-import FileDownloadDoneIcon from "@mui/icons-material/FileDownloadDone"
+import FileDownloadDoneIcon from "@mui/icons-material/FileDownloadDone";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useTheme } from "@mui/material/styles";
@@ -28,12 +26,6 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import PropTypes from "prop-types";
-import { useAuth } from "../Components/AuthContext";
-
-
-
-
-
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -78,9 +70,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
-
-
-  
 
   const handleClick = (newPage) => {
     onPageChange(null, newPage);
@@ -137,61 +126,47 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
+const rows = [
+  {
+    sNo: 1,
+    clientName: "LEAVE",
+    projectLead: "17 Aug, 2020",
+    project: "Diwali Holyday and Outing",
+    stats: "Approved",
+  },
+  {
+    sNo: 2,
+    clientName: "INVENTORY",
+    projectLead: "08 Oct, 2020",
+    project: "New Headphones required as old ones are not working",
+    stats: "Approved",
+  },
+  {
+    sNo: 3,
+    clientName: "TRAINING",
+    projectLead: "27 Jun, 2020",
+    project: "Request for react native Training",
+    stats: "Approved",
+  },
+  {
+    sNo: 4,
+    clientName: "LEAVE",
+    projectLead: "27 Jun, 2020",
+    project: "Brother’s Marriage ",
+    stats: "Pending",
+  },
+  {
+    sNo: 5,
+    clientName: "INVENTORY",
+    projectLead: "23 Jul, 2020",
+    project: "Replacement for old keyboard",
+    stats: "Rejected",
+  },
+];
 
-
-// export default function AdminApprovals() {
-
-//   const [page, setPage] = useState(0);
-//   const [rowsPerPage, setRowsPerPage] = useState(5);
-//   console.log(process.env.REACT_APP_BASE_URL);
-//   ///mycode
-// // const [status, setStatus] = useState("");
-// const [isApproved , setIsApproved] =useState("rejected")
-// const rows = [
-//   {
-//     sNo: 1,
-//     clientName: "LEAVE",
-//     projectLead: "17 Aug, 2020",
-//     project: "Diwali Holyday and Outing",
-//     stats: isApproved ,
-//   },
-//   {
-//     sNo: 2,
-//     clientName: "INVENTORY",
-//     projectLead: "08 Oct, 2020",
-//     project: "New Headphones required as old ones are not working",
-//     stats: isApproved ,
-//   },
-//   {
-//     sNo: 3,
-//     clientName: "TRAINING",
-//     projectLead: "27 Jun, 2020",
-//     project: "Request for react native Training",
-//     stats: isApproved ,
-//   },
-//   {
-//     sNo: 4,
-//     clientName: "LEAVE",
-//     projectLead: "27 Jun, 2020",
-//     project: "Brother’s Marriage ",
-//     stats: isApproved ,
-//   },
-//   {
-//     sNo: 5,
-//     clientName: "INVENTORY",
-//     projectLead: "23 Jul, 2020",
-//     project: "Replacement for old keyboard",
-//     stats: isApproved ,
-//   },
-// ];
-
-export default function AdminApprovals({approvalData}) {
+export default function AdminApprovals({approvalData , approvalReq}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [isApproved , setIsApproved] =useState("rejected");
-  const rows =[];
-  // const {user} = useContext(useAuth);
-  // console.log(user);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -202,100 +177,24 @@ export default function AdminApprovals({approvalData}) {
     setPage(0);
   };
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - approvalData?.length) : 0;
-
-
-
-    // chetan code
-    async function fetchData(status) {
-
-      setIsApproved("approved")
-      // setIsApproved(!isApproved)
-
-      // console.log(isApporved);
-      try {
-        const response = await axios.put(
-         "http://localhost:4000/api/v1/approval/admin/approval",
-          {
-            emp_id: "AMEMP010",
-            item: "sick leave", 
-            foreign_id: "1138",
-            status,
-            request_type: "leave",
-          }
-        );
-        console.log("ress",response);
-  
-        //   // Handle login error
-      } catch (error) {
-        console.log("Error data:", error);
-        // setRes(error.response.data.errors[0]?.msg);
-      }
-      
-    };
-
-    
-    async function rejectData(status) {
-
-      setIsApproved("rejected")
-      // setIsApproved(!isApproved)
-
-      // console.log(isApporved);
-      try {
-        const response = await axios.put(
-         "http://localhost:4000/api/v1/approval/admin/approval",
-          {
-            emp_id: "AMEMP010",
-            item: "sick leave", 
-            foreign_id: "1138",
-            status,
-            request_type: "leave",
-          }
-        );
-        console.log("ress",response);
-  
-        //   // Handle login error
-      } catch (error) {
-        console.log("Error data:", error);
-        // setRes(error.response.data.errors[0]?.msg);
-      }
-      
-    };
-
-    async function deleteData(status) {
-
-      setIsApproved("rejected")
-      // setIsApproved(!isApproved)
-
-      // console.log(isApporved);
-      try {
-        const response = await axios.put(
-         "http://localhost:4000/api/v1/approval/admin/approval",
-          {
-            emp_id: "AMEMP010",
-            item: "sick leave", 
-            foreign_id: "1138",
-            status,
-            request_type: "leave",
-          }
-        );
-        console.log("ress",response);
-  
-        //   // Handle login error
-      } catch (error) {
-        console.log("Error data:", error);
-        // setRes(error.response.data.errors[0]?.msg);
-      }
-      
-    };
-  const formattedDate =  (date) => {
-    const newdate = new Date(date);
-    const dateInStr = newdate.toString().split(" ");
-    const reqFormat = dateInStr[2] +" " + dateInStr[1] + " " + dateInStr [3];
-    return reqFormat;
+  const formattedDate = (date) => {
+    const newDate = new Date(date);
+    const dateStr = newDate.toString().split(" ");
+    return dateStr[2] + " " + dateStr[1] + " "+ dateStr[3];
   }
-    
+
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    const handleClick = (val , status) => {
+      const body = {
+          emp_id: val?.emp_id,
+          item: val?.item, // In case of leave
+          foreign_id: val?.foreign_id,
+          status: status,
+          request_type: val?.request_type
+      };
+      approvalReq(body)
+    }
   return (
     <div>
       <Box
@@ -371,8 +270,6 @@ export default function AdminApprovals({approvalData}) {
                   </TableCell>
                   <TableCell
                     align="left"
-                    ///my code
-                    
                     sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                   >
                     Action
@@ -441,11 +338,9 @@ export default function AdminApprovals({approvalData}) {
                       )}
                     </TableCell>
                     <TableCell align="left" sx={{ minWidth: "104px" }}>
-                      <FileDownloadDoneIcon 
-                      onClick={()=>{fetchData("approved")}}
-                       sx={{ color: "#b1bacb" }} />
-                      <NotInterestedIcon onClick={()=>{rejectData("rejected")}} sx={{ color: "#b1bacb" }} />
-                      <DeleteOutlineIcon onClick={()=>{deleteData("deleted")}} sx={{ color: "#b1bacb" }} />
+                      <FileDownloadDoneIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "approved")} />
+                      <NotInterestedIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "rejected")}/>
+                      <DeleteOutlineIcon sx={{ color: "#b1bacb", cursor:"pointer" }} />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -485,4 +380,3 @@ export default function AdminApprovals({approvalData}) {
     </div>
   );
 }
-

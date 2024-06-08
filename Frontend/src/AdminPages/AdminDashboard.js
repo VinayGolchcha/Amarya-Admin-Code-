@@ -10,6 +10,7 @@ import DashboardPosComp from "../Components/DashboardPosComp";
 import AdminApprovals from "./AdminApprovals";
 import axios from "axios";
 import { useAuth } from '../Components/AuthContext';
+import { ToastContainer, toast } from "react-toastify";
 
 const suggSum = [
   {
@@ -60,6 +61,20 @@ const AdminDashboard = () => {
   const [apiData , setApidata] = useState([]);
   const {user} = useAuth();
   console.log(user);
+
+  const approvalReq = async (body) => {
+    try{
+      const res = await axios.put(`${process.env.REACT_APP_API_URI}/approval/admin/approval` , body , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
+      toast.success(res?.data?.message);
+      fetchApprovalData();
+    }catch(err){
+      console.log(err);
+    }
+  }
   const fetchFeedback = async () => {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/userDashboard/admin/fetch-user-feedback` , {
@@ -147,6 +162,7 @@ const AdminDashboard = () => {
   },[])
   return (
     <Box>
+      <ToastContainer/>
       <Typography
         variant="h4"
         sx={{
@@ -371,7 +387,7 @@ const AdminDashboard = () => {
           </Box>
         </Box>
       </Box>
-      <AdminApprovals approvalData = {approvalData}/>
+      <AdminApprovals approvalData = {approvalData} approvalReq={approvalReq}/>
     </Box>
   );
 };

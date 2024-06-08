@@ -13,10 +13,12 @@ import {
   TableContainer,
   Paper,
   Checkbox,
+  Alert,
 } from "@mui/material";
 import axios from "axios";
+import { useAuth } from "../Components/AuthContext";
 
-const fields = [
+const field = [
   {
     courseName: "Full Stack",
     courseDescription:
@@ -68,7 +70,9 @@ const fields = [
 
 export default function TrainingsPage(props) {
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [courses, setfields] = React.useState(fields);
+  const [rows , setRows] = React.useState([])
+  const [courses, setfields] = React.useState([]);
+  const [trainingId , setTrainingId] = React.useState(null);
   const handleCheckboxChange = (rowId) => {
     const isSelected = selectedRows.includes(rowId);
     setSelectedRows((prevSelected) =>
@@ -77,65 +81,140 @@ export default function TrainingsPage(props) {
         : [...prevSelected, rowId]
     );
   }; 
+  const {user} = useAuth();
 
  ///chetan code
  const [trainingCards, setTrainingCards] = React.useState("");
 
+ const getUserTraining = async () => {
+  try {
+    const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/get-user-training` , {
+      emp_id : user?.user_id
+    }, {
+      headers : {
+        "x-access-token" : user?.token
+      }
+    });
+    setRows(res?.data?.data?.map((item) => ({
+      id: item?.training_id[8],
+      empid: user?.user_id,
+      courses: item?.course_name,
+      coursedescription: item?.course_description,
+      completedinprogress: item?.progress_status,
+      approvedon: "Nov 1, 22",
+      approvedrejected: "Approved",
+      manager: "HR",
+    })));
+
+  }catch(err){
+    console.log(err);
+  }
+ }
+
+ const fecthTrainings = async () => {
+  try {
+    const res = await axios.get(`${process.env.REACT_APP_API_URI}/training/training-cards` , {
+      headers : {
+        "x-access-token" : user?.token
+      }
+    });
+    setfields(res?.data?.data?.map((item , i) => (
+      {
+        courseName : item?.course_name ,
+        trainindId : item?.training_id,
+        roadmapurl : item?.roadmap_url,
+        courseDescription : item?.course_description,
+        color : field[i].color
+      }
+    )));
+  }catch(err){
+    console.log(err);
+  }
+ }
+
+ const requestTraining = async (requestData) => {
+  try{
+    const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/request-new-training`, requestData , {
+      headers : {
+        "x-access-token" : user?.token
+      }
+    });
+    console.log(res);
+  }catch(err){
+    console.log(err);
+  }
+ }
+ const handleRequest = (val) => {
+  const requestData = {
+    emp_id: user?.user_id,
+    training_id: val,
+    request_type: "training",
+    progress_status: "in progress"
+  };
+  requestTraining(requestData);
+ }
   React.useEffect(() => {
     // Axios GET request
-    axios.get('http://localhost:4000/api/v1/training/training-cards')
-      .then(response => {
-        console.log('Training Cards:', response.data.message);
-        // Update state with the fetched data
-        setTrainingCards(response.data.message);
-      })
-      .catch(error => {
-        console.error('Error fetching training cards:', error);
-        // Handle error as needed
-      });
+    // axios.get(`${process.env.REACT_APP_API_URI}/training/training-cards` , {
+    //   headers : {
+    //     "x-access-token" : user?.token
+    //   }
+    // })
+    //   .then(response => {
+    //     console.log('Training Cards:', response.data.message);
+    //     // Update state with the fetched data
+    //     setTrainingCards(response?.data?.data);
+    //     setfields(trainingCards?.map((item , i) => (
+    //       {
+    //         courseName : item?.course_name ,
+    //         trainindId : item?.training_id,
+    //         roadmapurl : item?.roadmap_url,
+    //         courseDescription : item?.course_description,
+    //         color : field[i].color
+    //       }
+    //     )));
+
+    //   })
+    //   .catch(error => {
+    //     console.error('Error fetching training cards:', error);
+    //     // Handle error as needed
+    //   });
+    fecthTrainings();
+    getUserTraining();
   }, []);
 
 
-  React.useEffect(() => {
-    // Data to be sent in the request
-    const requestData = {
-      emp_id: "AMEMP003",
-      training_id: "AMTRAN005",
-      request_type: "training",
-      progress_status: "in progress"
-    };
+  // React.useEffect(() => {
+  //   // Data to be sent in the request
+  //   const requestData = {
+  //     emp_id: user?.user_id,
+  //     training_id: "AMTRAN005",
+  //     request_type: "training",
+  //     progress_status: "in progress"
+  //   };
 
-    // Axios POST request
-    axios.post('http://localhost:4000/api/v1/training/request-new-training', requestData)
-      .then(response => {
-        console.log('Response:', response);
-        // Handle response as needed
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        // Handle error as needed
-      });
-  }, []); // Empty dependency array means this effect runs only once after initial render
-
-  
+  //   // Axios POST request
+  //   axios.post(`${process.env.REACT_APP_API_URI}/training/request-new-training`, requestData , {
+  //     headers : {
+  //       "x-access-token" : user?.token
+  //     }
+  //   })
+  //     .then(response => {
+  //       console.log('Response:', response);
+  //       // Handle response as needed
+  //     })  
+  //     .catch(error => {
+  //       console.error('Error:', error);
+  //       // Handle error as needed
+  //     });
+  // }, []); // Empty dependency array means this effect runs only once after initial render
 
 // 
 
 
-  const rows = [
-    {
-      id: 1,
-      empid: "AMEMP00012",
-      courses: "Full Stack",
-      coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-      completedinprogress: "Completed",
-      approvedon: "Nov 1, 22",
-      approvedrejected: "Approved",
-      manager: "HR",
-    },
-    // Add more rows as needed
-  ];
+
   let row;
+  console.log(courses);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -173,7 +252,7 @@ export default function TrainingsPage(props) {
             color: "#121843",
           }}
         >
-          AMEMP00012 - Sanjana Jain
+          {user?.user_id} - {user?.user_name}
         </Typography>
         <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
           <Table>
@@ -260,7 +339,14 @@ export default function TrainingsPage(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+            {rows?.length === 0 ?
+              (<TableRow >
+                <TableCell colSpan={8}>
+                  <Alert severity="warning">Data not found.</Alert>
+                </TableCell>
+                
+              </TableRow>) : 
+              (rows?.map((row) => (
                 <TableRow key={row.id}>
                   <TableCell style={{ fontFamily: "Poppins" }}>
                     <Box
@@ -294,7 +380,7 @@ export default function TrainingsPage(props) {
                     {row.manager}
                   </TableCell>
                 </TableRow>
-              ))}
+              )))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -308,8 +394,8 @@ export default function TrainingsPage(props) {
           }}
         >
           <Grid container spacing={2}>
-            {courses.map((course, i) => {
-              return <TrainingCard field={course} i={i} />;
+            {courses?.map((course, i) => {
+              return <TrainingCard field={course} i={i} setTrainingId = {setTrainingId}  handleRequest = {handleRequest} />;
             })}
           </Grid>
           

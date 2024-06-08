@@ -4,6 +4,8 @@ import Typography from "@mui/material/Typography";
 import TrainingCard from "./TrainingCard";
 import Grid from "@mui/material/Grid";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+
 import {
   Table,
   TableHead,
@@ -28,13 +30,17 @@ import { pink } from "@mui/material/colors";
 import Filter from "../Components/Filter";
 import axios from "axios";
 import AddTraining from "../Components/AddTraining";
+import { useAuth } from "../Components/AuthContext";
+import EditTraining from "../Components/EditTraining";
 
 
-const fields = [
+
+
+const field = [
   {
-    courseName: "Full Stack",
+    courseName: "FULL STACK",
     courseDescription:
-      "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
+      "Topics Covered -  CSS, React JS, Node JS, Express Js, MongoDB",
     color: "#FDEBF9",
   },
   {
@@ -225,16 +231,25 @@ let data = [
 ];
 
 
-export default function TrainingsPageAdmin({ trainingId }) {
+export default function TrainingsPageAdmin( ) {
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [courses, setfields] = React.useState(fields);
+  const [courses, setfields] = React.useState([]);
   const [page, pagechange] = React.useState(0);
   const [open, setOpen] = React.useState(false);
   const [rowperpage, rowperpagechange] = React.useState(5);
   const [filter, setFilter] = React.useState(false);
   const [courseStatus, setCourseStatus] = React.useState("All");
-  let [filteredData, setFilteredData] = React.useState(data);
+  let [filteredData, setFilteredData] = React.useState([]);
   const [searchEmp , setSearchEmp] = React.useState("");
+  const [edit , setEdit] = React.useState(false);
+  const [editOpen , setEditOpen] = React.useState(false);
+  const [deleteItem , setDelete] = React.useState(false);
+  const {user} = useAuth();
+  let [data , setData] = React.useState([]);
+  const [selectedTr , setSelectedTr] = React.useState({});
+  const handleEditTr = () => {
+    setEdit(!edit);
+  }
   const handleClick = () => {
     setOpen(!open);
   }
@@ -243,20 +258,80 @@ export default function TrainingsPageAdmin({ trainingId }) {
   const [trainingCards, setTrainingCards] = React.useState([]);
   
 
-  const [trainingIdd, setTrainingIdd] = React.useState("");
+  const [trainingId, setTrainingId] = React.useState(null);
   const [updatedTraining, setUpdatedTraining] = React.useState({
     course_description: "HTML, CSS, React JS, Node JS, Express Js, MongoDB",
     details: "HTML, CSS, React JS, Node JS, Express Js, MongoD"
   });
 
+  const addTraining = async (body) => {
+    try {
+      const res = axios.post(`${process.env.REACT_APP_API_URI}/training/admin/add-new-training` , body , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      })
+      fecthTrainings();
+    }catch(err){
+      console.log(err);
+    }
+  }
+  const fecthTrainings = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/training/training-cards` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
+      setfields(res?.data?.data?.map((item , i) => (
+        {
+          courseName : item?.course_name ,
+          trainindId : item?.training_id,
+          roadmapurl : item?.roadmap_url,
+          courseDescription : item?.course_description,
+          color : field[i].color
+        }
+      )));
+    }catch(err){
+      console.log(err);
+    }
+   }
+  
+   const getAllUserTrainings = async() => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/training/admin/display-all-users-training-data` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
+      setFilteredData(res?.data?.data?.map((item) => ({
+          id: item?.training_id[8],
+          empid: item?.emp_id,
+          courses: item?.course_name,
+          coursedescription: item?.course_description,
+          completedinprogress: item?.progress_status,
+          approvedon: "Nov 1, 22",
+          approvedrejected: "Approved",
+          manager: "HR",
+      })));
+      setData(filteredData);
+      console.log(data);
+    }catch(err){
+      console.log(err);
+    }
+   }
   // Function to handle the update operation
-  const handleUpdate = () => {
+  const handleUpdate = (id , body) => {
     // Log the updated training data
     // console.log('Updated Training Data:', updatedTraining);
     
     // Axios PUT request
-    axios.put(`https://localhost:4000/api/v1/training/admin/update-training/${trainingId}`, updatedTraining)
-
+    axios.put(`${process.env.REACT_APP_API_URI}/training/admin/update-training/${id}`, body , {
+      headers : {
+        "x-access-token" : user?.token
+      }
+    })
+    fecthTrainings()
       .then(response => {
         console.log('Update Training Response:', response);
         // Optionally, you can perform any additional actions after successful update
@@ -268,13 +343,18 @@ export default function TrainingsPageAdmin({ trainingId }) {
   };
 
   // Function to handle the delete operation
-  const handleDelete = async () => {
+  const handleDelete = () => {
+    setDelete(!deleteItem);
+  }
+  const handleDeleteApi = async (val) => {
     try {
-      const response = await axios.delete('http://localhost:4000/api/v1/training/admin/delete-training', {
-                data: { training_id: "AMTRAN007" } // Include training ID in the request body
+      const response = await axios.delete(`${process.env.REACT_APP_API_URI}/training/admin/delete-training/${val}`, {
+              headers : {
+                "x-access-token" : user?.token
+              } // Include training ID in the request body
             });
             console.log(response);
-      
+      fecthTrainings();
     } catch (error) {
       console.log(error.response.data.message);
     }
@@ -297,16 +377,8 @@ export default function TrainingsPageAdmin({ trainingId }) {
 
   React.useEffect(() => {
     // Axios GET request
-    axios.get('http://localhost:4000/api/v1/training/training-cards')
-      .then(response => {
-        console.log('Training Cards:', response);
-        // Update state with the fetched data
-        setTrainingCards(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching training cards:', error);
-        // Handle error as needed
-      });
+    fecthTrainings();
+    getAllUserTrainings();
   }, []);
   ///
 
@@ -331,10 +403,10 @@ export default function TrainingsPageAdmin({ trainingId }) {
     pagechange(0);
   };
   const handleCheckboxChange = (rowId) => {
-    const isSelected = selectedRows.includes(rowId);
+    const isSelected = selectedRows?.includes(rowId);
     setSelectedRows((prevSelected) =>
       isSelected
-        ? prevSelected.filter((id) => id !== rowId)
+        ? prevSelected?.filter((id) => id !== rowId)
         : [...prevSelected, rowId]
     );
   };
@@ -346,24 +418,28 @@ export default function TrainingsPageAdmin({ trainingId }) {
   function handleSelect(value) {
     const selectedStatus = value;
     setCourseStatus(selectedStatus);
-    const newData = data.filter((item) => {
+    const newData = data?.filter((item) => {
       if (selectedStatus === "All") {
         return true;
       } else {
-        return item.completedinprogress == selectedStatus;
+        return item.completedinprogress == selectedStatus.toString().toLowerCase();
       }
     });
-    setFilteredData(newData);
+    setData(newData);
   }
-  filteredData = filteredData.filter(item =>
+  data = data?.filter(item =>
     item.empid.toLowerCase().includes(searchEmp.toLowerCase())
   );
   function handleFilterEmp(e) {
     setSearchEmp(e.target.value);
 
   }
+
+  function handleEditClose(){
+    setEditOpen(false);
+  }
   function handleTrId(){
-    setFilteredData(filteredData.sort((a, b) => a.id - b.id));
+    setFilteredData(data?.sort((a, b) => a.id - b.id));
   }
 
   let row;
@@ -402,8 +478,8 @@ export default function TrainingsPageAdmin({ trainingId }) {
           }}
         >
           <Grid container spacing={2}>
-            {courses.map((course) => {
-              return <TrainingCard field={course} />;
+            {courses?.map((course) => {
+              return <TrainingCard field={course}   key={course.training_id}  logo= {DeleteOutlineIcon} edit={edit} deleteItem = {deleteItem} handleDeleteApi = {handleDeleteApi} setTrainingId = {setTrainingId} setSelectedTr = {setSelectedTr} setEditOpen = {setEditOpen}/>;
             })}
           </Grid>
         </Box>
@@ -426,7 +502,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
                 Add Training
               </Button>
               <>
-              <AddTraining handleClose={handleClose} open={open} />
+              <AddTraining handleClose={handleClose} open={open} addTraining = {addTraining}/>
               </>
             </Grid>
             <Grid item lg={4} md={6} sm={12} xs={12}>
@@ -441,10 +517,13 @@ export default function TrainingsPageAdmin({ trainingId }) {
                   textTransform: "none",
                   fontFamily: "Poppins",
                 }}
-                onClick={handleClick}
+                onClick={handleEditTr}
               >
                 Update Training
               </Button>
+              <>
+              <EditTraining handleClose={handleEditClose} open={editOpen} selectedTr = {selectedTr} handleUpdate={handleUpdate}/>
+              </>
             </Grid>
             <Grid item lg={4} md={6} sm={12} xs={12}>
               <Button
@@ -623,7 +702,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filteredData && filteredData?.map((row,i) =>    {
+              {filter ?(data) : (filteredData)?.map((row,i) =>    {
                 return(           
                <TableRow key={i}>
                   <TableCell style={{ fontFamily: "Poppins" }}>
@@ -650,7 +729,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
                   </TableCell>
                 </TableRow>)
  } )} 
- {filteredData.length === 0  && <TableRow><TableCell colSpan={6}> {/* Adjust the colSpan based on the number of columns */}
+ {filteredData?.length === 0  && <TableRow><TableCell colSpan={6}> {/* Adjust the colSpan based on the number of columns */}
         <Alert severity="warning" sx={{ width: '100%' }}>
           No data found.
         </Alert>
