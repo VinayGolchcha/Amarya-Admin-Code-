@@ -191,9 +191,9 @@ const ProjectOverview = ({ apiData }) => {
               },
             }}
           >
-            {teamAProjects}
+            {apiData?.employee_count_with_team[0]?.project_count}
             <br />
-            Team A Projects
+            {apiData?.employee_count_with_team[0]?.team} Projects
           </Typography>
         </Box>
         <Box
@@ -215,9 +215,9 @@ const ProjectOverview = ({ apiData }) => {
               },
             }}
           >
-            {teamBProjects}
+            {apiData?.employee_count_with_team[1]?.project_count}
             <br />
-            Team B Projects
+            {apiData?.employee_count_with_team[1]?.team} Projects
           </Typography>
         </Box>
         <Box

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   Typography,
@@ -13,6 +13,7 @@ import {
   TableFooter,
   TablePagination,
   IconButton,
+  TextField,
 } from "@mui/material";
 import FileDownloadDoneIcon from "@mui/icons-material/FileDownloadDone";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
@@ -26,6 +27,7 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -167,6 +169,7 @@ const rows = [
 export default function AdminApprovals({approvalData , approvalReq}) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const[foreignId , setForeignId] = useState("");
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -185,16 +188,23 @@ export default function AdminApprovals({approvalData , approvalReq}) {
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-    const handleClick = (val , status) => {
-      const body = {
-          emp_id: val?.emp_id,
-          item: val?.item, // In case of leave
-          foreign_id: val?.foreign_id,
-          status: status,
-          request_type: val?.request_type
-      };
-      approvalReq(body)
+  const handleClick = (val , status) => {
+    var regEx = /^[a-z0-9]+$/i;
+    const isValid = regEx.test(foreignId);
+    console.log(isValid)
+    if(!isValid){
+      toast.error("Foreign id should be alphanumeric");
+      return;
     }
+    const body = {
+        emp_id: val?.emp_id,
+        item: val?.item, // In case of leave
+        foreign_id: (val.foreign_id ? val.foreign_id : foreignId),
+        status: status,
+        request_type: val?.request_type
+    };
+    approvalReq(body)
+  }
   return (
     <div>
       <Box
@@ -243,6 +253,24 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                     sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                   >
                     Request Type
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                  >
+                    Item
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                  >
+                    User
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                  >
+                    Foreign id
                   </TableCell>
                   <TableCell
                     align="left"
@@ -299,6 +327,15 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                       {row?.request_type}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
+                      {row?.item}
+                    </TableCell>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
+                      {row?.full_name}
+                    </TableCell>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
+                      {row?.foreign_id ? (row?.foreign_id) : (<TextField variant="standard" onChange={(e) => setForeignId(e.target.value)} />)}
+                    </TableCell>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {formattedDate(row.request_date)}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
@@ -340,7 +377,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                     <TableCell align="left" sx={{ minWidth: "104px" }}>
                       <FileDownloadDoneIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "approved")} />
                       <NotInterestedIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "rejected")}/>
-                      {/* <DeleteOutlineIcon sx={{ color: "#b1bacb", cursor:"pointer" }} /> */}
+                      <DeleteOutlineIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "deleted")}/>
                     </TableCell>
                   </TableRow>
                 ))}
