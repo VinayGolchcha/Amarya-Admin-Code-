@@ -86,149 +86,149 @@ const field = [
   },
 ];
 
-let data = [
-  {
-    id: 2,
-    empid: "AMEM00024",
-    courses: "Full Stack",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "Pending",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 1,
-    empid: "AMEM00023",
-    courses: "Full Stack",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "In Progress",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 1,
-    empid: "AMEM00012",
-    courses: "Full Stack",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "Completed",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 1,
-    empid: "AMEM00020",
-    courses: "Full Stack",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "Completed",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 2,
-    empid: "AMEM00022",
-    courses: "SAP ABAP",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "Pending",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 2,
-    empid: "AMEM00010",
-    courses: "SAP ABAP",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "Pending",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 2,
-    empid: "AMEMP00013",
-    courses: "SAP ABAP",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "In Progress",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 2,
-    empid: "AMEMP00014",
-    courses: "SAP ABAP",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "In Progress",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 2,
-    empid: "AMEMP00021",
-    courses: "Full Stack",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "Completed",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 3,
-    empid: "AMEMP00024",
-    courses: "Flutter",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "In Progress",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 4,
-    empid: "AMEMP00020",
-    courses: "Vue JS",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "In Progress",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 4,
-    empid: "AMEMP00023",
-    courses: "Vue JS",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "Completed",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 5,
-    empid: "AMEMP00024",
-    courses: "SAP CDS",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "Completed",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  {
-    id: 6,
-    empid: "AMEMP00024",
-    courses: "Data Science",
-    coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-    completedinprogress: "Completed",
-    approvedon: "Nov 1, 22",
-    approvedrejected: "Approved",
-    manager: "HR",
-  },
-  // Add more rows as needed
-];
+// let data = [
+//   {
+//     id: 2,
+//     empid: "AMEM00024",
+//     courses: "Full Stack",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "Pending",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 1,
+//     empid: "AMEM00023",
+//     courses: "Full Stack",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "In Progress",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 1,
+//     empid: "AMEM00012",
+//     courses: "Full Stack",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "Completed",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 1,
+//     empid: "AMEM00020",
+//     courses: "Full Stack",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "Completed",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 2,
+//     empid: "AMEM00022",
+//     courses: "SAP ABAP",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "Pending",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 2,
+//     empid: "AMEM00010",
+//     courses: "SAP ABAP",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "Pending",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 2,
+//     empid: "AMEMP00013",
+//     courses: "SAP ABAP",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "In Progress",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 2,
+//     empid: "AMEMP00014",
+//     courses: "SAP ABAP",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "In Progress",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 2,
+//     empid: "AMEMP00021",
+//     courses: "Full Stack",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "Completed",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 3,
+//     empid: "AMEMP00024",
+//     courses: "Flutter",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "In Progress",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 4,
+//     empid: "AMEMP00020",
+//     courses: "Vue JS",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "In Progress",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 4,
+//     empid: "AMEMP00023",
+//     courses: "Vue JS",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "Completed",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 5,
+//     empid: "AMEMP00024",
+//     courses: "SAP CDS",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "Completed",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   {
+//     id: 6,
+//     empid: "AMEMP00024",
+//     courses: "Data Science",
+//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
+//     completedinprogress: "Completed",
+//     approvedon: "Nov 1, 22",
+//     approvedrejected: "Approved",
+//     manager: "HR",
+//   },
+//   // Add more rows as needed
+// ];
 
 
 export default function TrainingsPageAdmin( ) {
@@ -263,7 +263,7 @@ export default function TrainingsPageAdmin( ) {
     course_description: "HTML, CSS, React JS, Node JS, Express Js, MongoDB",
     details: "HTML, CSS, React JS, Node JS, Express Js, MongoD"
   });
-
+  
   const addTraining = async (body) => {
     try {
       const res = axios.post(`${process.env.REACT_APP_API_URI}/training/admin/add-new-training` , body , {
@@ -439,7 +439,7 @@ export default function TrainingsPageAdmin( ) {
     setEditOpen(false);
   }
   function handleTrId(){
-    setFilteredData(data?.sort((a, b) => a.id - b.id));
+    setData(data?.sort((a, b) => a.id - b.id));
   }
 
   let row;
@@ -702,8 +702,7 @@ export default function TrainingsPageAdmin( ) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filter ?(data) : (filteredData)?.map((row,i) =>    {
-                return(           
+              {filter ? (data) : (filteredData)?.map((row,i) =>    (         
                <TableRow key={i}>
                   <TableCell style={{ fontFamily: "Poppins" }}>
                     <Checkbox
@@ -728,7 +727,7 @@ export default function TrainingsPageAdmin( ) {
                     {row.approvedon}
                   </TableCell>
                 </TableRow>)
- } )} 
+ ) } 
  {filteredData?.length === 0  && <TableRow><TableCell colSpan={6}> {/* Adjust the colSpan based on the number of columns */}
         <Alert severity="warning" sx={{ width: '100%' }}>
           No data found.

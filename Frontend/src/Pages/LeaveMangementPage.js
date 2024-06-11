@@ -56,6 +56,7 @@ export default function LeaveMangementPage() {
   const [subject, setSubject] = React.useState("");
   const [body, setBody] = React.useState("");
   const [rows , setRows] = React.useState([]);
+  const [leaveOverviewData , setLeaveOverviewData] = React.useState([]);
   ////
 
   // new code
@@ -72,6 +73,22 @@ export default function LeaveMangementPage() {
   
 
   // const handleClick = async() => {
+
+  const leaveOverView = async () => {
+    try{
+      const res = await axios.post(`${process.env.REACT_APP_API_URI}/leave/fetch-leave-overview` ,{
+        emp_id : user?.user_id,
+        status : "approved"
+      } , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      })
+      setLeaveOverviewData(res?.data?.data)
+    }catch(err){
+      toast.error(err?.response?.message);
+    }
+  }
     
   const getUserLeaves = async() => {
     try{
@@ -110,6 +127,7 @@ export default function LeaveMangementPage() {
     }
     getData();
     getUserLeaves()
+    leaveOverView();
   },[]);
 
   const handleUpdate = async () => {
@@ -166,6 +184,12 @@ export default function LeaveMangementPage() {
   }
   function handleChange(e) {
     setLeaveType(e.target.value);
+  }
+
+  const formattedLeaveDate = (date) => {
+    const newdate = new Date(date);
+    const dateStr = newdate.toString().split(" ");
+    return dateStr[2] + " " + dateStr[1] + " " + dateStr[3];
   }
   const currentDate = new Date();
 
@@ -483,7 +507,7 @@ export default function LeaveMangementPage() {
                     height: { lg: "340px", md: "362px", sm: "305px" },
                   }}
                 >
-                  <ListItem
+                  {leaveOverviewData?.map((item) => (<ListItem
                     sx={{
                       backgroundColor: "#fafafa",
                       margin: "5px 0px",
@@ -492,14 +516,14 @@ export default function LeaveMangementPage() {
                     }}
                   >
                     <ListItemText
-                      primary="Brother’s Marriage "
+                      primary={item?.leave_type}
                       secondary={
                         <React.Fragment>
-                          {"24th Jan 2021 - 26th Jan 2021"}
+                          {formattedLeaveDate(item?.from_date)} - {formattedLeaveDate(item?.to_date)}
                         </React.Fragment>
                       }
                     />
-                  </ListItem>
+                  </ListItem>))}
                   <ListItem
                     sx={{
                       backgroundColor: "#fafafa",

@@ -97,6 +97,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { activities } from "./ActivitiesPage";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useAuth } from "../Components/AuthContext";
 export const activity = {
   images: [
     "/Images/activities/activity1/1.jpg",
@@ -111,12 +112,19 @@ const ActivityPage = () => {
   const activity = activities.find((obj) => obj.id === parseInt(activityId));
   const [sliderIndex, setSliderIndex] = useState(0);
   const [activityData , setActivityData] = useState({});
+  const [images , setImages] = useState([]);
+  const {user} = useAuth();
 
   const fechActivityById = async () => {
     try{
-      const res = await axios.get(`${process.env.REACT_APP_API_URI}activity/user/get-activity/${activityId}`);
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/activity/get-activity/${activityId}` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
       console.log(res);
-      setActivityData(res.data.data[0]);
+      setActivityData(res?.data?.data[0]);
+      setImages(res?.data?.data[1]);
     }catch(err){
       console.log(err);
       toast.error(err);
@@ -178,10 +186,10 @@ const ActivityPage = () => {
             initialSlide={sliderIndex}
             sx={{ maxHeight: "fit-content" }}
           >
-            {activity?.images.map((image, index) => (
+            {images?.map((image, index) => (
               <div key={index} style={{ maxHeight: "fit-content" }}>
                 <img
-                  src={image}
+                  src={image?.image_url}
                   alt={`Slide ${index}`}
                   style={{
                     maxHeight: "50vh",

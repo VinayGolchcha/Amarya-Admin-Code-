@@ -309,11 +309,11 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                     </TableCell>
                     <TableCell
                       align="left"
-                      sx={{ fontFamily: "Open Sans", minwidth: "119px" }}
+                      sx={{ fontFamily: "Open Sans", minWidth: "130px" }}
                     >
                       {row?.status === "approved" && (
                         <>
-                          <img src="Images/circle(1).svg" /> {row.stats}
+                          <img src="Images/circle(1).svg" /> {row.status}
                         </>
                       )}
                       {row?.status === "pending" && (
@@ -331,16 +331,16 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                           {row.status}
                         </>
                       )}
-                      {row?.stats === "rejected" && (
+                      {row?.status === "rejected" && (
                         <>
-                          <img src="Images/circle.svg" /> {row.stats}
+                          <img src="Images/circle.svg" /> {row.status}
                         </>
                       )}
                     </TableCell>
                     <TableCell align="left" sx={{ minWidth: "104px" }}>
                       <FileDownloadDoneIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "approved")} />
                       <NotInterestedIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "rejected")}/>
-                      <DeleteOutlineIcon sx={{ color: "#b1bacb", cursor:"pointer" }} />
+                      {/* <DeleteOutlineIcon sx={{ color: "#b1bacb", cursor:"pointer" }} /> */}
                     </TableCell>
                   </TableRow>
                 ))}

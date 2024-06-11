@@ -28,13 +28,19 @@ import AssetsAdminPage from "./Pages/AssetsAdminPage";
 import WorksheetPage from "./Pages/WorksheetPage";
 import TrainingsPageAdmin from "./Pages/TrainingsPageAdmin";
 import ActivityPage from "./Pages/ActivityPage";
-import PolicyPage from "./AdminPages/PolicyPage";
+import { useAuth } from "./Components/AuthContext";
 
 const drawerWidth = 240;
 
 const MainPage = (props) => {
   // const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(true);
+  const { user } = useAuth(); // Using useAuth hook to access user data
+  const role = user?.role;
+  console.log(user);
+  if (!user) {
+    return <LoginPage />;
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -76,21 +82,34 @@ const MainPage = (props) => {
         }}
       >
         <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/assets" element={<AssetsPage />} />
+          {role === "user" && <Route path="/" element={<DashboardPage />} />}
+          {role === "user" && <Route path="/assets" element={<AssetsPage />} />}
           <Route path="/leaves" element={<LeaveManagementPage />} />
-          <Route path="/trainings" element={<TrainingsPage />} />
+          {role === "user" && (
+            <Route path="/trainings" element={<TrainingsPage />} />
+          )}
           <Route path="/policies" element={<PoliciesPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/trainingPageAdmin" element={<TrainingsPageAdmin />} />
-          <Route path="/worksheet" element={<WorksheetPage />} />
+          {role === "admin" && (
+            <Route path="/settings" element={<SettingsPage />} />
+          )}
+          {role === "admin" && (
+            <Route path="/trainings" element={<TrainingsPageAdmin />} />
+          )}
           <Route path="/profile" element={<UserProfilePage />}></Route>
           <Route path="/announcements" element={<AnnouncementPage />}></Route>
           <Route path="/activities" element={<ActivitiesPage />} />
-          <Route path="/assetsAdminPAge" element={<AssetsAdminPage />} />
-          <Route path="/adminworksheet" element={<AdminWorkSheet />} />
-          <Route path="/admindashboard" element={<AdminDashboard />} />
-          <Route path="/adminAnouncement" element={<AdminAnnouncement />} />
+          {role === "admin" && (
+            <Route path="/worksheet" element={<AdminWorkSheet />} />
+          )}
+          {role === "user" && (
+            <Route path="/worksheet" element={<WorksheetPage />} />
+          )}
+
+          {role === "admin" && (
+            <Route path="/assets" element={<AssetsAdminPage />} />
+          )}
+          {role === "admin" && (<Route path="/" element={<AdminDashboard />} />)}
+          {role === "admin" && (<Route path="/anouncement" element={<AdminAnnouncement />} />)}
           <Route path="/activities/:activityId" element={<ActivityPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>

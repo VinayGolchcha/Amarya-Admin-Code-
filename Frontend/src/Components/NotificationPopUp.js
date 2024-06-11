@@ -10,16 +10,20 @@ import Badge from "@mui/material/Badge";
 import NotificationContext from "../ContextProvider/NotificationContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "./AuthContext";
 
 export default function NotificationPopUp() {
   const navigate = useNavigate();
   const { notifications, setNotifications } = useContext(NotificationContext);
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = process.env.REACT_APP_API_URI;
+  const { user } = useAuth();
 
   useEffect(() => {
     if (notifications.length === 0) {
       axios
-        .get(`${apiUrl}/announcement/admin/fetch-announcement`)
+        .get(`${apiUrl}/announcement/fetch-announcement`, {
+          headers: { "x-access-token": user?.token },
+        })
         .then((response) => {
           const data = response.data;
           if (data.success) {

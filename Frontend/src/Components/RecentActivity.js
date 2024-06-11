@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function RecentActivity() {
   const [isActivity , setIsActivity] = useState(false);
+  const navigate = useNavigate();
   return (
     <Box sx={{ p: 0, border: "1px solid #E0E0E0", borderRadius: "12px" }}>
       <Box
@@ -97,7 +98,7 @@ export default function RecentActivity() {
                   backgroundColor: "#FF5151",
                 },
               }}
-              onClick={() => setIsActivity(true)}
+              onClick={() => navigate("/activities")}
             >
               See All Activity
             </Button>

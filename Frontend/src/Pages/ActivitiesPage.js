@@ -9,6 +9,7 @@ import "slick-carousel/slick/slick-theme.css";
 import { LoremIpsum } from "react-lorem-ipsum";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useAuth } from "../Components/AuthContext";
 
 export const activities = [
   {
@@ -123,10 +124,16 @@ const ActivitiesPage = () => {
 
   const [hoveredCard, setHoveredCard] = useState(null);
   const [activiyData , setActivityData] = useState([]);
+  const {user} = useAuth()
 
   const fetchNotification = async () => {
     try{
-      const resData = await axios.get(`${process.env.REACT_APP_API_URI}/activity/fetch-activity`);
+      const resData = await axios.get(`${process.env.REACT_APP_API_URI}/activity/fetch-activity`, {
+        headers : {
+          "x-access-token" : user?.token
+        }
+       
+      } );
       setActivityData(resData.data.data);
       console.log(resData.data.data)
     }catch(error){
@@ -134,8 +141,6 @@ const ActivitiesPage = () => {
       toast.error(error.message);
     }
   }
-
-
   useEffect(()=> {
     fetchNotification();
   },[])
@@ -182,7 +187,7 @@ const ActivitiesPage = () => {
       <Box display="flex" flexWrap="wrap" justifyContent="center">
         <Grid container spacing={1}>
           {activiyData?.map((activity, index) => (
-            <Grid key={activity.id} item xs={12} sm={12} md={6} lg={3}>
+            <Grid key={activity.activity_id} item xs={12} sm={12} md={6} lg={3}>
               <Box
                 sx={{
                   display: "flex",
@@ -193,7 +198,7 @@ const ActivitiesPage = () => {
                 }}
                 gap={1}
               >
-                <Link to={`/activities/${activity._id}`}>
+                <Link to={`/activities/${activity.activity_id}`}>
                   <Card
                     style={{
                       flex: "0 0 calc(25% - 16px)",
@@ -206,20 +211,20 @@ const ActivitiesPage = () => {
                       position: "relative",
                       cursor: "pointer",
                     }}
-                    onMouseEnter={() => handleHoverIn(activity.id)}
+                    onMouseEnter={() => handleHoverIn(activity.activity_id)}
                     onMouseLeave={handleHoverOut}
                   >
                     <Slider
                       {...sliderSettings}
                       sx={{ minHeight: "300px", height: "100%" }}
                     >
-                      {activities[0].images.map((image, index) => (
+                      {activity?.images.map((image, index) => (
                         <div
                           key={index}
                           style={{ minHeight: "300px", height: "100%" }}
                         >
                           <img
-                            src={image}
+                            src={image?.image_url}
                             alt={`Slide ${index}`}
                             style={{
                               minHeight: "300px",
@@ -229,14 +234,14 @@ const ActivitiesPage = () => {
                               display: "block",
                               position: "relative",
                               opacity:
-                                hoveredCard === activity.id ? "0.6" : "1",
+                                hoveredCard === activity.activity_id ? "0.6" : "1",
                               transition: "opacity 0.3s ease-in-out",
                             }}
                           />
                         </div>
                       ))}
                     </Slider>
-                    {hoveredCard === activity.id && (
+                    {hoveredCard === activity.activity_id && (
                       <div
                         style={{
                           position: "absolute",
@@ -255,19 +260,19 @@ const ActivitiesPage = () => {
                   </Card>
                 </Link>
                 <Card
-                  id={activity.id}
+                  id={activity.activity_id}
                   style={{
                     flex: "0 0 calc(25% - 16px)", // Each card takes 25% of the container width with some margin
                     backgroundColor: "#e8f0fb",
                     border: "solid 1px #74787e",
                     borderRadius: "0",
-                    transform: isCardFlipped(activity._id)
+                    transform: isCardFlipped(activity.activity_id)
                       ? "rotateY(180deg)"
                       : "rotateY(0)",
                     transition: "transform 0.6s ease",
                     cursor: "pointer",
                   }}
-                  onClick={() => handleCardClick(activity._id)}
+                  onClick={() => handleCardClick(activity.activity_id)}
                 >
                   <CardContent
                     style={{
@@ -276,12 +281,12 @@ const ActivitiesPage = () => {
                       flex: "1",
                       width: "100%",
                       height: "300px",
-                      transform: isCardFlipped(activity._id)
+                      transform: isCardFlipped(activity.activity_id)
                         ? "rotateY(180deg)"
                         : "rotateY(0deg)",
                     }}
                   >
-                    {isCardFlipped(activity._id) ? (
+                    {isCardFlipped(activity.activity_id) ? (
                       <Box
                         sx={{
                           padding: "0px 10px",
