@@ -86,150 +86,6 @@ const field = [
   },
 ];
 
-// let data = [
-//   {
-//     id: 2,
-//     empid: "AMEM00024",
-//     courses: "Full Stack",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Pending",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 1,
-//     empid: "AMEM00023",
-//     courses: "Full Stack",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "In Progress",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 1,
-//     empid: "AMEM00012",
-//     courses: "Full Stack",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 1,
-//     empid: "AMEM00020",
-//     courses: "Full Stack",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 2,
-//     empid: "AMEM00022",
-//     courses: "SAP ABAP",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Pending",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 2,
-//     empid: "AMEM00010",
-//     courses: "SAP ABAP",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Pending",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 2,
-//     empid: "AMEMP00013",
-//     courses: "SAP ABAP",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "In Progress",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 2,
-//     empid: "AMEMP00014",
-//     courses: "SAP ABAP",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "In Progress",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 2,
-//     empid: "AMEMP00021",
-//     courses: "Full Stack",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 3,
-//     empid: "AMEMP00024",
-//     courses: "Flutter",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "In Progress",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 4,
-//     empid: "AMEMP00020",
-//     courses: "Vue JS",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "In Progress",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 4,
-//     empid: "AMEMP00023",
-//     courses: "Vue JS",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 5,
-//     empid: "AMEMP00024",
-//     courses: "SAP CDS",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 6,
-//     empid: "AMEMP00024",
-//     courses: "Data Science",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   // Add more rows as needed
-// ];
-
 
 export default function TrainingsPageAdmin( ) {
   const [selectedRows, setSelectedRows] = React.useState([]);
@@ -305,7 +161,7 @@ export default function TrainingsPageAdmin( ) {
         }
       });
       setFilteredData(res?.data?.data?.map((item) => ({
-          id: item?.training_id[8],
+          id: item?.training_id,
           empid: item?.emp_id,
           courses: item?.course_name,
           coursedescription: item?.course_description,
@@ -314,8 +170,21 @@ export default function TrainingsPageAdmin( ) {
           approvedrejected: "Approved",
           manager: "HR",
       })));
-      setData(filteredData);
-      console.log(data);
+      const newData = res?.data?.data?.map(item => ({
+        id: item?.training_id,
+        empid: item?.emp_id,
+        courses: item?.course_name,
+        coursedescription: item?.course_description,
+        completedinprogress: item?.progress_status,
+        approvedon: "Nov 1, 22",
+        approvedrejected: "Approved",
+        manager: "HR",
+      }));
+      setData(newData)
+      console.log(data , typeof data);
+      data = data?.filter(item =>
+        item.empid.toLowerCase().includes(searchEmp.toLowerCase())
+      );
     }catch(err){
       console.log(err);
     }
@@ -418,7 +287,7 @@ export default function TrainingsPageAdmin( ) {
   function handleSelect(value) {
     const selectedStatus = value;
     setCourseStatus(selectedStatus);
-    const newData = data?.filter((item) => {
+    const newData = filteredData?.filter((item) => {
       if (selectedStatus === "All") {
         return true;
       } else {
@@ -427,9 +296,7 @@ export default function TrainingsPageAdmin( ) {
     });
     setData(newData);
   }
-  data = data?.filter(item =>
-    item.empid.toLowerCase().includes(searchEmp.toLowerCase())
-  );
+  
   function handleFilterEmp(e) {
     setSearchEmp(e.target.value);
 
@@ -702,38 +569,71 @@ export default function TrainingsPageAdmin( ) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {filter ? (data) : (filteredData)?.map((row,i) =>    (         
-               <TableRow key={i}>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    <Checkbox
-                      checked={selectedRows.includes(row.id)}
-                      onChange={() => handleCheckboxChange(row.id)}
-                    />
-                    {row.id}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.courses}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.empid}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.coursedescription}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.completedinprogress}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.approvedon}
-                  </TableCell>
-                </TableRow>)
- ) } 
- {filteredData?.length === 0  && <TableRow><TableCell colSpan={6}> {/* Adjust the colSpan based on the number of columns */}
+  {filter ? (
+    data?.map((row, i) => (
+      <TableRow key={i}>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          <Checkbox
+            checked={selectedRows.includes(row.id)}
+            onChange={() => handleCheckboxChange(row.id)}
+          />
+          {row.id}
+        </TableCell>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          {row.courses}
+        </TableCell>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          {row.empid}
+        </TableCell>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          {row.coursedescription}
+        </TableCell>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          {row.completedinprogress}
+        </TableCell>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          {row.approvedon}
+        </TableCell>
+      </TableRow>
+    ))
+  ) : filteredData?.length > 0 ? (
+    filteredData?.map((row, i) => (
+      <TableRow key={i}>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          <Checkbox
+            checked={selectedRows.includes(row.id)}
+            onChange={() => handleCheckboxChange(row.id)}
+          />
+          {row.id}
+        </TableCell>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          {row.courses}
+        </TableCell>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          {row.empid}
+        </TableCell>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          {row.coursedescription}
+        </TableCell>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          {row.completedinprogress}
+        </TableCell>
+        <TableCell style={{ fontFamily: "Poppins" }}>
+          {row.approvedon}
+        </TableCell>
+      </TableRow>
+    ))
+  ) : (
+    <TableRow>
+      <TableCell colSpan={6}>
         <Alert severity="warning" sx={{ width: '100%' }}>
           No data found.
         </Alert>
-      </TableCell></TableRow>}
-            </TableBody>
+      </TableCell>
+    </TableRow>
+  )}
+</TableBody>
+
           </Table>
         </TableContainer>
         {/* <TablePagination

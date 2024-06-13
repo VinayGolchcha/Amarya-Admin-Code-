@@ -13,7 +13,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 export default function TrainingCard({ field, i  , setTrainingId , handleRequest , edit , deleteItem , handleDeleteApi , setSelectedTr , setEditOpen}) {
   const [isFLip, setIsFlip] = useState(false);
   const navigate = useNavigate();
-  const dynamicColor = field.color;
+  const dynamicColor = field?.color;
   function handleFlip(val) {
     setIsFlip(!isFLip);
     setTrainingId(val);
@@ -74,7 +74,7 @@ export default function TrainingCard({ field, i  , setTrainingId , handleRequest
                   fontSize: "1.8rem",
                 }}
               >
-                {field.courseName}
+                {field?.courseName}
               </Typography>
 
               <Typography
@@ -85,7 +85,7 @@ export default function TrainingCard({ field, i  , setTrainingId , handleRequest
                   color: "#4A4949",
                 }}
               >
-                {field.courseDescription}
+                {field?.courseDescription}
               </Typography>
             </CardContent>
           </Card>
