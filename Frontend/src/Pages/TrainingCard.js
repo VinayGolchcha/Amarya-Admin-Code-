@@ -45,7 +45,7 @@ export default function TrainingCard({ field, i, isActiveDeleteButton, logo ,isE
  };
 
       const response = await axios.post(
-        "http://localhost:4000/api/v1/training/request-new-training",
+        `${process.env.REACT_APP_API_URI}/training/request-new-training`,
         requestBody
       );
       console.log(response.data); // Log success message or handle response as needed

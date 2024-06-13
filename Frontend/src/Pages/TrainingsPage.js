@@ -64,7 +64,7 @@ export default function TrainingsPage(props) {
   ///vb code
   React.useEffect(() => {
     axios
-      .post("http://localhost:4000/api/v1/training/get-user-training", {
+      .post(`${process.env.REACT_APP_API_URI}/training/get-user-training`, {
         emp_id: "AMEMP003",
       })
       .then((response) => {
@@ -78,7 +78,7 @@ export default function TrainingsPage(props) {
 
   React.useEffect(() => {
     axios
-      .get("http://localhost:4000/api/v1/training/training-cards")
+      .get(`${process.env.REACT_APP_API_URI}/training/training-cards`)
       .then((response) => {
         console.log("Training Cards:", response);
         setfields(response.data.data);
@@ -276,7 +276,7 @@ export default function TrainingsPage(props) {
           }}
         >
           <Grid container spacing={2}>
-            {courses.map((course, i) => {
+            {courses?.map((course, i) => {
               return (
                 <TrainingCard
                   field={course}

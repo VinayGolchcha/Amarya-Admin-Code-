@@ -72,9 +72,7 @@ export default function LeaveMangementPage() {
         setLoading(true);
 
         const response = await axios.get(
-          // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
-          "http://localhost:4000/api/v1/leave/get-all-leave-count/AMEMP010"
-          // "https://localhost:4000/api/v1/training/request-new-training"
+          `${process.env.REACT_APP_API_URI}/leave/get-all-leave-count/AMEMP010`
         );
 
         setData(response?.data.data);
@@ -96,7 +94,7 @@ export default function LeaveMangementPage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/leave/leave-request",
+        `${process.env.REACT_APP_API_URI}/leave/leave-request`,
         {
           emp_id: "AMEMP010",
           leave_type: leaveType,

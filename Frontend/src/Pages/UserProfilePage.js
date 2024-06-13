@@ -57,7 +57,7 @@ const UserProfilePage = () => {
     const handleSaveProject = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:4000/api/v1/project/create-user-project", projectData);
+            const response = await axios.post(`${process.env.REACT_APP_API_URI}/project/create-user-project`, projectData);
             console.log("API response:", response);
         } catch (error) {
             console.error("Error:", error);
@@ -66,11 +66,12 @@ const UserProfilePage = () => {
 
     useEffect(() => {
         fetchUserProfile();
+        fetchUserProject();
     }, []);
 
     const fetchUserProfile = async () => {
         try {
-            const response = await axios.post("http://localhost:4000/api/v1/user/get-user-profile", {
+            const response = await axios.post(`${process.env.REACT_APP_API_URI}/user/get-user-profile`, {
                 emp_id: "AMEMP002"
             });
             console.log(response.data.data[0][0]); 
@@ -79,7 +80,19 @@ const UserProfilePage = () => {
             console.error("Error fetching user profile:", error);
         }
     };
+          
 
+    const fetchUserProject = async () => {
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URI}/project/fetch-user-project/${projectData.emp_id}`); 
+            console.log(response.data); 
+            setProjectData(response.data); 
+        } catch (error) {
+            console.error("Error fetching user project:", error);
+        }
+    };
+    
+           
 
 
     

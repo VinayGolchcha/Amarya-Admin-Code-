@@ -78,7 +78,7 @@ export default function UpdateTraining({ handleClose, open, selectedObj }) {
     };
     try {
       const response = axios.put(
-        `http://localhost:4000/api/v1/training/admin/update-training/${selectedObj.id}`,
+        `${process.env.REACT_APP_API_URI}/training/admin/update-training/${selectedObj.id}`,
         updatedData
       );
        console.log("Update successful:", response.data);

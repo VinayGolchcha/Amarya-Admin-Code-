@@ -93,7 +93,7 @@ export default function AddTraining({
 
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/training/admin/add-new-training",
+        `${process.env.REACT_APP_API_URI}/training/admin/add-new-training`,
         newTrainingData
       );
       console.log("Training added successfully:", response.data);

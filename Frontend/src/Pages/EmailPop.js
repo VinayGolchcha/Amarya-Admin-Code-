@@ -17,7 +17,7 @@ const handleUpdate = async () => {
   
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/user/send-otp-password-verification",
+        `${process.env.REACT_APP_API_URI}/user/send-otp-password-verification`,
         {
          email,
         }

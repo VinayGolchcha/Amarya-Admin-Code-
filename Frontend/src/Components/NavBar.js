@@ -92,10 +92,13 @@ const NavBar = ({ handleDrawerToggle }) => {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [stickeyNotesData , setStickeyNotesData]=React.useState([]);
   
+  React.useEffect(() => {
+    handleGetNotes("AIEMP1001"); 
+  }, []);
 
   const handleAddStickyNote = () => {
     axios
-      .post("http://localhost:4000/api/v1/stickynotes/add-stickynotes", {
+      .post(`${process.env.REACT_APP_API_URI}/stickynotes/add-stickynotes`, {
         emp_id: "AIEMP1001",
         note: addTask,
       })
@@ -107,13 +110,10 @@ const NavBar = ({ handleDrawerToggle }) => {
       });
   };
 
-  const handleGetNotes = async () => {
+  const handleGetNotes = async (empId) => {
     try {
-      const response = await axios.post(
-        "http://localhost:4000/api/v1/stickynotes/get-user-notes",
-        {
-          emp_id: "AIEMP1001",
-        }
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URI}/get-user-notes/${empId}`,
       );
       console.log(response.data);
       setStickeyNotesData(response.data.data)
@@ -122,9 +122,9 @@ const NavBar = ({ handleDrawerToggle }) => {
     }
   };
 
-  const handleDeleteStickyNote = async (noteId) => {
+  const handleDeleteStickyNote = async (emp_id) => {
     try {
-     const response = await axios.delete(`http://localhost:4000/api/v1/stickynotes/delete-stickynotes/${noteId}`);
+     const response = await axios.delete(`${process.env.REACT_APP_API_URI}/stickynotes/delete-stickynotes/${id}/${emp_id}`);
       console.log(response);
     } catch (error) {
       console.error("Error deleting sticky note:", error);
@@ -357,7 +357,7 @@ const NavBar = ({ handleDrawerToggle }) => {
                   id={id}
                   open={open}
                   anchorEl={anchorE2}
-                  sx={{ marginTop: "20px", position: "relative", overflowY:"auto",}}
+                  sx={{ marginTop: "20px", position: "relative",}}
                   placement="bottom-start"
                 >
                   
@@ -412,7 +412,7 @@ const NavBar = ({ handleDrawerToggle }) => {
                         />
                       )}
                     </Box>
-                    {stickeyNotesData.map((note) => {
+                    {stickeyNotesData?.map((note) => {
                       return (
                         <Box
                           key={

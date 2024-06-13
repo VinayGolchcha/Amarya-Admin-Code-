@@ -17,7 +17,7 @@ function OtpP({ closeOtpP }) {
 const handleUpdate = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/user/verify-email-for-password-update",
+        `${process.env.REACT_APP_API_URI}/user/verify-email-for-password-update`,
         {
          otp,
          email: savedEmail,

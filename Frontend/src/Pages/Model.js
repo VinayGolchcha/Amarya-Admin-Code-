@@ -15,7 +15,7 @@ function Model({ closeModel }) {
   const handleUpdate = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:4000/api/v1/user/update-password",
+        `${process.env.REACT_APP_API_URI}/user/update-password`,
         {
         
           password,

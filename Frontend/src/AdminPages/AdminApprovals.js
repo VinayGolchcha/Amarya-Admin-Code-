@@ -203,7 +203,7 @@ const rows = [
       // console.log(isApporved);
       try {
         const response = await axios.put(
-         'http://localhost:4000/api/v1/approval/admin/approval',
+          `${process.env.REACT_APP_API_URI}/approval/admin/approval`,
           {
             emp_id: "AMEMP010",
             item: "sick leave", 

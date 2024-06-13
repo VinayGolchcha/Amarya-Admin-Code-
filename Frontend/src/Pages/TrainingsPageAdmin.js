@@ -247,6 +247,8 @@ export default function TrainingsPageAdmin({ trainingId }) {
 
   const [isActiveDeleteButton, setIsActiveDeleteButton] = React.useState(false);
   const [isEdit, setIsEdit] = React.useState(false);
+  const apiUrl= process.env.REACT_APP_API_URI ;
+
 
   const handleClick = () => {
     setOpen(!open);
@@ -307,7 +309,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
   React.useEffect(() => {
     // Axios GET request
     axios
-      .get("http://localhost:4000/api/v1/training/training-cards")
+      .get(`${process.env.REACT_APP_API_URI}/training/training-cards`)
       .then((response) => {
         // console.log("insdeeee");
         console.log("Training Cards:", response.data.data);
@@ -321,7 +323,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
   React.useEffect(() => {
     axios
       .get(
-        "http://localhost:4000/api/v1/training/admin/display-all-users-training-data"
+        `${process.env.REACT_APP_API_URI}/training/admin/display-all-users-training-data`
       )
       .then((response) => {
         // console.log( response);
@@ -371,7 +373,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
           }}
         >
           <Grid container spacing={2}>
-            {courses.map((course) => {
+            {courses?.map((course) => {
               return (
                 <TrainingCard
                   setOpen={setOpen}
@@ -645,7 +647,7 @@ export default function TrainingsPageAdmin({ trainingId }) {
                     </TableRow>
                   );
                 })}
-              {filteredData.length === 0 && (
+              {filteredData?.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6}>
                     {" "}
