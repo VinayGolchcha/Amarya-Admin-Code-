@@ -416,7 +416,7 @@ const NavBar = ({ handleDrawerToggle }) => {
                   size="large"
                   aria-label="show 4 new mails"
                   color="inherit"
-                  sx={{ marginRight: 1 }}
+                  sx={{ marginRight: -1 }}
                 >
                   <Avatar
                     alt={user.username}

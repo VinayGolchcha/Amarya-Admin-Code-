@@ -70,6 +70,7 @@ export default function AddEditModal({ rows }) {
     item_description: "",
     image_url: "",
     file: null,
+    public_id: "",
   });
 
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -87,6 +88,7 @@ export default function AddEditModal({ rows }) {
         model_number: rowData.model_number || "",
         item_description: rowData.description || "",
         image_url: rowData.photo || "",
+        public_id: rowData.public_id || "", // Store the public_id
       });
     }
   }, [rows]);
@@ -94,7 +96,7 @@ export default function AddEditModal({ rows }) {
   function handleUpdate() {
     const formData = new FormData();
     formData.append("asset_type", editedData.asset_type);
-    formData.append("item", editedData.item);
+    formData.append("item", editedData.item); 
     formData.append("purchase_date", editedData.purchase_date);
     formData.append("warranty_period", editedData.warranty_period);
     formData.append("price", editedData.price);
@@ -102,7 +104,9 @@ export default function AddEditModal({ rows }) {
     formData.append("item_description", editedData.item_description);
     if (editedData.file) {
       formData.append("file", editedData.file);
+      formData.append("public_id",editedData?.public_id);
     }
+
 
     axios
       .put(`${apiUrl}/asset/admin/update-asset/${rows[0]?.inId}`, formData, {
