@@ -26,7 +26,7 @@ export default function TrainingCard({ field, i  , setTrainingId , handleRequest
   }
   return (
     // <Box sx={{ flexGrow: 1 , flexWrap : 'wrap', p : 1}}>
-    <Grid item lg={4} md={6} sm={12} xs={12}>
+    <Grid item lg={4} md={6} sm={12} xs={12} sx={{display : "flex" , justifyContent : "center" , alignItems : "center"}}>
       <Box sx={{ minWidth: 275, width: 200 }}>
         <ReactCardFlip flipDirection="horizontal" isFlipped={isFLip}>
           <Card

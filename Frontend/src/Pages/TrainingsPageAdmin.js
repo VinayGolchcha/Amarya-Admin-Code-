@@ -251,7 +251,9 @@ export default function TrainingsPageAdmin( ) {
   }, []);
   ///
 
- 
+  React.useEffect(()=>{
+
+  },[data]);
 
     
 
@@ -282,6 +284,7 @@ export default function TrainingsPageAdmin( ) {
 
   function handleChangeFilter() {
     setFilter(!filter);
+    setData(filteredData);
   }
 
   function handleSelect(value) {
@@ -306,7 +309,7 @@ export default function TrainingsPageAdmin( ) {
     setEditOpen(false);
   }
   function handleTrId(){
-    setData(data?.sort((a, b) => a.id - b.id));
+    setData(data?.sort((a, b) => a?.id?.[8] - b?.id?.[8]));
   }
 
   let row;

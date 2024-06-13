@@ -270,7 +270,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                     align="left"
                     sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                   >
-                    Foreign id
+                    Req. id
                   </TableCell>
                   <TableCell
                     align="left"
