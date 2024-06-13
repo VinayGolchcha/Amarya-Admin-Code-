@@ -2,6 +2,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Box, Button } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -69,10 +70,6 @@ export default function AddEditModal({ rows }) {
     item_description: "",
     image_url: "",
     file: null,
-<<<<<<< HEAD
-    public_id: "",
-=======
->>>>>>> 4dbe98c (worked on role access)
   });
 
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -90,10 +87,6 @@ export default function AddEditModal({ rows }) {
         model_number: rowData.model_number || "",
         item_description: rowData.description || "",
         image_url: rowData.photo || "",
-<<<<<<< HEAD
-        public_id: rowData.public_id || "", // Store the public_id
-=======
->>>>>>> 4dbe98c (worked on role access)
       });
     }
   }, [rows]);
@@ -101,11 +94,7 @@ export default function AddEditModal({ rows }) {
   function handleUpdate() {
     const formData = new FormData();
     formData.append("asset_type", editedData.asset_type);
-<<<<<<< HEAD
-    formData.append("item", editedData.item); 
-=======
     formData.append("item", editedData.item);
->>>>>>> 4dbe98c (worked on role access)
     formData.append("purchase_date", editedData.purchase_date);
     formData.append("warranty_period", editedData.warranty_period);
     formData.append("price", editedData.price);
@@ -113,13 +102,7 @@ export default function AddEditModal({ rows }) {
     formData.append("item_description", editedData.item_description);
     if (editedData.file) {
       formData.append("file", editedData.file);
-<<<<<<< HEAD
-      formData.append("public_id",editedData?.public_id);
     }
-
-=======
-    }
->>>>>>> 4dbe98c (worked on role access)
 
     axios
       .put(`${apiUrl}/asset/admin/update-asset/${rows[0]?.inId}`, formData, {

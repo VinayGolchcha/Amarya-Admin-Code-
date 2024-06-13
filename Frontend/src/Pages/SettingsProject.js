@@ -2,10 +2,14 @@ import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { Button, FormControl, FormLabel, TextField, MenuItem, Select } from "@mui/material";
 =======
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
 >>>>>>> 4dbe98c (worked on role access)
+=======
+import { Button, FormControl, FormLabel, TextField, MenuItem, Select } from "@mui/material";
+>>>>>>> 3a0e9bc (fixed user dashboard page)
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -19,10 +23,14 @@ import { useAuth } from "../Components/AuthContext";
 export default function SettingsProject() {
   const { user } = useAuth();
 <<<<<<< HEAD
+<<<<<<< HEAD
   const token = encodeURIComponent(user?.token || "");
 =======
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 >>>>>>> 4dbe98c (worked on role access)
+=======
+  const token = encodeURIComponent(user?.token || "");
+>>>>>>> 3a0e9bc (fixed user dashboard page)
 
   const [formData, setFormData] = useState([
     {
@@ -34,11 +42,16 @@ export default function SettingsProject() {
       "End Of The Project": null,
       "Project Status": "",
 <<<<<<< HEAD
+<<<<<<< HEAD
       "Category": "",
       "category_id": null, // Add category_id field
 =======
       Category: "",
 >>>>>>> 4dbe98c (worked on role access)
+=======
+      "Category": "",
+      "category_id": null, // Add category_id field
+>>>>>>> 3a0e9bc (fixed user dashboard page)
     },
   ]);
 
@@ -60,12 +73,15 @@ export default function SettingsProject() {
 <<<<<<< HEAD
 =======
 
+<<<<<<< HEAD
   const [editMode, setEditMode] = useState(null); // Track which project is being edited
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedInputIndex, setSelectedInputIndex] = useState(null);
   const apiUrl = process.env.REACT_APP_API_URL;
 >>>>>>> 4dbe98c (worked on role access)
 
+=======
+>>>>>>> 3a0e9bc (fixed user dashboard page)
   useEffect(() => {
     fetchProjects();
     fetchCategories(); // Fetch categories on component mount
@@ -110,7 +126,35 @@ export default function SettingsProject() {
       })
       .catch((error) => console.error("Error fetching projects:", error));
   };
-  const handleAddNew = async () => {
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/category/fetch-all-categories`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        const categoryOptions = data?.data?.map(({ _id, category }) => ({
+          _id, // Keep _id separate
+          value: category, // Use the label as the value displayed to the user
+          label: category,
+        }));
+        setCategories(categoryOptions);
+        console.log("category:", categoryOptions); // Log fetched categories
+        return categoryOptions;
+      } else {
+        console.error("Failed to fetch categories:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  const handleAddNew = () => {
     const newProject = {
       "Project Name": "",
       "Client Name": "",
@@ -119,7 +163,8 @@ export default function SettingsProject() {
       "Start Of The Project": null,
       "End Of The Project": null,
       "Project Status": "",
-      Category: "",
+      "Category": "",
+      "category_id": null,
     };
 
 <<<<<<< HEAD
@@ -129,7 +174,25 @@ export default function SettingsProject() {
         method: "GET",
 =======
     setFormData([...formData, newProject]);
-    setEditMode(formData.length); // Set the newly added project to edit mode
+    setNewProjectIndex(formData.length);
+  };
+
+  const handleSaveNewProject = async (index) => {
+    const newProject = formData[index];
+    const newProjectData = {
+      project: newProject["Project Name"],
+      client_name: newProject["Client Name"],
+      project_manager: newProject["Project Manager"],
+      project_lead: newProject["Project Lead"],
+      project_status: newProject["Project Status"],
+      start_month: newProject["Start Of The Project"]
+        ? dayjs(newProject["Start Of The Project"]).format("MMMM")
+        : null,
+      end_month: newProject["End Of The Project"]
+        ? dayjs(newProject["End Of The Project"]).format("MMMM")
+        : null,
+      category_id: newProject.category_id, // Use category_id
+    };
 
     try {
       const response = await fetch(`${apiUrl}/project/admin/create-project`, {
@@ -201,6 +264,7 @@ export default function SettingsProject() {
           "x-access-token": token,
         },
         body: JSON.stringify(newProjectData),
+<<<<<<< HEAD
       });
 
       if (!response.ok) {
@@ -219,6 +283,8 @@ export default function SettingsProject() {
 
 =======
         body: JSON.stringify(newProject),
+=======
+>>>>>>> 3a0e9bc (fixed user dashboard page)
       });
 
       if (!response.ok) {
@@ -227,6 +293,9 @@ export default function SettingsProject() {
 
       const data = await response.json();
       console.log("Project created successfully:", data);
+      setNewProjectIndex(null);
+      setEditMode(null);
+      fetchProjects();
     } catch (error) {
       console.error("Error creating project:", error);
     }
@@ -267,10 +336,14 @@ export default function SettingsProject() {
     const { project_id, category_id } = projectToUpdate;
     const id = project_id;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
     console.log(projectToUpdate);
 >>>>>>> 4dbe98c (worked on role access)
+=======
+
+>>>>>>> 3a0e9bc (fixed user dashboard page)
     const updatedProject = {
       project: projectToUpdate["Project Name"],
       client_name: projectToUpdate["Client Name"],
@@ -284,12 +357,17 @@ export default function SettingsProject() {
         ? dayjs(projectToUpdate["End Of The Project"]).format("MMMM")
         : null,
 <<<<<<< HEAD
+<<<<<<< HEAD
       category_id: projectToUpdate.category_id,
     };
 =======
     };
     console.log(updatedProject);
 >>>>>>> 4dbe98c (worked on role access)
+=======
+      category_id: projectToUpdate.category_id,
+    };
+>>>>>>> 3a0e9bc (fixed user dashboard page)
 
     fetch(`${apiUrl}/project/admin/update-project/${id}/${category_id}`, {
       method: "PUT",
@@ -338,14 +416,20 @@ export default function SettingsProject() {
         break;
       case "Category":
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3a0e9bc (fixed user dashboard page)
         const selectedCategory = categories.find(
           (category) => category.value === value
         );
         newDataItem["Category"] = value;
         newDataItem.category_id = selectedCategory?._id || null; // Set category_id
+<<<<<<< HEAD
 =======
         newDataItem["Category"] = value;
 >>>>>>> 4dbe98c (worked on role access)
+=======
+>>>>>>> 3a0e9bc (fixed user dashboard page)
         break;
       default:
         break;
@@ -357,19 +441,27 @@ export default function SettingsProject() {
 
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
     <Box>
 =======
     <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
 >>>>>>> 4dbe98c (worked on role access)
+=======
+    <Box>
+>>>>>>> 3a0e9bc (fixed user dashboard page)
       {formData?.map((data, index) => (
         <Box
           key={index}
           sx={{
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3a0e9bc (fixed user dashboard page)
             borderRadius: "10px",
             padding: "30px",
             boxShadow: "0px 0px 5px rgba(0,0,0,0.2)",
             margin: "10px 0px",
+<<<<<<< HEAD
           }}
         >
           <Box
@@ -389,6 +481,17 @@ export default function SettingsProject() {
         >
           <Box>
 >>>>>>> 4dbe98c (worked on role access)
+=======
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: "10px",
+            }}
+          >
+>>>>>>> 3a0e9bc (fixed user dashboard page)
             <RemoveIcon
               color="action"
               onClick={() => handleDelete(index)}
@@ -402,6 +505,7 @@ export default function SettingsProject() {
                 cursor: "pointer",
               }}
             />
+<<<<<<< HEAD
 <<<<<<< HEAD
             {editMode === index || newProjectIndex === index ? (
               <SaveIcon
@@ -417,6 +521,16 @@ export default function SettingsProject() {
                 color="action"
                 onClick={() => handleSave(index)}
 >>>>>>> 4dbe98c (worked on role access)
+=======
+            {editMode === index || newProjectIndex === index ? (
+              <SaveIcon
+                color="action"
+                onClick={() => {
+                  newProjectIndex === index
+                    ? handleSaveNewProject(index)
+                    : handleSave(index);
+                }}
+>>>>>>> 3a0e9bc (fixed user dashboard page)
                 sx={{
                   borderRadius: "50px",
                   backgroundColor: "rgb(222, 225, 231)",
@@ -491,6 +605,9 @@ export default function SettingsProject() {
                     </LocalizationProvider>
                   )}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 3a0e9bc (fixed user dashboard page)
                   {item === "Category" ? (
                     <Select
                       value={data[item]}
@@ -517,9 +634,12 @@ export default function SettingsProject() {
                     </Select>
                   ) : (
                     item !== "End Of The Project" &&
+<<<<<<< HEAD
 =======
                   {item !== "End Of The Project" &&
 >>>>>>> 4dbe98c (worked on role access)
+=======
+>>>>>>> 3a0e9bc (fixed user dashboard page)
                     item !== "Start Of The Project" && (
                       <TextField
                         value={data[item]}
@@ -540,6 +660,7 @@ export default function SettingsProject() {
                           handleInputChange(index, item, e.target.value)
                         }
 <<<<<<< HEAD
+<<<<<<< HEAD
                         disabled={
                           editMode !== index && newProjectIndex !== index
                         }
@@ -551,6 +672,14 @@ export default function SettingsProject() {
                       />
                     )}
 >>>>>>> 4dbe98c (worked on role access)
+=======
+                        disabled={
+                          editMode !== index && newProjectIndex !== index
+                        }
+                      />
+                    )
+                  )}
+>>>>>>> 3a0e9bc (fixed user dashboard page)
                 </FormControl>
               </Grid>
             ))}
