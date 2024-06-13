@@ -191,9 +191,9 @@ const ProjectOverview = ({ apiData }) => {
               },
             }}
           >
-            {apiData?.employee_count_with_team[0]?.project_count}
+            {apiData?.employee_count_with_team?.[0]?.project_count}
             <br />
-            {apiData?.employee_count_with_team[0]?.team} Projects
+            {apiData?.employee_count_with_team?.[0]?.team} Projects
           </Typography>
         </Box>
         <Box
@@ -215,9 +215,9 @@ const ProjectOverview = ({ apiData }) => {
               },
             }}
           >
-            {apiData?.employee_count_with_team[1]?.project_count}
+            {apiData?.employee_count_with_team?.[1]?.project_count}
             <br />
-            {apiData?.employee_count_with_team[1]?.team} Projects
+            {apiData?.employee_count_with_team?.[1]?.team} Projects
           </Typography>
         </Box>
         <Box

@@ -53,7 +53,7 @@ export default function NotificationPopUp() {
       {(popupState) => (
         <div>
           <Box variant="text" {...bindTrigger(popupState)}>
-            <Badge badgeContent={notifications.filter(notification => !notification.read).length} color="error">
+            <Badge badgeContent={notifications?.filter(notification => !notification.read).length} color="error">
               <NotificationsIcon sx={{ color: "#b4b4b4" }} />
             </Badge>
           </Box>
@@ -110,7 +110,7 @@ export default function NotificationPopUp() {
               }}
             >
               <List sx={{ width: "100%", padding: "4px 0px", height: "270px" }}>
-                {notifications.map((item, index) => {
+                {notifications?.map((item, index) => {
                   return (
                     <ListItem
                       sx={{

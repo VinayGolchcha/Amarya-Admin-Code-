@@ -11,6 +11,7 @@ import AdminApprovals from "./AdminApprovals";
 import axios from "axios";
 import { useAuth } from '../Components/AuthContext';
 import { ToastContainer, toast } from "react-toastify";
+import Loading from "../sharable/Loading";
 
 const suggSum = [
   {
@@ -59,6 +60,8 @@ const AdminDashboard = () => {
   const [approvalData , setApprovalData] = useState([]);
   const [activityAnnoucements , setActivityAnnoucements] = useState([]);
   const [apiData , setApidata] = useState([]);
+  const [isLoading , setIsLoading] = useState(true);
+
   const {user} = useAuth();
   console.log(user);
 
@@ -154,242 +157,251 @@ const AdminDashboard = () => {
   }
   
   useEffect(()=> {
+    
     fetchFeedback();
     fetchProjects();
     fetchApprovalData();
     fecthActAnn();
     adminDashboardApi();
-  },[])
-  return (
-    <Box>
-      <ToastContainer/>
-      <Typography
-        variant="h4"
-        sx={{
-          margin: "25px 0px 15px 0px",
-          font: {
-            lg: "normal normal 400 22px/35px Poppins",
-            md: "normal normal 400 22px/35px Poppins",
-            sm: "normal normal 400 20px/30px Poppins",
-            xs: "normal normal 400 22px/30px Poppins",
-          },
-          color: "#161E54",
-        }}
-      >
-        Welcome Admin !
-      </Typography>
-      <Box sx={{ display: "flex" }}>
-        <Box
-          sx={{
-            borderRadius: "20px",
-            border: "1px solid rgba(0, 0, 0, 0.30)",
-            width: "auto",
-          }}
-        >
-          <ProjectOverview apiData = {apiData}/>
-        </Box>
-        <Box
-          sx={{
-            borderRadius: "20px",
-            border: "1px solid rgba(0, 0, 0, 0.30)",
-            margin: "0px 5px 0px 25px",
-          }}
-        >
-          <AdminPerformace />
-        </Box>
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box
-          sx={{
-            borderRadius: "20px",
-            border: "1px solid rgba(0, 0, 0, 0.30)",
-            marginTop: "30px",
-            marginRight: "20px",
-            width: "50%",
-          }}
-        >
-          <EmployeeCountPieChart teamEmployeeCount = {apiData?.get_employee_team_count}/>
-        </Box>
-        <Box
-          sx={{
-            width: "50%",
-            marginTop: "30px",
-          }}
-        >
-          <AdminActivity activityAnnoucements = {activityAnnoucements?.activity_data}/>
-        </Box>
-      </Box>
-      <AdminProjectSummy projects = {apiData?.project_details}/>
+    setIsLoading(false);
+  },[]);
+  if(isLoading){
+    return(
+      <Loading/>
+    )
+  }else{
 
-      <DashboardPosComp />
-      <Box sx={{ display: "flex" }}>
-        <Box
+    return (
+      <Box>
+        <ToastContainer/>
+        <Typography
+          variant="h4"
           sx={{
-            border: "1px solid #0000004D",
-            // marginTop: "25px",
-            // width: "fit-content",
-            width: "60%",
-            borderRadius: "12px",
-            marginRight: "20px",
+            margin: "25px 0px 15px 0px",
+            font: {
+              lg: "normal normal 400 22px/35px Poppins",
+              md: "normal normal 400 22px/35px Poppins",
+              sm: "normal normal 400 20px/30px Poppins",
+              xs: "normal normal 400 22px/30px Poppins",
+            },
+            color: "#161E54",
           }}
         >
-          <Typography
-            sx={{
-              fontFamily: "Poppins",
-              backgroundColor: "#1B204A",
-              color: "#FFFFFF",
-              borderRadius: "12px 12px 0px 0px",
-              padding: "6px 16px",
-            }}
-          >
-            Suggestions Summary
-          </Typography>
-          <Box sx={{ padding: "0px 8px 8px 8px" }}>
-            <List sx={{ paddingBottom: "4px" }}>
-              {feedback?.map((item) => {
-                return (
-                  <ListItem
-                    sx={{
-                      padding: "4px",
-                      // width: "100%",
-                      border: "1px solid #00000033",
-                      borderRadius: "10px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        height: "100%",
-                        justifyContent: "center",
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "20px",
-                        fontFamily: "Poppins",
-                        color: "#222B45",
-                        fontWeight: "400",
-                      }}
-                    >
-                      {item.description}
-                    </Typography>
-                    <Typography
-                      sx={{
-                        height: "100%",
-                        width: "23%",
-                        justifyContent: "center",
-                        display: "flex",
-                        alignItems: "center",
-                        fontFamily: "Poppins",
-                        color: "#222B45",
-                        fontWeight: "600",
-                      }}
-                    >
-                      
-                      {dateFormat(item.date)}
-                    </Typography>
-                  </ListItem>
-                );
-              })}
-            </List>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            border: "1px solid #0000004D",
-            // marginTop: "25px",
-            width: "fit-content",
-            borderRadius: "12px",
-            width: "40%",
-          }}
-        >
+          Welcome Admin !
+        </Typography>
+        <Box sx={{ display: "flex" }}>
           <Box
             sx={{
-              backgroundColor: "#1B204A",
-              color: "#FFFFFF",
-              borderRadius: "12px 12px 0px 0px",
-              padding: "6px 16px",
+              borderRadius: "20px",
+              border: "1px solid rgba(0, 0, 0, 0.30)",
+              width: "auto",
             }}
           >
-            <Typography sx={{ fontFamily: "Poppins" }}>
-              New Announcement/Notice
-            </Typography>
+            <ProjectOverview apiData = {apiData}/>
           </Box>
-          <Box sx={{ margin: "0px 8px 8px 8px", marginTop: "1.5%" }}>
-            <List sx={{ paddingBottom: "0px" }}>
-              {activityAnnoucements?.announcement_data?.map((item) => {
-                return (
-                  <ListItem
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      padding: "4px",
-                      border: "1px solid #00000033",
-                      marginBottom: "8px",
-                      backgroundColor: "#FAFAFA",
-                      borderRadius: "6px",
-                    }}
-                  >
-                    <Box
+          <Box
+            sx={{
+              borderRadius: "20px",
+              border: "1px solid rgba(0, 0, 0, 0.30)",
+              margin: "0px 5px 0px 25px",
+            }}
+          >
+            <AdminPerformace />
+          </Box>
+        </Box>
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Box
+            sx={{
+              borderRadius: "20px",
+              border: "1px solid rgba(0, 0, 0, 0.30)",
+              marginTop: "30px",
+              marginRight: "20px",
+              width: "50%",
+            }}
+          >
+            <EmployeeCountPieChart teamEmployeeCount = {apiData?.get_employee_team_count}/>
+          </Box>
+          <Box
+            sx={{
+              width: "50%",
+              marginTop: "30px",
+            }}
+          >
+            <AdminActivity activityAnnoucements = {activityAnnoucements?.activity_data}/>
+          </Box>
+        </Box>
+        <AdminProjectSummy projects = {apiData?.project_details}/>
+  
+        <DashboardPosComp />
+        <Box sx={{ display: "flex" }}>
+          <Box
+            sx={{
+              border: "1px solid #0000004D",
+              // marginTop: "25px",
+              // width: "fit-content",
+              width: "60%",
+              borderRadius: "12px",
+              marginRight: "20px",
+            }}
+          >
+            <Typography
+              sx={{
+                fontFamily: "Poppins",
+                backgroundColor: "#1B204A",
+                color: "#FFFFFF",
+                borderRadius: "12px 12px 0px 0px",
+                padding: "6px 16px",
+              }}
+            >
+              Suggestions Summary
+            </Typography>
+            <Box sx={{ padding: "0px 8px 8px 8px" }}>
+              <List sx={{ paddingBottom: "4px" }}>
+                {feedback?.slice(0,5)?.map((item) => {
+                  return (
+                    <ListItem
                       sx={{
-                        height: "100%",
-                        width: "250px",
-                        justifyContent: "center",
+                        padding: "4px",
+                        // width: "100%",
+                        border: "1px solid #00000033",
+                        borderRadius: "10px",
                         display: "flex",
-                        alignItems: "center",
-                        padding: "20px",
+                        justifyContent: "space-between",
                       }}
                     >
                       <Typography
                         sx={{
+                          height: "100%",
+                          justifyContent: "center",
+                          display: "flex",
+                          alignItems: "center",
+                          padding: "20px",
                           fontFamily: "Poppins",
-                          color: "#303030",
+                          color: "#222B45",
                           fontWeight: "400",
                         }}
                       >
                         {item.description}
                       </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        height: "100%",
-                        width: "23%",
-                        justifyContent: "center",
-                        display: "flex",
-                        alignItems: "center",
-                        fontFamily: "Poppins",
-                        color: "#00000099",
-                        fontWeight: "600",
-                      }}
-                    >
-                      <img src="icons/pin.svg" />
-                      <img src="icons/3dots.svg" />
-                    </Box>
-                  </ListItem>
-                );
-              })}
-            </List>
-            <Button
-              variant="outlined"
-              color="error"
+                      <Typography
+                        sx={{
+                          height: "100%",
+                          width: "23%",
+                          justifyContent: "center",
+                          display: "flex",
+                          alignItems: "center",
+                          fontFamily: "Poppins",
+                          color: "#222B45",
+                          fontWeight: "600",
+                        }}
+                      >
+                        
+                        {dateFormat(item.date)}
+                      </Typography>
+                    </ListItem>
+                  );
+                })}
+              </List>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              border: "1px solid #0000004D",
+              // marginTop: "25px",
+              width: "fit-content",
+              borderRadius: "12px",
+              width: "40%",
+            }}
+          >
+            <Box
               sx={{
-                textTransform: "none",
-                fontFamily: "Poppins",
-                width: "100%",
-                border: "1px solid #00000033",
-                color: "#FF5151",
-                fontWeight: "500",
-                borderRadius: "0px 0px 10px 10px",
-                marginTop: "1%",
+                backgroundColor: "#1B204A",
+                color: "#FFFFFF",
+                borderRadius: "12px 12px 0px 0px",
+                padding: "6px 16px",
               }}
             >
-              New Announcement/Notice
-            </Button>
+              <Typography sx={{ fontFamily: "Poppins" }}>
+                New Announcement/Notice
+              </Typography>
+            </Box>
+            <Box sx={{ margin: "0px 8px 8px 8px", marginTop: "1.5%" }}>
+              <List sx={{ paddingBottom: "0px" }}>
+                {activityAnnoucements?.announcement_data?.map((item) => {
+                  return (
+                    <ListItem
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        padding: "4px",
+                        border: "1px solid #00000033",
+                        marginBottom: "8px",
+                        backgroundColor: "#FAFAFA",
+                        borderRadius: "6px",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          height: "100%",
+                          width: "250px",
+                          justifyContent: "center",
+                          display: "flex",
+                          alignItems: "center",
+                          padding: "20px",
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontFamily: "Poppins",
+                            color: "#303030",
+                            fontWeight: "400",
+                          }}
+                        >
+                          {item.description}
+                        </Typography>
+                      </Box>
+                      <Box
+                        sx={{
+                          height: "100%",
+                          width: "23%",
+                          justifyContent: "center",
+                          display: "flex",
+                          alignItems: "center",
+                          fontFamily: "Poppins",
+                          color: "#00000099",
+                          fontWeight: "600",
+                        }}
+                      >
+                        <img src="icons/pin.svg" />
+                        <img src="icons/3dots.svg" />
+                      </Box>
+                    </ListItem>
+                  );
+                })}
+              </List>
+              <Button
+                variant="outlined"
+                color="error"
+                sx={{
+                  textTransform: "none",
+                  fontFamily: "Poppins",
+                  width: "100%",
+                  border: "1px solid #00000033",
+                  color: "#FF5151",
+                  fontWeight: "500",
+                  borderRadius: "0px 0px 10px 10px",
+                  marginTop: "1%",
+                }}
+              >
+                New Announcement/Notice
+              </Button>
+            </Box>
           </Box>
         </Box>
+        <AdminApprovals approvalData = {approvalData} approvalReq={approvalReq}/>
       </Box>
-      <AdminApprovals approvalData = {approvalData} approvalReq={approvalReq}/>
-    </Box>
-  );
+    );
+  }
 };
 
 export default AdminDashboard;

@@ -66,7 +66,7 @@ const AdminActivity = ({activityAnnoucements}) => {
           Activity Planned
         </Typography>
         <List sx={{ paddingBottom: "4px", margin: "0px 8px 8px 8px" }}>
-          {activityAnnoucements?.map((item) => {
+          {activityAnnoucements?.slice(0,3)?.map((item) => {
             return (
               <ListItem
                 sx={{
