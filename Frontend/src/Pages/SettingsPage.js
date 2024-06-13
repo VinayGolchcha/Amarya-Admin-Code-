@@ -15,6 +15,7 @@ import SettingsSkiilSet from "./SettingsSkiilSet";
 import SettingsCategory from "./SettingsCategory";
 import env from "react-dotenv";
 import SettingsTeams from "./SettingsTeams";
+import PolicyPage from "../AdminPages/PolicyPage";
 
 function TextFieldsGrid() {
   const [selectedTab, setSelectedTab] = useState("AddUser");
@@ -197,6 +198,33 @@ function TextFieldsGrid() {
                   "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)",
               },
               backgroundImage:
+                selectedTab === "policy"
+                  ? "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)"
+                  : "none",
+              margin: "0px 10px",
+              borderRadius: "72px",
+            }}
+            onClick={() => {
+              handleTabChange("policy");
+            }}
+          >
+            <Box
+              component="img"
+              src={`${process.env.PUBLIC_URL}/Images/settings/Vector.png`}
+              alt="Category"
+              sx={{ margin: "0px 10px", cursor: "pointer" , height : "60%"}}
+            />
+          </Button>
+          <Button
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              "&:hover": {
+                backgroundImage:
+                  "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)",
+              },
+              backgroundImage:
                 selectedTab === "project"
                   ? "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)"
                   : "none",
@@ -250,6 +278,7 @@ function TextFieldsGrid() {
       {selectedTab === "project" && <SettingsProject />}
       {selectedTab === "skillset" && <SettingsSkiilSet />}
       {selectedTab === "teams" && <SettingsTeams />}
+      {selectedTab === "policy" && <PolicyPage/>}
     </div>
   );
 }

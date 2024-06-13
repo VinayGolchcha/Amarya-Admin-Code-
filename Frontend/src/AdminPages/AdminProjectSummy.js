@@ -118,10 +118,10 @@ const rows = [
   },
 ];
 
-const AdminProjectSummy = () => {
+const AdminProjectSummy = ({projects}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
+  
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -191,14 +191,14 @@ const AdminProjectSummy = () => {
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? rows.slice(
+                  ? projects?.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
                   : rows
-                ).map((row) => (
+                )?.map((row , i) => (
                   <TableRow
-                    key={row.sNo}
+                    key={i}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
                     <TableCell
@@ -206,25 +206,25 @@ const AdminProjectSummy = () => {
                       scope="row"
                       sx={{ fontFamily: "Poppins" }}
                     >
-                      {row.sNo}
+                      {i+1}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
-                      {row.clientName}
+                      {row.client_name}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
-                      {row.projectLead}
+                      {row.project_lead}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
                       {row.project}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
-                      {row.stats === "Delivered" ? (
+                      {row.project_status === "Delivered" ? (
                         <>
-                          <img src="Images/circle(1).svg" /> {row.stats}
+                          <img src="Images/circle(1).svg" /> {row.project_status}
                         </>
                       ) : (
                         <>
-                          <img src="Images/circle.svg" /> {row.stats}{" "}
+                          <img src="Images/circle.svg" /> {row.project_status}{" "}
                         </>
                       )}
                     </TableCell>

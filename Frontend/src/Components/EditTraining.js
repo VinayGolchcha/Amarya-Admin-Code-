@@ -1,6 +1,6 @@
 import Modal from "@mui/material/Modal";
 import { Box, Button, Typography } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -44,34 +44,39 @@ const labelStyle = {
   fontSize: { lg: "1rem", md: "1rem", sm: "1rem", xs: "0.9 rem" },
   color : "rgb(120, 120, 122)"
 };
-export default function AddTraining({
+export default function EditTraining({
   handleClose,
   open,
-  addTraining
+  addTraining , 
+  selectedTr ,
+  handleUpdate
 }) {
 
+  const [courseName , setCouseName] = useState("");
+  const [courseDescription , setCourseDescription] = useState("");
+  const [roadmapUrl , setRoadmapUrl] = useState("");
+  const [details , setDetails] = useState("");
+  const [trId , setTrId] = useState(""); 
 
-  const itemNewInId = useRef("");
-  const itemNewDop = useRef("");
-  const itemNewAssignee = useRef("");
-  const itemNewItem = useRef("");
-  const itemNewDescription = useRef("");
-  const itemNewIssuedFrom = useRef("");
-  const itemNewIssuedTill = useRef("");
-  const itemNewRepairs = useRef("");
-  const itemNewInWarranty = useRef("");
-  const itemNewEndWarranty = useRef("");
+  useEffect(() => {
+    setCouseName(selectedTr?.courseName);
+    setCourseDescription(selectedTr?.courseDescription);
+    setRoadmapUrl(selectedTr?.roadmapurl);
+    setDetails("");
+    setTrId(selectedTr?.trainindId);
+
+  } , [selectedTr])
 
   function handleSubmit(event) {
     event.preventDefault();
     const newItem = {
-      course_name : itemNewInId.current.value,
-      course_description : itemNewDop.current.value,
-      roadmap_url : itemNewAssignee.current.value,
-      details : itemNewItem.current.value,
+      course_name : courseName,
+      course_description : courseDescription,
+      roadmap_url : roadmapUrl,
+      details : details,
 
   };
-  addTraining(newItem);
+  handleUpdate(trId , newItem);
     // handleAdd((prevData) => [...prevData, newItem]);
   }
   return (
@@ -106,7 +111,8 @@ export default function AddTraining({
                   type="text"
                   id="inId"
                   style={inputControl}
-                  ref={itemNewInId}
+                  value={courseName}
+                  onChange={(e) => setCouseName(e.target.value)}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -118,7 +124,8 @@ export default function AddTraining({
                   type="text"
                   id="dop"
                   style={inputControl}
-                  ref={itemNewDop}
+                  value={courseDescription}
+                  onChange={(e) => setCourseDescription(e.target.value)}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -130,7 +137,8 @@ export default function AddTraining({
                   type="text"
                   id="assignee"
                   style={inputControl}
-                  ref={itemNewAssignee}
+                  value={roadmapUrl}
+                  onChange={(e) => setRoadmapUrl(e.target.value)}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
@@ -151,7 +159,8 @@ export default function AddTraining({
                   padding: "5px",
                   margin: "2px 0px",
                 }}
-                  ref={itemNewItem}
+                  value={details}
+                  onChange={(e) => setDetails(e.target.value)}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>

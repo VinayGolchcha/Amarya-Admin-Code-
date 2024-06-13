@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import ProjectOverview from "../Components/ProjectOverview";
 import EmployeeCountPieChart from "../Components/AdminPieChart";
@@ -8,6 +8,9 @@ import AdminActivity from "./AdminActivity";
 import AdminProjectSummy from "./AdminProjectSummy";
 import DashboardPosComp from "../Components/DashboardPosComp";
 import AdminApprovals from "./AdminApprovals";
+import axios from "axios";
+import { useAuth } from '../Components/AuthContext';
+import { ToastContainer, toast } from "react-toastify";
 
 const suggSum = [
   {
@@ -48,8 +51,118 @@ const announceNoti = [
   },
 ];
 const AdminDashboard = () => {
+  const [projectOverview , setProjectOverview] = useState([]);
+  const [feedback , setFeedback] = useState([]);
+  const [projects , setProjects] = useState([]);
+  const [onGoingProjects , setOnGoingProjects] = useState(null);
+  const [totalProjects , setTotalProjects] = useState(null);
+  const [approvalData , setApprovalData] = useState([]);
+  const [activityAnnoucements , setActivityAnnoucements] = useState([]);
+  const [apiData , setApidata] = useState([]);
+  const {user} = useAuth();
+  console.log(user);
+
+  const approvalReq = async (body) => {
+    try{
+      const res = await axios.put(`${process.env.REACT_APP_API_URI}/approval/admin/approval` , body , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
+      toast.success(res?.data?.message);
+      fetchApprovalData();
+    }catch(err){
+      console.log(err);
+    }
+  }
+  const fetchFeedback = async () => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/userDashboard/admin/fetch-user-feedback` , {
+        headers : {
+          "x-access-token" : user?.token,
+        }
+      })
+      setFeedback(res?.data?.data);
+    }catch(err){
+      console.log(err);
+    }
+  }
+  const fetchApprovalData = async () => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/fetch-approval-data` , {
+        headers : {
+          "x-access-token" : user?.token,
+        }
+      });
+      setApprovalData(res?.data?.data);
+      console.log(approvalData);
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  const fecthActAnn = async() => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/fetch-activity-announcement` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
+      setActivityAnnoucements(res?.data?.data);
+      console.log(activityAnnoucements);
+    }catch(err){
+      console.log(err);
+    }
+
+  }
+  const fetchProjects = async () => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/project/fetch-all-projects` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      });
+      setProjects(res?.data?.data);
+      const fecthedProjects = res?.data?.data
+      const inprogress = 0 ;
+      const projectInProgress = fecthedProjects.filter((item) => item.project_status === "In Progress");
+      setOnGoingProjects(projectInProgress.length);
+      setTotalProjects(res?.data?.data?.length);
+      setOnGoingProjects()
+    }catch(err){
+      console.log(err);
+    }
+  }
+  const adminDashboardApi = async() => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/admin-dashboard` , {
+        headers : {
+          "x-access-token" : user?.token
+        }
+      })
+      setApidata(res?.data?.data);
+      console.log(res);
+    }catch(err){
+      console.log(err);
+    }
+  }
+  const dateFormat = (date) => {
+    const reqFormat = new Date(date);
+    const dateList = reqFormat.toString().split(" ");
+    const stringFormat = dateList[2]+" "+ dateList[1]+" " + dateList[3];
+    return stringFormat;
+  }
+  
+  useEffect(()=> {
+    fetchFeedback();
+    fetchProjects();
+    fetchApprovalData();
+    fecthActAnn();
+    adminDashboardApi();
+  },[])
   return (
     <Box>
+      <ToastContainer/>
       <Typography
         variant="h4"
         sx={{
@@ -73,7 +186,7 @@ const AdminDashboard = () => {
             width: "auto",
           }}
         >
-          <ProjectOverview />
+          <ProjectOverview apiData = {apiData}/>
         </Box>
         <Box
           sx={{
@@ -95,7 +208,7 @@ const AdminDashboard = () => {
             width: "50%",
           }}
         >
-          <EmployeeCountPieChart />
+          <EmployeeCountPieChart teamEmployeeCount = {apiData?.get_employee_team_count}/>
         </Box>
         <Box
           sx={{
@@ -103,10 +216,10 @@ const AdminDashboard = () => {
             marginTop: "30px",
           }}
         >
-          <AdminActivity />
+          <AdminActivity activityAnnoucements = {activityAnnoucements?.activity_data}/>
         </Box>
       </Box>
-      <AdminProjectSummy />
+      <AdminProjectSummy projects = {apiData?.project_details}/>
 
       <DashboardPosComp />
       <Box sx={{ display: "flex" }}>
@@ -133,7 +246,7 @@ const AdminDashboard = () => {
           </Typography>
           <Box sx={{ padding: "0px 8px 8px 8px" }}>
             <List sx={{ paddingBottom: "4px" }}>
-              {suggSum.map((item) => {
+              {feedback?.map((item) => {
                 return (
                   <ListItem
                     sx={{
@@ -171,7 +284,8 @@ const AdminDashboard = () => {
                         fontWeight: "600",
                       }}
                     >
-                      {item.date}
+                      
+                      {dateFormat(item.date)}
                     </Typography>
                   </ListItem>
                 );
@@ -202,7 +316,7 @@ const AdminDashboard = () => {
           </Box>
           <Box sx={{ margin: "0px 8px 8px 8px", marginTop: "1.5%" }}>
             <List sx={{ paddingBottom: "0px" }}>
-              {announceNoti.map((item) => {
+              {activityAnnoucements?.announcement_data?.map((item) => {
                 return (
                   <ListItem
                     sx={{
@@ -273,7 +387,7 @@ const AdminDashboard = () => {
           </Box>
         </Box>
       </Box>
-      <AdminApprovals />
+      <AdminApprovals approvalData = {approvalData} approvalReq={approvalReq}/>
     </Box>
   );
 };
