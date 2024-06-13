@@ -26,6 +26,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { format } from "date-fns";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import { useAuth } from "../Components/AuthContext";
 
 const teams = [
   { value: "", label: "Select Team" },
@@ -128,25 +129,73 @@ const WorkSheet = () => {
 
   const [rows, setRows] = useState([
     {
-      empid: "AMEMP00012",
+      empid: "",
       team: "",
-      date: new Date().toLocaleDateString(),
-      category: "Client Project",
-      project: "Shephertz",
-      description: "Finance Automation for GST, TDS in the app",
-      skillset: ["Node JS", "Python", "ML", "AWS"],
+      date: "",
+      category: "",
+      project: "",
+      description: "",
+      skillset: [],
     },
   ]);
   const [currentPage, setCurrentPage] = useState(0);
-  const rowsPerPage = 5;
+  const rowsPerPage = 5;  
 
   const [newRow, setNewRow] = useState(null);
   const [editingRowIndex, setEditingRowIndex] = useState(null);
   const [textValue, setTextValue] = useState("");
 
+
   const [filterEmpId, setFilterEmpId] = useState(""); // State to store the selected employee ID for filtering
-  const handleFilterChange = (event) => {
-    setFilterEmpId(event.target.value);
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
+  };
+  const fetchWorksheetDataForEmployee = async (empId) => {
+    try {
+      const response = await fetch(
+        `${apiUrl}/worksheet/fetch-user-worksheet/${empId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      if (data.success) {
+        const worksheetData = data?.data.map((rowData) => ({
+          empid: rowData.emp_id,
+          team: rowData.team,
+          date: formatDate(rowData.created_at),
+          category: rowData.category,
+          project: rowData.project,
+          description: rowData.description,
+          // skillset: getSkillsetNameByIds(rowData.skill_set_id),
+          skillset: rowData.skills || [],  // Map skills to skillset
+        }));
+        setRows(worksheetData);
+      } else {
+        console.error("Failed to fetch worksheet data:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching worksheet data:", error);
+    }
+  };
+
+  const handleFilterChange = (event, newValue) => {
+    if (newValue) {
+      setFilterEmpId(newValue.emp_id); // Set the employee ID for fetching data
+      fetchWorksheetDataForEmployee(newValue.emp_id); // Fetch worksheet data for selected employee
+    } else {
+      setFilterEmpId("");
+    }
   };
 
   const handleChangePage = (event, newPage) => {
@@ -258,7 +307,39 @@ const WorkSheet = () => {
     "Skillset",
     "",
   ];
+  const [employees, setEmployees] = useState([]);
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); //
 
+  useEffect(() => {
+    // Fetch the list of all employees when the component mounts
+    fetchAllEmployees();
+  }, []);
+
+  const fetchAllEmployees = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/user/fetch-all-employee-ids`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      if (data.success) {
+        setEmployees(data.data); // Assuming data.data contains the list of employees
+        setFilterDropdown(data.data.map((emp) => emp.emp_id)); // Assuming emp_id is the identifier
+      } else {
+        console.error("Failed to fetch employees:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+    }
+  };
   return (
     <Box style={{ margin: "20px 20px 20px 20px" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -285,10 +366,15 @@ const WorkSheet = () => {
           </InputLabel>
           {/* Replace the Select component with Autocomplete */}
           <Autocomplete
-            options={["all", ...filterDropdown]} // Include the "All" option
-            getOptionLabel={(option) => option}
-            value={filterEmpId}
-            onChange={(event, newValue) => setFilterEmpId(newValue)}
+            options={employees}
+            getOptionLabel={(option) => option.name} // Display employee names
+            filterOptions={(options, state) => {
+              return options.filter(option =>
+                option.name.toLowerCase().includes(state.inputValue.toLowerCase())
+              );
+            }}
+            value={employees.find((emp) => emp.emp_id === filterEmpId) || null}
+            onChange={handleFilterChange}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -378,7 +464,7 @@ const WorkSheet = () => {
                     />
                   </TableCell>
                   {renderTableCells(row)}
-                  <TableCell>
+                  {/* <TableCell>
                     <Box
                       component="img"
                       src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
@@ -386,155 +472,11 @@ const WorkSheet = () => {
                       onClick={handleSaveRow}
                       sx={{ cursor: "pointer" }}
                     />
-                  </TableCell>
+                  </TableCell> */}
                 </TableRow>
               ))}
           </TableBody>
         </Table>
-        {/* {newRow && (
-              <TableRow>
-                <TableCell
-                  style={{ filter: "invert(1)", alignItems: "center" }}
-                >
-                  <Box
-                    component="img"
-                    src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                    alt="Check"
-                  />
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    variant="standard"
-                    value={newRow.empid}
-                    onChange={(e) =>
-                      handleNewRowChange("empid", e.target.value)
-                    }
-                    sx={{ width: "80px", marginTop: "15px" }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <FormControl>
-                    <InputLabel htmlFor="team-select">Team</InputLabel>
-                    <Select
-                      value={newRow.team}
-                      onChange={(e) =>
-                        handleNewRowChange("team", e.target.value)
-                      }
-                      label="team-select"
-                      sx={{ width: "100px" }}
-                      variant="standard"
-                    >
-                      {teams.map((team) => (
-                        <MenuItem key={team.value} value={team.value}>
-                          {team.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    variant="standard"
-                    type="date"
-                    value={newRow.date}
-                    onChange={(e) => handleNewRowChange("date", e.target.value)}
-                    sx={{ width: "120px", marginTop: "15px" }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <FormControl>
-                    <InputLabel htmlFor="category-select">Category</InputLabel>
-                    <Select
-                      id="category"
-                      value={newRow.category}
-                      onChange={(e) =>
-                        handleNewRowChange("category", e.target.value)
-                      }
-                      label="category-select"
-                      variant="standard"
-                      sx={{ width: "120px" }}
-                    >
-                      {categories.map((category) => (
-                        <MenuItem key={category.value} value={category.value}>
-                          {category.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </TableCell>
-                <TableCell>
-                  <FormControl>
-                    <InputLabel htmlFor="project-select">Project</InputLabel>
-                    <Select
-                      value={newRow.project}
-                      id="project"
-                      onChange={(e) =>
-                        handleNewRowChange("project", e.target.value)
-                      }
-                      label="project-select"
-                      sx={{ width: "100px" }}
-                      variant="standard"
-                    >
-                      {projects.map((project) => (
-                        <MenuItem key={project.value} value={project.value}>
-                          {project.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    variant="standard"
-                    value={newRow.description}
-                    onChange={(e) =>
-                      handleNewRowChange("description", e.target.value)
-                    }
-                    sx={{ marginTop: "15px" }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <FormControl>
-                    <InputLabel htmlFor="skillset-select">Skillset</InputLabel>
-                    <Select
-                      multiple
-                      id="skillset"
-                      value={newRow.skillset}
-                      onChange={(e) => handleSkillsetChange(e.target.value)}
-                      label="skillset-select"
-                      sx={{ width: "100px" }}
-                      variant="standard"
-                    >
-                      {skillsets.map((skill) => (
-                        <MenuItem key={skill} value={skill}>
-                          {skill}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </TableCell>
-
-                <TableCell>
-                  <Box
-                    component="img"
-                    src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
-                    alt="Check"
-                    onClick={handleSaveRow}
-                    sx={{ cursor: "pointer" }}
-                  />
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        <TableCell sx={{ textAlign: "center", cursor: "pointer" }}>
-          <Box
-            component="img"
-            src={`${process.env.PUBLIC_URL}/Images/Add_ring_duotone.png`}
-            alt="Check"
-            onClick={handleAddRow}
-          />
-        </TableCell> */}
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
@@ -543,116 +485,7 @@ const WorkSheet = () => {
           page={currentPage}
           onPageChange={handleChangePage}
         />
-      </Box>
-      <Typography
-        variant="h4"
-        sx={{
-          margin: "25px 0px 20px 10px",
-          font: {
-            lg: "normal normal 300 22px/35px Poppins",
-            md: "normal normal 300 22px/35px Poppins",
-            sm: "normal normal 300 20px/30px Poppins",
-            xs: "normal normal 300 22px/30px Poppins",
-          },
-        }}
-      >
-        Add new Property
-      </Typography>
-      <Box sx={{ borderRadius: "12px", border: "1px solid #BCBCBC" }}>
-        <Typography
-          variant="h4"
-          sx={{
-            margin: "25px 0px 20px 10px",
-            font: {
-              lg: "normal normal 600 18/25px Poppins",
-              md: "normal normal 600 18/25px Poppins",
-              sm: "normal normal 600 18px/25px Poppins",
-              xs: "normal normal 600 16px/25px Poppins",
-            },
-            color: "#4C4C4C",
-          }}
-        >
-          Select One from below:
-        </Typography>
-        <FormGroup
-          sx={{
-            paddingLeft: "20px",
-            color: "#4C4C4C",
-            font: {
-              lg: "normal normal 600 18/25px Poppins",
-              md: "normal normal 600 18/25px Poppins",
-              sm: "normal normal 600 18px/25px Poppins",
-              xs: "normal normal 600 16px/25px Poppins",
-            },
-          }}
-        >
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selectedOption === "Project"}
-                onChange={() => handleCheckboxChange("Project")}
-              />
-            }
-            label="Project"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selectedOption === "Category"}
-                onChange={() => handleCheckboxChange("Category")}
-              />
-            }
-            label="Category"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selectedOption === "Skillset"}
-                onChange={() => handleCheckboxChange("Skillset")}
-              />
-            }
-            label="Skill Set"
-          />
-        </FormGroup>
-        <Typography
-          variant="h4"
-          sx={{
-            margin: "25px 0px 20px 20px",
-            font: {
-              lg: "normal normal 600 18/25px Poppins",
-              md: "normal normal 600 18/25px Poppins",
-              sm: "normal normal 600 18px/25px Poppins",
-              xs: "normal normal 600 16px/25px Poppins",
-            },
-            color: "#4C4C4C",
-          }}
-        >
-          Fill your property below
-        </Typography>
-        <TextField
-          id="filled-basic"
-          variant="outlined"
-          sx={{
-            margin: "0px 20px 20px 20px",
-            backgroundColor: "rgb(250, 250, 250)",
-          }}
-          onChange={(e) => handleTextFieldChange(e.target.value)}
-        />
-        <br />
-        <box sx={{ textAlign: "center" }}>
-          <Button
-            variant="contained"
-            style={{
-              backgroundColor: "#FF5151",
-              color: "white",
-              border: "4px",
-              margin: "10px 0px 20px 40%",
-            }}
-            onClick={addOptionToDropdown}
-          >
-            Click to Save
-          </Button>
-        </box>
+      {/* </Box> */}
         <ToastContainer />
       </Box>
     </Box>

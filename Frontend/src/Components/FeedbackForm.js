@@ -1,11 +1,55 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Typography, TextField } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DemoItem } from "@mui/x-date-pickers/internals/demo";
+import { useAuth } from "./AuthContext";
+import dayjs from "dayjs";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function FeedbackForm() {
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || "");
+  const [date, setDate] = useState(dayjs());
+  const [subject, setSubject] = useState("");
+  const [description, setDescription] = useState("");
+  const apiUrl = process.env.REACT_APP_API_URL;
+
+  const handleSubmit = async () => {
+    const feedbackData = {
+      emp_id: user?.user_id, // Replace with actual employee ID if available
+      date: date.format("YYYY-MM-DD"),
+      subject,
+      description,
+    };
+
+    try {
+      const response = await fetch(
+        `${apiUrl}/userDashboard/user-dashboard-feedback`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token, // Add your custom headers here
+          },
+          body: JSON.stringify(feedbackData),
+        }
+      );
+
+      if (response.ok) {
+        // Handle successful submission (e.g., display a success message, clear form, etc.)
+        console.log("Feedback submitted successfully!");
+        toast.success("Feedback submitted successfully!");
+      } else {
+        // Handle error response
+        console.error("Failed to submit feedback");
+      }
+    } catch (error) {
+      console.error("An error occurred while submitting feedback:", error);
+    }
+  };
+
   return (
     <Box
       sx={{ p: 2, mt: 2, border: "1px solid #E0E0E0", borderRadius: "12px" }}
@@ -29,16 +73,14 @@ export default function FeedbackForm() {
         >
           Suggestions and Feedback
         </Typography>
-        {/* Date code starts here */}
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoItem components={["DatePicker"]}>
-            <DatePicker
-              label="Date"
-              sx={{ backgroundColor: "rgb(250, 250, 250)" }}
-            />
-          </DemoItem>
+          <DatePicker
+            label="Date"
+            value={date}
+            onChange={(newDate) => setDate(newDate)}
+            sx={{ backgroundColor: "rgb(250, 250, 250)" }}
+          />
         </LocalizationProvider>
-        {/* date code ends here */}
       </Box>
       <Typography
         sx={{
@@ -55,6 +97,8 @@ export default function FeedbackForm() {
         fullWidth
         variant="outlined"
         type="text"
+        value={subject}
+        onChange={(e) => setSubject(e.target.value)}
         sx={{
           border: "0.5px solid #E0E0E0",
           borderRadius: "6px",
@@ -78,6 +122,8 @@ export default function FeedbackForm() {
         multiline
         rows={4}
         type="text"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
         sx={{
           border: "0.5px solid #E0E0E0",
           borderRadius: "6px",
@@ -100,6 +146,7 @@ export default function FeedbackForm() {
               backgroundColor: "#FF5151",
             },
           }}
+          onClick={handleSubmit}
         >
           Send to admin
         </Button>

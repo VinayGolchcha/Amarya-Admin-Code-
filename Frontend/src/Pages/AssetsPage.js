@@ -125,6 +125,18 @@ const AssetsPage = () => {
   };
 
   const handleSendAsset = () => {
+    if (!declarationChecked) {
+      toast.warn("Please check the declaration checkbox before sending the request.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      return;
+    }
     const requestData = {
       emp_id: user?.user_id,
       asset_type: selectedRequestTypes.length > 0 ? selectedRequestTypes : "",

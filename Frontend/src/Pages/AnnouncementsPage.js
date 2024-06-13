@@ -7,11 +7,13 @@ import axios from "axios";
 const AnnouncementPage = () => {
     const { notifications, setNotifications } = useContext(NotificationContext);
     const apiUrl = process.env.REACT_APP_API_URL;
+    
 
     useEffect(() => {
         if (notifications.length === 0) {
             axios
-                .get(`${apiUrl}/announcement/admin/fetch-announcement`)
+                .get(`${apiUrl}/announcement
+                    /fetch-announcement`)
                 .then((response) => {
                     const data = response.data;
                     if (data.success) {
