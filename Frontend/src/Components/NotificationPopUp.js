@@ -22,7 +22,11 @@ export default function NotificationPopUp() {
   useEffect(() => {
     if (notifications.length === 0) {
       axios
-        .get(`${apiUrl}/announcement/admin/fetch-announcement`)
+        .get(`${apiUrl}/announcement/fetch-announcement`,{
+          headers: {
+            "x-access-token": token, // Add your custom headers here
+          },
+        })
         .then((response) => {
           const data = response.data;
           if (data.success) {
@@ -52,7 +56,7 @@ export default function NotificationPopUp() {
       {(popupState) => (
         <div>
           <Box variant="text" {...bindTrigger(popupState)}>
-            <Badge badgeContent={notifications.filter(notification => !notification.read).length} color="error">
+            <Badge badgeContent={notifications?.filter(notification => !notification.read).length} color="error">
               <NotificationsIcon sx={{ color: "#b4b4b4" }} />
             </Badge>
           </Box>
@@ -109,7 +113,7 @@ export default function NotificationPopUp() {
               }}
             >
               <List sx={{ width: "100%", padding: "4px 0px", height: "270px" }}>
-                {notifications.map((item, index) => {
+                {notifications?.map((item, index) => {
                   return (
                     <ListItem
                       sx={{

@@ -100,20 +100,21 @@ function createData(
   inId,
   dop,
   photo,
-  assingnee,
+  assignee,
   item,
   description,
   issued_From,
   issued_Till,
   repairs,
   in_Warranty,
-  warranty_End
+  warranty_End,
+  public_id // Add this parameter
 ) {
   return {
     inId,
     dop,
     photo,
-    assingnee,
+    assignee,
     item,
     description,
     issued_From,
@@ -121,8 +122,10 @@ function createData(
     repairs,
     in_Warranty,
     warranty_End,
+    public_id // Ensure it's included in the returned object
   };
 }
+
 
 const rows = [
   createData(
@@ -150,8 +153,8 @@ export default function AssetsAdminPage() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
-  
- console.log(user);
+
+  console.log(user);
   const fetchAssets = async () => {
     try {
       const response = await axios.get(`${apiUrl}/asset/admin/fetch-assets`, {
@@ -168,13 +171,14 @@ export default function AssetsAdminPage() {
             asset.assignee ? asset.assignee : "-",
             asset.item,
             asset.item_description,
-            new Date(asset.issued_from).toLocaleDateString(),
+            asset.issued_from
+              ? new Date(asset.issued_from).toLocaleDateString()
+              : "-",
             asset.issued_till
               ? new Date(asset.issued_till).toLocaleDateString()
               : "-",
             null, // You need to fetch this value from the API or set it accordingly
             asset.warranty_period > 0 ? "YES" : "NO",
-            // Calculate the warranty end date based on purchase date and warranty period
             asset.warranty_period
               ? new Date(
                   new Date(asset.purchase_date).setFullYear(
@@ -182,11 +186,12 @@ export default function AssetsAdminPage() {
                       asset.warranty_period
                   )
                 ).toLocaleDateString()
-              : null
+              : null,
+            asset.public_id // Include public_id
           );
         });
         setAssetsData(apiAssets);
-        console.log(apiAssets, "kdsfk;k");
+        console.log(apiAssets);
       } else {
         console.error("Error fetching assets:", response.data.message);
       }
@@ -268,7 +273,7 @@ export default function AssetsAdminPage() {
   }
 
   const renderItemImage = (photoUrl) => {
-    console.log(photoUrl);
+    // console.log(photoUrl);
     return (
       <img
         src={photoUrl}
