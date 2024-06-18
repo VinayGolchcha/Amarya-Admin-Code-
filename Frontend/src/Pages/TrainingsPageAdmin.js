@@ -32,6 +32,8 @@ import axios from "axios";
 import AddTraining from "../Components/AddTraining";
 import { useAuth } from "../Components/AuthContext";
 import EditTraining from "../Components/EditTraining";
+import Loading from "../sharable/Loading";
+import ConfirmDelete from "../Components/ConfirmDelete";
 
 
 
@@ -88,6 +90,11 @@ const field = [
 
 
 export default function TrainingsPageAdmin( ) {
+  const [openConDel, setOpenConDel] = React.useState(false);
+  const handleOpenConDel = () => setOpenConDel(true);
+  const handleCloseConDel = () => setOpenConDel(false);
+  const [ id , setId] = React.useState(null);
+  const [isLoading , setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [courses, setfields] = React.useState([]);
   const [page, pagechange] = React.useState(0);
@@ -133,6 +140,7 @@ export default function TrainingsPageAdmin( ) {
     }
   }
   const fecthTrainings = async () => {
+    setIsLoading(true);
     try {
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/training/training-cards` , {
         headers : {
@@ -148,8 +156,10 @@ export default function TrainingsPageAdmin( ) {
           color : field[i].color
         }
       )));
+      setIsLoading(false);
     }catch(err){
       console.log(err);
+      setIsLoading(false);
     }
    }
   
@@ -215,6 +225,10 @@ export default function TrainingsPageAdmin( ) {
   const handleDelete = () => {
     setDelete(!deleteItem);
   }
+  const handleConfirmDelete = (id) => {
+    handleOpenConDel();
+    setId(id);
+  }
   const handleDeleteApi = async (val) => {
     try {
       const response = await axios.delete(`${process.env.REACT_APP_API_URI}/training/admin/delete-training/${val}`, {
@@ -224,6 +238,7 @@ export default function TrainingsPageAdmin( ) {
             });
             console.log(response);
       fecthTrainings();
+      handleCloseConDel();
     } catch (error) {
       console.log(error.response.data.message);
     }
@@ -246,14 +261,17 @@ export default function TrainingsPageAdmin( ) {
 
   React.useEffect(() => {
     // Axios GET request
-    fecthTrainings();
-    getAllUserTrainings();
+    const fecthData = async () => {
+      setIsLoading(true);
+      await Promise.all([
+        fecthTrainings(),
+        getAllUserTrainings()
+      ]);
+      setIsLoading(false);
+    }
+    fecthData();
   }, []);
   ///
-
-  React.useEffect(()=>{
-
-  },[data]);
 
     
 
@@ -314,341 +332,348 @@ export default function TrainingsPageAdmin( ) {
 
   let row;
   // const slicedData = data.slice(page * rowperpage, (page + 1) * rowperpage);
-  return (
-    <Box sx={{ display: "flex" }}>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: 100,
-        }}
-      >
-        <Typography
-          sx={{
-            margin: "12px 0px",
-            width: "630px",
-            height: "42px",
-            fontFamily: "Poppins",
-            fontSize: "24px",
-            fontWeight: "500",
-            lineHeight: "42px",
-            color: "#121843",
-          }}
-        >
-          Training
-        </Typography>
+  if(isLoading){
+    return(
+      <Loading/>
+    )
+  }else{
+    return (
+      <Box sx={{ display: "flex" }}>
         <Box
+          component="main"
           sx={{
             flexGrow: 1,
-            display: "flex",
-            flexWrap: "wrap",
-            p: 1,
-            justifyContent: "center",
+            p: 3,
+            width: 100,
           }}
         >
-          <Grid container spacing={2}>
-            {courses?.map((course) => {
-              return <TrainingCard field={course}   key={course.training_id}  logo= {DeleteOutlineIcon} edit={edit} deleteItem = {deleteItem} handleDeleteApi = {handleDeleteApi} setTrainingId = {setTrainingId} setSelectedTr = {setSelectedTr} setEditOpen = {setEditOpen}/>;
-            })}
-          </Grid>
-        </Box>
-        <Box sx={{ p: 1, marginBottom: "20px" }}>
-          <Grid container spacing={2}>
-            <Grid item lg={4} md={6} sm={12} xs={12}>
-              <Button
-                color="error"
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  border: "2px solid #E0E0E0",
-                  borderBottomLeftRadius: "10px",
-                  borderBottomRightRadius: "10px",
-                  textTransform: "none",
-                  fontFamily: "Poppins",
-                }}
-                onClick={handleClick}
-              >
-                Add Training
-              </Button>
-              <>
-              <AddTraining handleClose={handleClose} open={open} addTraining = {addTraining}/>
-              </>
-            </Grid>
-            <Grid item lg={4} md={6} sm={12} xs={12}>
-              <Button
-                color="error"
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  border: "2px solid #E0E0E0",
-                  borderBottomLeftRadius: "10px",
-                  borderBottomRightRadius: "10px",
-                  textTransform: "none",
-                  fontFamily: "Poppins",
-                }}
-                onClick={handleEditTr}
-              >
-                Update Training
-              </Button>
-              <>
-              <EditTraining handleClose={handleEditClose} open={editOpen} selectedTr = {selectedTr} handleUpdate={handleUpdate}/>
-              </>
-            </Grid>
-            <Grid item lg={4} md={6} sm={12} xs={12}>
-              <Button
-                color="error"
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  border: "2px solid #E0E0E0",
-                  borderBottomLeftRadius: "10px",
-                  borderBottomRightRadius: "10px",
-                  textTransform: "none",
-                  fontFamily: "Poppins",
-                }}
-                onClick={handleDelete}
-              >
-                Delete Training
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            fontFamily: "Preahvihear",
-          }}
-        >
+          <ConfirmDelete open={openConDel} handleClose={handleCloseConDel} handleIncomeDelete ={handleDeleteApi} id ={id}/>
           <Typography
             sx={{
-              color: "#FF5151",
               margin: "12px 0px",
-              width: "542px",
-              height: "28px",
-              fontFamily: "Preahvihear",
-              fontSize: "20px",
-              lineHeight: "28px",
+              width: "630px",
+              height: "42px",
+              fontFamily: "Poppins",
+              fontSize: "24px",
+              fontWeight: "500",
+              lineHeight: "42px",
+              color: "#121843",
             }}
           >
-            Training Description
+            Training
           </Typography>
-          <FormControlLabel
-            value="start"
-            control={
-              <Checkbox
-                sx={{
-                  color: pink[800],
-                  "&.Mui-checked": {
-                    color: pink[600],
-                  },
-                }}
-                onChange={handleChangeFilter}
-              />
-            }
-            label="Enable Filter"
-            labelPlacement="start"
-            sx={{fontFamily : 'Poppins' , color : '#FF5151'}}
-          />
-        </Box>
-        <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
-          <Table>
-            <TableHead>
-              <TableRow style={{ fontFamily: "Poppins" }}>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                    minWidth: "126px",
-                    height: "40px",
-                  }}
-                >
-                  <Box sx={{display : 'flex'}}>
-                    <img src="Check.svg" style={{ margin: "-4px 6px" }} />
-                    Tr.No
-                    {filter && <FilterAltIcon onClick={handleTrId} />}
-                  </Box>
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: "flex",
+              flexWrap: "wrap",
+              p: 1,
+              justifyContent: "center",
+            }}
+          >
+            <Grid container spacing={2}>
+              {courses?.map((course) => {
+                return <TrainingCard field={course}   key={course.training_id}  logo= {DeleteOutlineIcon} edit={edit} deleteItem = {deleteItem} handleDeleteApi = {handleConfirmDelete} setTrainingId = {setTrainingId} setSelectedTr = {setSelectedTr} setEditOpen = {setEditOpen}/>;
+              })}
+            </Grid>
+          </Box>
+          <Box sx={{ p: 1, marginBottom: "20px" }}>
+            <Grid container spacing={2}>
+              <Grid item lg={4} md={6} sm={12} xs={12}>
+                <Button
+                  color="error"
+                  sx={{
+                    height: "100%",
+                    width: "100%",
+                    border: "2px solid #E0E0E0",
+                    borderBottomLeftRadius: "10px",
+                    borderBottomRightRadius: "10px",
+                    textTransform: "none",
                     fontFamily: "Poppins",
                   }}
+                  onClick={handleClick}
                 >
-                  Courses
-                </TableCell>
-                 
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
+                  Add Training
+                </Button>
+                <>
+                <AddTraining handleClose={handleClose} open={open} addTraining = {addTraining}/>
+                </>
+              </Grid>
+              <Grid item lg={4} md={6} sm={12} xs={12}>
+                <Button
+                  color="error"
+                  sx={{
+                    height: "100%",
+                    width: "100%",
+                    border: "2px solid #E0E0E0",
+                    borderBottomLeftRadius: "10px",
+                    borderBottomRightRadius: "10px",
+                    textTransform: "none",
                     fontFamily: "Poppins",
                   }}
+                  onClick={handleEditTr}
                 >
-                  Employee ID
-                </TableCell>
+                  Update Training
+                </Button>
+                <>
+                <EditTraining handleClose={handleEditClose} open={editOpen} selectedTr = {selectedTr} handleUpdate={handleUpdate}/>
+                </>
+              </Grid>
+              <Grid item lg={4} md={6} sm={12} xs={12}>
+                <Button
+                  color="error"
+                  sx={{
+                    height: "100%",
+                    width: "100%",
+                    border: "2px solid #E0E0E0",
+                    borderBottomLeftRadius: "10px",
+                    borderBottomRightRadius: "10px",
+                    textTransform: "none",
+                    fontFamily: "Poppins",
+                  }}
+                  onClick={handleDelete}
+                >
+                  Delete Training
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontFamily: "Preahvihear",
+            }}
+          >
+            <Typography
+              sx={{
+                color: "#FF5151",
+                margin: "12px 0px",
+                width: "542px",
+                height: "28px",
+                fontFamily: "Preahvihear",
+                fontSize: "20px",
+                lineHeight: "28px",
+              }}
+            >
+              Training Description
+            </Typography>
+            <FormControlLabel
+              value="start"
+              control={
+                <Checkbox
+                  sx={{
+                    color: pink[800],
+                    "&.Mui-checked": {
+                      color: pink[600],
+                    },
+                  }}
+                  onChange={handleChangeFilter}
+                />
+              }
+              label="Enable Filter"
+              labelPlacement="start"
+              sx={{fontFamily : 'Poppins' , color : '#FF5151'}}
+            />
+          </Box>
+          <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
+            <Table>
+              <TableHead>
+                <TableRow style={{ fontFamily: "Poppins" }}>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                      minWidth: "126px",
+                      height: "40px",
+                    }}
+                  >
+                    <Box sx={{display : 'flex'}}>
+                      <img src="Check.svg" style={{ margin: "-4px 6px" }} />
+                      Tr.No
+                      {filter && <FilterAltIcon onClick={handleTrId} />}
+                    </Box>
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Courses
+                  </TableCell>
+                   
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Employee ID
+                  </TableCell>
+               
+                {/* //   style={{
+                //     backgroundColor: "#161e54",
+                //     color: "#ffffff",
+                //     fontFamily: "Poppins",
+                //     padding : '0px'
+                //   }}
+                // >
+                //   <TextField id="standard-basic" InputProps={{ sx: { } }}  label="Emp Id" variant="outlined" size="small" onChange={handleFilterEmp} sx={{backgroundColor : 'white'}}/>
+                // </TableCell>
+                //   } */} 
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Course Description
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                      minWidth : '124px',
+                    }}
+                  >
+                    Status {
+                      filter && <Filter handleSelect = {handleSelect}/>
+                    }
+                  </TableCell>
              
-              {/* //   style={{
-              //     backgroundColor: "#161e54",
-              //     color: "#ffffff",
-              //     fontFamily: "Poppins",
-              //     padding : '0px'
-              //   }}
-              // >
-              //   <TextField id="standard-basic" InputProps={{ sx: { } }}  label="Emp Id" variant="outlined" size="small" onChange={handleFilterEmp} sx={{backgroundColor : 'white'}}/>
-              // </TableCell>
-              //   } */} 
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Course Description
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                    minWidth : '124px',
-                  }}
-                >
-                  Status {
-                    filter && <Filter handleSelect = {handleSelect}/>
-                  }
-                </TableCell>
-           
-                  {/* // <TableCell
-                  //   style={{
-                  //     backgroundColor: "#161e54",
-                  //     color: "#ffffff",
-                  //     fontFamily: "Poppins",
-                  //     paddingTop : '1px'
-                  //         }}>
-                  //       <FormControl
-                  //         sx={{
-                  //           backgroundColor: "#161e54",
-                  //           color: "#ffffff",
-                  //           fontFamily: "Poppins",
-                  //           height: "100%",
-                  //           width: "100%",
-                  //         }}
-                  //       >
-                          
-                  //         <NativeSelect
-                  //           defaultValue={courseStatus}
-                  //           inputProps={{
-                  //             name: "status",
-                  //             id: "uncontrolled-native",
-                              
-                  //           }}
-                  //           // sx={{ color: 'white' }}
-                  //           onChange={handleSelect}
-                  //           sx={{backgroundColor : 'white' , paddingLeft : '2px'}}
-                  //         >
-                  //           <option value={"All"} style={{fontFamily: "Poppins", color: 'black'}}>All</option>
-                  //           <option value={"Pending"} style={{fontFamily: "Poppins" , color: 'black'}}>Pending</option>
-                  //           <option value={"In Progress"} style={{fontFamily: "Poppins" , color: 'black'}}>In Progress</option>
-                  //           <option value={"Completed"} style={{fontFamily: "Poppins" , color: 'black'}}>Completed</option>
-                  //         </NativeSelect>
-                  //       </FormControl>
-                  // </TableCell>
-                  
-                )} */}
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Approval
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-  {filter ? (
-    data?.map((row, i) => (
-      <TableRow key={i}>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          <Checkbox
-            checked={selectedRows.includes(row.id)}
-            onChange={() => handleCheckboxChange(row.id)}
-          />
-          {row.id}
-        </TableCell>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          {row.courses}
-        </TableCell>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          {row.empid}
-        </TableCell>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          {row.coursedescription}
-        </TableCell>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          {row.completedinprogress}
-        </TableCell>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          {row.approvedon}
-        </TableCell>
-      </TableRow>
-    ))
-  ) : filteredData?.length > 0 ? (
-    filteredData?.map((row, i) => (
-      <TableRow key={i}>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          <Checkbox
-            checked={selectedRows.includes(row.id)}
-            onChange={() => handleCheckboxChange(row.id)}
-          />
-          {row.id}
-        </TableCell>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          {row.courses}
-        </TableCell>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          {row.empid}
-        </TableCell>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          {row.coursedescription}
-        </TableCell>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          {row.completedinprogress}
-        </TableCell>
-        <TableCell style={{ fontFamily: "Poppins" }}>
-          {row.approvedon}
+                    {/* // <TableCell
+                    //   style={{
+                    //     backgroundColor: "#161e54",
+                    //     color: "#ffffff",
+                    //     fontFamily: "Poppins",
+                    //     paddingTop : '1px'
+                    //         }}>
+                    //       <FormControl
+                    //         sx={{
+                    //           backgroundColor: "#161e54",
+                    //           color: "#ffffff",
+                    //           fontFamily: "Poppins",
+                    //           height: "100%",
+                    //           width: "100%",
+                    //         }}
+                    //       >
+                            
+                    //         <NativeSelect
+                    //           defaultValue={courseStatus}
+                    //           inputProps={{
+                    //             name: "status",
+                    //             id: "uncontrolled-native",
+                                
+                    //           }}
+                    //           // sx={{ color: 'white' }}
+                    //           onChange={handleSelect}
+                    //           sx={{backgroundColor : 'white' , paddingLeft : '2px'}}
+                    //         >
+                    //           <option value={"All"} style={{fontFamily: "Poppins", color: 'black'}}>All</option>
+                    //           <option value={"Pending"} style={{fontFamily: "Poppins" , color: 'black'}}>Pending</option>
+                    //           <option value={"In Progress"} style={{fontFamily: "Poppins" , color: 'black'}}>In Progress</option>
+                    //           <option value={"Completed"} style={{fontFamily: "Poppins" , color: 'black'}}>Completed</option>
+                    //         </NativeSelect>
+                    //       </FormControl>
+                    // </TableCell>
+                    
+                  )} */}
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Approval
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+    {filter ? (
+      data?.map((row, i) => (
+        <TableRow key={i}>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            <Checkbox
+              checked={selectedRows.includes(row.id)}
+              onChange={() => handleCheckboxChange(row.id)}
+            />
+            {row.id}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.courses}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.empid}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.coursedescription}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.completedinprogress}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.approvedon}
+          </TableCell>
+        </TableRow>
+      ))
+    ) : filteredData?.length > 0 ? (
+      filteredData?.map((row, i) => (
+        <TableRow key={i}>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            <Checkbox
+              checked={selectedRows.includes(row.id)}
+              onChange={() => handleCheckboxChange(row.id)}
+            />
+            {row.id}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.courses}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.empid}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.coursedescription}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.completedinprogress}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.approvedon}
+          </TableCell>
+        </TableRow>
+      ))
+    ) : (
+      <TableRow>
+        <TableCell colSpan={6}>
+          <Alert severity="warning" sx={{ width: '100%' }}>
+            No data found.
+          </Alert>
         </TableCell>
       </TableRow>
-    ))
-  ) : (
-    <TableRow>
-      <TableCell colSpan={6}>
-        <Alert severity="warning" sx={{ width: '100%' }}>
-          No data found.
-        </Alert>
-      </TableCell>
-    </TableRow>
-  )}
-</TableBody>
-
-          </Table>
-        </TableContainer>
-        {/* <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          rowsPerPage={rowperpage}
-          page={page}
-          count={data.length}
-          component="div"
-          onPageChange={handlechangepage}
-          onRowsPerPageChange={handleRowsPerPage}
-        ></TablePagination> */}
+    )}
+  </TableBody>
+  
+            </Table>
+          </TableContainer>
+          {/* <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPage={rowperpage}
+            page={page}
+            count={data.length}
+            component="div"
+            onPageChange={handlechangepage}
+            onRowsPerPageChange={handleRowsPerPage}
+          ></TablePagination> */}
+        </Box>
       </Box>
-    </Box>
-  );
+    );
+  }
 }

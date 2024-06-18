@@ -157,13 +157,19 @@ const AdminDashboard = () => {
   }
   
   useEffect(()=> {
+    const fetchData = async () => {
+      setIsLoading(true);
+      await Promise.all([
+        fetchFeedback(),
+        fetchProjects(),
+        fetchApprovalData(),
+        fecthActAnn(),
+        adminDashboardApi()
+      ]);
+      setIsLoading(false);
+    }
+    fetchData();
     
-    fetchFeedback();
-    fetchProjects();
-    fetchApprovalData();
-    fecthActAnn();
-    adminDashboardApi();
-    setIsLoading(false);
   },[]);
   if(isLoading){
     return(
