@@ -34,6 +34,7 @@ import { useAuth } from "../Components/AuthContext";
 import EditTraining from "../Components/EditTraining";
 import Loading from "../sharable/Loading";
 import ConfirmDelete from "../Components/ConfirmDelete";
+import { ToastContainer, toast } from "react-toastify";
 
 
 
@@ -129,7 +130,7 @@ export default function TrainingsPageAdmin( ) {
   
   const addTraining = async (body) => {
     try {
-      const res = axios.post(`${process.env.REACT_APP_API_URI}/training/admin/add-new-training` , body , {
+      const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/admin/add-new-training` , body , {
         headers : {
           "x-access-token" : user?.token
         }
@@ -137,6 +138,10 @@ export default function TrainingsPageAdmin( ) {
       fecthTrainings();
     }catch(err){
       console.log(err);
+      const errors = err?.response?.data?.errors;
+        errors.forEach((item) => {
+          toast.error(item?.msg);
+        });
     }
   }
   const fecthTrainings = async () => {
@@ -217,6 +222,10 @@ export default function TrainingsPageAdmin( ) {
       })
       .catch(error => {
         console.error('Error updating training:', error);
+        const errors = error?.response?.data?.errors;
+        errors.forEach((item) => {
+          toast.error(item?.msg);
+        });
         // Handle error as needed
       });
   };
@@ -339,6 +348,7 @@ export default function TrainingsPageAdmin( ) {
   }else{
     return (
       <Box sx={{ display: "flex" }}>
+        <ToastContainer/>
         <Box
           component="main"
           sx={{

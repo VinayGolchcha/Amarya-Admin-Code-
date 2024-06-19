@@ -508,7 +508,10 @@ const AdminNotificationTab = () => {
         fetchNotification();
       }
       catch (error) {
-      toast.error(error?.response?.data?.errors[0]?.msg);
+        const errors = error?.response?.data?.errors;
+        errors.forEach((item) => {
+          toast.error(item?.msg);
+        });
     }
   };
 
@@ -530,7 +533,11 @@ const AdminNotificationTab = () => {
         fetchNotification();
       }
       catch (error) {
-      toast.error(error?.response?.data?.errors[0]?.msg);
+        const errors = error?.response?.data?.errors;
+        errors.forEach((item) => {
+          toast.error(item?.msg);
+        });
+      
     }
   }
 
@@ -552,7 +559,10 @@ const AdminNotificationTab = () => {
       setEdit(false);
       setSelectedNoti({});
     } catch (error) {
-      toast.error(error?.response?.data?.errors);
+      const errors = error?.response?.data?.errors;
+        errors.forEach((item) => {
+          toast.error(item?.msg);
+        });
     }
   }
   const handleEditAnnouncement = async (body, id) => {
@@ -576,7 +586,10 @@ const AdminNotificationTab = () => {
       setEdit(false);
       setSelectedNoti({});
     } catch (error) {
-      toast.error(error?.response?.data?.errors);
+      const errors = error?.response?.data?.errors;
+        errors.forEach((item) => {
+          toast.error(item?.msg);
+        });
     }
   };
 

@@ -161,7 +161,11 @@ export default function LeaveMangementPage() {
 
       toast.success(response?.data?.message);
     } catch (error) {
+      const errors = error?.response?.data?.errors;
+      errors.forEach((item) => {
+        toast.error(item?.msg);});
       console.error("Error:", error);
+      
     }
   };
 

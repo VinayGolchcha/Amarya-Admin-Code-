@@ -12,6 +12,7 @@ import axios from "axios";
 import { useAuth } from '../Components/AuthContext';
 import { ToastContainer, toast } from "react-toastify";
 import Loading from "../sharable/Loading";
+import { useNavigate } from "react-router-dom";
 
 const suggSum = [
   {
@@ -52,6 +53,7 @@ const announceNoti = [
   },
 ];
 const AdminDashboard = () => {
+  const navigate = useNavigate();
   const [projectOverview , setProjectOverview] = useState([]);
   const [feedback , setFeedback] = useState([]);
   const [projects , setProjects] = useState([]);
@@ -397,6 +399,9 @@ const AdminDashboard = () => {
                   fontWeight: "500",
                   borderRadius: "0px 0px 10px 10px",
                   marginTop: "1%",
+                }}
+                onClick={() => {
+                  navigate("/anouncement")
                 }}
               >
                 New Announcement/Notice

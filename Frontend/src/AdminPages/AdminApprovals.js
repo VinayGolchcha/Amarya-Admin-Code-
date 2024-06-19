@@ -28,6 +28,7 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -167,6 +168,7 @@ const rows = [
 ];
 
 export default function AdminApprovals({approvalData , approvalReq}) {
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const[foreignId , setForeignId] = useState("");
