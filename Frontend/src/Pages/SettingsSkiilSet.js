@@ -10,18 +10,7 @@ import {
 import { useAuth } from "../Components/AuthContext";
 
 export default function SettingsSkillSet() {
-  const [formData, setFormData] = useState([
-    { _id: "", skill: "" },
-    { _id: "", skill: "" },
-    { _id: "", skill: "" },
-    { _id: "", skill: "" },
-    { _id: "", skill: "" },
-    { _id: "", skill: "" },
-    { _id: "", skill: "" },
-    { _id: "", skill: "" },
-    { _id: "", skill: "" },
-    { _id: "", skill: "" },
-  ]);
+  const [formData, setFormData] = useState([]);
 
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
@@ -42,7 +31,7 @@ export default function SettingsSkillSet() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": user?.token,
+        "x-access-token": token,
       },
     })
       .then((response) => {
@@ -204,8 +193,21 @@ export default function SettingsSkillSet() {
     }
   };
 
-  return (
-    <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
+  return  (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        // height: '100vh',
+      }}
+    >
+    <Box
+      sx={{
+        flexGrow: 1,
+        m: "25px 0px 20px 25px",
+      }}
+    >
       <Grid container spacing={4}>
         <Grid item xs={4}>
           {formData.slice(0, midPoint).map((data, index) => (
@@ -337,6 +339,7 @@ export default function SettingsSkillSet() {
           </Box>
         </Grid>
       </Grid>
+    </Box>
     </Box>
   );
 }

@@ -109,13 +109,13 @@ const UserProfilePage = () => {
 
   const [projectsData, setProjectsData] = useState({
     currentProject: {
-      project_id: 1113,
-      emp_id: "AMEMP031",
-      tech: "node js, express js, and MYSQL",
-      team_id: 1111,
-      start_month: "04/24",
-      end_month: "11/24",
-      project_manager: "Sumit Kumar",
+      project_id: null,
+      emp_id: "",
+      tech: "",
+      team_id: null,
+      start_month: "",
+      end_month: "",
+      project_manager: "",
     },
     projects: [],
   });

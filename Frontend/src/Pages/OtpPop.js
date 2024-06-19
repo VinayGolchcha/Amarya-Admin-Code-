@@ -1,27 +1,37 @@
 import { TextField, Button } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
-import CloseIcon from '@mui/icons-material/Close';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CloseIcon from "@mui/icons-material/Close";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import "./../App.css";
 import Model from "./Model";
+import { useAuth } from "../Components/AuthContext";
+import { Update } from "@mui/icons-material";
 
 function OtpP({ closeOtpP }) {
-    const [otp, setOtp] = useState("");
-     const[openModel,setOpenModel]=useState(false)
+  const [otp, setOtp] = useState("");
+  const [openModel, setOpenModel] = useState(false);
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || "");
+  const apiUrl = process.env.REACT_APP_API_URL;
 
-const handleUpdate = async () => {
+  const handleUpdate = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/user/update-password",
+        `${apiUrl}/user/verify-email-for-password-update`,
         {
-         otp,
+          otp,
+        },
+        {
+          headers: {
+            "x-access-token": token,
+          },
         }
       );
       console.log(response);
-     } catch (error) {
+      setOpenModel(true)
+    } catch (error) {
       console.log("Error data:", error.response.data.errors[0]?.msg);
-    
     }
   };
   return (
@@ -34,7 +44,7 @@ const handleUpdate = async () => {
           width: "100vw",
           position: "absolute",
           top: "-250px",
-        //   left: "800px",
+          //   left: "800px",
           zIndex: "11",
         }}
         className="modelbackgroundd"
@@ -49,11 +59,10 @@ const handleUpdate = async () => {
 
             top: "50%",
             left: "50%",
-            
+
             transform: "translate(-50%,-50%)",
             // backgroundColor: "rgb(50, 50, 116)",
-            background:"#161E54",
-
+            background: "#161E54",
           }}
           className="modelcontainer"
         >
@@ -65,55 +74,33 @@ const handleUpdate = async () => {
               background: "none",
               borderRadius: "50%",
               width: "10px",
-              padding:"0",
-              minWidth:"30px",
+              padding: "0",
+              minWidth: "30px",
               height: "30px",
               color: "white",
-              top:"10px",
-
+              top: "10px",
             }}
             variant="contained"
             color="primary"
             onClick={() => closeOtpP(false)}
           >
-            < ArrowBackIcon />
+            <ArrowBackIcon />
           </Button>
-         
 
           <div>
             <h1>OTP Verification</h1>
-            <p >
-             Please Enter The OTP Sent To Your Email To <br></br>
-            Complete The Verification process
-            </p>  
-        <TextField
-              id="filled-basic"
-              variant="filled"
-              inputProps={{ maxLength: 1 }} 
-              
-              
-            
-              onChange={(e) => setOtp(e.target.value)}
-              sx={{
-                marginY: 1,
-                width: "8%",
-                borderRadius: "5px",
-                border: "1px solid #FF5151",
-                backgroundColor: "white",
-                
-              }}
-            />
+            <p>
+              Please Enter The OTP Sent To Your Email To <br></br>
+              Complete The Verification process
+            </p>
             <TextField
               id="filled-basic"
               variant="filled"
-              inputProps={{ maxLength: 1 }} 
-              
-            
+              inputProps={{ maxLength: 1 }}
               onChange={(e) => setOtp(e.target.value)}
               sx={{
                 marginY: 1,
                 width: "8%",
-                marginLeft:"15px",
                 borderRadius: "5px",
                 border: "1px solid #FF5151",
                 backgroundColor: "white",
@@ -122,14 +109,12 @@ const handleUpdate = async () => {
             <TextField
               id="filled-basic"
               variant="filled"
-              inputProps={{ maxLength: 1 }} 
-              
-            
+              inputProps={{ maxLength: 1 }}
               onChange={(e) => setOtp(e.target.value)}
               sx={{
                 marginY: 1,
                 width: "8%",
-                marginLeft:"15px",
+                marginLeft: "15px",
                 borderRadius: "5px",
                 border: "1px solid #FF5151",
                 backgroundColor: "white",
@@ -138,14 +123,26 @@ const handleUpdate = async () => {
             <TextField
               id="filled-basic"
               variant="filled"
-              inputProps={{ maxLength: 1 }} 
-              
-            
+              inputProps={{ maxLength: 1 }}
               onChange={(e) => setOtp(e.target.value)}
               sx={{
                 marginY: 1,
                 width: "8%",
-                marginLeft:"15PX",
+                marginLeft: "15px",
+                borderRadius: "5px",
+                border: "1px solid #FF5151",
+                backgroundColor: "white",
+              }}
+            />
+            <TextField
+              id="filled-basic"
+              variant="filled"
+              inputProps={{ maxLength: 1 }}
+              onChange={(e) => setOtp(e.target.value)}
+              sx={{
+                marginY: 1,
+                width: "8%",
+                marginLeft: "15PX",
                 borderRadius: "5px",
                 border: "1px solid #FF5151",
                 backgroundColor: "white",
@@ -153,7 +150,7 @@ const handleUpdate = async () => {
             />
             <br></br>
             <br></br>
-           
+
             <Button
               sx={{
                 marginTop: "10px",
@@ -163,19 +160,17 @@ const handleUpdate = async () => {
                 padding: "10px",
                 color: "white",
                 fontWeight: 600,
-               
-                textTransform:"none",
-               
+
+                textTransform: "none",
               }}
               variant="contained"
               color="primary"
-            //   onClick={handleUpdate}
-              onClick={()=>setOpenModel(true)}
-          
+              //   onClick={handleUpdate}
+              onClick={handleUpdate}
             >
               Verify otp
             </Button>
-            { openModel && <Model closeModel={setOpenModel}/>}
+            {openModel && <Model closeModel={setOpenModel} />}
 
             <br></br>
           </div>

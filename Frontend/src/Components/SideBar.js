@@ -57,19 +57,19 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
     },
   ];
 
-  const [activeItem, setActiveItem] = useState("");
+  const [activeItem, setActiveItem] = useState("Dashboard");
 
   useEffect(() => {
     // Extract the last part of the pathname (e.g., 'dashboard', 'assets')
     const currentPath = location.pathname.split("/").pop();
-    setActiveItem(currentPath || "dashboard");
+    setActiveItem(currentPath || "");
     if (
       !menu.some((item) => item.link === currentPath) &&
       !other.some((item) => item.link === currentPath)
     ) {
-      setActiveItem("dashboard");
+      setActiveItem("Dashboard");
     }
-  }, [location.pathname]);
+  }, []);
 
   const handleItemClick = (text) => {
     setActiveItem(text);

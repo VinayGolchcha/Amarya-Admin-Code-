@@ -48,7 +48,7 @@ export default function SettingsAddUser() {
     joining_date: "",
     experience: 0,
     completed_projects: 0,
-    team_id: 0,
+    team_id: null,
     gender: "",
     file: "",
   });
@@ -62,9 +62,9 @@ export default function SettingsAddUser() {
       if (selectedTeam) {
         setFormData((prevState) => ({
           ...prevState,
-          [name]: selectedTeam._id, // Set the team_id instead of the value
+          team_id: selectedTeam._id, // Set the team_id instead of the value
         }));
-        console.log(selectedTeam);
+        console.log(formData,selectedTeam);
       } else {
         console.error('Selected team not found');
       }
@@ -128,7 +128,7 @@ export default function SettingsAddUser() {
       ...formData,
       dob: formData.dob,
       joining_date: formData.joining_date,
-      team_id:formData.team
+      team_id:formData.team_id
     };
 
     // Create a new FormData instance
@@ -139,7 +139,7 @@ export default function SettingsAddUser() {
       }
     }
 
-    console.log("submit Data:", updatedFormData);
+    console.log("submit Data:", formDataToSend);
     try {
       const response = await axios.post(
         `${apiUrl}/user/admin/register`,
@@ -151,7 +151,7 @@ export default function SettingsAddUser() {
           },
         }
       );
-      toast.success("User data saved successfully!");
+      toast.success(response.data.message);
     } catch (error) {
       console.error("Error saving user data:", error.message);
       if (error.response && error.response.data && error.response.data.errors) {

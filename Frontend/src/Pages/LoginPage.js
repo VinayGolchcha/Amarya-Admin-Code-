@@ -9,6 +9,8 @@ import "./EmailPop";
 import EmailP from "./EmailPop";
 import { useAuth } from "../Components/AuthContext";
 import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -38,10 +40,22 @@ const LoginPage = () => {
         navigate("/");
       } else {
         console.error("Login failed");
-        // Handle login error
+        toast.error("Login failed");
       }
     } catch (error) {
       console.error("Error:", error);
+      if (error.response) {
+        // Server responded with a non 2xx status code
+        const { data } = error.response;
+        if (data && data.message) {
+          toast.error(data.message);
+        } else {
+          toast.error("Error logging in");
+        }
+      } else {
+        // Request failed before getting to server (e.g., network issue)
+        toast.error("Error logging in. Please check your network connection.");
+      }
     }
   };
   // useEffect(() => {

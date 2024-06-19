@@ -254,7 +254,7 @@ const AssetsPage = () => {
             },
           }}
         >
-          AMEMP00012 - Sanjana Jain
+         {user?.user_id} - {user?.user_name}
         </Typography>
         <Box
           sx={{

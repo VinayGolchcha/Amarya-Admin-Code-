@@ -37,7 +37,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { useAuth } from "../Components/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -55,8 +55,11 @@ export default function LeaveMangementPage() {
   const [leaveType, setLeaveType] = React.useState("Casual Leave");
   const [subject, setSubject] = React.useState("");
   const [body, setBody] = React.useState("");
-  const [rows , setRows] = React.useState([]);
-  const [leaveOverviewData , setLeaveOverviewData] = React.useState([]);
+  const [rows, setRows] = React.useState([]);
+  const [leaveOverviewData, setLeaveOverviewData] = React.useState([]);
+  const [leaveTypes, setLeaveTypes] = React.useState([]); // State for leave types
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || "");
   ////
 
   // new code
@@ -66,42 +69,65 @@ export default function LeaveMangementPage() {
   const [loading, setLoading] = React.useState(true);
 
   const [errorr, setErrorr] = React.useState(null);
-  const {user} = useAuth();
+
   const today = new Date();
 
   // const [error, setError]  = React.useState(null);
-  
 
   // const handleClick = async() => {
 
   const leaveOverView = async () => {
-    try{
-      const res = await axios.post(`${process.env.REACT_APP_API_URI}/leave/fetch-leave-overview` ,{
-        emp_id : user?.user_id,
-        status : "approved"
-      } , {
-        headers : {
-          "x-access-token" : user?.token
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_API_URI}/leave/fetch-leave-overview`,
+        {
+          emp_id: user?.user_id,
+          status: "approved",
+        },
+        {
+          headers: {
+            "x-access-token": token,
+          },
         }
-      })
-      setLeaveOverviewData(res?.data?.data)
-    }catch(err){
+      );
+      setLeaveOverviewData(res?.data?.data);
+    } catch (err) {
       toast.error(err?.response?.message);
     }
-  }
-    
-  const getUserLeaves = async() => {
-    try{
-      const res = await axios.get(`${process.env.REACT_APP_API_URI}/leave/user-all-leave-data` , {
-        headers : {
-          "x-access-token" : user?.token
+  };
+
+  const getUserLeaves = async () => {
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URI}/leave/user-all-leave-data`,
+        {
+          headers: {
+            "x-access-token": token,
+          },
         }
-      });
+      );
       setRows(res?.data?.data);
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
+
+  const fetchLeaveData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URI}/leave/fetch-leave-type-and-count`,
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+      setLeaveTypes(response.data.data); // Update the leave types state
+    } catch (error) {
+      console.error("Error fetching leave types:", error);
+    }
+  };
+
   React.useEffect(() => {
     async function getData() {
       try {
@@ -109,10 +135,11 @@ export default function LeaveMangementPage() {
 
         const response = await axios.get(
           // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
-          `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data/${user?.user_id}` , {
-            headers : {
-              "x-access-token" : user?.token
-            }
+          `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data/${user?.user_id}`,
+          {
+            headers: {
+              "x-access-token": user?.token,
+            },
           }
           // "https://localhost:4000/api/v1/training/request-new-training"
         );
@@ -126,13 +153,12 @@ export default function LeaveMangementPage() {
       }
     }
     getData();
-    getUserLeaves()
+    getUserLeaves();
     leaveOverView();
-  },[]);
+    fetchLeaveData();
+  }, []);
 
   const handleUpdate = async () => {
-
-
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URI}/leave/leave-request`,
@@ -143,11 +169,11 @@ export default function LeaveMangementPage() {
           to_date: toDate,
           subject: subject,
           body: body,
-        } , {
-          headers : {
-              "x-access-token" : user?.token
-            }
-          
+        },
+        {
+          headers: {
+            "x-access-token": token,
+          },
         }
       );
 
@@ -169,8 +195,7 @@ export default function LeaveMangementPage() {
     const newDate = new Date(date);
     const datestr = newDate.toString().split(" ");
     return datestr[2] + " " + datestr[1];
-    
-  } 
+  };
   ////
   function handleFromDateChange(newDate) {
     const date = new Date(newDate);
@@ -190,7 +215,7 @@ export default function LeaveMangementPage() {
     const newdate = new Date(date);
     const dateStr = newdate.toString().split(" ");
     return dateStr[2] + " " + dateStr[1] + " " + dateStr[3];
-  }
+  };
   const currentDate = new Date();
 
   let row;
@@ -205,7 +230,7 @@ export default function LeaveMangementPage() {
           borderRadius: "10px",
         }}
       >
-        <ToastContainer/>
+        <ToastContainer />
         <Typography
           sx={{
             margin: "12px 0px",
@@ -254,7 +279,8 @@ export default function LeaveMangementPage() {
               lineHeight: "25px",
             }}
           >
-            Today’s Date {today.toString().split(" ")[2] }{today.toString().split(" ")[1]} {today.toString().split(" ")[3]}
+            Today’s Date {today.toString().split(" ")[2]}
+            {today.toString().split(" ")[1]} {today.toString().split(" ")[3]}
           </Typography>
           <Box
             sx={{
@@ -266,30 +292,35 @@ export default function LeaveMangementPage() {
             }}
             spacing={2}
           >
-            {data?.user_data?.map((item) => (<Card
-              sx={{
-                minHeight : "110px" ,
-                minWidth : "144px",
-                width: "125px",
-                height: "70px",
-                margin: "10px 0px",
-                marginRight: "10px",
-                backgroundColor: "#FFEFE7",
-                padding: "3px 3px 3px 15px",
-                display : "flex" , 
-                flexDirection : "column" ,
-                justifyContent : "space-between"
-              }}
-            >
-              <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                {item?.leave_type}
-              </Typography>
-              <CardContent sx={{ padding: "0px" }}>
-                <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                  <strong style={{ fontSize: "1.5rem" }}>{item?.leave_taken_count}</strong>/{item?.leave_count}
+            {data?.user_data?.map((item) => (
+              <Card
+                sx={{
+                  minHeight: "110px",
+                  minWidth: "144px",
+                  width: "125px",
+                  height: "70px",
+                  margin: "10px 0px",
+                  marginRight: "10px",
+                  backgroundColor: "#FFEFE7",
+                  padding: "3px 3px 3px 15px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
+                  {item?.leave_type}
                 </Typography>
-              </CardContent>
-            </Card>))}
+                <CardContent sx={{ padding: "0px" }}>
+                  <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
+                    <strong style={{ fontSize: "1.5rem" }}>
+                      {item?.leave_taken_count}
+                    </strong>
+                    /{item?.leave_count}
+                  </Typography>
+                </CardContent>
+              </Card>
+            ))}
           </Box>
           <Typography
             variant="h6"
@@ -318,7 +349,11 @@ export default function LeaveMangementPage() {
                 paddingLeft: "1rem",
               }}
             >
-              {data?.holiday_list_data?.map((item) => (<li style={{ fontFamily: "poppins" }}>{formattedDate(item?.date)} - {item?.holiday}</li>))}
+              {data?.holiday_list_data?.map((item) => (
+                <li style={{ fontFamily: "poppins" }}>
+                  {formattedDate(item?.date)} - {item?.holiday}
+                </li>
+              ))}
             </ol>
           </Card>
         </Box>
@@ -405,8 +440,11 @@ export default function LeaveMangementPage() {
                 sx={{ width: "100%", backgroundColor: "#fafafa" }}
                 onChange={handleChange}
               >
-                <MenuItem value={"Casual leave"}>casual  </MenuItem>
-                <MenuItem value={"Sick leave"}>Sick </MenuItem>
+                {leaveTypes.map((type) => (
+                  <MenuItem key={type.leave_type} value={type.leave_type}>
+                    {type.leave_type}
+                  </MenuItem>
+                ))}
               </Select>
               <br />
               <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
@@ -507,23 +545,26 @@ export default function LeaveMangementPage() {
                     height: { lg: "340px", md: "362px", sm: "305px" },
                   }}
                 >
-                  {leaveOverviewData?.map((item) => (<ListItem
-                    sx={{
-                      backgroundColor: "#fafafa",
-                      margin: "5px 0px",
-                      border: "0.5px solid #E0E0E0",
-                      borderRadius: "6px",
-                    }}
-                  >
-                    <ListItemText
-                      primary={item?.leave_type}
-                      secondary={
-                        <React.Fragment>
-                          {formattedLeaveDate(item?.from_date)} - {formattedLeaveDate(item?.to_date)}
-                        </React.Fragment>
-                      }
-                    />
-                  </ListItem>))}
+                  {leaveOverviewData?.map((item) => (
+                    <ListItem
+                      sx={{
+                        backgroundColor: "#fafafa",
+                        margin: "5px 0px",
+                        border: "0.5px solid #E0E0E0",
+                        borderRadius: "6px",
+                      }}
+                    >
+                      <ListItemText
+                        primary={item?.leave_type}
+                        secondary={
+                          <React.Fragment>
+                            {formattedLeaveDate(item?.from_date)} -{" "}
+                            {formattedLeaveDate(item?.to_date)}
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>
+                  ))}
                   <ListItem
                     sx={{
                       backgroundColor: "#fafafa",
@@ -674,64 +715,65 @@ export default function LeaveMangementPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows?.length === 0 ?
-              (<TableRow >
-                <TableCell colSpan={8}>
-                  <Alert severity="warning">Data not found.</Alert>
-                </TableCell>
-                
-              </TableRow>) : 
-              (rows?.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell
-                    style={{ fontFamily: "Poppins", minWidth: "110px" }}
-                  >
-                    <Box
-                      component="img"
-                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                      alt="Check"
-                      style={{ filter: "invert(1)" }}
-                      sx={{ paddingRight: "9px" }}
-                    />
-                    {row.id}
-                  </TableCell>
-                  <TableCell
-                    style={{ fontFamily: "Poppins", color: "#74828F" }}
-                  >
-                    {row.startDate}
-                  </TableCell>
-                  <TableCell
-                    style={{ fontFamily: "Poppins", color: "#74828F" }}
-                  >
-                    {row.endDate}
-                  </TableCell>
-                  <TableCell
-                    style={{ fontFamily: "Poppins", color: "#74828F" }}
-                  >
-                    {row.days}
-                  </TableCell>
-                  <TableCell
-                    style={{ fontFamily: "Poppins", color: "#74828F" }}
-                  >
-                    {row.leaveType}
-                  </TableCell>
-                  <TableCell
-                    style={{ fontFamily: "Poppins", color: "#74828F" }}
-                  >
-                    {row.extendedLeave}
-                  </TableCell>
-                  <TableCell
-                    style={{ fontFamily: "Poppins", color: "#74828F" }}
-                  >
-                    {row.approvedrejected}
-                  </TableCell>
-                  <TableCell
-                    style={{ fontFamily: "Poppins", color: "#74828F" }}
-                  >
-                    {row.manager}
+              {rows?.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8}>
+                    <Alert severity="warning">Data not found.</Alert>
                   </TableCell>
                 </TableRow>
-              )))}
+              ) : (
+                rows?.map((row) => (
+                  <TableRow key={row.id}>
+                    <TableCell
+                      style={{ fontFamily: "Poppins", minWidth: "110px" }}
+                    >
+                      <Box
+                        component="img"
+                        src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                        alt="Check"
+                        style={{ filter: "invert(1)" }}
+                        sx={{ paddingRight: "9px" }}
+                      />
+                      {row.id}
+                    </TableCell>
+                    <TableCell
+                      style={{ fontFamily: "Poppins", color: "#74828F" }}
+                    >
+                      {row.startDate}
+                    </TableCell>
+                    <TableCell
+                      style={{ fontFamily: "Poppins", color: "#74828F" }}
+                    >
+                      {row.endDate}
+                    </TableCell>
+                    <TableCell
+                      style={{ fontFamily: "Poppins", color: "#74828F" }}
+                    >
+                      {row.days}
+                    </TableCell>
+                    <TableCell
+                      style={{ fontFamily: "Poppins", color: "#74828F" }}
+                    >
+                      {row.leaveType}
+                    </TableCell>
+                    <TableCell
+                      style={{ fontFamily: "Poppins", color: "#74828F" }}
+                    >
+                      {row.extendedLeave}
+                    </TableCell>
+                    <TableCell
+                      style={{ fontFamily: "Poppins", color: "#74828F" }}
+                    >
+                      {row.approvedrejected}
+                    </TableCell>
+                    <TableCell
+                      style={{ fontFamily: "Poppins", color: "#74828F" }}
+                    >
+                      {row.manager}
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
             </TableBody>
           </Table>
         </TableContainer>

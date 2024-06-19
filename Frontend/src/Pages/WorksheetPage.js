@@ -132,7 +132,7 @@ const WorksheetPage = () => {
     const today = format(new Date(), "yyyy-MM-dd");
 
     setNewRow({
-      empid: randomId,
+      empid: user?.user_id,
       team: "",
       date: today,
       category: "",
@@ -167,7 +167,7 @@ const WorksheetPage = () => {
 
       // Prepare the data object
       const postData = {
-        emp_id: "AMEMP031",
+        emp_id: user?.user_id,
         team_id: teamId,
         category_id: categoryId,
         skill_set_id: skillSetIds,
@@ -181,8 +181,7 @@ const WorksheetPage = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-access-token":
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiQU1FTVAwMzIiLCJuYW1lIjoic2FuamFuYSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzE3NjYzMTA2LCJleHAiOjE3MjY2NjMxMDZ9.2SR73mJRK7Rprq6e3mrLMYj6RjAIfI_gCyw9vA4Fy8c",
+          "x-access-token": token, // Add your custom headers here
         },
         body: JSON.stringify(postData),
       });
@@ -252,7 +251,7 @@ const WorksheetPage = () => {
       skillsets?.length > 0 &&
       projects?.length > 0
     ) {
-      const empId = "AMEMP031"; // Replace this with the actual emp_id
+      const empId = user?.user_id; // Replace this with the actual emp_id
       fetchWorksheetDataForEmployee(empId);
     } else {
       console.error("Failed to fetch all required data.");
@@ -466,7 +465,7 @@ const WorksheetPage = () => {
           color: "#161E54",
         }}
       >
-        AMEMP00012 - Sanjana Jain
+        {user?.user_id} - {user?.user_name}
       </Typography>
       <Box
         sx={{

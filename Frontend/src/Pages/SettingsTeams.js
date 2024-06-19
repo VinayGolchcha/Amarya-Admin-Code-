@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
+import { useAuth } from "../Components/AuthContext";
 
 export default function SettingsTeams() {
   const [formData, setFormData] = useState([
@@ -18,14 +19,20 @@ export default function SettingsTeams() {
   const [originalFormData, setOriginalFormData] = useState([]);
   const midPoint = Math.floor(formData.length / 2);
   const apiUrl = process.env.REACT_APP_API_URL;
-  
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   useEffect(() => {
     fetchTeams();
   }, []);
 
   const fetchTeams = () => {
-    fetch(`${apiUrl}/team/fetch-all-teams`)
+    fetch(`${apiUrl}/team/fetch-all-teams`, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": user?.token,
+      },
+    })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch teams");
@@ -64,6 +71,10 @@ export default function SettingsTeams() {
         const teamId = formData[selectedInputIndex]._id;
         fetch(`${apiUrl}/team/admin/delete-team/${teamId}`, {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": user?.token,
+          },
         })
           .then((response) => {
             if (!response.ok) {
@@ -90,7 +101,6 @@ export default function SettingsTeams() {
       setEditMode(true); // Enable all text fields
     }
   };
-  
 
   const handleSave = () => {
     if (editMode) {
@@ -108,6 +118,7 @@ export default function SettingsTeams() {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            "x-access-token": user?.token,
           },
           body: JSON.stringify({ team: editedteam.team }),
         })
@@ -131,6 +142,7 @@ export default function SettingsTeams() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "x-access-token": user?.token,
           },
           body: JSON.stringify({ team: newteam.team }),
         })

@@ -7,15 +7,6 @@ import { useAuth } from "../Components/AuthContext";
 export default function SettingsCategory() {
   const [formData, setFormData] = useState([
     { category: "", points: "" },
-    { category: "", points: "" },
-    { category: "", points: "" },
-    { category: "", points: "" },
-    { category: "", points: "" },
-    { category: "", points: "" },
-    { category: "", points: "" },
-    { category: "", points: "" },
-    { category: "", points: "" },
-    { category: "", points: "" },
   ]);
   useEffect(() => {}, []);
   const [editMode, setEditMode] = useState(false);
@@ -25,7 +16,8 @@ export default function SettingsCategory() {
   const len = formData.length;
   const midPoint = Math.floor(formData.length / 2);
   const apiUrl = process.env.REACT_APP_API_URL;
-  const {user} = useAuth();
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   useEffect(() => {
     fetchCategories();
@@ -36,7 +28,7 @@ export default function SettingsCategory() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": user?.token,
+        "x-access-token": token,
       },
     })
       .then((response) => {
@@ -81,6 +73,10 @@ export default function SettingsCategory() {
         const categoryId = formData[selectedInputIndex]._id;
         fetch(`${apiUrl}/category/admin/delete-category/${categoryId}`, {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
         })
           .then((response) => {
             if (!response.ok) {
@@ -125,6 +121,7 @@ export default function SettingsCategory() {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              "x-access-token": token,
             },
             body: JSON.stringify({ category: editedCategory.category }),
           }
@@ -150,8 +147,9 @@ export default function SettingsCategory() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "x-access-token": token,
           },
-          body: JSON.stringify({ category: newCategory.category,points:"1" }),
+          body: JSON.stringify({ category: newCategory.category, points: "1" }),
         })
           .then((response) => {
             if (!response.ok) {

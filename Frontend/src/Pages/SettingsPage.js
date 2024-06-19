@@ -46,7 +46,7 @@ function TextFieldsGrid() {
           sx={{
             display: "flex",
             justifyContent: "center",
-            m: "25px 0px 20px 25px",
+            // m: "25px 0px 20px 25px",
             borderRadius: "10px",
             height: "auto",
             backgroundColor: "#161e54",

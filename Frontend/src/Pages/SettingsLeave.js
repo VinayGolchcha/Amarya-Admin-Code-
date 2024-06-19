@@ -34,7 +34,7 @@ export default function SettingsLeave() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": user?.token,
+        "x-access-token": token,
       },
     })
       .then((response) => response.json())
@@ -125,6 +125,7 @@ export default function SettingsLeave() {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              "x-access-token": token,
             },
             body: JSON.stringify({
               leave_type: item.leave_type,
@@ -156,6 +157,7 @@ export default function SettingsLeave() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "x-access-token": token,
           },
           body: JSON.stringify({
             leave_type: item.leave_type,
@@ -263,7 +265,7 @@ export default function SettingsLeave() {
           </FormControl>
         </Grid>
 
-        <Grid item xs={1}>
+        <Grid item xs={1.5}>
           <FormControl fullWidth>
             <FormLabel sx={{ color: "black", fontWeight: "600" }}>
               Count

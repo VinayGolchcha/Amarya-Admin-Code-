@@ -150,6 +150,7 @@ export default function SettingHoliday() {
       editedHolidays.forEach((editedHoliday) => {
         // const formattedDate = formatDateForAPI(editedHoliday.date);
         // console.log(formattedDate);
+        const formattedDate = formatDateForAPI2(editedHoliday.date);
         fetch(
           `https://amarya-admin-backend-code.onrender.com/api/v1/leave/admin/update-holiday/${editedHoliday._id}`,
           {
@@ -159,7 +160,7 @@ export default function SettingHoliday() {
               "x-access-token": token,
             },
             body: JSON.stringify({
-              date: editedHoliday.date,
+              date: formattedDate,
               holiday: editedHoliday.holiday,
             }),
           }

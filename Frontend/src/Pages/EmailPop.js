@@ -1,32 +1,39 @@
-import { TextField, Button } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
-import "./../App.css";
+import { TextField, Button } from "@mui/material";
 import OtpP from "./OtpPop";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
-import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { useAuth } from "../Components/AuthContext";
 
 function EmailP({ closeEmailP }) {
-    const [email, setEmail] = useState("");
-    const[openOtpP,setOpenOtpP]=useState(false)
+  const [email, setEmail] = useState("");
+  const [openOtpP, setOpenOtpP] = useState(false);
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || "");
 
-const handleUpdate = async () => {
-  
+  const handleUpdate = async () => {
     try {
+      // Replace with your actual API URL from environment variable
+      const apiUrl = process.env.REACT_APP_API_URL;
+
       const response = await axios.post(
-        "http://localhost:5000/api/v1/user/update-password",
+        `${apiUrl}/user/send-otp-password-verification`,
         {
-         email,
+          email,
+        },
+        {
+          headers: {
+            "x-access-token": token,
+          },
         }
       );
       console.log(response);
-     } catch (error) {
+      setOpenOtpP(true);
+    } catch (error) {
       console.log("Error data:", error.response.data.errors[0]?.msg);
-    
     }
-    
   };
+
   return (
     <>
       <div
@@ -49,13 +56,10 @@ const handleUpdate = async () => {
             width: "600px",
             height: "300px",
             borderRadius: "10px",
-
             top: "50%",
             left: "50%",
             transform: "translate(-50%,-50%)",
-            // backgroundColor: "rgb(50, 50, 116)",
-            background:"#161E54",
-
+            background: "#161E54",
           }}
           className="modelcontainer"
         >
@@ -67,27 +71,23 @@ const handleUpdate = async () => {
               background: "none",
               borderRadius: "50%",
               width: "10px",
-              padding:"0",
-              minWidth:"30px",
+              padding: "0",
+              minWidth: "30px",
               height: "30px",
               color: "white",
-              top:"10px",
-
+              top: "10px",
             }}
             variant="contained"
             color="primary"
             onClick={() => closeEmailP(false)}
           >
-            < ArrowBackIcon />
+            <ArrowBackIcon />
           </Button>
-         
 
           <div>
             <h1>Enter Email</h1>
-            <p >
-             Enter Your Email To Verify
-            </p>  
-        <TextField
+            <p>Enter Your Email To Verify</p>
+            <TextField
               id="filled-basic"
               label="Your Email"
               variant="filled"
@@ -102,41 +102,31 @@ const handleUpdate = async () => {
                 backgroundColor: "white",
               }}
             />
-            <br></br>
-            <br></br>
-           
+            <br />
+            <br />
             <Button
               sx={{
                 marginTop: "10px",
-                width: "75%", // Set button width to 100%
+                width: "75%",
                 background: "#FF5151",
-
                 padding: "10px",
                 color: "white",
                 fontWeight: 600,
-               
-                textTransform:"none",
-               
+                textTransform: "none",
               }}
               variant="contained"
               color="primary"
-              // onClick={handleUpdate}
-           onClick={()=>setOpenOtpP(true)}
-          
-             
-              
+              onClick={handleUpdate}
             >
-               
               Send OTP
-              
             </Button>
-            { openOtpP && <OtpP closeOtpP={setOpenOtpP}/>}
-            
-            <br></br>
+            {openOtpP && <OtpP closeOtpP={setOpenOtpP} />}
+            <br />
           </div>
         </div>
       </div>
     </>
   );
 }
+
 export default EmailP;

@@ -16,10 +16,10 @@ const safeJSONParse = (value, defaultValue) => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(() => safeJSONParse(localStorage.getItem("user"), null));
+  const [user, setUser] = useState(() => safeJSONParse(localStorage.getItem("app1_auth_token"), null));
 
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("app1_auth_token", JSON.stringify(user));
   }, [user]);
 
   const login = (userData) => {
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
       const { user_id, token, profile_picture, user_name ,role} = userData;
       const userDetails = { user_id, token, profile_picture, user_name, role };
       setUser(userDetails);
-      localStorage.setItem("user", JSON.stringify(userDetails));
+      localStorage.setItem("app1_auth_token", JSON.stringify(userDetails));
     } else {
       console.error("Login failed: Invalid response format");
     }
@@ -43,7 +43,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.status === 200) {
         setUser(null);
-        localStorage.removeItem("user");
+        localStorage.removeItem("app1_auth_token");
         console.log("Logout successful");
       } else {
         console.error("Failed to logout:", response.statusText);

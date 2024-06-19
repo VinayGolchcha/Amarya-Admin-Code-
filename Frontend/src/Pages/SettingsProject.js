@@ -1,7 +1,14 @@
 import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
-import { Button, FormControl, FormLabel, TextField, MenuItem, Select } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  TextField,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -25,8 +32,8 @@ export default function SettingsProject() {
       "Start Of The Project": null,
       "End Of The Project": null,
       "Project Status": "",
-      "Category": "",
-      "category_id": null, // Add category_id field
+      Category: "",
+      category_id: null, // Add category_id field
     },
   ]);
 
@@ -81,7 +88,7 @@ export default function SettingsProject() {
             "Start Of The Project": startMonth,
             "End Of The Project": endMonth,
             "Project Status": item.project_status,
-            "Category": item.category,
+            Category: item.category,
             category_id: item.category_id,
             project_id: item.project_id,
           };
@@ -127,12 +134,16 @@ export default function SettingsProject() {
       "Start Of The Project": null,
       "End Of The Project": null,
       "Project Status": "",
-      "Category": "",
-      "category_id": null,
+      Category: "",
+      category_id: null,
     };
 
     setFormData([...formData, newProject]);
     setNewProjectIndex(formData.length);
+  };
+
+  const formatMonthYear = (dateString) => {
+    return dayjs(dateString).format("MMM YY");
   };
 
   const handleSaveNewProject = async (index) => {
@@ -144,10 +155,10 @@ export default function SettingsProject() {
       project_lead: newProject["Project Lead"],
       project_status: newProject["Project Status"],
       start_month: newProject["Start Of The Project"]
-        ? dayjs(newProject["Start Of The Project"]).format("MMMM")
+        ? dayjs(newProject["Start Of The Project"]).format("MMM YY")
         : null,
       end_month: newProject["End Of The Project"]
-        ? dayjs(newProject["End Of The Project"]).format("MMMM")
+        ? dayjs(newProject["End Of The Project"]).format("MMM YY")
         : null,
       category_id: newProject.category_id, // Use category_id
     };
@@ -217,10 +228,10 @@ export default function SettingsProject() {
       project_lead: projectToUpdate["Project Lead"],
       project_status: projectToUpdate["Project Status"],
       start_month: projectToUpdate["Start Of The Project"]
-        ? dayjs(projectToUpdate["Start Of The Project"]).format("MMMM")
+        ? dayjs(projectToUpdate["Start Of The Project"]).format("MMM YY")
         : null,
       end_month: projectToUpdate["End Of The Project"]
-        ? dayjs(projectToUpdate["End Of The Project"]).format("MMMM")
+        ? dayjs(projectToUpdate["End Of The Project"]).format("MMM YY")
         : null,
       category_id: projectToUpdate.category_id,
     };
@@ -412,9 +423,7 @@ export default function SettingsProject() {
                         },
                         margin: "10px 0px",
                       }}
-                      disabled={
-                        editMode !== index && newProjectIndex !== index
-                      }
+                      disabled={editMode !== index && newProjectIndex !== index}
                     >
                       {categories?.map((category) => (
                         <MenuItem key={category._id} value={category.value}>

@@ -20,7 +20,7 @@ export default function NotificationPopUp() {
   const token = encodeURIComponent(user?.token || ""); 
 
   useEffect(() => {
-    if (notifications.length === 0) {
+    if (notifications?.length === 0) {
       axios
         .get(`${apiUrl}/announcement/fetch-announcement`,{
           headers: {
