@@ -37,7 +37,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { useAuth } from "../Components/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
-import Alert from "@mui/material/Alert";
+import Alert from '@mui/material/Alert';
+import Loading from "../sharable/Loading";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -49,6 +50,7 @@ const Item = styled(Paper)(({ theme }) => ({
 const cls = "";
 
 export default function LeaveMangementPage() {
+  const [isLoading , setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [fromDate, setFromDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
@@ -179,7 +181,11 @@ export default function LeaveMangementPage() {
 
       toast.success(response?.data?.message);
     } catch (error) {
+      const errors = error?.response?.data?.errors;
+      errors.forEach((item) => {
+        toast.error(item?.msg);});
       console.error("Error:", error);
+      
     }
   };
 
@@ -219,93 +225,96 @@ export default function LeaveMangementPage() {
   const currentDate = new Date();
 
   let row;
-  return (
-    <>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: "100%",
-          borderRadius: "10px",
-        }}
-      >
-        <ToastContainer />
-        <Typography
-          sx={{
-            margin: "12px 0px",
-            width: "630px",
-            height: "42px",
-            fontFamily: "Poppins",
-            fontSize: "24px",
-            fontWeight: "500",
-            lineHeight: "42px",
-            color: "#121843",
-          }}
-        >
-          Leave Management
-        </Typography>
-        <Typography
-          sx={{
-            margin: "12px 0px",
-            width: "542px",
-            height: "28px",
-            fontFamily: "Racing Sans One",
-            fontSize: "18px",
-            fontWeight: "600",
-            lineHeight: "28px",
-            color: "#121843",
-          }}
-        >
-          {user?.user_id} - {user?.user_name}
-        </Typography>
+  if(isLoading){
+    return(
+      <Loading/>
+    );
+  }else{
+    return (
+      <>
         <Box
+          component="main"
           sx={{
             flexGrow: 1,
-            backgroundColor: "#161E54",
-            height: "auto",
-            width: "100%",
             p: 3,
+            width: "100%",
             borderRadius: "10px",
-            overflow: "auto",
           }}
-          spacing={2}
         >
+          <ToastContainer/>
           <Typography
-            variant="h6"
             sx={{
-              color: "#FFFFFF",
+              margin: "12px 0px",
+              width: "630px",
+              height: "42px",
               fontFamily: "Poppins",
-              lineHeight: "25px",
+              fontSize: "24px",
+              fontWeight: "500",
+              lineHeight: "42px",
+              color: "#121843",
             }}
           >
-            Today’s Date {today.toString().split(" ")[2]}
-            {today.toString().split(" ")[1]} {today.toString().split(" ")[3]}
+            Leave Management
+          </Typography>
+          <Typography
+            sx={{
+              margin: "12px 0px",
+              width: "542px",
+              height: "28px",
+              fontFamily: "Racing Sans One",
+              fontSize: "18px",
+              fontWeight: "600",
+              lineHeight: "28px",
+              color: "#121843",
+            }}
+          >
+            {user?.user_id} - {user?.user_name}
           </Typography>
           <Box
             sx={{
               flexGrow: 1,
-              display: "flex",
-              marginTop: "10px",
-              fontFamily: "Poppins",
-              flexWrap: "wrap",
+              backgroundColor: "#161E54",
+              height: "auto",
+              width: "100%",
+              p: 3,
+              borderRadius: "10px",
+              overflow: "auto",
             }}
             spacing={2}
           >
-            {data?.user_data?.map((item) => (
-              <Card
+            <Typography
+              variant="h6"
+              sx={{
+                color: "#FFFFFF",
+                fontFamily: "Poppins",
+                lineHeight: "25px",
+              }}
+            >
+              Today’s Date {today.toString().split(" ")[2] }{today.toString().split(" ")[1]} {today.toString().split(" ")[3]}
+            </Typography>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: "flex",
+                marginTop: "10px",
+                fontFamily: "Poppins",
+                flexWrap: "wrap",
+              }}
+              spacing={2}
+            >
+              {data?.user_data?.map((item) => (<Card
                 sx={{
-                  minHeight: "110px",
-                  minWidth: "144px",
+                  minHeight : "110px" ,
+                  minWidth : "144px",
                   width: "125px",
                   height: "70px",
                   margin: "10px 0px",
                   marginRight: "10px",
                   backgroundColor: "#FFEFE7",
                   padding: "3px 3px 3px 15px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
+                  display : "flex" , 
+                  flexDirection : "column" ,
+                  justifyContent : "space-between"
                 }}
               >
                 <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
@@ -313,240 +322,222 @@ export default function LeaveMangementPage() {
                 </Typography>
                 <CardContent sx={{ padding: "0px" }}>
                   <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                    <strong style={{ fontSize: "1.5rem" }}>
-                      {item?.leave_taken_count}
-                    </strong>
-                    /{item?.leave_count}
+                    <strong style={{ fontSize: "1.5rem" }}>{item?.leave_taken_count}</strong>/{item?.leave_count}
                   </Typography>
                 </CardContent>
-              </Card>
-            ))}
-          </Box>
-          <Typography
-            variant="h6"
-            sx={{
-              margin: "14px 0px",
-              color: "#ffffffa6",
-              fontFamily: "Poppins",
-              lineHeight: "25px",
-            }}
-          >
-            Holidays List {today.toString().split(" ")[3]}
-          </Typography>
-          <Card
-            sx={{
-              height: "48%",
-              width: "fit-content",
-              overflow: "auto",
-              padding: "2px 12px",
-            }}
-          >
-            <ol
-              style={{
-                fontFamily: "poppins",
-                fontSize: "0.9rem",
-                fontWeight: "400",
-                paddingLeft: "1rem",
-              }}
-            >
-              {data?.holiday_list_data?.map((item) => (
-                <li style={{ fontFamily: "poppins" }}>
-                  {formattedDate(item?.date)} - {item?.holiday}
-                </li>
-              ))}
-            </ol>
-          </Card>
-        </Box>
-        <Grid
-          container
-          spacing={1}
-          sx={{ margin: "6px 0px", justifyContent: "space-between" }}
-        >
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <Box
-              p={1}
+              </Card>))}
+            </Box>
+            <Typography
+              variant="h6"
               sx={{
-                backgroundColor: "#FFFFFF",
-                height: "auto",
-                width: "auto",
-                border: "1px solid #E0E0E0E0",
-                borderRadius: "12px",
+                margin: "14px 0px",
+                color: "#ffffffa6",
+                fontFamily: "Poppins",
+                lineHeight: "25px",
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  flexWrap: "wrap",
-                  color: "#161E54",
-                  fontSize: "1.4rem",
+              Holidays List {today.toString().split(" ")[3]}
+            </Typography>
+            <Card
+              sx={{
+                height: "48%",
+                width: "fit-content",
+                overflow: "auto",
+                padding: "2px 12px",
+              }}
+            >
+              <ol
+                style={{
+                  fontFamily: "poppins",
+                  fontSize: "0.9rem",
+                  fontWeight: "400",
+                  paddingLeft: "1rem",
                 }}
               >
-                Leave Application{" "}
+                {data?.holiday_list_data?.map((item) => (<li style={{ fontFamily: "poppins" }}>{formattedDate(item?.date)} - {item?.holiday}</li>))}
+              </ol>
+            </Card>
+          </Box>
+          <Grid
+            container
+            spacing={1}
+            sx={{ margin: "6px 0px", justifyContent: "space-between" }}
+          >
+            <Grid item lg={6} md={6} sm={12} xs={12}>
+              <Box
+                p={1}
+                sx={{
+                  backgroundColor: "#FFFFFF",
+                  height: "auto",
+                  width: "auto",
+                  border: "1px solid #E0E0E0E0",
+                  borderRadius: "12px",
+                }}
+              >
                 <Box
-                  sx={{ width: { lg: "35%", md: "40%", sm: "40%", xs: "43%" } }}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    flexWrap: "wrap",
+                    color: "#161E54",
+                    fontSize: "1.4rem",
+                  }}
                 >
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                      sx={{
-                        margin: "4px 0px",
-                        "&.MuiTextField-root .MuiInputBase-input::placeholder":
-                          {
-                            fontSize:
-                              "14px" /* Adjust the font size as needed */,
-                          },
-                      }}
-                      label="From Date"
-                      value={fromDate}
-                      minDate={currentDate}
-                      onChange={handleFromDateChange}
-                      renderInput={(params) => (
-                        <TextField {...params} size="small" />
-                      )}
-                      slotProps={{ textField: { size: "small" } }}
-                    />
-                    <DatePicker
-                      label="To Date"
-                      sx={{
-                        "&.MuiTextField-root .MuiInputBase-input::placeholder":
-                          {
-                            fontSize:
-                              "14px" /* Adjust the font size as needed */,
-                          },
-                      }}
-                      value={toDate}
-                      minDate={fromDate} // Set the minDate based on fromDate
-                      // onChange={(newDate) => setToDate(newDate)}
-                      onChange={handleToDateChange}
-                      renderInput={(params) => (
-                        <TextField {...params} size="small" />
-                      )}
-                      slotProps={{ textField: { size: "small" } }}
-                    />
-                  </LocalizationProvider>
+                  Leave Application{" "}
+                  <Box
+                    sx={{ width: { lg: "35%", md: "40%", sm: "40%", xs: "43%" } }}
+                  >
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        sx={{
+                          margin: "4px 0px",
+                          "&.MuiTextField-root .MuiInputBase-input::placeholder":
+                            {
+                              fontSize:
+                                "14px" /* Adjust the font size as needed */,
+                            },
+                        }}
+                        label="From Date"
+                        value={fromDate}
+                        minDate={currentDate}
+                        onChange={handleFromDateChange}
+                        renderInput={(params) => (
+                          <TextField {...params} size="small" />
+                        )}
+                        slotProps={{ textField: { size: "small" } }}
+                      />
+                      <DatePicker
+                        label="To Date"
+                        sx={{
+                          "&.MuiTextField-root .MuiInputBase-input::placeholder":
+                            {
+                              fontSize:
+                                "14px" /* Adjust the font size as needed */,
+                            },
+                        }}
+                        value={toDate}
+                        minDate={fromDate} // Set the minDate based on fromDate
+                        // onChange={(newDate) => setToDate(newDate)}
+                        onChange={handleToDateChange}
+                        renderInput={(params) => (
+                          <TextField {...params} size="small" />
+                        )}
+                        slotProps={{ textField: { size: "small" } }}
+                      />
+                    </LocalizationProvider>
+                  </Box>
                 </Box>
-              </Box>
-              <InputLabel
-                id="demo-simple-select-label"
-                sx={{ fontSize: "12px" }}
-              >
-                Leave Type
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={leaveType}
-                label="leaveType"
-                sx={{ width: "100%", backgroundColor: "#fafafa" }}
-                onChange={handleChange}
-              >
+                <InputLabel
+                  id="demo-simple-select-label"
+                  sx={{ fontSize: "12px" }}
+                >
+                  Leave Type
+                </InputLabel>
                 {leaveTypes.map((type) => (
                   <MenuItem key={type.leave_type} value={type.leave_type}>
                     {type.leave_type}
                   </MenuItem>
                 ))}
-              </Select>
-              <br />
-              <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
-              <TextField
-                variant="outlined"
-                onChange={(e) => setSubject(e.target.value)}
-                sx={{ width: "100%", backgroundColor: "#fafafa" }}
-              />
-              <FormLabel sx={{ margin: "2px 0px", fontSize: "12px" }}>
-                Body
-              </FormLabel>
-              <TextField
-                multiline
-                rows={3}
-                variant="outlined"
-                onChange={(e) => setBody(e.target.value)}
-                sx={{ width: "100%", backgroundColor: "#fafafa" }}
-              />
-            </Box>
-            <Button
-              variant="outlined"
-              sx={{
-                color: "red",
-                borderColor: "white",
-                border: "1px solid #E0E0E0E0",
-                width: "100%",
-                borderBottomLeftRadius: "12px",
-                borderBottomRightRadius: "12px",
-                textTransform: "none",
-                marginTop: "9px",
-                "&:hover": {
-                  borderColor: "#E0E0E0E0",
-                },
-              }}
-              onClick={handleUpdate}
-            >
-              Send to admin
-            </Button>
-          </Grid>
-          <Grid item lg={6} md={6} sm={12} xs={12}>
-            <Box
-              p={1}
-              sx={{
-                backgroundColor: "#FFFFFF",
-                height: "auto",
-                width: "auto",
-                border: "1px solid #E0E0E0E0",
-                borderRadius: "12px",
-              }}
-            >
-              <Box
-                sx={{
-                  color: "#161E54",
-                  fontSize: "1.4rem",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "space-between",
-                }}
-              >
-                Leaves Overview
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    sx={{
-                      width: "35%",
-                      "&.MuiTextField-root .MuiInputBase-input::placeholder": {
-                        fontSize: "14px" /* Adjust the font size as needed */,
-                      },
-                    }}
-                    label={"MM/YYYY"}
-                    views={["month", "year"]}
-                    slotProps={{ textField: { size: "small" } }}
-                  />
-                </LocalizationProvider>
-                {/* date code ends here */}
+                <br />
+                <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
+                <TextField
+                  variant="outlined"
+                  onChange={(e) => setSubject(e.target.value)}
+                  sx={{ width: "100%", backgroundColor: "#fafafa" }}
+                />
+                <FormLabel sx={{ margin: "2px 0px", fontSize: "12px" }}>
+                  Body
+                </FormLabel>
+                <TextField
+                  multiline
+                  rows={3}
+                  variant="outlined"
+                  onChange={(e) => setBody(e.target.value)}
+                  sx={{ width: "100%", backgroundColor: "#fafafa" }}
+                />
               </Box>
-              <Typography
+              <Button
+                variant="outlined"
                 sx={{
-                  fontFamily: "Poppins",
-                  color: "#686868",
-                  fontSize: "12px",
-                  marginTop: "4px",
+                  color: "red",
+                  borderColor: "white",
+                  border: "1px solid #E0E0E0E0",
+                  width: "100%",
+                  borderBottomLeftRadius: "12px",
+                  borderBottomRightRadius: "12px",
+                  textTransform: "none",
+                  marginTop: "9px",
+                  "&:hover": {
+                    borderColor: "#E0E0E0E0",
+                  },
                 }}
+                onClick={handleUpdate}
               >
-                {" "}
-                Details of Leave taken in the Past
-              </Typography>
+                Send to admin
+              </Button>
+            </Grid>
+            <Grid item lg={6} md={6} sm={12} xs={12}>
               <Box
+                p={1}
                 sx={{
+                  backgroundColor: "#FFFFFF",
+                  height: "auto",
                   width: "auto",
-                  overflow: "auto",
-                  margin: "4px 0px",
+                  border: "1px solid #E0E0E0E0",
+                  borderRadius: "12px",
                 }}
               >
-                <List
+                <Box
                   sx={{
-                    width: "100%",
-                    padding: "4px 0px",
-                    height: { lg: "340px", md: "362px", sm: "305px" },
+                    color: "#161E54",
+                    fontSize: "1.4rem",
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "space-between",
                   }}
                 >
-                  {leaveOverviewData?.map((item) => (
-                    <ListItem
+                  Leaves Overview
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      sx={{
+                        width: "35%",
+                        "&.MuiTextField-root .MuiInputBase-input::placeholder": {
+                          fontSize: "14px" /* Adjust the font size as needed */,
+                        },
+                      }}
+                      label={"MM/YYYY"}
+                      views={["month", "year"]}
+                      slotProps={{ textField: { size: "small" } }}
+                    />
+                  </LocalizationProvider>
+                  {/* date code ends here */}
+                </Box>
+                <Typography
+                  sx={{
+                    fontFamily: "Poppins",
+                    color: "#686868",
+                    fontSize: "12px",
+                    marginTop: "4px",
+                  }}
+                >
+                  {" "}
+                  Details of Leave taken in the Past
+                </Typography>
+                <Box
+                  sx={{
+                    width: "auto",
+                    overflow: "auto",
+                    margin: "4px 0px",
+                  }}
+                >
+                  <List
+                    sx={{
+                      width: "100%",
+                      padding: "4px 0px",
+                      height: { lg: "340px", md: "362px", sm: "305px" },
+                    }}
+                  >
+                    {leaveOverviewData?.map((item) => (<ListItem
                       sx={{
                         backgroundColor: "#fafafa",
                         margin: "5px 0px",
@@ -558,171 +549,169 @@ export default function LeaveMangementPage() {
                         primary={item?.leave_type}
                         secondary={
                           <React.Fragment>
-                            {formattedLeaveDate(item?.from_date)} -{" "}
-                            {formattedLeaveDate(item?.to_date)}
+                            {formattedLeaveDate(item?.from_date)} - {formattedLeaveDate(item?.to_date)}
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>))}
+                    <ListItem
+                      sx={{
+                        backgroundColor: "#fafafa",
+                        margin: "5px 0px",
+                        border: "0.5px solid #E0E0E0",
+                        borderRadius: "6px",
+                      }}
+                    >
+                      <ListItemText
+                        primary="Rakhi Leave"
+                        secondary={
+                          <React.Fragment>{"15th Aug 2021"}</React.Fragment>
+                        }
+                      />
+                    </ListItem>
+                    <ListItem
+                      sx={{
+                        backgroundColor: "#fafafa",
+                        margin: "5px 0px",
+                        border: "0.5px solid #E0E0E0",
+                        borderRadius: "6px",
+                      }}
+                    >
+                      <ListItemText
+                        primary="Due to personal reason "
+                        secondary={
+                          <React.Fragment>
+                            {"1st Sep 2021 - 4th Sep 2021"}
                           </React.Fragment>
                         }
                       />
                     </ListItem>
-                  ))}
-                  <ListItem
-                    sx={{
-                      backgroundColor: "#fafafa",
-                      margin: "5px 0px",
-                      border: "0.5px solid #E0E0E0",
-                      borderRadius: "6px",
-                    }}
-                  >
-                    <ListItemText
-                      primary="Rakhi Leave"
-                      secondary={
-                        <React.Fragment>{"15th Aug 2021"}</React.Fragment>
-                      }
-                    />
-                  </ListItem>
-                  <ListItem
-                    sx={{
-                      backgroundColor: "#fafafa",
-                      margin: "5px 0px",
-                      border: "0.5px solid #E0E0E0",
-                      borderRadius: "6px",
-                    }}
-                  >
-                    <ListItemText
-                      primary="Due to personal reason "
-                      secondary={
-                        <React.Fragment>
-                          {"1st Sep 2021 - 4th Sep 2021"}
-                        </React.Fragment>
-                      }
-                    />
-                  </ListItem>
-                  <ListItem
-                    sx={{
-                      backgroundColor: "#fafafa",
-                      margin: "5px 0px",
-                      border: "0.5px solid #E0E0E0",
-                      borderRadius: "6px",
-                    }}
-                  >
-                    <ListItemText
-                      primary="Due to personal reason "
-                      secondary={
-                        <React.Fragment>
-                          {"1st Sep 2021 - 4th Sep 2021"}
-                        </React.Fragment>
-                      }
-                    />
-                  </ListItem>
-                </List>
+                    <ListItem
+                      sx={{
+                        backgroundColor: "#fafafa",
+                        margin: "5px 0px",
+                        border: "0.5px solid #E0E0E0",
+                        borderRadius: "6px",
+                      }}
+                    >
+                      <ListItemText
+                        primary="Due to personal reason "
+                        secondary={
+                          <React.Fragment>
+                            {"1st Sep 2021 - 4th Sep 2021"}
+                          </React.Fragment>
+                        }
+                      />
+                    </ListItem>
+                  </List>
+                </Box>
               </Box>
-            </Box>
+            </Grid>
           </Grid>
-        </Grid>
-        <Typography
-          color="error"
-          variant="h6"
-          my={2}
-          sx={{ fontFamily: "Preahvihear" }}
-        >
-          Leave Description
-        </Typography>
-        <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
-          <Table>
-            <TableHead>
-              <TableRow style={{ fontFamily: "Poppins" }}>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                    minWidth: "110px",
-                    height: "40px",
-                  }}
-                >
-                  <Box
-                    component="img"
-                    src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                    alt="Check"
-                    sx={{ paddingRight: "10px" }}
-                    // onClick= {handleClick}
-                  />
-                  S.no
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Start Date
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  End Date
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Days
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Leave Type
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Extended Leave
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Approved/Rejected
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Manager
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows?.length === 0 ? (
-                <TableRow>
+          <Typography
+            color="error"
+            variant="h6"
+            my={2}
+            sx={{ fontFamily: "Preahvihear" }}
+          >
+            Leave Description
+          </Typography>
+          <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
+            <Table>
+              <TableHead>
+                <TableRow style={{ fontFamily: "Poppins" }}>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                      minWidth: "110px",
+                      height: "40px",
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                      alt="Check"
+                      sx={{ paddingRight: "10px" }}
+                      // onClick= {handleClick}
+                    />
+                    S.no
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Start Date
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    End Date
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Days
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Leave Type
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Extended Leave
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Approved/Rejected
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Manager
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows?.length === 0 ?
+                (<TableRow >
                   <TableCell colSpan={8}>
                     <Alert severity="warning">Data not found.</Alert>
                   </TableCell>
-                </TableRow>
-              ) : (
-                rows?.map((row) => (
+                  
+                </TableRow>) : 
+                (rows?.map((row) => (
                   <TableRow key={row.id}>
                     <TableCell
                       style={{ fontFamily: "Poppins", minWidth: "110px" }}
@@ -772,12 +761,12 @@ export default function LeaveMangementPage() {
                       {row.manager}
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
-    </>
-  );
+                )))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </>
+    );
+  }
 }

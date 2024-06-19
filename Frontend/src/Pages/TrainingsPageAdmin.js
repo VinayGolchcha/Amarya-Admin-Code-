@@ -32,6 +32,9 @@ import axios from "axios";
 import AddTraining from "../Components/AddTraining";
 import { useAuth } from "../Components/AuthContext";
 import EditTraining from "../Components/EditTraining";
+import Loading from "../sharable/Loading";
+import ConfirmDelete from "../Components/ConfirmDelete";
+import { ToastContainer, toast } from "react-toastify";
 
 
 
@@ -86,152 +89,13 @@ const field = [
   },
 ];
 
-// let data = [
-//   {
-//     id: 2,
-//     empid: "AMEM00024",
-//     courses: "Full Stack",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Pending",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 1,
-//     empid: "AMEM00023",
-//     courses: "Full Stack",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "In Progress",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 1,
-//     empid: "AMEM00012",
-//     courses: "Full Stack",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 1,
-//     empid: "AMEM00020",
-//     courses: "Full Stack",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 2,
-//     empid: "AMEM00022",
-//     courses: "SAP ABAP",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Pending",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 2,
-//     empid: "AMEM00010",
-//     courses: "SAP ABAP",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Pending",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 2,
-//     empid: "AMEMP00013",
-//     courses: "SAP ABAP",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "In Progress",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 2,
-//     empid: "AMEMP00014",
-//     courses: "SAP ABAP",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "In Progress",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 2,
-//     empid: "AMEMP00021",
-//     courses: "Full Stack",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 3,
-//     empid: "AMEMP00024",
-//     courses: "Flutter",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "In Progress",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 4,
-//     empid: "AMEMP00020",
-//     courses: "Vue JS",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "In Progress",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 4,
-//     empid: "AMEMP00023",
-//     courses: "Vue JS",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 5,
-//     empid: "AMEMP00024",
-//     courses: "SAP CDS",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   {
-//     id: 6,
-//     empid: "AMEMP00024",
-//     courses: "Data Science",
-//     coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-//     completedinprogress: "Completed",
-//     approvedon: "Nov 1, 22",
-//     approvedrejected: "Approved",
-//     manager: "HR",
-//   },
-//   // Add more rows as needed
-// ];
-
 
 export default function TrainingsPageAdmin( ) {
+  const [openConDel, setOpenConDel] = React.useState(false);
+  const handleOpenConDel = () => setOpenConDel(true);
+  const handleCloseConDel = () => setOpenConDel(false);
+  const [ id , setId] = React.useState(null);
+  const [isLoading , setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [courses, setfields] = React.useState([]);
   const [page, pagechange] = React.useState(0);
@@ -266,7 +130,7 @@ export default function TrainingsPageAdmin( ) {
   
   const addTraining = async (body) => {
     try {
-      const res = axios.post(`${process.env.REACT_APP_API_URI}/training/admin/add-new-training` , body , {
+      const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/admin/add-new-training` , body , {
         headers : {
           "x-access-token" : user?.token
         }
@@ -274,9 +138,14 @@ export default function TrainingsPageAdmin( ) {
       fecthTrainings();
     }catch(err){
       console.log(err);
+      const errors = err?.response?.data?.errors;
+        errors.forEach((item) => {
+          toast.error(item?.msg);
+        });
     }
   }
   const fecthTrainings = async () => {
+    setIsLoading(true);
     try {
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/training/training-cards` , {
         headers : {
@@ -292,8 +161,10 @@ export default function TrainingsPageAdmin( ) {
           color : field[i].color
         }
       )));
+      setIsLoading(false);
     }catch(err){
       console.log(err);
+      setIsLoading(false);
     }
    }
   
@@ -305,7 +176,7 @@ export default function TrainingsPageAdmin( ) {
         }
       });
       setFilteredData(res?.data?.data?.map((item) => ({
-          id: item?.training_id[8],
+          id: item?.training_id,
           empid: item?.emp_id,
           courses: item?.course_name,
           coursedescription: item?.course_description,
@@ -314,8 +185,21 @@ export default function TrainingsPageAdmin( ) {
           approvedrejected: "Approved",
           manager: "HR",
       })));
-      setData(filteredData);
-      console.log(data);
+      const newData = res?.data?.data?.map(item => ({
+        id: item?.training_id,
+        empid: item?.emp_id,
+        courses: item?.course_name,
+        coursedescription: item?.course_description,
+        completedinprogress: item?.progress_status,
+        approvedon: "Nov 1, 22",
+        approvedrejected: "Approved",
+        manager: "HR",
+      }));
+      setData(newData)
+      console.log(data , typeof data);
+      data = data?.filter(item =>
+        item.empid.toLowerCase().includes(searchEmp.toLowerCase())
+      );
     }catch(err){
       console.log(err);
     }
@@ -338,6 +222,10 @@ export default function TrainingsPageAdmin( ) {
       })
       .catch(error => {
         console.error('Error updating training:', error);
+        const errors = error?.response?.data?.errors;
+        errors.forEach((item) => {
+          toast.error(item?.msg);
+        });
         // Handle error as needed
       });
   };
@@ -345,6 +233,10 @@ export default function TrainingsPageAdmin( ) {
   // Function to handle the delete operation
   const handleDelete = () => {
     setDelete(!deleteItem);
+  }
+  const handleConfirmDelete = (id) => {
+    handleOpenConDel();
+    setId(id);
   }
   const handleDeleteApi = async (val) => {
     try {
@@ -355,6 +247,7 @@ export default function TrainingsPageAdmin( ) {
             });
             console.log(response);
       fecthTrainings();
+      handleCloseConDel();
     } catch (error) {
       console.log(error.response.data.message);
     }
@@ -377,12 +270,17 @@ export default function TrainingsPageAdmin( ) {
 
   React.useEffect(() => {
     // Axios GET request
-    fecthTrainings();
-    getAllUserTrainings();
+    const fecthData = async () => {
+      setIsLoading(true);
+      await Promise.all([
+        fecthTrainings(),
+        getAllUserTrainings()
+      ]);
+      setIsLoading(false);
+    }
+    fecthData();
   }, []);
   ///
-
- 
 
     
 
@@ -413,12 +311,13 @@ export default function TrainingsPageAdmin( ) {
 
   function handleChangeFilter() {
     setFilter(!filter);
+    setData(filteredData);
   }
 
   function handleSelect(value) {
     const selectedStatus = value;
     setCourseStatus(selectedStatus);
-    const newData = data?.filter((item) => {
+    const newData = filteredData?.filter((item) => {
       if (selectedStatus === "All") {
         return true;
       } else {
@@ -427,9 +326,7 @@ export default function TrainingsPageAdmin( ) {
     });
     setData(newData);
   }
-  data = data?.filter(item =>
-    item.empid.toLowerCase().includes(searchEmp.toLowerCase())
-  );
+  
   function handleFilterEmp(e) {
     setSearchEmp(e.target.value);
 
@@ -439,313 +336,354 @@ export default function TrainingsPageAdmin( ) {
     setEditOpen(false);
   }
   function handleTrId(){
-    setData(data?.sort((a, b) => a.id - b.id));
+    setData(data?.sort((a, b) => a?.id?.[8] - b?.id?.[8]));
   }
 
   let row;
   // const slicedData = data.slice(page * rowperpage, (page + 1) * rowperpage);
-  return (
-    <Box sx={{ display: "flex" }}>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: 100,
-        }}
-      >
-        <Typography
-          sx={{
-            margin: "12px 0px",
-            width: "630px",
-            height: "42px",
-            fontFamily: "Poppins",
-            fontSize: "24px",
-            fontWeight: "500",
-            lineHeight: "42px",
-            color: "#121843",
-          }}
-        >
-          Training
-        </Typography>
+  if(isLoading){
+    return(
+      <Loading/>
+    )
+  }else{
+    return (
+      <Box sx={{ display: "flex" }}>
+        <ToastContainer/>
         <Box
+          component="main"
           sx={{
             flexGrow: 1,
-            display: "flex",
-            flexWrap: "wrap",
-            p: 1,
-            justifyContent: "center",
+            p: 3,
+            width: 100,
           }}
         >
-          <Grid container spacing={2}>
-            {courses?.map((course) => {
-              return <TrainingCard field={course}   key={course.training_id}  logo= {DeleteOutlineIcon} edit={edit} deleteItem = {deleteItem} handleDeleteApi = {handleDeleteApi} setTrainingId = {setTrainingId} setSelectedTr = {setSelectedTr} setEditOpen = {setEditOpen}/>;
-            })}
-          </Grid>
-        </Box>
-        <Box sx={{ p: 1, marginBottom: "20px" }}>
-          <Grid container spacing={2}>
-            <Grid item lg={4} md={6} sm={12} xs={12}>
-              <Button
-                color="error"
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  border: "2px solid #E0E0E0",
-                  borderBottomLeftRadius: "10px",
-                  borderBottomRightRadius: "10px",
-                  textTransform: "none",
-                  fontFamily: "Poppins",
-                }}
-                onClick={handleClick}
-              >
-                Add Training
-              </Button>
-              <>
-              <AddTraining handleClose={handleClose} open={open} addTraining = {addTraining}/>
-              </>
-            </Grid>
-            <Grid item lg={4} md={6} sm={12} xs={12}>
-              <Button
-                color="error"
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  border: "2px solid #E0E0E0",
-                  borderBottomLeftRadius: "10px",
-                  borderBottomRightRadius: "10px",
-                  textTransform: "none",
-                  fontFamily: "Poppins",
-                }}
-                onClick={handleEditTr}
-              >
-                Update Training
-              </Button>
-              <>
-              <EditTraining handleClose={handleEditClose} open={editOpen} selectedTr = {selectedTr} handleUpdate={handleUpdate}/>
-              </>
-            </Grid>
-            <Grid item lg={4} md={6} sm={12} xs={12}>
-              <Button
-                color="error"
-                sx={{
-                  height: "100%",
-                  width: "100%",
-                  border: "2px solid #E0E0E0",
-                  borderBottomLeftRadius: "10px",
-                  borderBottomRightRadius: "10px",
-                  textTransform: "none",
-                  fontFamily: "Poppins",
-                }}
-                onClick={handleDelete}
-              >
-                Delete Training
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            fontFamily: "Preahvihear",
-          }}
-        >
+          <ConfirmDelete open={openConDel} handleClose={handleCloseConDel} handleIncomeDelete ={handleDeleteApi} id ={id}/>
           <Typography
             sx={{
-              color: "#FF5151",
               margin: "12px 0px",
-              width: "542px",
-              height: "28px",
-              fontFamily: "Preahvihear",
-              fontSize: "20px",
-              lineHeight: "28px",
+              width: "630px",
+              height: "42px",
+              fontFamily: "Poppins",
+              fontSize: "24px",
+              fontWeight: "500",
+              lineHeight: "42px",
+              color: "#121843",
             }}
           >
-            Training Description
+            Training
           </Typography>
-          <FormControlLabel
-            value="start"
-            control={
-              <Checkbox
-                sx={{
-                  color: pink[800],
-                  "&.Mui-checked": {
-                    color: pink[600],
-                  },
-                }}
-                onChange={handleChangeFilter}
-              />
-            }
-            label="Enable Filter"
-            labelPlacement="start"
-            sx={{fontFamily : 'Poppins' , color : '#FF5151'}}
-          />
-        </Box>
-        <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
-          <Table>
-            <TableHead>
-              <TableRow style={{ fontFamily: "Poppins" }}>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                    minWidth: "126px",
-                    height: "40px",
-                  }}
-                >
-                  <Box sx={{display : 'flex'}}>
-                    <img src="Check.svg" style={{ margin: "-4px 6px" }} />
-                    Tr.No
-                    {filter && <FilterAltIcon onClick={handleTrId} />}
-                  </Box>
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: "flex",
+              flexWrap: "wrap",
+              p: 1,
+              justifyContent: "center",
+            }}
+          >
+            <Grid container spacing={2}>
+              {courses?.map((course) => {
+                return <TrainingCard field={course}   key={course.training_id}  logo= {DeleteOutlineIcon} edit={edit} deleteItem = {deleteItem} handleDeleteApi = {handleConfirmDelete} setTrainingId = {setTrainingId} setSelectedTr = {setSelectedTr} setEditOpen = {setEditOpen}/>;
+              })}
+            </Grid>
+          </Box>
+          <Box sx={{ p: 1, marginBottom: "20px" }}>
+            <Grid container spacing={2}>
+              <Grid item lg={4} md={6} sm={12} xs={12}>
+                <Button
+                  color="error"
+                  sx={{
+                    height: "100%",
+                    width: "100%",
+                    border: "2px solid #E0E0E0",
+                    borderBottomLeftRadius: "10px",
+                    borderBottomRightRadius: "10px",
+                    textTransform: "none",
                     fontFamily: "Poppins",
                   }}
+                  onClick={handleClick}
                 >
-                  Courses
-                </TableCell>
-                 
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
+                  Add Training
+                </Button>
+                <>
+                <AddTraining handleClose={handleClose} open={open} addTraining = {addTraining}/>
+                </>
+              </Grid>
+              <Grid item lg={4} md={6} sm={12} xs={12}>
+                <Button
+                  color="error"
+                  sx={{
+                    height: "100%",
+                    width: "100%",
+                    border: "2px solid #E0E0E0",
+                    borderBottomLeftRadius: "10px",
+                    borderBottomRightRadius: "10px",
+                    textTransform: "none",
                     fontFamily: "Poppins",
                   }}
+                  onClick={handleEditTr}
                 >
-                  Employee ID
-                </TableCell>
+                  Update Training
+                </Button>
+                <>
+                <EditTraining handleClose={handleEditClose} open={editOpen} selectedTr = {selectedTr} handleUpdate={handleUpdate}/>
+                </>
+              </Grid>
+              <Grid item lg={4} md={6} sm={12} xs={12}>
+                <Button
+                  color="error"
+                  sx={{
+                    height: "100%",
+                    width: "100%",
+                    border: "2px solid #E0E0E0",
+                    borderBottomLeftRadius: "10px",
+                    borderBottomRightRadius: "10px",
+                    textTransform: "none",
+                    fontFamily: "Poppins",
+                  }}
+                  onClick={handleDelete}
+                >
+                  Delete Training
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontFamily: "Preahvihear",
+            }}
+          >
+            <Typography
+              sx={{
+                color: "#FF5151",
+                margin: "12px 0px",
+                width: "542px",
+                height: "28px",
+                fontFamily: "Preahvihear",
+                fontSize: "20px",
+                lineHeight: "28px",
+              }}
+            >
+              Training Description
+            </Typography>
+            <FormControlLabel
+              value="start"
+              control={
+                <Checkbox
+                  sx={{
+                    color: pink[800],
+                    "&.Mui-checked": {
+                      color: pink[600],
+                    },
+                  }}
+                  onChange={handleChangeFilter}
+                />
+              }
+              label="Enable Filter"
+              labelPlacement="start"
+              sx={{fontFamily : 'Poppins' , color : '#FF5151'}}
+            />
+          </Box>
+          <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
+            <Table>
+              <TableHead>
+                <TableRow style={{ fontFamily: "Poppins" }}>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                      minWidth: "126px",
+                      height: "40px",
+                    }}
+                  >
+                    <Box sx={{display : 'flex'}}>
+                      <img src="Check.svg" style={{ margin: "-4px 6px" }} />
+                      Tr.No
+                      {filter && <FilterAltIcon onClick={handleTrId} />}
+                    </Box>
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Courses
+                  </TableCell>
+                   
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Employee ID
+                  </TableCell>
+               
+                {/* //   style={{
+                //     backgroundColor: "#161e54",
+                //     color: "#ffffff",
+                //     fontFamily: "Poppins",
+                //     padding : '0px'
+                //   }}
+                // >
+                //   <TextField id="standard-basic" InputProps={{ sx: { } }}  label="Emp Id" variant="outlined" size="small" onChange={handleFilterEmp} sx={{backgroundColor : 'white'}}/>
+                // </TableCell>
+                //   } */} 
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Course Description
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                      minWidth : '124px',
+                    }}
+                  >
+                    Status {
+                      filter && <Filter handleSelect = {handleSelect}/>
+                    }
+                  </TableCell>
              
-              {/* //   style={{
-              //     backgroundColor: "#161e54",
-              //     color: "#ffffff",
-              //     fontFamily: "Poppins",
-              //     padding : '0px'
-              //   }}
-              // >
-              //   <TextField id="standard-basic" InputProps={{ sx: { } }}  label="Emp Id" variant="outlined" size="small" onChange={handleFilterEmp} sx={{backgroundColor : 'white'}}/>
-              // </TableCell>
-              //   } */} 
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Course Description
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                    minWidth : '124px',
-                  }}
-                >
-                  Status {
-                    filter && <Filter handleSelect = {handleSelect}/>
-                  }
-                </TableCell>
-           
-                  {/* // <TableCell
-                  //   style={{
-                  //     backgroundColor: "#161e54",
-                  //     color: "#ffffff",
-                  //     fontFamily: "Poppins",
-                  //     paddingTop : '1px'
-                  //         }}>
-                  //       <FormControl
-                  //         sx={{
-                  //           backgroundColor: "#161e54",
-                  //           color: "#ffffff",
-                  //           fontFamily: "Poppins",
-                  //           height: "100%",
-                  //           width: "100%",
-                  //         }}
-                  //       >
-                          
-                  //         <NativeSelect
-                  //           defaultValue={courseStatus}
-                  //           inputProps={{
-                  //             name: "status",
-                  //             id: "uncontrolled-native",
-                              
-                  //           }}
-                  //           // sx={{ color: 'white' }}
-                  //           onChange={handleSelect}
-                  //           sx={{backgroundColor : 'white' , paddingLeft : '2px'}}
-                  //         >
-                  //           <option value={"All"} style={{fontFamily: "Poppins", color: 'black'}}>All</option>
-                  //           <option value={"Pending"} style={{fontFamily: "Poppins" , color: 'black'}}>Pending</option>
-                  //           <option value={"In Progress"} style={{fontFamily: "Poppins" , color: 'black'}}>In Progress</option>
-                  //           <option value={"Completed"} style={{fontFamily: "Poppins" , color: 'black'}}>Completed</option>
-                  //         </NativeSelect>
-                  //       </FormControl>
-                  // </TableCell>
-                  
-                )} */}
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Approval
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filter ? (data) : (filteredData)?.map((row,i) =>    (         
-               <TableRow key={i}>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    <Checkbox
-                      checked={selectedRows.includes(row.id)}
-                      onChange={() => handleCheckboxChange(row.id)}
-                    />
-                    {row.id}
+                    {/* // <TableCell
+                    //   style={{
+                    //     backgroundColor: "#161e54",
+                    //     color: "#ffffff",
+                    //     fontFamily: "Poppins",
+                    //     paddingTop : '1px'
+                    //         }}>
+                    //       <FormControl
+                    //         sx={{
+                    //           backgroundColor: "#161e54",
+                    //           color: "#ffffff",
+                    //           fontFamily: "Poppins",
+                    //           height: "100%",
+                    //           width: "100%",
+                    //         }}
+                    //       >
+                            
+                    //         <NativeSelect
+                    //           defaultValue={courseStatus}
+                    //           inputProps={{
+                    //             name: "status",
+                    //             id: "uncontrolled-native",
+                                
+                    //           }}
+                    //           // sx={{ color: 'white' }}
+                    //           onChange={handleSelect}
+                    //           sx={{backgroundColor : 'white' , paddingLeft : '2px'}}
+                    //         >
+                    //           <option value={"All"} style={{fontFamily: "Poppins", color: 'black'}}>All</option>
+                    //           <option value={"Pending"} style={{fontFamily: "Poppins" , color: 'black'}}>Pending</option>
+                    //           <option value={"In Progress"} style={{fontFamily: "Poppins" , color: 'black'}}>In Progress</option>
+                    //           <option value={"Completed"} style={{fontFamily: "Poppins" , color: 'black'}}>Completed</option>
+                    //         </NativeSelect>
+                    //       </FormControl>
+                    // </TableCell>
+                    
+                  )} */}
+                  <TableCell
+                    style={{
+                      backgroundColor: "#161e54",
+                      color: "#ffffff",
+                      fontFamily: "Poppins",
+                    }}
+                  >
+                    Approval
                   </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.courses}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.empid}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.coursedescription}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.completedinprogress}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.approvedon}
-                  </TableCell>
-                </TableRow>)
- ) } 
- {filteredData?.length === 0  && <TableRow><TableCell colSpan={6}> {/* Adjust the colSpan based on the number of columns */}
-        <Alert severity="warning" sx={{ width: '100%' }}>
-          No data found.
-        </Alert>
-      </TableCell></TableRow>}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        {/* <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          rowsPerPage={rowperpage}
-          page={page}
-          count={data.length}
-          component="div"
-          onPageChange={handlechangepage}
-          onRowsPerPageChange={handleRowsPerPage}
-        ></TablePagination> */}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+    {filter ? (
+      data?.map((row, i) => (
+        <TableRow key={i}>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            <Checkbox
+              checked={selectedRows.includes(row.id)}
+              onChange={() => handleCheckboxChange(row.id)}
+            />
+            {row.id}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.courses}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.empid}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.coursedescription}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.completedinprogress}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.approvedon}
+          </TableCell>
+        </TableRow>
+      ))
+    ) : filteredData?.length > 0 ? (
+      filteredData?.map((row, i) => (
+        <TableRow key={i}>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            <Checkbox
+              checked={selectedRows.includes(row.id)}
+              onChange={() => handleCheckboxChange(row.id)}
+            />
+            {row.id}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.courses}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.empid}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.coursedescription}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.completedinprogress}
+          </TableCell>
+          <TableCell style={{ fontFamily: "Poppins" }}>
+            {row.approvedon}
+          </TableCell>
+        </TableRow>
+      ))
+    ) : (
+      <TableRow>
+        <TableCell colSpan={6}>
+          <Alert severity="warning" sx={{ width: '100%' }}>
+            No data found.
+          </Alert>
+        </TableCell>
+      </TableRow>
+    )}
+  </TableBody>
+  
+            </Table>
+          </TableContainer>
+          {/* <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPage={rowperpage}
+            page={page}
+            count={data.length}
+            component="div"
+            onPageChange={handlechangepage}
+            onRowsPerPageChange={handleRowsPerPage}
+          ></TablePagination> */}
+        </Box>
       </Box>
-    </Box>
-  );
+    );
+  }
 }

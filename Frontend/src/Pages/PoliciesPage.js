@@ -6,6 +6,7 @@ import axios from 'axios';
 
 import { Buffer } from 'buffer';
 import { useAuth } from "../Components/AuthContext";
+import Loading from "../sharable/Loading";
 const headingStyle = {
   margin: "2px 0px",
 };
@@ -58,7 +59,7 @@ const tableContentAppraisal = [
 const PoliciesPage = () => {
   const [policy , setPolicy] = useState([]);
   const [policyheading , setPolicyheading] = useState([]);
-  const [isLoading , setisLoading] = useState(false);
+  const [isLoading , setisLoading] = useState(true);
   const {user} = useAuth();
   console.log(user);
 
@@ -72,14 +73,14 @@ const PoliciesPage = () => {
       setPolicy(response?.data?.data);
       console.log(response?.data?.data?.[0]?.policy_heads);
       setPolicyheading(response?.data?.data?.[0]?.policy_heads.split(","));
-      setisLoading(true);
+      setisLoading(false);
       console.log(policyheading);
   }catch(err){
     console.log(err);
   }
 }
   useEffect(()=> {
-    fetchPolicy()
+    fetchPolicy();
   },[])
   const [fileBuffer , setFileBuffer] = useState(null);
   const addPolicy = async (body) => {
@@ -144,12 +145,10 @@ const PoliciesPage = () => {
         console.error('Error downloading the file:', error);
       }
     }
-    if(isLoading === false) {
-      <Box sx={{
-        flexGrow: 1,
-        p: 3,}}>
-      <CircularProgress color="inherit" />
-      </Box>
+    if(isLoading) {
+      return(
+        <Loading/>        
+      );
     }else{
 
       return (

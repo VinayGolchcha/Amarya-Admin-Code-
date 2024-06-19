@@ -8,18 +8,20 @@ import Model from "./Model";
 import { useAuth } from "../Components/AuthContext";
 import { Update } from "@mui/icons-material";
 
-function OtpP({ closeOtpP }) {
+function OtpP({ closeOtpP, email }) {
   const [otp, setOtp] = useState("");
   const [openModel, setOpenModel] = useState(false);
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || "");
   const apiUrl = process.env.REACT_APP_API_URL;
 
+  console.log("hello",email);
   const handleUpdate = async () => {
     try {
       const response = await axios.post(
         `${apiUrl}/user/verify-email-for-password-update`,
         {
+          email,
           otp,
         },
         {
@@ -29,7 +31,7 @@ function OtpP({ closeOtpP }) {
         }
       );
       console.log(response);
-      setOpenModel(true)
+      setOpenModel(true);
     } catch (error) {
       console.log("Error data:", error.response.data.errors[0]?.msg);
     }

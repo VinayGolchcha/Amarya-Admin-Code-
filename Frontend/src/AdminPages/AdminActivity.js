@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography, List, ListItem, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const data = [
   {
@@ -20,6 +21,7 @@ const data = [
 ];
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 const AdminActivity = ({activityAnnoucements}) => {
+  const navigate = useNavigate();
   const getDateDay = (date) => {
     const newdate = new Date(date);
     const list = [];
@@ -66,7 +68,7 @@ const AdminActivity = ({activityAnnoucements}) => {
           Activity Planned
         </Typography>
         <List sx={{ paddingBottom: "4px", margin: "0px 8px 8px 8px" }}>
-          {activityAnnoucements?.map((item) => {
+          {activityAnnoucements?.slice(0,3)?.map((item) => {
             return (
               <ListItem
                 sx={{
@@ -144,6 +146,9 @@ const AdminActivity = ({activityAnnoucements}) => {
             variant="contained"
             color="error"
             sx={{ textTransform: "none", fontFamily: "Poppins" }}
+            onClick={() => {
+              navigate("/anouncement");
+            }}
           >
             Post New Activity
           </Button>

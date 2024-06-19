@@ -139,14 +139,14 @@ const WorkSheet = () => {
     },
   ]);
   const [currentPage, setCurrentPage] = useState(0);
-  const rowsPerPage = 5;  
+  const rowsPerPage = 5;
 
   const [newRow, setNewRow] = useState(null);
   const [editingRowIndex, setEditingRowIndex] = useState(null);
   const [textValue, setTextValue] = useState("");
 
-
   const [filterEmpId, setFilterEmpId] = useState(""); // State to store the selected employee ID for filtering
+  const [filterEmpName, setFilterEmpName] = useState("");
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}-${(date.getMonth() + 1)
@@ -178,7 +178,7 @@ const WorkSheet = () => {
           project: rowData.project,
           description: rowData.description,
           // skillset: getSkillsetNameByIds(rowData.skill_set_id),
-          skillset: rowData.skills || [],  // Map skills to skillset
+          skillset: rowData.skills || [], // Map skills to skillset
         }));
         setRows(worksheetData);
       } else {
@@ -192,9 +192,11 @@ const WorkSheet = () => {
   const handleFilterChange = (event, newValue) => {
     if (newValue) {
       setFilterEmpId(newValue.emp_id); // Set the employee ID for fetching data
+      setFilterEmpName(newValue.name);
       fetchWorksheetDataForEmployee(newValue.emp_id); // Fetch worksheet data for selected employee
     } else {
       setFilterEmpId("");
+      setFilterEmpName("");
     }
   };
 
@@ -369,8 +371,10 @@ const WorkSheet = () => {
             options={employees}
             getOptionLabel={(option) => option.name} // Display employee names
             filterOptions={(options, state) => {
-              return options.filter(option =>
-                option.name.toLowerCase().includes(state.inputValue.toLowerCase())
+              return options.filter((option) =>
+                option.name
+                  .toLowerCase()
+                  .includes(state.inputValue.toLowerCase())
               );
             }}
             value={employees.find((emp) => emp.emp_id === filterEmpId) || null}
@@ -398,7 +402,7 @@ const WorkSheet = () => {
           color: "#161E54",
         }}
       >
-       {user?.user_id} - {user?.user_name}
+        { filterEmpName } - { filterEmpId }
       </Typography>
       <Box
         sx={{
@@ -485,7 +489,7 @@ const WorkSheet = () => {
           page={currentPage}
           onPageChange={handleChangePage}
         />
-      {/* </Box> */}
+        {/* </Box> */}
         <ToastContainer />
       </Box>
     </Box>

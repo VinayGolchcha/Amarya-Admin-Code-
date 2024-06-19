@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import { useAuth } from "../Components/AuthContext";
+import Loading from "../sharable/Loading";
 
 const field = [
   {
@@ -69,6 +70,7 @@ const field = [
 ];
 
 export default function TrainingsPage(props) {
+  const[isLoading , setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [rows , setRows] = React.useState([])
   const [courses, setfields] = React.useState([]);
@@ -179,8 +181,16 @@ export default function TrainingsPage(props) {
     //     console.error('Error fetching training cards:', error);
     //     // Handle error as needed
     //   });
-    fecthTrainings();
-    getUserTraining();
+    const fetchData = async () => {
+      await Promise.all(
+        [
+          fecthTrainings(),
+          getUserTraining()
+        ]
+      );
+      setIsLoading(false);
+    }
+    fetchData();
   }, []);
 
 
@@ -215,193 +225,199 @@ export default function TrainingsPage(props) {
 
   let row;
   console.log(courses);
-
-  return (
-    <Box sx={{ display: "flex" }}>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: 100,
-        }}
-      >
-        <Typography
-          sx={{
-            margin: "12px 0px",
-            width: "630px",
-            height: "42px",
-            fontFamily: "Poppins",
-            fontSize: "24px",
-            fontWeight: "500",
-            lineHeight: "42px",
-            color: "#121843",
-          }}
-        >
-          Training
-        </Typography>
-        <Typography
-          sx={{
-            margin: "12px 0px",
-            width: "542px",
-            height: "28px",
-            fontFamily: "Racing Sans One",
-            fontSize: "18px",
-            fontWeight: "600",
-            lineHeight: "28px",
-            color: "#121843",
-          }}
-        >
-          {user?.user_id} - {user?.user_name}
-        </Typography>
-        <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
-          <Table>
-            <TableHead>
-              <TableRow style={{ fontFamily: "Poppins" }}>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                    minWidth: "104px",
-                    height: "40px",
-                  }}
-                >
-                  <img
-                    src="Check.svg"
-                    style={{ margin: "-4px 2px", marginRight: "4px" }}
-                  />
-                  Tr.Id
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Employee ID
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Courses
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Course Description
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Status
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Approved On
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Approval Status
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Manager
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-            {rows?.length === 0 ?
-              (<TableRow >
-                <TableCell colSpan={8}>
-                  <Alert severity="warning">Data not found.</Alert>
-                </TableCell>
-                
-              </TableRow>) : 
-              (rows?.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    <Box
-                      component="img"
-                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                      alt="Check"
-                      style={{ filter: "invert(1)" }}
-                      sx={{ paddingRight: "9px" }}
-                    />
-                    {row.id}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.empid}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.courses}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.coursedescription}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.completedinprogress}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.approvedon}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.approvedrejected}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.manager}
-                  </TableCell>
-                </TableRow>
-              )))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Box
-          sx={{
-            flexGrow: 1,
-            display: "flex",
-            flexWrap: "wrap",
-            p: 1,
-            alignItems: "center",
-          }}
-        >
-          <Grid container spacing={2}>
-            {courses?.map((course, i) => {
-              return <TrainingCard field={course} i={i} setTrainingId = {setTrainingId}  handleRequest = {handleRequest} />;
-            })}
-          </Grid>
-          
+  if(isLoading){
+    return(
+      <Loading/>
+    );
+  }else{
+      return (
+        <Box sx={{ display: "flex" }}>
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              p: 3,
+              width: 100,
+            }}
+          >
+            <Typography
+              sx={{
+                margin: "12px 0px",
+                width: "630px",
+                height: "42px",
+                fontFamily: "Poppins",
+                fontSize: "24px",
+                fontWeight: "500",
+                lineHeight: "42px",
+                color: "#121843",
+              }}
+            >
+              Training
+            </Typography>
+            <Typography
+              sx={{
+                margin: "12px 0px",
+                width: "542px",
+                height: "28px",
+                fontFamily: "Racing Sans One",
+                fontSize: "18px",
+                fontWeight: "600",
+                lineHeight: "28px",
+                color: "#121843",
+              }}
+            >
+              {user?.user_id} - {user?.user_name}
+            </Typography>
+            <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
+              <Table>
+                <TableHead>
+                  <TableRow style={{ fontFamily: "Poppins" }}>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                        minWidth: "104px",
+                        height: "40px",
+                      }}
+                    >
+                      <img
+                        src="Check.svg"
+                        style={{ margin: "-4px 2px", marginRight: "4px" }}
+                      />
+                      Tr.Id
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Employee ID
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Courses
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Course Description
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Status
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Approved On
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Approval Status
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Manager
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                {rows?.length === 0 ?
+                  (<TableRow >
+                    <TableCell colSpan={8}>
+                      <Alert severity="warning">Data not found.</Alert>
+                    </TableCell>
+                    
+                  </TableRow>) : 
+                  (rows?.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        <Box
+                          component="img"
+                          src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                          alt="Check"
+                          style={{ filter: "invert(1)" }}
+                          sx={{ paddingRight: "9px" }}
+                        />
+                        {row.id}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.empid}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.courses}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.coursedescription}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.completedinprogress}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.approvedon}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.approvedrejected}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.manager}
+                      </TableCell>
+                    </TableRow>
+                  )))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: "flex",
+                flexWrap: "wrap",
+                p: 1,
+                alignItems: "center",
+              }}
+            >
+              <Grid container spacing={2}>
+                {courses?.map((course, i) => {
+                  return <TrainingCard field={course} i={i} setTrainingId = {setTrainingId}  handleRequest = {handleRequest} />;
+                })}
+              </Grid>
+              
+            </Box>
+          </Box>
+          {/* <div style={{position:"absolute", top:"0", zIndex:"200"}}>{trainingCards}</div> */}
         </Box>
-      </Box>
-      {/* <div style={{position:"absolute", top:"0", zIndex:"200"}}>{trainingCards}</div> */}
-    </Box>
-  );
+      );
+
+  }
 }

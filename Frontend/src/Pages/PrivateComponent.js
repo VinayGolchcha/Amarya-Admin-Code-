@@ -4,6 +4,7 @@ import { useAuth } from "../Components/AuthContext";
 
 const PrivateRoute = ({ element: Element, ...rest }) => {
   const { user } = useAuth();   
+
   return user ? <Element {...rest} /> : <Navigate to="/login" />;
 };
 

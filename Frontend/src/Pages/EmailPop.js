@@ -120,7 +120,7 @@ function EmailP({ closeEmailP }) {
             >
               Send OTP
             </Button>
-            {openOtpP && <OtpP closeOtpP={setOpenOtpP} />}
+            {openOtpP && <OtpP closeOtpP={setOpenOtpP} email={email}/>}
             <br />
           </div>
         </div>
