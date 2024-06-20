@@ -541,55 +541,6 @@ export default function LeaveMangementPage() {
                         }
                       />
                     </ListItem>))}
-                    <ListItem
-                      sx={{
-                        backgroundColor: "#fafafa",
-                        margin: "5px 0px",
-                        border: "0.5px solid #E0E0E0",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <ListItemText
-                        primary="Rakhi Leave"
-                        secondary={
-                          <React.Fragment>{"15th Aug 2021"}</React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <ListItem
-                      sx={{
-                        backgroundColor: "#fafafa",
-                        margin: "5px 0px",
-                        border: "0.5px solid #E0E0E0",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <ListItemText
-                        primary="Due to personal reason "
-                        secondary={
-                          <React.Fragment>
-                            {"1st Sep 2021 - 4th Sep 2021"}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <ListItem
-                      sx={{
-                        backgroundColor: "#fafafa",
-                        margin: "5px 0px",
-                        border: "0.5px solid #E0E0E0",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <ListItemText
-                        primary="Due to personal reason "
-                        secondary={
-                          <React.Fragment>
-                            {"1st Sep 2021 - 4th Sep 2021"}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
                   </List>
                 </Box>
               </Box>

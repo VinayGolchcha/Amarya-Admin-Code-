@@ -561,7 +561,7 @@ function MyForm({
             type="submit"
             variant="contained"
             sx={{ background: "#FF5151", color: "#FFFFFF"  , "&:hover" : {
-              backgroundColor : "#FFFFFF"
+              backgroundColor : "#FF5151"
             }}}
           >
             Click to Save
