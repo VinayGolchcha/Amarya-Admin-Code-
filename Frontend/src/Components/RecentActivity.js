@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, Button, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function RecentActivity({ activities }) {
+  const navigate = useNavigate();
   // Sort activities by created_at in descending order to get the most recent one first
   const sortedActivities = activities.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   
@@ -91,6 +92,7 @@ export default function RecentActivity({ activities }) {
                   backgroundColor: "#FF5151",
                 },
               }}
+              onClick={() => navigate("/activities")}
             >
               See All Activity
             </Button>

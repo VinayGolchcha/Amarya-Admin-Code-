@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, Typography, List, ListItem, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const data = [
   {
@@ -18,8 +19,34 @@ const data = [
     time: "12.02 PM",
   },
 ];
-
-const AdminActivity = () => {
+const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+const AdminActivity = ({activityAnnoucements}) => {
+  const navigate = useNavigate();
+  const getDateDay = (date) => {
+    const newdate = new Date(date);
+    const list = [];
+    const currentdate = newdate.getDate();
+    const currentday = newdate.getDay();
+    const day = days[currentday];
+    list.push(currentdate);
+    list.push(day);
+    return list;
+  }
+  function formatTime(isoString) {
+    const date = new Date(isoString);
+  
+    let hours = date.getUTCHours();
+    const minutes = date.getUTCMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+  
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+  
+    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
+    const timeStr = hours + ':' + minutesStr + ' ' + ampm;
+  
+    return timeStr;
+  }
   return (
     <div>
       <Box
@@ -41,7 +68,7 @@ const AdminActivity = () => {
           Activity Planned
         </Typography>
         <List sx={{ paddingBottom: "4px", margin: "0px 8px 8px 8px" }}>
-          {data.map((item) => {
+          {activityAnnoucements?.slice(0,3)?.map((item) => {
             return (
               <ListItem
                 sx={{
@@ -62,15 +89,23 @@ const AdminActivity = () => {
                     fontWeight: "600",
                   }}
                 >
-                  {item.date.split(" ").map((itm, idx) => (
+                  {getDateDay(item?.created_at)?.map((itm, idx) => (
                     <Box key={idx}>{itm}</Box>
                   ))}
                 </Box>
+                <Box sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  height : "100%",
+                  width: "80%"
+                }
+
+                }>
                 <Box
                   sx={{
                     height: "100%",
-                    justifyContent: "center",
                     display: "flex",
+                    justifyContent: "center",
                     alignItems: "center",
                     padding: "20px",
                     fontFamily: "Poppins",
@@ -84,15 +119,17 @@ const AdminActivity = () => {
                   sx={{
                     height: "100%",
                     width: "23%",
-                    justifyContent: "center",
+                    
                     display: "flex",
+                    justifyContent: "center",
                     alignItems: "center",
                     fontFamily: "Poppins",
                     color: "#00000099",
                     fontWeight: "600",
                   }}
                 >
-                  {item.time}
+                  {formatTime(item.created_at)}
+                </Box>
                 </Box>
               </ListItem>
             );
@@ -109,6 +146,9 @@ const AdminActivity = () => {
             variant="contained"
             color="error"
             sx={{ textTransform: "none", fontFamily: "Poppins" }}
+            onClick={() => {
+              navigate("/anouncement");
+            }}
           >
             Post New Activity
           </Button>

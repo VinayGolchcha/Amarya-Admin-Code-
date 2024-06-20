@@ -26,8 +26,10 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { format } from "date-fns";
 import { useAuth } from "../Components/AuthContext";
+import Loading from "../sharable/Loading";
 
 const WorksheetPage = () => {
+  const [isLoading , setIsLoading] = useState(true);
   const [teams, setTeams] = useState([]);
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
@@ -236,7 +238,9 @@ const WorksheetPage = () => {
         setCategories(categoriesData);
         setSkillsets(skillsData);
         setProjects(projectsData);
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
         console.error("Error fetching data:", error);
       }
     };
@@ -437,375 +441,381 @@ const WorksheetPage = () => {
       console.error("Error fetching skills:", error);
     }
   };
-  return (
-    <Box style={{ margin: "20px 20px 20px 20px" }}>
-      <Typography
-        variant="h4"
-        sx={{
-          marginBottom: "25px",
-          font: {
-            lg: "normal normal 300 22px/35px Poppins",
-            md: "normal normal 300 22px/35px Poppins",
-            sm: "normal normal 300 20px/30px Poppins",
-            xs: "normal normal 300 22px/30px Poppins",
-          },
-        }}
-      >
-        Worksheet Dashboard
-      </Typography>
-      <Typography
-        variant="h4"
-        sx={{
-          margin: "5px",
-          font: {
-            lg: "normal normal 400 18px/25px Racing Sans One",
-            md: "normal normal 400 16px/25px Racing Sans One",
-            sm: "normal normal 400 16px/25px Racing Sans One",
-            xs: "normal normal 400 10px/16px Racing Sans One",
-          },
-          color: "#161E54",
-        }}
-      >
-        AMEMP00012 - Sanjana Jain
-      </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "left",
-          justifyContent: "left",
-          background: "var(--Just-White, #FFF)",
-          borderRadius: "12px",
-          border: "1px solid #BCBCBC",
-          padding: "0px",
-          overflowX: "auto",
-        }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ background: "#161E54" }}>
-                <Box
-                  component="img"
-                  src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                  alt="Check"
-                />
-              </TableCell>
-              {tableHeaders?.map((header, index) => (
-                <TableCell
-                  key={index}
-                  align="left"
-                  sx={{
-                    background: "#161E54",
-                    color: "#FFFFFF",
-                    font: {
-                      lg: "normal normal 500 14px/20px Poppins",
-                      md: "normal normal 500 14px/20px Poppins",
-                      sm: "normal normal 500 14px/20px Poppins",
-                      xs: "normal normal 500 14px/20px Poppins",
-                    },
-                  }}
-                >
-                  {header}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody sx={{}}>
-            {rows
-              ?.slice(
-                currentPage * rowsPerPage,
-                (currentPage + 1) * rowsPerPage
-              )
-              .map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell style={{ filter: "invert(1)" }}>
-                    <Box
-                      component="img"
-                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                      alt="Check"
-                    />
-                  </TableCell>
-                  {renderTableCells(row)}
-                  <TableCell>
-                    {/* <IconButton onClick={() => handleEditClick()}>
-                      <EditIcon />
-                    </IconButton> */}
-                    <Box
-                      component="img"
-                      src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
-                      alt="Check"
-                      // onClick={handleSaveRow}
-                      sx={{ cursor: "pointer" }}
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
-
-            {newRow && (
+  if(isLoading){
+    return(
+      <Loading/>
+    )
+  }else{
+    return (
+      <Box style={{ margin: "20px 20px 20px 20px" }}>
+        <Typography
+          variant="h4"
+          sx={{
+            marginBottom: "25px",
+            font: {
+              lg: "normal normal 300 22px/35px Poppins",
+              md: "normal normal 300 22px/35px Poppins",
+              sm: "normal normal 300 20px/30px Poppins",
+              xs: "normal normal 300 22px/30px Poppins",
+            },
+          }}
+        >
+          Worksheet Dashboard
+        </Typography>
+        <Typography
+          variant="h4"
+          sx={{
+            margin: "5px",
+            font: {
+              lg: "normal normal 400 18px/25px Racing Sans One",
+              md: "normal normal 400 16px/25px Racing Sans One",
+              sm: "normal normal 400 16px/25px Racing Sans One",
+              xs: "normal normal 400 10px/16px Racing Sans One",
+            },
+            color: "#161E54",
+          }}
+        >
+          AMEMP00012 - Sanjana Jain
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "left",
+            justifyContent: "left",
+            background: "var(--Just-White, #FFF)",
+            borderRadius: "12px",
+            border: "1px solid #BCBCBC",
+            padding: "0px",
+            overflowX: "auto",
+          }}
+        >
+          <Table>
+            <TableHead>
               <TableRow>
-                <TableCell
-                  style={{ filter: "invert(1)", alignItems: "center" }}
-                >
+                <TableCell style={{ background: "#161E54" }}>
                   <Box
                     component="img"
                     src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
                     alt="Check"
                   />
                 </TableCell>
-                <TableCell>
-                  <TextField
-                    variant="standard"
-                    value={newRow.empid}
-                    onChange={(e) =>
-                      handleNewRowChange("empid", e.target.value)
-                    }
-                    sx={{ width: "80px", marginTop: "15px" }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <FormControl>
-                    <InputLabel htmlFor="team-select">Team</InputLabel>
-                    <Select
-                      value={newRow.team}
-                      onChange={(e) =>
-                        handleNewRowChange("team", e.target.value)
-                      }
-                      label="team-select"
-                      sx={{ width: "100px" }}
-                      variant="standard"
-                    >
-                      {teams?.map((team) => (
-                        <MenuItem key={team.value} value={team.value}>
-                          {team.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    variant="standard"
-                    type="date"
-                    value={newRow.date}
-                    onChange={(e) => handleNewRowChange("date", e.target.value)}
-                    sx={{ width: "120px", marginTop: "15px" }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <FormControl>
-                    <InputLabel htmlFor="category-select">Category</InputLabel>
-                    <Select
-                      id="category"
-                      value={newRow.category}
-                      onChange={(e) =>
-                        handleNewRowChange("category", e.target.value)
-                      }
-                      label="category-select"
-                      variant="standard"
-                      sx={{ width: "120px" }}
-                    >
-                      {categories?.map((category) => (
-                        <MenuItem key={category.value} value={category.value}>
-                          {category.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </TableCell>
-                <TableCell>
-                  <FormControl>
-                    <InputLabel htmlFor="project-select">Project</InputLabel>
-                    <Select
-                      value={newRow.project}
-                      id="project"
-                      onChange={(e) =>
-                        handleNewRowChange("project", e.target.value)
-                      }
-                      label="project-select"
-                      sx={{ width: "100px" }}
-                      variant="standard"
-                    >
-                      {projects?.map((project) => (
-                        <MenuItem key={project.value} value={project.value}>
-                          {project.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    variant="standard"
-                    value={newRow.description}
-                    onChange={(e) =>
-                      handleNewRowChange("description", e.target.value)
-                    }
-                    sx={{ marginTop: "15px" }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <FormControl>
-                    <InputLabel htmlFor="skillset-select">Skillset</InputLabel>
-                    <Select
-                      multiple
-                      id="skillset"
-                      value={newRow.skillset}
-                      onChange={(e) => handleSkillsetChange(e.target.value)}
-                      label="skillset-select"
-                      sx={{ width: "100px" }}
-                      variant="standard"
-                    >
-                      {skillsets?.map((skill) => (
-                        <MenuItem key={skill} value={skill}>
-                          {skill.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </TableCell>
-
-                <TableCell>
-                  <Box
-                    component="img"
-                    src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
-                    alt="Check"
-                    onClick={handleSaveRow}
-                    sx={{ cursor: "pointer" }}
-                  />
-                </TableCell>
+                {tableHeaders?.map((header, index) => (
+                  <TableCell
+                    key={index}
+                    align="left"
+                    sx={{
+                      background: "#161E54",
+                      color: "#FFFFFF",
+                      font: {
+                        lg: "normal normal 500 14px/20px Poppins",
+                        md: "normal normal 500 14px/20px Poppins",
+                        sm: "normal normal 500 14px/20px Poppins",
+                        xs: "normal normal 500 14px/20px Poppins",
+                      },
+                    }}
+                  >
+                    {header}
+                  </TableCell>
+                ))}
               </TableRow>
-            )}
-          </TableBody>
-        </Table>
-        <TableCell sx={{ textAlign: "center", cursor: "pointer" }}>
-          <Box
-            component="img"
-            src={`${process.env.PUBLIC_URL}/Images/Add_ring_duotone.png`}
-            alt="Check"
-            onClick={handleAddRow}
+            </TableHead>
+            <TableBody sx={{}}>
+              {rows
+                ?.slice(
+                  currentPage * rowsPerPage,
+                  (currentPage + 1) * rowsPerPage
+                )
+                .map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell style={{ filter: "invert(1)" }}>
+                      <Box
+                        component="img"
+                        src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                        alt="Check"
+                      />
+                    </TableCell>
+                    {renderTableCells(row)}
+                    <TableCell>
+                      {/* <IconButton onClick={() => handleEditClick()}>
+                        <EditIcon />
+                      </IconButton> */}
+                      <Box
+                        component="img"
+                        src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
+                        alt="Check"
+                        // onClick={handleSaveRow}
+                        sx={{ cursor: "pointer" }}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
+  
+              {newRow && (
+                <TableRow>
+                  <TableCell
+                    style={{ filter: "invert(1)", alignItems: "center" }}
+                  >
+                    <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                      alt="Check"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      variant="standard"
+                      value={newRow.empid}
+                      onChange={(e) =>
+                        handleNewRowChange("empid", e.target.value)
+                      }
+                      sx={{ width: "80px", marginTop: "15px" }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <FormControl>
+                      <InputLabel htmlFor="team-select">Team</InputLabel>
+                      <Select
+                        value={newRow.team}
+                        onChange={(e) =>
+                          handleNewRowChange("team", e.target.value)
+                        }
+                        label="team-select"
+                        sx={{ width: "100px" }}
+                        variant="standard"
+                      >
+                        {teams?.map((team) => (
+                          <MenuItem key={team.value} value={team.value}>
+                            {team.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      variant="standard"
+                      type="date"
+                      value={newRow.date}
+                      onChange={(e) => handleNewRowChange("date", e.target.value)}
+                      sx={{ width: "120px", marginTop: "15px" }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <FormControl>
+                      <InputLabel htmlFor="category-select">Category</InputLabel>
+                      <Select
+                        id="category"
+                        value={newRow.category}
+                        onChange={(e) =>
+                          handleNewRowChange("category", e.target.value)
+                        }
+                        label="category-select"
+                        variant="standard"
+                        sx={{ width: "120px" }}
+                      >
+                        {categories?.map((category) => (
+                          <MenuItem key={category.value} value={category.value}>
+                            {category.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </TableCell>
+                  <TableCell>
+                    <FormControl>
+                      <InputLabel htmlFor="project-select">Project</InputLabel>
+                      <Select
+                        value={newRow.project}
+                        id="project"
+                        onChange={(e) =>
+                          handleNewRowChange("project", e.target.value)
+                        }
+                        label="project-select"
+                        sx={{ width: "100px" }}
+                        variant="standard"
+                      >
+                        {projects?.map((project) => (
+                          <MenuItem key={project.value} value={project.value}>
+                            {project.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </TableCell>
+                  <TableCell>
+                    <TextField
+                      variant="standard"
+                      value={newRow.description}
+                      onChange={(e) =>
+                        handleNewRowChange("description", e.target.value)
+                      }
+                      sx={{ marginTop: "15px" }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <FormControl>
+                      <InputLabel htmlFor="skillset-select">Skillset</InputLabel>
+                      <Select
+                        multiple
+                        id="skillset"
+                        value={newRow.skillset}
+                        onChange={(e) => handleSkillsetChange(e.target.value)}
+                        label="skillset-select"
+                        sx={{ width: "100px" }}
+                        variant="standard"
+                      >
+                        {skillsets?.map((skill) => (
+                          <MenuItem key={skill} value={skill}>
+                            {skill.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </TableCell>
+  
+                  <TableCell>
+                    <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
+                      alt="Check"
+                      onClick={handleSaveRow}
+                      sx={{ cursor: "pointer" }}
+                    />
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+          <TableCell sx={{ textAlign: "center", cursor: "pointer" }}>
+            <Box
+              component="img"
+              src={`${process.env.PUBLIC_URL}/Images/Add_ring_duotone.png`}
+              alt="Check"
+              onClick={handleAddRow}
+            />
+          </TableCell>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={currentPage}
+            onPageChange={handleChangePage}
           />
-        </TableCell>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={currentPage}
-          onPageChange={handleChangePage}
-        />
-      </Box>
-      {/* <Typography
-        variant="h4"
-        sx={{
-          margin: "25px 0px 20px 10px",
-          font: {
-            lg: "normal normal 300 22px/35px Poppins",
-            md: "normal normal 300 22px/35px Poppins",
-            sm: "normal normal 300 20px/30px Poppins",
-            xs: "normal normal 300 22px/30px Poppins",
-          },
-        }}
-      >
-        Add new Property
-      </Typography>
-      <Box sx={{ borderRadius: "12px", border: "1px solid #BCBCBC" }}>
-        <Typography
+        </Box>
+        {/* <Typography
           variant="h4"
           sx={{
             margin: "25px 0px 20px 10px",
             font: {
-              lg: "normal normal 600 18/25px Poppins",
-              md: "normal normal 600 18/25px Poppins",
-              sm: "normal normal 600 18px/25px Poppins",
-              xs: "normal normal 600 16px/25px Poppins",
+              lg: "normal normal 300 22px/35px Poppins",
+              md: "normal normal 300 22px/35px Poppins",
+              sm: "normal normal 300 20px/30px Poppins",
+              xs: "normal normal 300 22px/30px Poppins",
             },
-            color: "#4C4C4C",
           }}
         >
-          Select One from below:
+          Add new Property
         </Typography>
-        <FormGroup
-          sx={{
-            paddingLeft: "20px",
-            color: "#4C4C4C",
-            font: {
-              lg: "normal normal 600 18/25px Poppins",
-              md: "normal normal 600 18/25px Poppins",
-              sm: "normal normal 600 18px/25px Poppins",
-              xs: "normal normal 600 16px/25px Poppins",
-            },
-          }}
-        >
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selectedOption === "Project"}
-                onChange={() => handleCheckboxChange("Project")}
-              />
-            }
-            label="Project"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selectedOption === "Category"}
-                onChange={() => handleCheckboxChange("Category")}
-              />
-            }
-            label="Category"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selectedOption === "Skillset"}
-                onChange={() => handleCheckboxChange("Skillset")}
-              />
-            }
-            label="Skill Set"
-          />
-        </FormGroup>
-        <Typography
-          variant="h4"
-          sx={{
-            margin: "25px 0px 20px 20px",
-            font: {
-              lg: "normal normal 600 18/25px Poppins",
-              md: "normal normal 600 18/25px Poppins",
-              sm: "normal normal 600 18px/25px Poppins",
-              xs: "normal normal 600 16px/25px Poppins",
-            },
-            color: "#4C4C4C",
-          }}
-        >
-          Fill your property below
-        </Typography>
-        <TextField
-          id="filled-basic"
-          variant="filled"
-          sx={{ margin: "0px 20px 20px 20px" }}
-          onChange={(e) => handleTextFieldChange(e.target.value)}
-        />
-        <br />
-        <box sx={{ textAlign: "center" }}>
-          <Button
-            variant="contained"
-            style={{
-              backgroundColor: "#FF5151",
-              color: "white",
-              border: "4px",
-              margin: "10px 0px 20px 40%",
+        <Box sx={{ borderRadius: "12px", border: "1px solid #BCBCBC" }}>
+          <Typography
+            variant="h4"
+            sx={{
+              margin: "25px 0px 20px 10px",
+              font: {
+                lg: "normal normal 600 18/25px Poppins",
+                md: "normal normal 600 18/25px Poppins",
+                sm: "normal normal 600 18px/25px Poppins",
+                xs: "normal normal 600 16px/25px Poppins",
+              },
+              color: "#4C4C4C",
             }}
-            onClick={addOptionToDropdown}
           >
-            Click to Save
-          </Button>
-        </box>
-        <ToastContainer />
-      </Box> */}
-      <ToastContainer /> {/* Add the ToastContainer here */}
-    </Box>
-  );
+            Select One from below:
+          </Typography>
+          <FormGroup
+            sx={{
+              paddingLeft: "20px",
+              color: "#4C4C4C",
+              font: {
+                lg: "normal normal 600 18/25px Poppins",
+                md: "normal normal 600 18/25px Poppins",
+                sm: "normal normal 600 18px/25px Poppins",
+                xs: "normal normal 600 16px/25px Poppins",
+              },
+            }}
+          >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={selectedOption === "Project"}
+                  onChange={() => handleCheckboxChange("Project")}
+                />
+              }
+              label="Project"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={selectedOption === "Category"}
+                  onChange={() => handleCheckboxChange("Category")}
+                />
+              }
+              label="Category"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={selectedOption === "Skillset"}
+                  onChange={() => handleCheckboxChange("Skillset")}
+                />
+              }
+              label="Skill Set"
+            />
+          </FormGroup>
+          <Typography
+            variant="h4"
+            sx={{
+              margin: "25px 0px 20px 20px",
+              font: {
+                lg: "normal normal 600 18/25px Poppins",
+                md: "normal normal 600 18/25px Poppins",
+                sm: "normal normal 600 18px/25px Poppins",
+                xs: "normal normal 600 16px/25px Poppins",
+              },
+              color: "#4C4C4C",
+            }}
+          >
+            Fill your property below
+          </Typography>
+          <TextField
+            id="filled-basic"
+            variant="filled"
+            sx={{ margin: "0px 20px 20px 20px" }}
+            onChange={(e) => handleTextFieldChange(e.target.value)}
+          />
+          <br />
+          <box sx={{ textAlign: "center" }}>
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: "#FF5151",
+                color: "white",
+                border: "4px",
+                margin: "10px 0px 20px 40%",
+              }}
+              onClick={addOptionToDropdown}
+            >
+              Click to Save
+            </Button>
+          </box>
+          <ToastContainer />
+        </Box> */}
+        <ToastContainer /> {/* Add the ToastContainer here */}
+      </Box>
+    );
+  }
 };
 
 export default WorksheetPage;

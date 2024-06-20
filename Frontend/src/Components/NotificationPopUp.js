@@ -15,17 +15,14 @@ import { useAuth } from "./AuthContext";
 export default function NotificationPopUp() {
   const navigate = useNavigate();
   const { notifications, setNotifications } = useContext(NotificationContext);
-  const apiUrl = process.env.REACT_APP_API_URL;
-  const {user} = useAuth();
-  const token = encodeURIComponent(user?.token || ""); 
+  const apiUrl = process.env.REACT_APP_API_URI;
+  const { user } = useAuth();
 
   useEffect(() => {
     if (notifications.length === 0) {
       axios
-        .get(`${apiUrl}/announcement/fetch-announcement`,{
-          headers: {
-            "x-access-token": token, // Add your custom headers here
-          },
+        .get(`${apiUrl}/announcement/fetch-announcement`, {
+          headers: { "x-access-token": user?.token },
         })
         .then((response) => {
           const data = response.data;

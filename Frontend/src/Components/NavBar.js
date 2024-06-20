@@ -28,6 +28,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import NotificationPopUp from "./NotificationPopUp";
 import { useAuth } from "./AuthContext";
+import axios from "axios";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -76,7 +77,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const NavBar = ({ handleDrawerToggle }) => {
   const { logout } = useAuth();
-  const { user } = useAuth();
+  const { userData } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -89,9 +90,49 @@ const NavBar = ({ handleDrawerToggle }) => {
   const [addIcon, setAddIcon] = React.useState(false);
   const [addTask, setAddTask] = React.useState("");
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [stickeyNotesData , setStickeyNotesData]=React.useState([]);
+  
+  React.useEffect(() => {
+    handleGetNotes("AIEMP1001"); 
+  }, []);
+
+  const handleAddStickyNote = () => {
+    axios
+      .post(`${process.env.REACT_APP_API_URI}/stickynotes/add-stickynotes`, {
+        emp_id: "AIEMP1001",
+        note: addTask,
+      })
+      .then((response) => {
+        console.log("Sticky note added:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error adding sticky note:", error);
+      });
+  };
+
+  const handleGetNotes = async (empId) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URI}/get-user-notes/${empId}`,
+      );
+      console.log(response.data);
+      setStickeyNotesData(response.data.data)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteStickyNote = async (emp_id) => {
+    try {
+     const response = await axios.delete(`${process.env.REACT_APP_API_URI}/stickynotes/delete-stickynotes/${id}/${emp_id}`);
+      console.log(response);
+    } catch (error) {
+      console.error("Error deleting sticky note:", error);
+    }
+  };
+
 
   const handleSearch = () => {
-    // Navigate to the page based on the search query
     navigate(`/${searchQuery}`);
   };
 
@@ -103,23 +144,27 @@ const NavBar = ({ handleDrawerToggle }) => {
     setAddTask(event.target.value);
   }
 
-  function handleDelete(index) {
-    setStickeyNotes((prevStickyNotes) => {
-      const newStickyNotes = [...prevStickyNotes];
-      newStickyNotes.splice(index, 1);
-      return newStickyNotes;
-    });
-  }
+
+    function handleDelete(noteId) {
+      handleDeleteStickyNote(noteId);
+      setStickeyNotes((prevStickyNotes) => {
+        return prevStickyNotes.filter((note) => note._id !== noteId);
+       
+      });
+    }
+  
   function handleKeyDown(e) {
     if (e.key === "Enter") {
       setStickeyNotes((prevStickyNotes) => [...prevStickyNotes, addTask]);
       setAddTask("");
+      handleAddStickyNote();
     }
   }
   const [anchorE2, setAnchorE2] = React.useState(null);
 
   const handleClick = (event) => {
     setAnchorE2(anchorE2 ? null : event.currentTarget);
+    handleGetNotes();
   };
 
   const open = Boolean(anchorE2);
@@ -173,14 +218,6 @@ const NavBar = ({ handleDrawerToggle }) => {
       onMouseUp={toggleArrow}
       sx={{ marginTop: "2.5rem" }}
     >
-       <MenuItem
-        onClick={()=>{
-          navigate("/profile");
-        }}
-        sx={{ color: "#ff5151", fontWeight: "bold" }}
-      >
-        Visit Profile
-      </MenuItem>
       <MenuItem
         onClick={handleLogOut}
         sx={{ color: "#ff5151", fontWeight: "bold" }}
@@ -320,9 +357,10 @@ const NavBar = ({ handleDrawerToggle }) => {
                   id={id}
                   open={open}
                   anchorEl={anchorE2}
-                  sx={{ marginTop: "20px", position: "relative" }}
+                  sx={{ marginTop: "20px", position: "relative",}}
                   placement="bottom-start"
                 >
+                  
                   <Box
                     sx={{
                       bgcolor: "#FFEBEB",
@@ -374,10 +412,12 @@ const NavBar = ({ handleDrawerToggle }) => {
                         />
                       )}
                     </Box>
-                    {stickeyNotes.map((item, index) => {
+                    {stickeyNotesData?.map((note) => {
                       return (
                         <Box
-                          key={index}
+                          key={
+                            note._id
+                          }
                           sx={{
                             p: 1,
                             width: "380px",
@@ -398,9 +438,12 @@ const NavBar = ({ handleDrawerToggle }) => {
                               fontFamily: "Lato",
                             }}
                           >
-                            {item}{" "}
+                            {/* {item}{" "} */}
+                            {note.note}
                             <Box>
-                              <CloseIcon onClick={() => handleDelete(index)} />
+                              <CloseIcon
+                                onClick={() => handleDelete(note._id)}
+                              />
                             </Box>
                           </Typography>
                         </Box>
@@ -410,17 +453,17 @@ const NavBar = ({ handleDrawerToggle }) => {
                 </Popper>
               </div>
             </IconButton>
-            {user && ( // Conditional rendering for user profile information
+            {userData && ( // Conditional rendering for user profile information
               <>
                 <IconButton
                   size="large"
                   aria-label="show 4 new mails"
                   color="inherit"
-                  sx={{ marginRight: -1 }}
+                  sx={{ marginRight: 1 }}
                 >
                   <Avatar
-                    alt={user.username}
-                    src={user.profile_picture}
+                    alt={userData.username}
+                    src={userData.profile_picture}
                   />
                 </IconButton>
                 <IconButton
@@ -433,8 +476,8 @@ const NavBar = ({ handleDrawerToggle }) => {
                 >
                   <div>
                     <Typography sx={{ display: "flex" }}>
-                      {user.username}
-                      {console.log(user.username)}
+                      {userData.username}
+                      {console.log(userData.username)}
                       {arrow ? (
                         <KeyboardArrowUpIcon />
                       ) : (

@@ -26,6 +26,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useAuth } from "../Components/AuthContext";
+import Loading from "../sharable/Loading";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -144,6 +145,7 @@ const rows = [
 ];
 let row;
 export default function AssetsAdminPage() {
+  const [isLoading , setIsLoading] = useState(true);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [assetsData, setAssetsData] = React.useState(rows);
@@ -195,7 +197,9 @@ export default function AssetsAdminPage() {
       } else {
         console.error("Error fetching assets:", response.data.message);
       }
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
       console.error("Error fetching assets:", error);
     }
   };
@@ -282,308 +286,313 @@ export default function AssetsAdminPage() {
       />
     );
   };
-
-  return (
-    <>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: "100%",
-          borderRadius: "10px",
-        }}
-      >
-        <Typography
+  if(isLoading){
+    return(
+      <Loading/>
+    )
+  }else{
+    return (
+      <>
+        <Box
+          component="main"
           sx={{
-            margin: "12px 0px",
-            width: "630px",
-            height: "42px",
-            fontFamily: "Poppins",
-            fontSize: "24px",
-            fontWeight: "600",
-            lineHeight: "42px",
-            color: "#121843",
+            flexGrow: 1,
+            p: 3,
+            width: "100%",
+            borderRadius: "10px",
           }}
         >
-          Assets
-        </Typography>
-        <Box sx={{ boxSizing: "border-box" }}>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow sx={{ backgroundColor: "#1B204A" }}>
-                  <TableCell
-                    sx={{
-                      color: "#FFFFFF",
-                      fontFamily: "Poppins",
-                      textAlign: "center",
-                      padding: "8px",
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      name="allselect"
-                      checked={
-                        !assetsData.some((user) => user?.isChecked !== true)
-                      }
-                      style={{ height: "40px", width: "20px" }}
-                      onChange={handleChange}
-                    />
-                    <br />
-                    Invt. Id{" "}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      color: "#FFFFFF",
-                      fontFamily: "Poppins",
-                      padding: "8px",
-                    }}
-                  >
-                    D.O.P
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      color: "#FFFFFF",
-                      fontFamily: "Poppins",
-                      padding: "8px",
-                    }}
-                  >
-                    Photo
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      color: "#FFFFFF",
-                      fontFamily: "Poppins",
-                      padding: "8px",
-                    }}
-                  >
-                    Assignee
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      color: "#FFFFFF",
-                      fontFamily: "Poppins",
-                      padding: "8px",
-                    }}
-                  >
-                    Item
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      color: "#FFFFFF",
-                      fontFamily: "Poppins",
-                      padding: "8px",
-                    }}
-                  >
-                    Description
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      color: "#FFFFFF",
-                      fontFamily: "Poppins",
-                      padding: "8px",
-                    }}
-                  >
-                    Issued From
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      color: "#FFFFFF",
-                      fontFamily: "Poppins",
-                      padding: "8px",
-                    }}
-                  >
-                    Issued Till
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      color: "#FFFFFF",
-                      fontFamily: "Poppins",
-                      padding: "8px",
-                    }}
-                  >
-                    In Warranty
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{
-                      color: "#FFFFFF",
-                      fontFamily: "Poppins",
-                      padding: "8px",
-                    }}
-                  >
-                    End of warranty
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(rowsPerPage > 0
-                  ? assetsData.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                  : assetsData
-                ).map((row) => (
-                  <TableRow
-                    key={row.name}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
+          <Typography
+            sx={{
+              margin: "12px 0px",
+              width: "630px",
+              height: "42px",
+              fontFamily: "Poppins",
+              fontSize: "24px",
+              fontWeight: "600",
+              lineHeight: "42px",
+              color: "#121843",
+            }}
+          >
+            Assets
+          </Typography>
+          <Box sx={{ boxSizing: "border-box" }}>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: "#1B204A" }}>
                     <TableCell
-                      component="th"
-                      scope="row"
-                      align="center"
-                      sx={{ fontFamily: "Poppins" }}
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        textAlign: "center",
+                        padding: "8px",
+                      }}
                     >
-                      {/* <Box
-                          component="img"
-                          src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                          alt="Check"
-                          style={{ filter: "invert(1)" }}
-                        /> */}
                       <input
                         type="checkbox"
-                        name={row.inId}
-                        checked={row?.isChecked || false}
-                        onChange={handleChange}
+                        name="allselect"
+                        checked={
+                          !assetsData.some((user) => user?.isChecked !== true)
+                        }
                         style={{ height: "40px", width: "20px" }}
+                        onChange={handleChange}
                       />
                       <br />
-                      {row.inId}
+                      Req. Id{" "}
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
                     >
-                      {row.dop}
+                      D.O.P
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
                     >
-                      {renderItemImage(row.photo)}
+                      Photo
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
                     >
-                      {row.assingnee}
+                      Assignee
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
                     >
-                      {row.item}
+                      Item
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
                     >
-                      {row.description}
+                      Description
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
                     >
-                      {row.issued_From}
+                      Issued From
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
                     >
-                      {row.issued_Till}
+                      Issued Till
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
                     >
-                      {row.in_Warranty}
+                      In Warranty
                     </TableCell>
                     <TableCell
                       align="center"
-                      sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
                     >
-                      {row.warranty_End}
+                      End of warranty
                     </TableCell>
                   </TableRow>
-                ))}
-
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={12} style={{ borderBottom: "none" }} />
-                  </TableRow>
-                )}
-              </TableBody>
-              <TableRow>
-                <TableCell colSpan={12} sx={{ textAlign: "center" }}>
-                  {/* <Box
-                      component="img"
-                      src={`${process.env.PUBLIC_URL}/Images/Add_ring_duotone.png`}
-                      alt="add"
-                      onClick={handleOpen}
-                    /> */}
-                  <AddOutlinedIcon
-                    onClick={handleOpen}
-                    color="action"
-                    sx={{
-                      borderRadius: "50px",
-                      backgroundColor: "rgb(222, 225, 231)",
-                      width: "30px",
-                      height: "30px",
-                      margin: "0px 2px",
-                      padding: "4px",
-                    }}
-                  />
-                  <AddNewAssets
-                    assetsData={assetsData}
-                    handleAdd={setAssetsData}
-                    handleClose={handleClose}
-                    open={open}
-                  />
-                  <EditDeleteIcons
-                    deleteAction={handleDelete}
-                    rows={selectedRows}
-                  />
-                </TableCell>
-              </TableRow>
-              <TableFooter>
+                </TableHead>
+                <TableBody>
+                  {(rowsPerPage > 0
+                    ? assetsData.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                    : assetsData
+                  ).map((row) => (
+                    <TableRow
+                      key={row.name}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        align="center"
+                        sx={{ fontFamily: "Poppins" }}
+                      >
+                        {/* <Box
+                            component="img"
+                            src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                            alt="Check"
+                            style={{ filter: "invert(1)" }}
+                          /> */}
+                        <input
+                          type="checkbox"
+                          name={row.inId}
+                          checked={row?.isChecked || false}
+                          onChange={handleChange}
+                          style={{ height: "40px", width: "20px" }}
+                        />
+                        <br />
+                        {row.inId}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.dop}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {renderItemImage(row.photo)}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.assingnee}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.item}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.description}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.issued_From}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.issued_Till}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.in_Warranty}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.warranty_End}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+  
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={12} style={{ borderBottom: "none" }} />
+                    </TableRow>
+                  )}
+                </TableBody>
                 <TableRow>
-                  <TablePagination
-                    rowsPerPageOptions={[
-                      5,
-                      10,
-                      25,
-                      { label: "All", value: -1 },
-                    ]}
-                    colSpan={12}
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    SelectProps={{
-                      inputProps: {
-                        "aria-label": "rows per page",
-                      },
-                      native: true,
-                    }}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    ActionsComponent={TablePaginationActions}
-                  />
+                  <TableCell colSpan={12} sx={{ textAlign: "center" }}>
+                    {/* <Box
+                        component="img"
+                        src={`${process.env.PUBLIC_URL}/Images/Add_ring_duotone.png`}
+                        alt="add"
+                        onClick={handleOpen}
+                      /> */}
+                    <AddOutlinedIcon
+                      onClick={handleOpen}
+                      color="action"
+                      sx={{
+                        borderRadius: "50px",
+                        backgroundColor: "rgb(222, 225, 231)",
+                        width: "30px",
+                        height: "30px",
+                        margin: "0px 2px",
+                        padding: "4px",
+                      }}
+                    />
+                    <AddNewAssets
+                      assetsData={assetsData}
+                      handleAdd={setAssetsData}
+                      handleClose={handleClose}
+                      open={open}
+                    />
+                    <EditDeleteIcons
+                      deleteAction={handleDelete}
+                      rows={selectedRows}
+                    />
+                  </TableCell>
                 </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
+                <TableFooter>
+                  <TableRow>
+                    <TablePagination
+                      rowsPerPageOptions={[
+                        5,
+                        10,
+                        25,
+                        { label: "All", value: -1 },
+                      ]}
+                      colSpan={12}
+                      count={rows.length}
+                      rowsPerPage={rowsPerPage}
+                      page={page}
+                      SelectProps={{
+                        inputProps: {
+                          "aria-label": "rows per page",
+                        },
+                        native: true,
+                      }}
+                      onPageChange={handleChangePage}
+                      onRowsPerPageChange={handleChangeRowsPerPage}
+                      ActionsComponent={TablePaginationActions}
+                    />
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            </TableContainer>
+          </Box>
         </Box>
-      </Box>
-      <ToastContainer />
-    </>
-  );
+        <ToastContainer />
+      </>
+    );
+  }
 }

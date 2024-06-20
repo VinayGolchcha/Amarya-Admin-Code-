@@ -24,8 +24,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData) => {
     if (userData) {
-      const { user_id, token, profile_picture, user_name ,role} = userData;
-      const userDetails = { user_id, token, profile_picture, user_name, role };
+      const { user_id, token, profile_picture, user_name , role } = userData;
+      const userDetails = { user_id, token, profile_picture, user_name , role};
       setUser(userDetails);
       localStorage.setItem("user", JSON.stringify(userDetails));
     } else {
