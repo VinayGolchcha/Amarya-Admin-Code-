@@ -246,7 +246,7 @@ export default function SettingHoliday() {
 
   return (
     <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
-      <Grid container spacing={4}>
+      <Grid container spacing={4} sx={{marginLeft:"2%"}}>
         <Grid item xs={3}>
           <FormControl fullWidth>
             <FormLabel sx={{ color: "black", fontWeight: "600" }}>

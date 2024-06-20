@@ -200,7 +200,7 @@ export default function SettingsLeave() {
   };
   return (
     <Box sx={{ flexGrow: 1, m: "25px 0px 20px 5px" }}>
-      <Grid container spacing={4}>
+      <Grid container spacing={4} sx={{marginLeft:"5%"}}>
         <Grid item xs={2.5}>
           <FormControl fullWidth>
             <FormLabel sx={{ color: "black", fontWeight: "600" }}>
@@ -233,7 +233,7 @@ export default function SettingsLeave() {
           </FormControl>
         </Grid>
 
-        <Grid item xs={1.5}>
+        <Grid item xs={1.5} >
           <FormControl fullWidth>
             <FormLabel sx={{ color: "black", fontWeight: "600" }}>
               Gender

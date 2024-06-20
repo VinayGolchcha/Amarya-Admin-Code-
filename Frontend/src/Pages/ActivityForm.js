@@ -560,7 +560,9 @@ function MyForm({
           <Button
             type="submit"
             variant="contained"
-            sx={{ background: "#FF5151", color: "#FFFFFF" }}
+            sx={{ background: "#FF5151", color: "#FFFFFF"  , "&:hover" : {
+              backgroundColor : "#FF5151"
+            }}}
           >
             Click to Save
           </Button>

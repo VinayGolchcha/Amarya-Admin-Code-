@@ -183,7 +183,7 @@ export default function SettingsCategory() {
   };
   return (
     <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
-      <Grid container spacing={4}>
+      <Grid container spacing={4} sx={{marginLeft:"6%"}}>
         <Grid item xs={4}>
           {formData.map((data, index) => (
             <FormControl fullWidth>

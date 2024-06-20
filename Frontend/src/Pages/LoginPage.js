@@ -205,6 +205,9 @@ const LoginPage = () => {
               padding: "10px",
               color: "#010101",
               fontWeight: 600,
+              "&:hover" : {
+                backgroundColor : "#FF5151"
+              }
             }}
             variant="contained"
             color="primary"

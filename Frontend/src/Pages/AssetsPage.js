@@ -67,7 +67,7 @@ const AssetsPage = () => {
     "Req. Id.",
     "Issued From",
     "Issued Till",
-    "Approved/Rejected",
+    "Status",
     "Manager",
     "In Warranty",
   ];

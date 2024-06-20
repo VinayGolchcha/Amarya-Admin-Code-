@@ -191,13 +191,15 @@ export default function AdminApprovals({approvalData , approvalReq}) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
   const handleClick = (val , status) => {
-    var regEx = /^[a-z0-9]+$/i;
-    const isValid = regEx.test(foreignId);
-    console.log(isValid)
-    if(!isValid){
-      toast.error("Foreign id should be alphanumeric");
-      return;
-    }
+    if(val?.request_type==="Inventory" || foreignId.length !== 0){
+      var regEx = /^[a-z0-9]+$/i;
+      const isValid = regEx.test(foreignId);
+      console.log(isValid)
+      if(!isValid){
+        toast.error("Foreign id should be alphanumeric");
+        return;
+      }
+    }   
     const body = {
         emp_id: val?.emp_id,
         item: val?.item, // In case of leave

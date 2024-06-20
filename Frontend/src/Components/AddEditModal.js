@@ -60,9 +60,7 @@ export default function AddEditModal({ rows }) {
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   const [open, setOpen] = useState(false);
-  const [editedData, setEditedData] = useState({
-
-  });
+  const [editedData, setEditedData] = useState({});
 
   const apiUrl = process.env.REACT_APP_API_URL;
   console.log(rows);
@@ -103,6 +101,9 @@ export default function AddEditModal({ rows }) {
     if (editedData.file) {
       formData.append("file", editedData.file);
       formData.append("public_id", editedData?.public_id);
+    } else {
+      formData.append("file", rows.photo);
+      formData.append("public_id", "");
     }
 
     axios

@@ -231,6 +231,7 @@ const AdminDashboard = () => {
           </Box>
           <Box
             sx={{
+              height : "100%",
               width: "50%",
               marginTop: "30px",
             }}

@@ -562,27 +562,7 @@ export default function LeaveMangementPage() {
                       height: { lg: "340px", md: "362px", sm: "305px" },
                     }}
                   >
-                    {leaveOverviewData?.map((item) => (
-                      <ListItem
-                        sx={{
-                          backgroundColor: "#fafafa",
-                          margin: "5px 0px",
-                          border: "0.5px solid #E0E0E0",
-                          borderRadius: "6px",
-                        }}
-                      >
-                        <ListItemText
-                          primary={item?.leave_type}
-                          secondary={
-                            <React.Fragment>
-                              {formattedLeaveDate(item?.from_date)} -{" "}
-                              {formattedLeaveDate(item?.to_date)}
-                            </React.Fragment>
-                          }
-                        />
-                      </ListItem>
-                    ))}
-                    <ListItem
+                    {leaveOverviewData?.map((item) => (<ListItem
                       sx={{
                         backgroundColor: "#fafafa",
                         margin: "5px 0px",
@@ -591,46 +571,14 @@ export default function LeaveMangementPage() {
                       }}
                     >
                       <ListItemText
-                        primary="Rakhi Leave"
-                        secondary={
-                          <React.Fragment>{"15th Aug 2021"}</React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <ListItem
-                      sx={{
-                        backgroundColor: "#fafafa",
-                        margin: "5px 0px",
-                        border: "0.5px solid #E0E0E0",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <ListItemText
-                        primary="Due to personal reason "
+                        primary={item?.leave_type}
                         secondary={
                           <React.Fragment>
-                            {"1st Sep 2021 - 4th Sep 2021"}
+                            {formattedLeaveDate(item?.from_date)} - {formattedLeaveDate(item?.to_date)}
                           </React.Fragment>
                         }
                       />
-                    </ListItem>
-                    <ListItem
-                      sx={{
-                        backgroundColor: "#fafafa",
-                        margin: "5px 0px",
-                        border: "0.5px solid #E0E0E0",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <ListItemText
-                        primary="Due to personal reason "
-                        secondary={
-                          <React.Fragment>
-                            {"1st Sep 2021 - 4th Sep 2021"}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
+                    </ListItem>))}
                   </List>
                 </Box>
               </Box>
