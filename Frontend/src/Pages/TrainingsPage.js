@@ -18,6 +18,7 @@ import {
 import axios from "axios";
 import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
+import { toast } from "react-toastify";
 
 const field = [
   {
@@ -141,9 +142,13 @@ export default function TrainingsPage(props) {
         "x-access-token" : user?.token
       }
     });
+    setIsLoading(false);
+    toast.success(res?.data?.message);
     console.log(res);
   }catch(err){
+    setIsLoading(false);
     console.log(err);
+    toast.error(err?.response?.data?.message)
   }
  }
  const handleRequest = (val) => {
@@ -153,6 +158,7 @@ export default function TrainingsPage(props) {
     request_type: "training",
     progress_status: "in progress"
   };
+  setIsLoading(true);
   requestTraining(requestData);
  }
   React.useEffect(() => {
