@@ -5,9 +5,8 @@ import OtpP from "./OtpPop";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useAuth } from "../Components/AuthContext";
 
-function EmailP({ closeEmailP }) {
-  const [email, setEmail] = useState("");
-  const [openOtpP, setOpenOtpP] = useState(false);
+function EmailP({ closeEmailP, openOtpP, setEmail }) {
+  const [email, setEmailInput] = useState("");
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || "");
 
@@ -28,7 +27,8 @@ function EmailP({ closeEmailP }) {
         }
       );
       console.log(response);
-      setOpenOtpP(true);
+      setEmail(email);
+      openOtpP();
     } catch (error) {
       console.log("Error data:", error.response.data.errors[0]?.msg);
     }
@@ -40,12 +40,12 @@ function EmailP({ closeEmailP }) {
         style={{
           backgroundColor: "white",
           borderRadius: "10px",
-          height: "100vh",
-          width: "100vw",
-          position: "absolute",
-          top: "57px",
-          left: "117px",
-          zIndex: "11",
+          // height: "100vh",
+          // width: "100vw",
+          // position: "absolute",
+          // top: "57px",
+          // left: "117px",
+          // zIndex: "11",
         }}
         className="modelbackground"
       >
@@ -93,7 +93,7 @@ function EmailP({ closeEmailP }) {
               variant="filled"
               type="email"
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmailInput(e.target.value)}
               sx={{
                 marginY: 1,
                 width: "75%",
@@ -120,7 +120,6 @@ function EmailP({ closeEmailP }) {
             >
               Send OTP
             </Button>
-            {openOtpP && <OtpP closeOtpP={setOpenOtpP} email={email}/>}
             <br />
           </div>
         </div>

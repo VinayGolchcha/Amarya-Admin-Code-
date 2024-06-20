@@ -16,15 +16,15 @@ export default function NotificationPopUp() {
   const navigate = useNavigate();
   const { notifications, setNotifications } = useContext(NotificationContext);
   const apiUrl = process.env.REACT_APP_API_URL;
-  const {user} = useAuth();
-  const token = encodeURIComponent(user?.token || ""); 
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || "");
 
   useEffect(() => {
     if (notifications?.length === 0) {
       axios
-        .get(`${apiUrl}/announcement/fetch-announcement`,{
+        .get(`${apiUrl}/announcement/fetch-announcement`, {
           headers: {
-            "x-access-token": token, // Add your custom headers here
+            "x-access-token": token,
           },
         })
         .then((response) => {
@@ -42,12 +42,9 @@ export default function NotificationPopUp() {
   }, []);
 
   const handleNotificationClick = (index) => {
-    // Update the notifications array to remove the red dot
     const updatedNotifications = [...notifications];
     updatedNotifications[index].read = true;
     setNotifications(updatedNotifications);
-
-    // Navigate the user to the announcement page
     navigate("/announcements");
   };
 
@@ -56,21 +53,29 @@ export default function NotificationPopUp() {
       {(popupState) => (
         <div>
           <Box variant="text" {...bindTrigger(popupState)}>
-            <Badge badgeContent={notifications?.filter(notification => !notification.read).length} color="error">
-              <NotificationsIcon sx={{ color: "#b4b4b4" }} />
+            <Badge
+              badgeContent={notifications?.filter((notification) => !notification.read).length}
+              color="error"
+            >
+              <NotificationsIcon sx={{ color: "#b4b4b4" }} fontSize="large" />
             </Badge>
           </Box>
           <Popover
             {...bindPopover(popupState)}
             anchorOrigin={{
               vertical: "bottom",
-              horizontal: "start",
+              horizontal: "right",
             }}
             transformOrigin={{
               vertical: "top",
-              horizontal: "center",
+              horizontal: "right",
             }}
-            sx={{}}
+            PaperProps={{
+              sx: {
+                width: { xs: "100%", sm: "300px", md: "400px" },
+                maxWidth: "100%",
+              },
+            }}
           >
             <Box sx={{ borderBottom: "1px solid lightgray" }}>
               <Typography sx={{ p: 2 }}>Notifications</Typography>
@@ -80,7 +85,7 @@ export default function NotificationPopUp() {
                 sx={{
                   display: "flex",
                   justifyContent: "end",
-                  padding: "6px 0px 0px 0px",
+                  padding: "6px 16px",
                 }}
               >
                 <Box
@@ -88,6 +93,14 @@ export default function NotificationPopUp() {
                     width: "fit-content",
                     padding: "6px 13px 8px 8px",
                     backgroundColor: "#9B64001A",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    const updatedNotifications = notifications.map((notification) => ({
+                      ...notification,
+                      read: true,
+                    }));
+                    setNotifications(updatedNotifications);
                   }}
                 >
                   Mark all as read
@@ -112,92 +125,71 @@ export default function NotificationPopUp() {
                 margin: "4px 0px",
               }}
             >
-              <List sx={{ width: "100%", padding: "4px 0px", height: "270px" }}>
-                {notifications?.map((item, index) => {
-                  return (
-                    <ListItem
-                      sx={{
-                        width: "100%",
-                        height: "128px",
-                        backgroundColor: "#0061FE14",
-                        border: "0.5px solid #E0E0E0",
-                        paddingLeft: "0px",
-                        paddingRight: "0px",
-                      }}
-                      onClick={() => handleNotificationClick(index)} // Add onClick handler
-                      >
-                      <Box
-                        sx={{
-                          height: "100%",
-                          paddingTop: "5%",
-                          display: "flex",
-                        }}
-                      >
+              <List sx={{ width: "100%", padding: "4px 0px" }}>
+                {notifications?.map((item, index) => (
+                  <ListItem
+                    key={index}
+                    sx={{
+                      width: "100%",
+                      backgroundColor: item.read ? "#fff" : "#0061FE14",
+                      border: "0.5px solid #E0E0E0",
+                      padding: "8px 16px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => handleNotificationClick(index)}
+                  >
+                    <Box sx={{ display: "flex", alignItems: "center" }}>
+                      {!item.read && (
                         <Box
                           sx={{
                             height: "6px",
-                            width: "5px",
+                            width: "6px",
                             backgroundColor: "#9B0032",
-                            borderRadius: "50px",
-                            margin: "16px 8px",
+                            borderRadius: "50%",
+                            marginRight: "8px",
                           }}
                         ></Box>
-                        <img
-                          src="amarya-logo.jpg"
-                          style={{
-                            borderRadius: "50px",
-                            height: "35px",
-                            width: "40px",
-                            marginRight: "5px",
-                          }}
-                        />
-                      </Box>
-                      <Box
-                        sx={{
-                          marginLeft: "20px",
-                          width: "100%",
-                          cursor: "pointer",
+                      )}
+                      <img
+                        src="amarya-logo.jpg"
+                        alt="logo"
+                        style={{
+                          borderRadius: "50%",
+                          height: "35px",
+                          width: "35px",
+                          marginRight: "8px",
                         }}
-                      >
+                      />
+                      <Box>
                         <Typography
                           variant="subtitle1"
                           sx={{
                             fontWeight: "400",
                             fontFamily: "Poppins",
-                            fontSize: "0.8rem",
-                            margin: "9px 0px",
+                            fontSize: "0.9rem",
                           }}
                         >
                           {item.title}
                         </Typography>
-                        <Box
+                        <Typography
+                          variant="subtitle2"
                           sx={{
-                            borderTop: "2px solid #e6e8eb",
-                            borderBottom: "2px solid #e6e8eb",
-                            borderLeft: "2px solid #e6e8eb",
-                            padding: "0px 16px",
+                            fontFamily: "Poppins",
+                            fontSize: "0.8rem",
+                            color: "#555",
                           }}
                         >
-                          <Typography
-                            variant="subtitle2"
-                            sx={{
-                              fontFamily: "Poppins",
-                              fontSize: "10px",
-                              margin: "9px 0px",
-                            }}
-                          >
-                            {item.description.length > 90
-                              ? `${item.description.slice(0, 90)}...`
-                              : item.description}
-                          </Typography>
-                        </Box>
-                        <Typography sx={{ color: "gray", fontSize: "10px" }}>
+                          {item.description.length > 90
+                            ? `${item.description.slice(0, 90)}...`
+                            : item.description}
+                        </Typography>
+                        <Typography sx={{ color: "gray", fontSize: "0.75rem" }}>
                           {item.from_date}
                         </Typography>
                       </Box>
-                    </ListItem>
-                  );
-                })}
+                    </Box>
+                  </ListItem>
+                ))}
               </List>
             </Box>
           </Popover>

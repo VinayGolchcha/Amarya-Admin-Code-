@@ -17,25 +17,15 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import EditIcon from "@mui/icons-material/Edit";
 import SaveIcon from "@mui/icons-material/Save";
 import dayjs from "dayjs";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../Components/AuthContext";
 
 export default function SettingsProject() {
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || "");
 
-  const [formData, setFormData] = useState([
-    {
-      "Project Name": "",
-      "Client Name": "",
-      "Project Lead": "",
-      "Project Manager": "",
-      "Start Of The Project": null,
-      "End Of The Project": null,
-      "Project Status": "",
-      Category: "",
-      category_id: null, // Add category_id field
-    },
-  ]);
+  const [formData, setFormData] = useState([]);
 
   const [categories, setCategories] = useState([]); // State to store categories
   const [editMode, setEditMode] = useState(null);
@@ -173,17 +163,25 @@ export default function SettingsProject() {
         body: JSON.stringify(newProjectData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to create project");
+        if (data.errors && data.errors.length > 0) {
+          data.errors.forEach((error) => toast.error(error.msg));
+        } else {
+          toast.error("Failed to create project");
+        }
+        return;
       }
 
-      const data = await response.json();
       console.log("Project created successfully:", data);
       setNewProjectIndex(null);
       setEditMode(null);
       fetchProjects();
+      toast.success("Project created successfully!");
     } catch (error) {
       console.error("Error creating project:", error);
+      toast.error("Error creating project");
     }
   };
 
@@ -209,11 +207,20 @@ export default function SettingsProject() {
           const newFormData = [...formData];
           newFormData.splice(index, 1);
           setFormData(newFormData);
+          toast.success("Project deleted successfully!");
         } else {
           console.error("Error deleting project:", data.error);
+          if (data.errors && data.errors.length > 0) {
+            data.errors.forEach((error) => toast.error(error.msg));
+          } else {
+            toast.error("Error deleting project");
+          }
         }
       })
-      .catch((error) => console.error("Error deleting project:", error));
+      .catch((error) => {
+        console.error("Error deleting project:", error);
+        toast.error("Error deleting project");
+      });
   };
 
   const handleSave = (index) => {
@@ -248,11 +255,20 @@ export default function SettingsProject() {
       .then((data) => {
         if (data.success) {
           setEditMode(null);
+          toast.success("Project updated successfully!");
         } else {
           console.error("Error updating project:", data.error);
+          if (data.errors && data.errors.length > 0) {
+            data.errors.forEach((error) => toast.error(error.msg));
+          } else {
+            toast.error("Error updating project");
+          }
         }
       })
-      .catch((error) => console.error("Error updating project:", error));
+      .catch((error) => {
+        console.error("Error updating project:", error);
+        toast.error("Error updating project");
+      });
   };
 
   const handleInputChange = (index, fieldName, value) => {

@@ -549,6 +549,7 @@ export default function AssetsAdminPage() {
                         height: "30px",
                         margin: "0px 2px",
                         padding: "4px",
+                        cursor:"pointer"
                       }}
                     />
                     <AddNewAssets

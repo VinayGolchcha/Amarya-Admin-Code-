@@ -370,12 +370,20 @@ const UserProfilePage = () => {
     formDataToSend.append("username", formData.username);
     formDataToSend.append("experience", formData.experience);
     formDataToSend.append("public_id", formData.public_id);
+    formDataToSend.append("first_name", formData.first_name);
+    formDataToSend.append("last_name", formData.last_name);
+    formDataToSend.append("password", formData.password);
+    formDataToSend.append("mobile_number", formData.mobile_number);
+    formDataToSend.append("emergency_contact_number", formData.emergency_contact_number);
+    formDataToSend.append("emergency_contact_person_info", formData.emergency_contact_person_info);
+
+
     if (formData.file) {
       formDataToSend.append("file", formData.file);
     }
 
     try {
-      const id = user.user_id;
+      const id = user?.user_id;
 
       const response = await axios.put(
         `https://amarya-admin-backend-code.onrender.com/api/v1/user/update-user-profile/${id}`,

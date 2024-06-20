@@ -10,7 +10,7 @@ const AnnouncementPage = () => {
     
 
     useEffect(() => {
-        if (notifications.length === 0) {
+        if (notifications?.length === 0) {
             axios
                 .get(`${apiUrl}/announcement
                     /fetch-announcement`)
@@ -33,12 +33,12 @@ const AnnouncementPage = () => {
             <Typography variant="h5" sx={{ fontWeight: "700", color: "#121843" }} gutterBottom>
                 Announcement Tab
             </Typography>
-            {notifications.length === 0 ? (
+            {notifications?.length === 0 ? (
                 <CircularProgress /> // Show loading indicator if notifications are being fetched
-            ) : notifications.map((notification) => (
+            ) : notifications?.map((notification) => (
                 <CardComponenet key={notification.id} data={notification} />
             ))}
-            {notifications.length === 0 && <Typography>No notifications available</Typography>} 
+            {notifications?.length === 0 && <Typography>No notifications available</Typography>} 
         </Box>
     );
 };

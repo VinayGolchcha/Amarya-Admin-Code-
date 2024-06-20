@@ -2,7 +2,8 @@ import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function DashboardProfile({profileData}) {
+export default function DashboardProfile({ profileData }) {
+  console.log(profileData);
   return (
     <Box
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
@@ -176,7 +177,7 @@ export default function DashboardProfile({profileData}) {
                 variant="h6"
               >
                 {" "}
-               {profileData?.email}
+                {profileData?.email}
               </Typography>
               <Typography
                 sx={{

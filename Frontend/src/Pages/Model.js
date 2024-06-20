@@ -1,29 +1,28 @@
 import { TextField, Button } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from "@mui/icons-material/Close";
 import "./../App.css";
-function Model({ closeModel }) {
-
+import { useAuth } from "../Components/AuthContext";
+function Model({ closeModel, email }) {
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirm_password] = useState("");
-  
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleUpdate = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/v1/user/update-password",
+        `${apiUrl}/user/update-password`,
         {
-        
           password,
           confirm_password,
+          email,
         }
       );
       console.log(response);
 
-     
       //   // Handle login error
     } catch (error) {
       console.log("Error data:", error.response.data.errors[0]?.msg);
@@ -38,12 +37,6 @@ function Model({ closeModel }) {
         style={{
           backgroundColor: "white",
           borderRadius: "10px",
-          height: "100vh",
-          width: "100vw",
-          position: "absolute",
-          top: "57px",
-          left: "117px",
-          zIndex: "11",
         }}
         className="modelbackground"
       >
@@ -59,8 +52,7 @@ function Model({ closeModel }) {
             left: "50%",
             transform: "translate(-50%,-50%)",
             // backgroundColor: "rgb(50, 50, 116)",
-            background:"#161E54",
-
+            background: "#161E54",
           }}
           className="modelcontainer"
         >
@@ -72,18 +64,17 @@ function Model({ closeModel }) {
               background: "white",
               borderRadius: "50%",
               width: "10px",
-              padding:"0",
-              minWidth:"30px",
+              padding: "0",
+              minWidth: "30px",
               height: "30px",
               color: "black",
-              top:"10px",
-
+              top: "10px",
             }}
             variant="contained"
             color="primary"
             onClick={() => closeModel(false)}
           >
-            < CloseIcon />
+            <CloseIcon />
           </Button>
           <Button
             sx={{
@@ -93,28 +84,25 @@ function Model({ closeModel }) {
               background: "none",
               borderRadius: "50%",
               width: "10px",
-              padding:"0",
-              minWidth:"30px",
+              padding: "0",
+              minWidth: "30px",
               height: "30px",
               color: "white",
-              top:"10px",
-
+              top: "10px",
             }}
             variant="contained"
             color="primary"
             onClick={() => closeModel(false)}
-            
           >
-            < ArrowBackIcon />
+            <ArrowBackIcon />
           </Button>
-         
 
           <div>
             <h1>Set Password</h1>
-            <p >
-              Please create a new password and ensure you <br></br> remember it for future 
-              use
-            </p>  
+            <p>
+              Please create a new password and ensure you <br></br> remember it
+              for future use
+            </p>
             {/* <TextField
               id="filled-basic"
               label="Your Email"
@@ -137,14 +125,13 @@ function Model({ closeModel }) {
               label="New Password"
               variant="filled"
               type="password"
-              
               required
               onChange={(e) => setPassword(e.target.value)}
               sx={{
                 marginY: 1,
                 width: "75%",
                 borderRadius: "5px",
-                
+
                 border: "1px solid #FF5151",
                 backgroundColor: "white",
               }}
@@ -176,14 +163,12 @@ function Model({ closeModel }) {
                 padding: "10px",
                 color: "white",
                 fontWeight: 600,
-               
-                textTransform:"none",
-               
+
+                textTransform: "none",
               }}
               variant="contained"
               color="primary"
-              // onClick={handleUpdate}
-              
+              onClick={handleUpdate}
             >
               Update Password
             </Button>

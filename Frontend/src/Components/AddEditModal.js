@@ -9,6 +9,7 @@ import Grid from "@mui/material/Grid";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
+import dayjs from "dayjs";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -60,29 +61,27 @@ export default function AddEditModal({ rows }) {
 
   const [open, setOpen] = useState(false);
   const [editedData, setEditedData] = useState({
-    asset_type: "",
-    item: "",
-    purchase_date: "",
-    warranty_period: "",
-    price: "",
-    model_number: "",
-    item_description: "",
-    image_url: "",
-    file: null,
-    public_id: "",
+
   });
 
   const apiUrl = process.env.REACT_APP_API_URL;
   console.log(rows);
-
+  function calculateWarrantyPeriod(dop, warrantyEnd) {
+    const purchaseDate = dayjs(dop, "DD/MM/YYYY");
+    const warrantyEndDate = dayjs(warrantyEnd, "DD/MM/YYYY");
+    const warrantyPeriod = warrantyEndDate.diff(purchaseDate, "year");
+    return warrantyPeriod.toString();
+  }
   useEffect(() => {
     if (rows.length === 1) {
       const rowData = rows[0];
       setEditedData({
         asset_type: rowData.asset_type || "",
         item: rowData.item || "",
-        purchase_date: rowData.dop || "",
-        warranty_period: rowData.warranty_period || "",
+        purchase_date:
+          dayjs(rowData.dop, "DD/MM/YYYY").format("YYYY-MM-DD") || "",
+        warranty_period:
+          calculateWarrantyPeriod(rowData.dop, rowData.warranty_End) || "",
         price: rowData.price || "",
         model_number: rowData.model_number || "",
         item_description: rowData.description || "",
@@ -95,7 +94,7 @@ export default function AddEditModal({ rows }) {
   function handleUpdate() {
     const formData = new FormData();
     formData.append("asset_type", editedData.asset_type);
-    formData.append("item", editedData.item); 
+    formData.append("item", editedData.item);
     formData.append("purchase_date", editedData.purchase_date);
     formData.append("warranty_period", editedData.warranty_period);
     formData.append("price", editedData.price);
@@ -103,9 +102,8 @@ export default function AddEditModal({ rows }) {
     formData.append("item_description", editedData.item_description);
     if (editedData.file) {
       formData.append("file", editedData.file);
-      formData.append("public_id",editedData?.public_id);
+      formData.append("public_id", editedData?.public_id);
     }
-
 
     axios
       .put(`${apiUrl}/asset/admin/update-asset/${rows[0]?.inId}`, formData, {

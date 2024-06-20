@@ -37,7 +37,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { DemoItem } from "@mui/x-date-pickers/internals/demo";
 import { useAuth } from "../Components/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import Loading from "../sharable/Loading";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -50,7 +50,7 @@ const Item = styled(Paper)(({ theme }) => ({
 const cls = "";
 
 export default function LeaveMangementPage() {
-  const [isLoading , setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [fromDate, setFromDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
@@ -59,9 +59,9 @@ export default function LeaveMangementPage() {
   const [body, setBody] = React.useState("");
   const [rows, setRows] = React.useState([]);
   const [leaveOverviewData, setLeaveOverviewData] = React.useState([]);
-  const [leaveTypes, setLeaveTypes] = React.useState([]); // State for leave types
-  const { user } = useAuth();
-  const token = encodeURIComponent(user?.token || "");
+  const [leaveTypes, setLeaveTypes] = React.useState([]); // State for le
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   ////
 
   // new code
@@ -71,7 +71,8 @@ export default function LeaveMangementPage() {
   const [loading, setLoading] = React.useState(true);
 
   const [errorr, setErrorr] = React.useState(null);
-
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
   const today = new Date();
 
   // const [error, setError]  = React.useState(null);
@@ -81,13 +82,14 @@ export default function LeaveMangementPage() {
   const leaveOverView = async () => {
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_API_URI}/leave/fetch-leave-overview`,
+        `${apiUrl}/leave/fetch-leave-overview`,
         {
           emp_id: user?.user_id,
           status: "approved",
         },
         {
           headers: {
+            "Content-Type": "application/json",
             "x-access-token": token,
           },
         }
@@ -97,29 +99,13 @@ export default function LeaveMangementPage() {
       toast.error(err?.response?.message);
     }
   };
-
-  const getUserLeaves = async () => {
-    try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_URI}/leave/user-all-leave-data`,
-        {
-          headers: {
-            "x-access-token": token,
-          },
-        }
-      );
-      setRows(res?.data?.data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const fetchLeaveData = async () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_API_URI}/leave/fetch-leave-type-and-count`,
         {
           headers: {
+            "Content-Type": "application/json",
             "x-access-token": token,
           },
         }
@@ -130,6 +116,19 @@ export default function LeaveMangementPage() {
     }
   };
 
+  const getUserLeaves = async () => {
+    try {
+      const res = await axios.get(`${apiUrl}/leave/user-all-leave-data`, {
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        },
+      });
+      setRows(res?.data?.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   React.useEffect(() => {
     async function getData() {
       try {
@@ -137,13 +136,13 @@ export default function LeaveMangementPage() {
 
         const response = await axios.get(
           // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
-          `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data/${user?.user_id}`,
+          `${apiUrl}/leave/get-user-leave-dashboard-data/${user?.user_id}`,
           {
             headers: {
-              "x-access-token": user?.token,
+              "Content-Type": "application/json",
+              "x-access-token": token,
             },
           }
-          // "https://localhost:4000/api/v1/training/request-new-training"
         );
         setData(response?.data?.data);
 
@@ -154,16 +153,18 @@ export default function LeaveMangementPage() {
         setLoading(false);
       }
     }
-    getData();
-    getUserLeaves();
-    leaveOverView();
-    fetchLeaveData();
+    const fetchData = async () => {
+      await Promise.all([getData(), getUserLeaves(), leaveOverView()]);
+      fetchLeaveData(); // Fetch leave types on component mount
+      setIsLoading(false);
+    };
+    fetchData();
   }, []);
 
   const handleUpdate = async () => {
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URI}/leave/leave-request`,
+        `${apiUrl}/leave/leave-request`,
         {
           emp_id: user?.user_id,
           leave_type: leaveType,
@@ -174,6 +175,7 @@ export default function LeaveMangementPage() {
         },
         {
           headers: {
+            "Content-Type": "application/json",
             "x-access-token": token,
           },
         }
@@ -183,9 +185,9 @@ export default function LeaveMangementPage() {
     } catch (error) {
       const errors = error?.response?.data?.errors;
       errors.forEach((item) => {
-        toast.error(item?.msg);});
+        toast.error(item?.msg);
+      });
       console.error("Error:", error);
-      
     }
   };
 
@@ -225,11 +227,9 @@ export default function LeaveMangementPage() {
   const currentDate = new Date();
 
   let row;
-  if(isLoading){
-    return(
-      <Loading/>
-    );
-  }else{
+  if (isLoading) {
+    return <Loading />;
+  } else {
     return (
       <>
         <Box
@@ -241,7 +241,7 @@ export default function LeaveMangementPage() {
             borderRadius: "10px",
           }}
         >
-          <ToastContainer/>
+          <ToastContainer />
           <Typography
             sx={{
               margin: "12px 0px",
@@ -290,7 +290,8 @@ export default function LeaveMangementPage() {
                 lineHeight: "25px",
               }}
             >
-              Today’s Date {today.toString().split(" ")[2] }{today.toString().split(" ")[1]} {today.toString().split(" ")[3]}
+              Today’s Date {today.toString().split(" ")[2]}
+              {today.toString().split(" ")[1]} {today.toString().split(" ")[3]}
             </Typography>
             <Box
               sx={{
@@ -302,30 +303,37 @@ export default function LeaveMangementPage() {
               }}
               spacing={2}
             >
-              {data?.user_data?.map((item) => (<Card
-                sx={{
-                  minHeight : "110px" ,
-                  minWidth : "144px",
-                  width: "125px",
-                  height: "70px",
-                  margin: "10px 0px",
-                  marginRight: "10px",
-                  backgroundColor: "#FFEFE7",
-                  padding: "3px 3px 3px 15px",
-                  display : "flex" , 
-                  flexDirection : "column" ,
-                  justifyContent : "space-between"
-                }}
-              >
-                <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
-                  {item?.leave_type}
-                </Typography>
-                <CardContent sx={{ padding: "0px" }}>
-                  <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                    <strong style={{ fontSize: "1.5rem" }}>{item?.leave_taken_count}</strong>/{item?.leave_count}
+              {data?.user_data?.map((item) => (
+                <Card
+                  sx={{
+                    minHeight: "110px",
+                    minWidth: "144px",
+                    width: "125px",
+                    height: "70px",
+                    margin: "10px 0px",
+                    marginRight: "10px",
+                    backgroundColor: "#FFEFE7",
+                    padding: "3px 3px 3px 15px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
+                    {item?.leave_type}
                   </Typography>
-                </CardContent>
-              </Card>))}
+                  <CardContent sx={{ padding: "0px" }}>
+                    <Typography
+                      sx={{ fontWeight: "500", fontFamily: "Poppins" }}
+                    >
+                      <strong style={{ fontSize: "1.5rem" }}>
+                        {item?.leave_taken_count}
+                      </strong>
+                      /{item?.leave_count}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              ))}
             </Box>
             <Typography
               variant="h6"
@@ -354,7 +362,11 @@ export default function LeaveMangementPage() {
                   paddingLeft: "1rem",
                 }}
               >
-                {data?.holiday_list_data?.map((item) => (<li style={{ fontFamily: "poppins" }}>{formattedDate(item?.date)} - {item?.holiday}</li>))}
+                {data?.holiday_list_data?.map((item) => (
+                  <li style={{ fontFamily: "poppins" }}>
+                    {formattedDate(item?.date)} - {item?.holiday}
+                  </li>
+                ))}
               </ol>
             </Card>
           </Box>
@@ -385,7 +397,9 @@ export default function LeaveMangementPage() {
                 >
                   Leave Application{" "}
                   <Box
-                    sx={{ width: { lg: "35%", md: "40%", sm: "40%", xs: "43%" } }}
+                    sx={{
+                      width: { lg: "35%", md: "40%", sm: "40%", xs: "43%" },
+                    }}
                   >
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DatePicker
@@ -433,11 +447,20 @@ export default function LeaveMangementPage() {
                 >
                   Leave Type
                 </InputLabel>
-                {leaveTypes.map((type) => (
-                  <MenuItem key={type.leave_type} value={type.leave_type}>
-                    {type.leave_type}
-                  </MenuItem>
-                ))}
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={leaveType}
+                  label="leaveType"
+                  sx={{ width: "100%", backgroundColor: "#fafafa" }}
+                  onChange={handleChange}
+                >
+                  {leaveTypes?.map((type) => (
+                    <MenuItem key={type.leave_type} value={type.leave_type}>
+                      {type.leave_type}
+                    </MenuItem>
+                  ))}
+                </Select>
                 <br />
                 <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
                 <TextField
@@ -501,9 +524,11 @@ export default function LeaveMangementPage() {
                     <DatePicker
                       sx={{
                         width: "35%",
-                        "&.MuiTextField-root .MuiInputBase-input::placeholder": {
-                          fontSize: "14px" /* Adjust the font size as needed */,
-                        },
+                        "&.MuiTextField-root .MuiInputBase-input::placeholder":
+                          {
+                            fontSize:
+                              "14px" /* Adjust the font size as needed */,
+                          },
                       }}
                       label={"MM/YYYY"}
                       views={["month", "year"]}
@@ -537,23 +562,26 @@ export default function LeaveMangementPage() {
                       height: { lg: "340px", md: "362px", sm: "305px" },
                     }}
                   >
-                    {leaveOverviewData?.map((item) => (<ListItem
-                      sx={{
-                        backgroundColor: "#fafafa",
-                        margin: "5px 0px",
-                        border: "0.5px solid #E0E0E0",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <ListItemText
-                        primary={item?.leave_type}
-                        secondary={
-                          <React.Fragment>
-                            {formattedLeaveDate(item?.from_date)} - {formattedLeaveDate(item?.to_date)}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>))}
+                    {leaveOverviewData?.map((item) => (
+                      <ListItem
+                        sx={{
+                          backgroundColor: "#fafafa",
+                          margin: "5px 0px",
+                          border: "0.5px solid #E0E0E0",
+                          borderRadius: "6px",
+                        }}
+                      >
+                        <ListItemText
+                          primary={item?.leave_type}
+                          secondary={
+                            <React.Fragment>
+                              {formattedLeaveDate(item?.from_date)} -{" "}
+                              {formattedLeaveDate(item?.to_date)}
+                            </React.Fragment>
+                          }
+                        />
+                      </ListItem>
+                    ))}
                     <ListItem
                       sx={{
                         backgroundColor: "#fafafa",
@@ -704,64 +732,65 @@ export default function LeaveMangementPage() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows?.length === 0 ?
-                (<TableRow >
-                  <TableCell colSpan={8}>
-                    <Alert severity="warning">Data not found.</Alert>
-                  </TableCell>
-                  
-                </TableRow>) : 
-                (rows?.map((row) => (
-                  <TableRow key={row.id}>
-                    <TableCell
-                      style={{ fontFamily: "Poppins", minWidth: "110px" }}
-                    >
-                      <Box
-                        component="img"
-                        src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                        alt="Check"
-                        style={{ filter: "invert(1)" }}
-                        sx={{ paddingRight: "9px" }}
-                      />
-                      {row.id}
-                    </TableCell>
-                    <TableCell
-                      style={{ fontFamily: "Poppins", color: "#74828F" }}
-                    >
-                      {row.startDate}
-                    </TableCell>
-                    <TableCell
-                      style={{ fontFamily: "Poppins", color: "#74828F" }}
-                    >
-                      {row.endDate}
-                    </TableCell>
-                    <TableCell
-                      style={{ fontFamily: "Poppins", color: "#74828F" }}
-                    >
-                      {row.days}
-                    </TableCell>
-                    <TableCell
-                      style={{ fontFamily: "Poppins", color: "#74828F" }}
-                    >
-                      {row.leaveType}
-                    </TableCell>
-                    <TableCell
-                      style={{ fontFamily: "Poppins", color: "#74828F" }}
-                    >
-                      {row.extendedLeave}
-                    </TableCell>
-                    <TableCell
-                      style={{ fontFamily: "Poppins", color: "#74828F" }}
-                    >
-                      {row.approvedrejected}
-                    </TableCell>
-                    <TableCell
-                      style={{ fontFamily: "Poppins", color: "#74828F" }}
-                    >
-                      {row.manager}
+                {rows?.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8}>
+                      <Alert severity="warning">Data not found.</Alert>
                     </TableCell>
                   </TableRow>
-                )))}
+                ) : (
+                  rows?.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell
+                        style={{ fontFamily: "Poppins", minWidth: "110px" }}
+                      >
+                        <Box
+                          component="img"
+                          src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                          alt="Check"
+                          style={{ filter: "invert(1)" }}
+                          sx={{ paddingRight: "9px" }}
+                        />
+                        {row.id}
+                      </TableCell>
+                      <TableCell
+                        style={{ fontFamily: "Poppins", color: "#74828F" }}
+                      >
+                        {row.startDate}
+                      </TableCell>
+                      <TableCell
+                        style={{ fontFamily: "Poppins", color: "#74828F" }}
+                      >
+                        {row.endDate}
+                      </TableCell>
+                      <TableCell
+                        style={{ fontFamily: "Poppins", color: "#74828F" }}
+                      >
+                        {row.days}
+                      </TableCell>
+                      <TableCell
+                        style={{ fontFamily: "Poppins", color: "#74828F" }}
+                      >
+                        {row.leaveType}
+                      </TableCell>
+                      <TableCell
+                        style={{ fontFamily: "Poppins", color: "#74828F" }}
+                      >
+                        {row.extendedLeave}
+                      </TableCell>
+                      <TableCell
+                        style={{ fontFamily: "Poppins", color: "#74828F" }}
+                      >
+                        {row.approvedrejected}
+                      </TableCell>
+                      <TableCell
+                        style={{ fontFamily: "Poppins", color: "#74828F" }}
+                      >
+                        {row.manager}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </TableContainer>

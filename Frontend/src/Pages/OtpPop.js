@@ -5,35 +5,30 @@ import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import "./../App.css";
 import Model from "./Model";
-import { useAuth } from "../Components/AuthContext";
-import { Update } from "@mui/icons-material";
+import OtpInput from "./OtpInput";
 
 function OtpP({ closeOtpP, email }) {
   const [otp, setOtp] = useState("");
   const [openModel, setOpenModel] = useState(false);
-  const { user } = useAuth();
-  const token = encodeURIComponent(user?.token || "");
-  const apiUrl = process.env.REACT_APP_API_URL;
+  // Retrieve saved email from local storage
 
-  console.log("hello",email);
   const handleUpdate = async () => {
     try {
       const response = await axios.post(
-        `${apiUrl}/user/verify-email-for-password-update`,
+        `${process.env.REACT_APP_API_URI}/user/verify-email-for-password-update`,
         {
-          email,
           otp,
-        },
-        {
-          headers: {
-            "x-access-token": token,
-          },
+          email,
         }
       );
       console.log(response);
-      setOpenModel(true);
+      if (response.data.success) {
+        setOpenModel(true);
+      } else {
+        console.error("Email is incorrect");
+      }
     } catch (error) {
-      console.log("Error data:", error.response.data.errors[0]?.msg);
+      console.log("Error data:", error);
     }
   };
   return (
@@ -42,12 +37,7 @@ function OtpP({ closeOtpP, email }) {
         style={{
           backgroundColor: "white",
           borderRadius: "10px",
-          height: "100vh",
-          width: "100vw",
-          position: "absolute",
-          top: "-250px",
-          //   left: "800px",
-          zIndex: "11",
+
         }}
         className="modelbackgroundd"
       >
@@ -95,14 +85,35 @@ function OtpP({ closeOtpP, email }) {
               Please Enter The OTP Sent To Your Email To <br></br>
               Complete The Verification process
             </p>
-            <TextField
+            <OtpInput numInputs={4} onOtpChange={setOtp} />
+            {/* <TextField
               id="filled-basic"
               variant="filled"
-              inputProps={{ maxLength: 1 }}
+              inputProps={{ maxLength: 1 }} 
+              
+              
+            
               onChange={(e) => setOtp(e.target.value)}
               sx={{
                 marginY: 1,
                 width: "8%",
+                borderRadius: "5px",
+                border: "1px solid #FF5151",
+                backgroundColor: "white",
+                
+              }}
+            />
+            <TextField
+              id="filled-basic"
+              variant="filled"
+              inputProps={{ maxLength: 1 }} 
+              
+            
+              onChange={(e) => setOtp(e.target.value)}
+              sx={{
+                marginY: 1,
+                width: "8%",
+                marginLeft:"15px",
                 borderRadius: "5px",
                 border: "1px solid #FF5151",
                 backgroundColor: "white",
@@ -111,12 +122,14 @@ function OtpP({ closeOtpP, email }) {
             <TextField
               id="filled-basic"
               variant="filled"
-              inputProps={{ maxLength: 1 }}
+              inputProps={{ maxLength: 1 }} 
+              
+            
               onChange={(e) => setOtp(e.target.value)}
               sx={{
                 marginY: 1,
                 width: "8%",
-                marginLeft: "15px",
+                marginLeft:"15px",
                 borderRadius: "5px",
                 border: "1px solid #FF5151",
                 backgroundColor: "white",
@@ -125,37 +138,25 @@ function OtpP({ closeOtpP, email }) {
             <TextField
               id="filled-basic"
               variant="filled"
-              inputProps={{ maxLength: 1 }}
+              inputProps={{ maxLength: 1 }} 
+              
+            
               onChange={(e) => setOtp(e.target.value)}
               sx={{
                 marginY: 1,
                 width: "8%",
-                marginLeft: "15px",
+                marginLeft:"15PX",
                 borderRadius: "5px",
                 border: "1px solid #FF5151",
                 backgroundColor: "white",
-              }}
-            />
-            <TextField
-              id="filled-basic"
-              variant="filled"
-              inputProps={{ maxLength: 1 }}
-              onChange={(e) => setOtp(e.target.value)}
-              sx={{
-                marginY: 1,
-                width: "8%",
-                marginLeft: "15PX",
-                borderRadius: "5px",
-                border: "1px solid #FF5151",
-                backgroundColor: "white",
-              }}
-            />
+              }} */}
+            {/* /> */}
             <br></br>
             <br></br>
 
             <Button
               sx={{
-                marginTop: "10px",
+                marginTop: "4px",
                 width: "50%", // Set button width to 100%
                 background: "#FF5151",
 
@@ -167,12 +168,12 @@ function OtpP({ closeOtpP, email }) {
               }}
               variant="contained"
               color="primary"
-              //   onClick={handleUpdate}
               onClick={handleUpdate}
+              // onClick={()=>setOpenModel(true)}
             >
               Verify otp
             </Button>
-            {openModel && <Model closeModel={setOpenModel} />}
+            {openModel && <Model closeModel={setOpenModel} email={email} />}
 
             <br></br>
           </div>
