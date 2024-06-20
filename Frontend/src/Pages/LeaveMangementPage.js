@@ -118,12 +118,18 @@ export default function LeaveMangementPage() {
 
   const getUserLeaves = async () => {
     try {
-      const res = await axios.get(`${apiUrl}/leave/user-all-leave-data`, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": token,
+      const res = await axios.post(
+        `${apiUrl}/leave/user-all-leave-data`,
+        {
+          emp_id: user?.user_id,
         },
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
+        }
+      );
       setRows(res?.data?.data);
     } catch (err) {
       console.log(err);
@@ -562,23 +568,26 @@ export default function LeaveMangementPage() {
                       height: { lg: "340px", md: "362px", sm: "305px" },
                     }}
                   >
-                    {leaveOverviewData?.map((item) => (<ListItem
-                      sx={{
-                        backgroundColor: "#fafafa",
-                        margin: "5px 0px",
-                        border: "0.5px solid #E0E0E0",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <ListItemText
-                        primary={item?.leave_type}
-                        secondary={
-                          <React.Fragment>
-                            {formattedLeaveDate(item?.from_date)} - {formattedLeaveDate(item?.to_date)}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>))}
+                    {leaveOverviewData?.map((item) => (
+                      <ListItem
+                        sx={{
+                          backgroundColor: "#fafafa",
+                          margin: "5px 0px",
+                          border: "0.5px solid #E0E0E0",
+                          borderRadius: "6px",
+                        }}
+                      >
+                        <ListItemText
+                          primary={item?.leave_type}
+                          secondary={
+                            <React.Fragment>
+                              {formattedLeaveDate(item?.from_date)} -{" "}
+                              {formattedLeaveDate(item?.to_date)}
+                            </React.Fragment>
+                          }
+                        />
+                      </ListItem>
+                    ))}
                   </List>
                 </Box>
               </Box>
