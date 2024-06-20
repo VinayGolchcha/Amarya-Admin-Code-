@@ -396,6 +396,7 @@ const UserProfilePage = () => {
         }
       );
       console.log(response.data);
+      fetchUserData();
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating user profile:", error.message);

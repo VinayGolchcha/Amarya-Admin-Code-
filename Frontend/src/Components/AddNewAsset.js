@@ -52,6 +52,7 @@ export default function AddNewAssets({
   handleAdd,
   handleClose,
   open,
+  fetchAssets
 }) {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { user } = useAuth();
@@ -97,6 +98,7 @@ export default function AddNewAssets({
 
       const newItem = await response.json();
       handleAdd((prevData) => [...prevData, newItem]);
+      fetchAssets();
       handleClose();  
     } catch (error) {
       console.error("There was a problem with the fetch operation:", error);
