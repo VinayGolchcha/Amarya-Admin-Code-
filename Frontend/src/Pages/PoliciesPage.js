@@ -115,7 +115,9 @@ const PoliciesPage = () => {
   };
 
   if (isLoading) {
-    return <Loading />;
+    return <>
+    Loading ...
+    </>;
   }
 
   return (

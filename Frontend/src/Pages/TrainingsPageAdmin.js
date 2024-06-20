@@ -135,6 +135,7 @@ export default function TrainingsPageAdmin( ) {
           "x-access-token" : user?.token
         }
       })
+      setOpen(false);
       fecthTrainings();
     }catch(err){
       console.log(err);
@@ -246,6 +247,7 @@ export default function TrainingsPageAdmin( ) {
               } // Include training ID in the request body
             });
             console.log(response);
+            handleEditClose(false);
       fecthTrainings();
       handleCloseConDel();
     } catch (error) {
