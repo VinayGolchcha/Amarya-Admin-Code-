@@ -154,12 +154,18 @@ export default function LeaveMangementPage() {
 
   const getUserLeaves = async () => {
     try {
-      const res = await axios.get(`${apiUrl}/leave/user-all-leave-data`, {
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": token,
+      const res = await axios.post(
+        `${apiUrl}/leave/user-all-leave-data`,
+        {
+          emp_id: user?.user_id,
         },
-      });
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
+        }
+      );
       setRows(res?.data?.data);
     } catch (err) {
       console.log(err);
@@ -635,8 +641,11 @@ export default function LeaveMangementPage() {
                     }}
                   >
 <<<<<<< HEAD
+<<<<<<< HEAD
                     {leaveOverviewData?.map((item) => (<ListItem
 =======
+=======
+>>>>>>> 2e2bcaf (leave page change)
                     {leaveOverviewData?.map((item) => (
                       <ListItem
                         sx={{
@@ -657,6 +666,7 @@ export default function LeaveMangementPage() {
                         />
                       </ListItem>
                     ))}
+<<<<<<< HEAD
                     <ListItem
 >>>>>>> a977ca4 (setting page bugs fixes)
                       sx={{
@@ -718,6 +728,8 @@ export default function LeaveMangementPage() {
                       />
                     </ListItem>
 >>>>>>> a977ca4 (setting page bugs fixes)
+=======
+>>>>>>> 2e2bcaf (leave page change)
                   </List>
                 </Box>
               </Box>
