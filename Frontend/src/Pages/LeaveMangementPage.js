@@ -166,7 +166,7 @@ export default function LeaveMangementPage() {
           },
         }
       );
-      setRows(res?.data?.data);
+      setRows(res?.data?.data || []); // Ensure to handle empty response data gracefully
     } catch (err) {
       console.log(err);
     }

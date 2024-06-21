@@ -192,6 +192,7 @@ const WorksheetPage = () => {
       const responseData = await response.json();
       if (responseData.success) {
         toast.success("Data submitted successfully!");
+        fetchWorksheetDataForEmployee();
         console.log(responseData);
       } else {
         toast.error("Failed to submit data: " + responseData.message);

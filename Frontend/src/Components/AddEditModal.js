@@ -55,7 +55,7 @@ const labelStyle = {
   color: "rgb(120, 120, 122)",
 };
 
-export default function AddEditModal({ rows }) {
+export default function AddEditModal({ rows,fetchAssets }) {
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
@@ -170,6 +170,7 @@ export default function AddEditModal({ rows }) {
       })
       .then((response) => {
         toast.success("Asset updated successfully");
+        fetchAssets();
         setOpen(false);
       })
       .catch((error) => {

@@ -124,6 +124,7 @@ function createData(
     repairs,
     in_Warranty,
     warranty_End,
+<<<<<<< HEAD
     public_id // Ensure it's included in the returned object
 
   };
@@ -131,6 +132,12 @@ function createData(
 
 
 
+=======
+    public_id, // Ensure it's included in the returned object
+  };
+}
+
+>>>>>>> 784827c (bugs fixes)
 const rows = [
   createData(
     "AM1211",
@@ -148,7 +155,7 @@ const rows = [
 ];
 let row;
 export default function AssetsAdminPage() {
-  const [isLoading , setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [assetsData, setAssetsData] = React.useState(rows);
@@ -261,6 +268,7 @@ export default function AssetsAdminPage() {
         if (response.data.success) {
           fetchAssets();
           setSelectedRows([]);
+          fetchAssets();
           toast.success("Selected asset deleted successfully");
         } else {
           const errorMessage =
@@ -289,6 +297,7 @@ export default function AssetsAdminPage() {
       />
     );
   };
+<<<<<<< HEAD
 
   return (
     <>
@@ -302,6 +311,15 @@ export default function AssetsAdminPage() {
         }}
       >
         <Typography
+=======
+  if (isLoading) {
+    return <Loading />;
+  } else {
+    return (
+      <>
+        <Box
+          component="main"
+>>>>>>> 784827c (bugs fixes)
           sx={{
             margin: "12px 0px",
             width: "630px",
@@ -560,10 +578,13 @@ export default function AssetsAdminPage() {
                       </TableCell>
                     </TableRow>
                   ))}
-  
+
                   {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={12} style={{ borderBottom: "none" }} />
+                      <TableCell
+                        colSpan={12}
+                        style={{ borderBottom: "none" }}
+                      />
                     </TableRow>
                   )}
                 </TableBody>
@@ -585,7 +606,7 @@ export default function AssetsAdminPage() {
                         height: "30px",
                         margin: "0px 2px",
                         padding: "4px",
-                        cursor:"pointer"
+                        cursor: "pointer",
                       }}
                     />
                     <AddNewAssets
@@ -593,11 +614,16 @@ export default function AssetsAdminPage() {
                       handleAdd={setAssetsData}
                       handleClose={handleClose}
                       open={open}
+                      fetchAssets={fetchAssets}
                     />
                     <EditDeleteIcons
                       deleteAction={handleDelete}
                       rows={selectedRows}
+<<<<<<< HEAD
 >>>>>>> a977ca4 (setting page bugs fixes)
+=======
+                      fetchAssets={fetchAssets}
+>>>>>>> 784827c (bugs fixes)
                     />
                     <br />
                     Invt. Id{" "}
