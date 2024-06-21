@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import "./../App.css";
 import Model from "./Model";
+<<<<<<< HEAD
 
 function OtpP({ closeOtpP }) {
     const [otp, setOtp] = useState("");
@@ -22,6 +23,32 @@ const handleUpdate = async () => {
      } catch (error) {
       console.log("Error data:", error.response.data.errors[0]?.msg);
     
+=======
+import OtpInput from "./OtpInput";
+
+function OtpP({ closeOtpP, email }) {
+  const [otp, setOtp] = useState("");
+  const [openModel, setOpenModel] = useState(false);
+  // Retrieve saved email from local storage
+
+  const handleUpdate = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URI}/user/verify-email-for-password-update`,
+        {
+          otp,
+          email,
+        }
+      );
+      console.log(response);
+      if (response.data.success) {
+        setOpenModel(true);
+      } else {
+        console.error("Email is incorrect");
+      }
+    } catch (error) {
+      console.log("Error data:", error);
+>>>>>>> a977ca4 (setting page bugs fixes)
     }
   };
   return (
@@ -30,12 +57,16 @@ const handleUpdate = async () => {
         style={{
           backgroundColor: "white",
           borderRadius: "10px",
+<<<<<<< HEAD
           height: "100vh",
           width: "100vw",
           position: "absolute",
           top: "-250px",
         //   left: "800px",
           zIndex: "11",
+=======
+
+>>>>>>> a977ca4 (setting page bugs fixes)
         }}
         className="modelbackgroundd"
       >
@@ -82,11 +113,20 @@ const handleUpdate = async () => {
 
           <div>
             <h1>OTP Verification</h1>
+<<<<<<< HEAD
             <p >
              Please Enter The OTP Sent To Your Email To <br></br>
             Complete The Verification process
             </p>  
         <TextField
+=======
+            <p>
+              Please Enter The OTP Sent To Your Email To <br></br>
+              Complete The Verification process
+            </p>
+            <OtpInput numInputs={4} onOtpChange={setOtp} />
+            {/* <TextField
+>>>>>>> a977ca4 (setting page bugs fixes)
               id="filled-basic"
               variant="filled"
               inputProps={{ maxLength: 1 }} 
@@ -149,14 +189,19 @@ const handleUpdate = async () => {
                 borderRadius: "5px",
                 border: "1px solid #FF5151",
                 backgroundColor: "white",
+<<<<<<< HEAD
               }}
             />
+=======
+              }} */}
+            {/* /> */}
+>>>>>>> a977ca4 (setting page bugs fixes)
             <br></br>
             <br></br>
            
             <Button
               sx={{
-                marginTop: "10px",
+                marginTop: "4px",
                 width: "50%", // Set button width to 100%
                 background: "#FF5151",
 
@@ -169,6 +214,7 @@ const handleUpdate = async () => {
               }}
               variant="contained"
               color="primary"
+<<<<<<< HEAD
             //   onClick={handleUpdate}
               onClick={()=>setOpenModel(true)}
           
@@ -176,6 +222,14 @@ const handleUpdate = async () => {
               Verify otp
             </Button>
             { openModel && <Model closeModel={setOpenModel}/>}
+=======
+              onClick={handleUpdate}
+              // onClick={()=>setOpenModel(true)}
+            >
+              Verify otp
+            </Button>
+            {openModel && <Model closeModel={setOpenModel} email={email} />}
+>>>>>>> a977ca4 (setting page bugs fixes)
 
             <br></br>
           </div>

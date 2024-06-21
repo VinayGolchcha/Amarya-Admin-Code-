@@ -9,11 +9,19 @@ import "./EmailPop";
 import EmailP from "./EmailPop";
 import { useAuth } from "../Components/AuthContext";
 import { useNavigate } from "react-router-dom";
+<<<<<<< HEAD
+=======
+import "react-toastify/dist/ReactToastify.css";
+import OtpP from "./OtpPop";
+import { toast } from "react-toastify";
+>>>>>>> a977ca4 (setting page bugs fixes)
 
 const LoginPage = () => {
   const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [openOtpP, setOpenOtpP] = useState(false);
+  const [email, setEmail] = useState("");
   //new
   // const[openModel,setOpenModel]=useState(false)
   const [openEmailP, setOpenEmailP] = useState(false);
@@ -166,7 +174,19 @@ const LoginPage = () => {
             >
               Forgot/Reset Password?
             </a>
-            {openEmailP && <EmailP closeEmailP={setOpenEmailP} />}
+            {openEmailP && (
+              <EmailP
+                closeEmailP={setOpenEmailP}
+                openOtpP={() => {
+                  setOpenEmailP(false);
+                  setOpenOtpP(true);
+                }}
+                setEmail={setEmail}
+              />
+            )}
+            {openOtpP && (
+              <OtpP closeOtpP={() => setOpenOtpP(false)} email={email} />
+            )}
           </Typography>
           <Button
             sx={{

@@ -8,6 +8,8 @@ import {
   TextField,
 } from "@mui/material";
 import { useAuth } from "../Components/AuthContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SettingsSkillSet() {
   const [formData, setFormData] = useState([
@@ -101,9 +103,11 @@ export default function SettingsSkillSet() {
             setFormData(newFormData);
             setSelectedInputIndex(null);
             setDeleteMode(false);
+            toast.success("Skill deleted successfully.");
           })
           .catch((error) => {
             console.error("Error deleting skill:", error);
+            toast.error("Failed to delete skill.");
           });
       } else {
         setDeleteMode(false);
@@ -146,9 +150,12 @@ export default function SettingsSkillSet() {
           })
           .then((data) => {
             console.log("Skill updated successfully:", data);
+            fetchSkills();
+            toast.success("Skill updated successfully.");
           })
           .catch((error) => {
             console.error("Error updating skill:", error);
+            toast.error("Failed to update skill.");
           });
       });
 
@@ -170,6 +177,8 @@ export default function SettingsSkillSet() {
           })
           .then((data) => {
             console.log("Skill created successfully:", data);
+            fetchSkills();
+            toast.success("Skill created successfully.");
             // Update the form data with the newly created skill ID
             const updatedFormData = [...formData];
             const index = updatedFormData.findIndex(
@@ -185,11 +194,13 @@ export default function SettingsSkillSet() {
           })
           .catch((error) => {
             console.error("Error creating skill:", error);
+            // toast.error(error.message);
           });
       });
 
       setEditMode(false);
     }
+     
   };
 
   const handleInputChange = (index, fieldName, value) => {
@@ -205,6 +216,7 @@ export default function SettingsSkillSet() {
   };
 
   return (
+<<<<<<< HEAD
     <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
       <Grid container spacing={4}>
         <Grid item xs={4}>
@@ -213,90 +225,101 @@ export default function SettingsSkillSet() {
               <FormLabel sx={{ color: "black", fontWeight: "600" }}>
                 Skill {index + 1}
               </FormLabel>
+=======
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        // height: '100vh',
+        marginLeft: "15%",
+      }}
+    >
+      <Box
+        sx={{
+          flexGrow: 1,
+          m: "25px 0px 20px 25px",
+        }}
+      >
+        <Grid container spacing={4}>
+          <Grid item xs={4}>
+            {formData.slice(0, midPoint).map((data, index) => (
+              <FormControl fullWidth>
+                <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                  Skill {index + 1}
+                </FormLabel>
+>>>>>>> a977ca4 (setting page bugs fixes)
 
-              <TextField
-                key={index}
-                type="text"
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                  margin: "10px 0px",
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={data.skill}
-                onChange={(e) =>
-                  handleInputChange(index, "skill", e.target.value)
-                }
-                onClick={() => handleInputClick(index)}
-                disabled={!editMode}
-              />
-            </FormControl>
-          ))}
-        </Grid>
+                <TextField
+                  key={index}
+                  type="text"
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "2px",
+                      borderColor: "#b3b3b3",
+                      borderRadius: "10px",
+                    },
+                    margin: "10px 0px",
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={data.skill}
+                  onChange={(e) =>
+                    handleInputChange(index, "skill", e.target.value)
+                  }
+                  onClick={() => handleInputClick(index)}
+                  disabled={!editMode}
+                />
+              </FormControl>
+            ))}
+          </Grid>
 
-        <Grid item xs={4}>
-          {formData.slice(midPoint, len).map((data, index) => (
-            <FormControl fullWidth>
-              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-                Skill {index + midPoint + 1}
-              </FormLabel>
+          <Grid item xs={4}>
+            {formData.slice(midPoint, len).map((data, index) => (
+              <FormControl fullWidth>
+                <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                  Skill {index + midPoint + 1}
+                </FormLabel>
 
-              <TextField
-                key={index}
-                type="text"
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                  margin: "10px 0px",
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={data.skill}
-                onChange={(e) =>
-                  handleInputChange(index + midPoint, "skill", e.target.value)
-                }
-                disabled={!editMode}
-                onClick={() => handleInputClick(index + midPoint)}
-              />
-            </FormControl>
-          ))}
-        </Grid>
+                <TextField
+                  key={index}
+                  type="text"
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "2px",
+                      borderColor: "#b3b3b3",
+                      borderRadius: "10px",
+                    },
+                    margin: "10px 0px",
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={data.skill}
+                  onChange={(e) =>
+                    handleInputChange(index + midPoint, "skill", e.target.value)
+                  }
+                  disabled={!editMode}
+                  onClick={() => handleInputClick(index + midPoint)}
+                />
+              </FormControl>
+            ))}
+          </Grid>
 
-        <Grid item xs={4}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              width: "100%",
-              height: "100%",
-              gap: "40px",
-            }}
-          >
-            <Button
-              variant="contained"
-              color="error"
+          <Grid item xs={4}>
+            <Box
               sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                width: "100%",
+                height: "100%",
+                gap: "40px",
               }}
-              onClick={handleAddNew}
             >
-              Add New
-            </Button>
-            {editMode && (
               <Button
                 variant="contained"
                 color="error"
@@ -305,38 +328,56 @@ export default function SettingsSkillSet() {
                   backgroundColor: "#ff5151",
                   width: "60%",
                 }}
-                onClick={handleSave}
+                onClick={handleAddNew}
               >
-                Save
+                Add New
               </Button>
-            )}
-            <Button
-              variant="contained"
-              color="error"
-              sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
-              }}
-              onClick={handleEdit}
-            >
-              {editMode ? "Cancel Edit" : "Edit"}
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
-              }}
-              onClick={handleDelete}
-            >
-              {deleteMode ? "Confirm Delete" : "Delete"}
-            </Button>
-          </Box>
+              {editMode && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  sx={{
+                    display: "block",
+                    backgroundColor: "#ff5151",
+                    width: "60%",
+                  }}
+                  onClick={handleSave}
+                >
+                  Save
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                color="error"
+                sx={{
+                  display: "block",
+                  backgroundColor: "#ff5151",
+                  width: "60%",
+                }}
+                onClick={handleEdit}
+              >
+                {editMode ? "Cancel Edit" : "Edit"}
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                sx={{
+                  display: "block",
+                  backgroundColor: "#ff5151",
+                  width: "60%",
+                }}
+                onClick={handleDelete}
+              >
+                {deleteMode ? "Confirm Delete" : "Delete"}
+              </Button>
+            </Box>
+          </Grid>
         </Grid>
+<<<<<<< HEAD
       </Grid>
+=======
+      </Box>
+>>>>>>> a977ca4 (setting page bugs fixes)
     </Box>
   );
 }

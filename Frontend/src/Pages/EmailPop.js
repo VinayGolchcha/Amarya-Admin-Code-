@@ -7,9 +7,16 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import CloseIcon from '@mui/icons-material/Close';
 
+<<<<<<< HEAD
 function EmailP({ closeEmailP }) {
     const [email, setEmail] = useState("");
     const[openOtpP,setOpenOtpP]=useState(false)
+=======
+function EmailP({ closeEmailP, openOtpP, setEmail }) {
+  const [email, setEmailInput] = useState("");
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || "");
+>>>>>>> a977ca4 (setting page bugs fixes)
 
 const handleUpdate = async () => {
   
@@ -21,7 +28,13 @@ const handleUpdate = async () => {
         }
       );
       console.log(response);
+<<<<<<< HEAD
      } catch (error) {
+=======
+      setEmail(email);
+      openOtpP();
+    } catch (error) {
+>>>>>>> a977ca4 (setting page bugs fixes)
       console.log("Error data:", error.response.data.errors[0]?.msg);
     
     }
@@ -33,12 +46,12 @@ const handleUpdate = async () => {
         style={{
           backgroundColor: "white",
           borderRadius: "10px",
-          height: "100vh",
-          width: "100vw",
-          position: "absolute",
-          top: "57px",
-          left: "117px",
-          zIndex: "11",
+          // height: "100vh",
+          // width: "100vw",
+          // position: "absolute",
+          // top: "57px",
+          // left: "117px",
+          // zIndex: "11",
         }}
         className="modelbackground"
       >
@@ -93,7 +106,7 @@ const handleUpdate = async () => {
               variant="filled"
               type="email"
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmailInput(e.target.value)}
               sx={{
                 marginY: 1,
                 width: "75%",
@@ -130,9 +143,13 @@ const handleUpdate = async () => {
               Send OTP
               
             </Button>
+<<<<<<< HEAD
             { openOtpP && <OtpP closeOtpP={setOpenOtpP}/>}
             
             <br></br>
+=======
+            <br />
+>>>>>>> a977ca4 (setting page bugs fixes)
           </div>
         </div>
       </div>

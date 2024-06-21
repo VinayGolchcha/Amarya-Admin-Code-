@@ -43,10 +43,11 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const menu = [
     { text: "Dashboard", link: "", icon: <DashboardIcon /> },
     { text: "Assets", link: "assets", icon: <PersonAddAlt1Icon /> },
-    { text: "Leave Planner", link: "leaves", icon: <InsertInvitationIcon /> },
+    // Only include "Leave Planner" if user's role is not "admin"
+    user?.role !== "admin" && { text: "Leave Planner", link: "leaves", icon: <InsertInvitationIcon /> },
     { text: "Trainings", link: "trainings", icon: <GroupsIcon /> },
     { text: "Worksheet", link: "worksheet", icon: <GroupWorkIcon /> },
-  ];
+  ].filter(Boolean); //
 
   const other = [
     { text: "Policies", link: "policies", icon: <HeadsetMicIcon /> },

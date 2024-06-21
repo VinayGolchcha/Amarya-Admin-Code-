@@ -313,6 +313,7 @@ export default function AssetsAdminPage() {
             color: "#121843",
           }}
         >
+<<<<<<< HEAD
           Assets
         </Typography>
         <Box sx={{ boxSizing: "border-box" }}>
@@ -336,6 +337,267 @@ export default function AssetsAdminPage() {
                       }
                       style={{ height: "40px", width: "20px" }}
                       onChange={handleChange}
+=======
+          <Typography
+            sx={{
+              margin: "12px 0px",
+              width: "630px",
+              height: "42px",
+              fontFamily: "Poppins",
+              fontSize: "24px",
+              fontWeight: "600",
+              lineHeight: "42px",
+              color: "#121843",
+            }}
+          >
+            Assets
+          </Typography>
+          <Box sx={{ boxSizing: "border-box" }}>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: "#1B204A" }}>
+                    <TableCell
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        textAlign: "center",
+                        padding: "8px",
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        name="allselect"
+                        checked={
+                          !assetsData.some((user) => user?.isChecked !== true)
+                        }
+                        style={{ height: "40px", width: "20px" }}
+                        onChange={handleChange}
+                      />
+                      <br />
+                      Req. Id{" "}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
+                    >
+                      D.O.P
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
+                    >
+                      {/* {renderItemImage(row.photo)} */}
+                      {/* Photo */}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
+                    >
+                      Assignee
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
+                    >
+                      Item
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
+                    >
+                      Description
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
+                    >
+                      Issued From
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
+                    >
+                      Issued Till
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
+                    >
+                      In Warranty
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Poppins",
+                        padding: "8px",
+                      }}
+                    >
+                      End of warranty
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {(rowsPerPage > 0
+                    ? assetsData.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                    : assetsData
+                  ).map((row) => (
+                    <TableRow
+                      key={row.name}
+                      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                    >
+                      <TableCell
+                        component="th"
+                        scope="row"
+                        align="center"
+                        sx={{ fontFamily: "Poppins" }}
+                      >
+                        {/* <Box
+                            component="img"
+                            src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                            alt="Check"
+                            style={{ filter: "invert(1)" }}
+                          /> */}
+                        <input
+                          type="checkbox"
+                          name={row.inId}
+                          checked={row?.isChecked || false}
+                          onChange={handleChange}
+                          style={{ height: "40px", width: "20px" }}
+                        />
+                        <br />
+                        {row.inId}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.dop}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {renderItemImage(row.photo)}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.assingnee}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.item}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.description}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.issued_From}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.issued_Till}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.in_Warranty}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        sx={{ fontFamily: "Poppins", padding: "8px" }}
+                      >
+                        {row.warranty_End}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+  
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={12} style={{ borderBottom: "none" }} />
+                    </TableRow>
+                  )}
+                </TableBody>
+                <TableRow>
+                  <TableCell colSpan={12} sx={{ textAlign: "center" }}>
+                    {/* <Box
+                        component="img"
+                        src={`${process.env.PUBLIC_URL}/Images/Add_ring_duotone.png`}
+                        alt="add"
+                        onClick={handleOpen}
+                      /> */}
+                    <AddOutlinedIcon
+                      onClick={handleOpen}
+                      color="action"
+                      sx={{
+                        borderRadius: "50px",
+                        backgroundColor: "rgb(222, 225, 231)",
+                        width: "30px",
+                        height: "30px",
+                        margin: "0px 2px",
+                        padding: "4px",
+                        cursor:"pointer"
+                      }}
+                    />
+                    <AddNewAssets
+                      assetsData={assetsData}
+                      handleAdd={setAssetsData}
+                      handleClose={handleClose}
+                      open={open}
+                    />
+                    <EditDeleteIcons
+                      deleteAction={handleDelete}
+                      rows={selectedRows}
+>>>>>>> a977ca4 (setting page bugs fixes)
                     />
                     <br />
                     Invt. Id{" "}

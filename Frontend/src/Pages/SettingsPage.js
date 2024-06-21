@@ -271,6 +271,7 @@ function TextFieldsGrid() {
           </Button>
         </Box>
       </Box>
+      <Box sx={{display:'flex',justifyContent:"center",alignItems:"center"}}>
       {selectedTab === "AddUser" && <SettingsAddUser />}
       {selectedTab === "holiday" && <SettingHoliday />}
       {selectedTab === "leaves" && <SettingsLeave />}
@@ -279,6 +280,7 @@ function TextFieldsGrid() {
       {selectedTab === "skillset" && <SettingsSkiilSet />}
       {selectedTab === "teams" && <SettingsTeams />}
       {selectedTab === "policy" && <PolicyPage/>}
+      </Box>
     </div>
   );
 }
