@@ -26,7 +26,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useAuth } from "../Components/AuthContext";
+<<<<<<< HEAD
 import Loading from "../sharable/Loading";
+=======
+>>>>>>> 4dbe98c (worked on role access)
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -155,8 +158,13 @@ export default function AssetsAdminPage() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+<<<<<<< HEAD
 
   console.log(user);
+=======
+  
+ console.log(user);
+>>>>>>> 4dbe98c (worked on role access)
   const fetchAssets = async () => {
     try {
       const response = await axios.get(`${apiUrl}/asset/admin/fetch-assets`, {
@@ -193,7 +201,11 @@ export default function AssetsAdminPage() {
           );
         });
         setAssetsData(apiAssets);
+<<<<<<< HEAD
         console.log(apiAssets);
+=======
+        console.log(apiAssets, "kdsfk;k");
+>>>>>>> 4dbe98c (worked on role access)
       } else {
         console.error("Error fetching assets:", response.data.message);
       }
@@ -277,7 +289,11 @@ export default function AssetsAdminPage() {
   }
 
   const renderItemImage = (photoUrl) => {
+<<<<<<< HEAD
     // console.log(photoUrl);
+=======
+    console.log(photoUrl);
+>>>>>>> 4dbe98c (worked on role access)
     return (
       <img
         src={photoUrl}
@@ -286,6 +302,7 @@ export default function AssetsAdminPage() {
       />
     );
   };
+<<<<<<< HEAD
   if(isLoading){
     return(
       <Loading/>
@@ -295,6 +312,21 @@ export default function AssetsAdminPage() {
       <>
         <Box
           component="main"
+=======
+
+  return (
+    <>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: "100%",
+          borderRadius: "10px",
+        }}
+      >
+        <Typography
+>>>>>>> 4dbe98c (worked on role access)
           sx={{
             flexGrow: 1,
             p: 3,
@@ -329,6 +361,15 @@ export default function AssetsAdminPage() {
                         padding: "8px",
                       }}
                     >
+<<<<<<< HEAD
+=======
+                      {/* <Box
+                          component="img"
+                          src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                          alt="Check"
+                          style={{ filter: "invert(1)" }}
+                        /> */}
+>>>>>>> 4dbe98c (worked on role access)
                       <input
                         type="checkbox"
                         name="allselect"
@@ -359,7 +400,11 @@ export default function AssetsAdminPage() {
                         padding: "8px",
                       }}
                     >
+<<<<<<< HEAD
                       Photo
+=======
+                      {renderItemImage(row.photo)}
+>>>>>>> 4dbe98c (worked on role access)
                     </TableCell>
                     <TableCell
                       align="center"
@@ -432,6 +477,7 @@ export default function AssetsAdminPage() {
                       End of warranty
                     </TableCell>
                   </TableRow>
+<<<<<<< HEAD
                 </TableHead>
                 <TableBody>
                   {(rowsPerPage > 0
@@ -530,6 +576,49 @@ export default function AssetsAdminPage() {
                     </TableRow>
                   )}
                 </TableBody>
+=======
+                ))}
+
+                {emptyRows > 0 && (
+                  <TableRow style={{ height: 53 * emptyRows }}>
+                    <TableCell colSpan={12} style={{ borderBottom: "none" }} />
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableRow>
+                <TableCell colSpan={12} sx={{ textAlign: "center" }}>
+                  {/* <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Add_ring_duotone.png`}
+                      alt="add"
+                      onClick={handleOpen}
+                    /> */}
+                  <AddOutlinedIcon
+                    onClick={handleOpen}
+                    color="action"
+                    sx={{
+                      borderRadius: "50px",
+                      backgroundColor: "rgb(222, 225, 231)",
+                      width: "30px",
+                      height: "30px",
+                      margin: "0px 2px",
+                      padding: "4px",
+                    }}
+                  />
+                  <AddNewAssets
+                    assetsData={assetsData}
+                    handleAdd={setAssetsData}
+                    handleClose={handleClose}
+                    open={open}
+                  />
+                  <EditDeleteIcons
+                    deleteAction={handleDelete}
+                    rows={selectedRows}
+                  />
+                </TableCell>
+              </TableRow>
+              <TableFooter>
+>>>>>>> 4dbe98c (worked on role access)
                 <TableRow>
                   <TableCell colSpan={12} sx={{ textAlign: "center" }}>
                     {/* <Box

@@ -15,8 +15,14 @@ import { useAuth } from "./AuthContext";
 export default function NotificationPopUp() {
   const navigate = useNavigate();
   const { notifications, setNotifications } = useContext(NotificationContext);
+<<<<<<< HEAD
   const apiUrl = process.env.REACT_APP_API_URI;
   const { user } = useAuth();
+=======
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const {user} = useAuth();
+  const token = encodeURIComponent(user?.token || ""); 
+>>>>>>> 4dbe98c (worked on role access)
 
   useEffect(() => {
     if (notifications.length === 0) {

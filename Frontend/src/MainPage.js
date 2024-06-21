@@ -29,7 +29,10 @@ import WorksheetPage from "./Pages/WorksheetPage";
 import TrainingsPageAdmin from "./Pages/TrainingsPageAdmin";
 import ActivityPage from "./Pages/ActivityPage";
 import { useAuth } from "./Components/AuthContext";
+<<<<<<< HEAD
 import AdminLeaveManagement from "./Pages/AdminLeaveManagement";
+=======
+>>>>>>> 4dbe98c (worked on role access)
 
 const drawerWidth = 240;
 
@@ -38,6 +41,10 @@ const MainPage = (props) => {
   const [mobileOpen, setMobileOpen] = React.useState(true);
   const { user } = useAuth(); // Using useAuth hook to access user data
   const role = user?.role;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4dbe98c (worked on role access)
   if (!user) {
     return <LoginPage />;
   }
@@ -109,7 +116,10 @@ const MainPage = (props) => {
             <Route path="/assets" element={<AssetsAdminPage />} />
           )}
           {role === "admin" && (<Route path="/" element={<AdminDashboard />} />)}
+<<<<<<< HEAD
           {role === "admin" && (<Route path="/admin-leave" element={<AdminLeaveManagement />} />)}
+=======
+>>>>>>> 4dbe98c (worked on role access)
           {role === "admin" && (<Route path="/anouncement" element={<AdminAnnouncement />} />)}
           <Route path="/activities/:activityId" element={<ActivityPage />} />
           <Route path="/login" element={<LoginPage />} />

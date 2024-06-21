@@ -441,6 +441,7 @@ const WorksheetPage = () => {
       console.error("Error fetching skills:", error);
     }
   };
+<<<<<<< HEAD
   if(isLoading){
     return(
       <Loading/>
@@ -492,6 +493,114 @@ const WorksheetPage = () => {
         >
           <Table>
             <TableHead>
+=======
+  return (
+    <Box style={{ margin: "20px 20px 20px 20px" }}>
+      <Typography
+        variant="h4"
+        sx={{
+          marginBottom: "25px",
+          font: {
+            lg: "normal normal 300 22px/35px Poppins",
+            md: "normal normal 300 22px/35px Poppins",
+            sm: "normal normal 300 20px/30px Poppins",
+            xs: "normal normal 300 22px/30px Poppins",
+          },
+        }}
+      >
+        Worksheet Dashboard
+      </Typography>
+      <Typography
+        variant="h4"
+        sx={{
+          margin: "5px",
+          font: {
+            lg: "normal normal 400 18px/25px Racing Sans One",
+            md: "normal normal 400 16px/25px Racing Sans One",
+            sm: "normal normal 400 16px/25px Racing Sans One",
+            xs: "normal normal 400 10px/16px Racing Sans One",
+          },
+          color: "#161E54",
+        }}
+      >
+        AMEMP00012 - Sanjana Jain
+      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "left",
+          justifyContent: "left",
+          background: "var(--Just-White, #FFF)",
+          borderRadius: "12px",
+          border: "1px solid #BCBCBC",
+          padding: "0px",
+          overflowX: "auto",
+        }}
+      >
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ background: "#161E54" }}>
+                <Box
+                  component="img"
+                  src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                  alt="Check"
+                />
+              </TableCell>
+              {tableHeaders?.map((header, index) => (
+                <TableCell
+                  key={index}
+                  align="left"
+                  sx={{
+                    background: "#161E54",
+                    color: "#FFFFFF",
+                    font: {
+                      lg: "normal normal 500 14px/20px Poppins",
+                      md: "normal normal 500 14px/20px Poppins",
+                      sm: "normal normal 500 14px/20px Poppins",
+                      xs: "normal normal 500 14px/20px Poppins",
+                    },
+                  }}
+                >
+                  {header}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody sx={{}}>
+            {rows
+              ?.slice(
+                currentPage * rowsPerPage,
+                (currentPage + 1) * rowsPerPage
+              )
+              .map((row, index) => (
+                <TableRow key={index}>
+                  <TableCell style={{ filter: "invert(1)" }}>
+                    <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                      alt="Check"
+                    />
+                  </TableCell>
+                  {renderTableCells(row)}
+                  <TableCell>
+                    {/* <IconButton onClick={() => handleEditClick()}>
+                      <EditIcon />
+                    </IconButton> */}
+                    <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
+                      alt="Check"
+                      // onClick={handleSaveRow}
+                      sx={{ cursor: "pointer" }}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+
+            {newRow && (
+>>>>>>> 4dbe98c (worked on role access)
               <TableRow>
                 <TableCell style={{ background: "#161E54" }}>
                   <Box
