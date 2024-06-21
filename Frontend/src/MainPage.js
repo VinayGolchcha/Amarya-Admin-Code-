@@ -29,6 +29,7 @@ import WorksheetPage from "./Pages/WorksheetPage";
 import TrainingsPageAdmin from "./Pages/TrainingsPageAdmin";
 import ActivityPage from "./Pages/ActivityPage";
 import { useAuth } from "./Components/AuthContext";
+import AdminLeaveManagement from "./Pages/AdminLeaveManagement";
 
 const drawerWidth = 240;
 
@@ -108,6 +109,7 @@ const MainPage = (props) => {
             <Route path="/assets" element={<AssetsAdminPage />} />
           )}
           {role === "admin" && (<Route path="/" element={<AdminDashboard />} />)}
+          {role === "admin" && (<Route path="/admin-leave" element={<AdminLeaveManagement />} />)}
           {role === "admin" && (<Route path="/anouncement" element={<AdminAnnouncement />} />)}
           <Route path="/activities/:activityId" element={<ActivityPage />} />
           <Route path="/login" element={<LoginPage />} />
