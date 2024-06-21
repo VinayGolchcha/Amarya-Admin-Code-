@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
-import { Button, FormControl, FormLabel, TextField } from "@mui/material";
+import { Button, FormControl, FormLabel, TextField, MenuItem, Select } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -14,7 +14,7 @@ import { useAuth } from "../Components/AuthContext";
 
 export default function SettingsProject() {
   const { user } = useAuth();
-  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+  const token = encodeURIComponent(user?.token || "");
 
   const [formData, setFormData] = useState([
     {
@@ -25,9 +25,15 @@ export default function SettingsProject() {
       "Start Of The Project": null,
       "End Of The Project": null,
       "Project Status": "",
-      Category: "",
+      "Category": "",
+      "category_id": null, // Add category_id field
     },
   ]);
+
+  const [categories, setCategories] = useState([]); // State to store categories
+  const [editMode, setEditMode] = useState(null);
+  const [newProjectIndex, setNewProjectIndex] = useState(null);
+  const apiUrl = process.env.REACT_APP_API_URL;
 
   const labels = [
     "Project Name",
@@ -40,13 +46,9 @@ export default function SettingsProject() {
     "Category",
   ];
 
-  const [editMode, setEditMode] = useState(null); // Track which project is being edited
-  const [deleteMode, setDeleteMode] = useState(false);
-  const [selectedInputIndex, setSelectedInputIndex] = useState(null);
-  const apiUrl = process.env.REACT_APP_API_URL;
-
   useEffect(() => {
     fetchProjects();
+    fetchCategories(); // Fetch categories on component mount
   }, []);
 
   const fetchProjects = () => {
@@ -79,7 +81,7 @@ export default function SettingsProject() {
             "Start Of The Project": startMonth,
             "End Of The Project": endMonth,
             "Project Status": item.project_status,
-            Category: item.category,
+            "Category": item.category,
             category_id: item.category_id,
             project_id: item.project_id,
           };
@@ -88,7 +90,35 @@ export default function SettingsProject() {
       })
       .catch((error) => console.error("Error fetching projects:", error));
   };
-  const handleAddNew = async () => {
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/category/fetch-all-categories`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        },
+      });
+      const data = await response.json();
+      if (data.success) {
+        const categoryOptions = data?.data?.map(({ _id, category }) => ({
+          _id, // Keep _id separate
+          value: category, // Use the label as the value displayed to the user
+          label: category,
+        }));
+        setCategories(categoryOptions);
+        console.log("category:", categoryOptions); // Log fetched categories
+        return categoryOptions;
+      } else {
+        console.error("Failed to fetch categories:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  const handleAddNew = () => {
     const newProject = {
       "Project Name": "",
       "Client Name": "",
@@ -97,11 +127,30 @@ export default function SettingsProject() {
       "Start Of The Project": null,
       "End Of The Project": null,
       "Project Status": "",
-      Category: "",
+      "Category": "",
+      "category_id": null,
     };
 
     setFormData([...formData, newProject]);
-    setEditMode(formData.length); // Set the newly added project to edit mode
+    setNewProjectIndex(formData.length);
+  };
+
+  const handleSaveNewProject = async (index) => {
+    const newProject = formData[index];
+    const newProjectData = {
+      project: newProject["Project Name"],
+      client_name: newProject["Client Name"],
+      project_manager: newProject["Project Manager"],
+      project_lead: newProject["Project Lead"],
+      project_status: newProject["Project Status"],
+      start_month: newProject["Start Of The Project"]
+        ? dayjs(newProject["Start Of The Project"]).format("MMMM")
+        : null,
+      end_month: newProject["End Of The Project"]
+        ? dayjs(newProject["End Of The Project"]).format("MMMM")
+        : null,
+      category_id: newProject.category_id, // Use category_id
+    };
 
     try {
       const response = await fetch(`${apiUrl}/project/admin/create-project`, {
@@ -110,7 +159,7 @@ export default function SettingsProject() {
           "Content-Type": "application/json",
           "x-access-token": token,
         },
-        body: JSON.stringify(newProject),
+        body: JSON.stringify(newProjectData),
       });
 
       if (!response.ok) {
@@ -119,6 +168,9 @@ export default function SettingsProject() {
 
       const data = await response.json();
       console.log("Project created successfully:", data);
+      setNewProjectIndex(null);
+      setEditMode(null);
+      fetchProjects();
     } catch (error) {
       console.error("Error creating project:", error);
     }
@@ -157,7 +209,7 @@ export default function SettingsProject() {
     const projectToUpdate = formData[index];
     const { project_id, category_id } = projectToUpdate;
     const id = project_id;
-    console.log(projectToUpdate);
+
     const updatedProject = {
       project: projectToUpdate["Project Name"],
       client_name: projectToUpdate["Client Name"],
@@ -170,8 +222,8 @@ export default function SettingsProject() {
       end_month: projectToUpdate["End Of The Project"]
         ? dayjs(projectToUpdate["End Of The Project"]).format("MMMM")
         : null,
+      category_id: projectToUpdate.category_id,
     };
-    console.log(updatedProject);
 
     fetch(`${apiUrl}/project/admin/update-project/${id}/${category_id}`, {
       method: "PUT",
@@ -219,7 +271,11 @@ export default function SettingsProject() {
         newDataItem["Project Status"] = value;
         break;
       case "Category":
+        const selectedCategory = categories.find(
+          (category) => category.value === value
+        );
         newDataItem["Category"] = value;
+        newDataItem.category_id = selectedCategory?._id || null; // Set category_id
         break;
       default:
         break;
@@ -230,19 +286,24 @@ export default function SettingsProject() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
+    <Box>
       {formData?.map((data, index) => (
         <Box
           key={index}
           sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-            margin: "20px 0px 0px 0px",
+            borderRadius: "10px",
+            padding: "30px",
+            boxShadow: "0px 0px 5px rgba(0,0,0,0.2)",
+            margin: "10px 0px",
           }}
         >
-          <Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginBottom: "10px",
+            }}
+          >
             <RemoveIcon
               color="action"
               onClick={() => handleDelete(index)}
@@ -256,10 +317,14 @@ export default function SettingsProject() {
                 cursor: "pointer",
               }}
             />
-            {editMode === index ? (
+            {editMode === index || newProjectIndex === index ? (
               <SaveIcon
                 color="action"
-                onClick={() => handleSave(index)}
+                onClick={() => {
+                  newProjectIndex === index
+                    ? handleSaveNewProject(index)
+                    : handleSave(index);
+                }}
                 sx={{
                   borderRadius: "50px",
                   backgroundColor: "rgb(222, 225, 231)",
@@ -333,7 +398,32 @@ export default function SettingsProject() {
                       />
                     </LocalizationProvider>
                   )}
-                  {item !== "End Of The Project" &&
+                  {item === "Category" ? (
+                    <Select
+                      value={data[item]}
+                      onChange={(e) =>
+                        handleInputChange(index, item, e.target.value)
+                      }
+                      sx={{
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderWidth: "2px",
+                          borderColor: "#b3b3b3",
+                          borderRadius: "10px",
+                        },
+                        margin: "10px 0px",
+                      }}
+                      disabled={
+                        editMode !== index && newProjectIndex !== index
+                      }
+                    >
+                      {categories?.map((category) => (
+                        <MenuItem key={category._id} value={category.value}>
+                          {category.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  ) : (
+                    item !== "End Of The Project" &&
                     item !== "Start Of The Project" && (
                       <TextField
                         value={data[item]}
@@ -353,9 +443,12 @@ export default function SettingsProject() {
                         onChange={(e) =>
                           handleInputChange(index, item, e.target.value)
                         }
-                        disabled={editMode !== index}
+                        disabled={
+                          editMode !== index && newProjectIndex !== index
+                        }
                       />
-                    )}
+                    )
+                  )}
                 </FormControl>
               </Grid>
             ))}
