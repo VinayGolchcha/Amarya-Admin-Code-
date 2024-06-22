@@ -100,6 +100,7 @@ export default function LeaveMangementPage() {
       toast.error(err?.response?.message);
     }
   };
+
   const fetchLeaveData = async () => {
     try {
       const response = await axios.get(

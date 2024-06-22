@@ -82,7 +82,7 @@ const MainPage = (props) => {
         <Routes>
           {role === "user" && <Route path="/" element={<DashboardPage />} />}
           {role === "user" && <Route path="/assets" element={<AssetsPage />} />}
-          <Route path="/leaves" element={<LeaveManagementPage />} />
+          <Route path="/leaves" element={role === "user" ? <LeaveManagementPage /> : <AdminLeaveManagement />} />
           {role === "user" && (
             <Route path="/trainings" element={<TrainingsPage />} />
           )}
@@ -107,7 +107,6 @@ const MainPage = (props) => {
             <Route path="/assets" element={<AssetsAdminPage />} />
           )}
           {role === "admin" && (<Route path="/" element={<AdminDashboard />} />)}
-          {role === "admin" && (<Route path="/admin-leave" element={<AdminLeaveManagement />} />)}
           {role === "admin" && (<Route path="/anouncement" element={<AdminAnnouncement />} />)}
           <Route path="/activities/:activityId" element={<ActivityPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -126,10 +125,6 @@ const MainPage = (props) => {
                 element={role === "user" ? AssetsPage : AssetsAdminPage}
               />
             }
-          />
-          <Route
-            path="/leaves"
-            element={<PrivateRoute element={LeaveManagementPage} />}
           />
           <Route
             path="/trainings"

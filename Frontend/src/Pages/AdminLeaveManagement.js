@@ -69,7 +69,7 @@ import NativeSelect from '@mui/material/NativeSelect';
     const [employees, setEmployees] = React.useState([]);
     const [filterEmpId, setFilterEmpId] = React.useState(""); 
     const [loading, setLoading] = React.useState(true);
-    const apiUrl = process.env.REACT_APP_API_URL;
+    const apiUrl = process.env.REACT_APP_API_URI;
     const [errorr, setErrorr] = React.useState(null);
     const [filterDropdown, setFilterDropdown] = React.useState([]);
     const today = new Date();
@@ -82,7 +82,9 @@ import NativeSelect from '@mui/material/NativeSelect';
   const handleFilterChange = (event, newValue) => {
     if (newValue) {
       setFilterEmpId(newValue.emp_id); // Set the employee ID for fetching data
-      getData(newValue.emp_id); // Fetch worksheet data for selected employee
+      getData(newValue.emp_id);
+      getUserLeaves(newValue.emp_id)
+       // Fetch worksheet data for selected employee
     } else {
       setFilterEmpId("");
     }
@@ -111,35 +113,27 @@ import NativeSelect from '@mui/material/NativeSelect';
           console.error("Error fetching employees:", error);
         }
       };
-  
-    const leaveOverView = async () => {
-      try{
-        const res = await axios.post(`${process.env.REACT_APP_API_URI}/leave/fetch-leave-overview` ,{
-          emp_id : user?.user_id,
-          status : "approved"
-        } , {
-          headers : {
-            "x-access-token" : user?.token
-          }
-        })
-        setLeaveOverviewData(res?.data?.data)
-      }catch(err){
-        toast.error(err?.response?.message);
-      }
-    }
       
-    const getUserLeaves = async() => {
-      try{
-        const res = await axios.get(`${process.env.REACT_APP_API_URI}/leave/user-all-leave-data` , {
-          headers : {
-            "x-access-token" : user?.token
-          }
-        });
-        setRows(res?.data?.data);
-      }catch(err){
-        console.log(err);
-      }
-    }
+      const getUserLeaves = async (empId) => {
+        try {
+          const res = await axios.post(
+            `${apiUrl}/leave/user-all-leave-data`,
+            {
+              emp_id: empId
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token,
+              },
+            }
+          );
+          setRows(res?.data?.data || []); // Ensure to handle empty response data gracefully
+        } catch (err) {
+          console.log(err);
+          setRows([]);
+        }
+      };
     const getData = async ( empId) =>  {
       try {
         setLoading(true);
@@ -163,16 +157,7 @@ import NativeSelect from '@mui/material/NativeSelect';
       }
     }
     React.useEffect(() => {
-      
-      const fetchData = async () => {
-        await Promise.all([
-          getUserLeaves(),
-          leaveOverView()
-        ]);
-        setIsLoading(false);
-      }
       fetchAllEmployees();
-      fetchData();
     },[]);
   
     const handleUpdate = async () => {
@@ -478,16 +463,7 @@ import NativeSelect from '@mui/material/NativeSelect';
                         fontFamily: "Poppins",
                       }}
                     >
-                      Extended Leave
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        backgroundColor: "#161e54",
-                        color: "#ffffff",
-                        fontFamily: "Poppins",
-                      }}
-                    >
-                      Approved/Rejected
+                      Status
                     </TableCell>
                     <TableCell
                       style={{
@@ -508,8 +484,8 @@ import NativeSelect from '@mui/material/NativeSelect';
                     </TableCell>
                     
                   </TableRow>) : 
-                  (rows?.map((row) => (
-                    <TableRow key={row.id}>
+                  (rows?.map((row , i) => (
+                    <TableRow key={row?._id}>
                       <TableCell
                         style={{ fontFamily: "Poppins", minWidth: "110px" }}
                       >
@@ -520,42 +496,37 @@ import NativeSelect from '@mui/material/NativeSelect';
                           style={{ filter: "invert(1)" }}
                           sx={{ paddingRight: "9px" }}
                         />
-                        {row.id}
+                        {i+1}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.startDate}
+                        {row?.from_date}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.endDate}
+                        {row?.to_date}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.days}
+                        {row?.total_days}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.leaveType}
+                        {row?.leave_type}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.extendedLeave}
+                        {row?.status}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.approvedrejected}
-                      </TableCell>
-                      <TableCell
-                        style={{ fontFamily: "Poppins", color: "#74828F" }}
-                      >
-                        {row.manager}
+                        {row?.manager}
                       </TableCell>
                     </TableRow>
                   )))}

@@ -9,10 +9,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { useAuth } from "../Components/AuthContext";
 
 export default function TrainingCard({ field, i  , setTrainingId , handleRequest , edit , deleteItem , handleDeleteApi , setSelectedTr , setEditOpen}) {
   const [isFLip, setIsFlip] = useState(false);
   const navigate = useNavigate();
+  const {user} = useAuth();
   const dynamicColor = field?.color;
   function handleFlip(val) {
     setIsFlip(!isFLip);
@@ -56,7 +58,7 @@ export default function TrainingCard({ field, i  , setTrainingId , handleRequest
                 Training {field?.trainindId?.toString()[field?.trainindId?.length - 1]}
                 <>
                 
-                {!edit && !deleteItem && <LaunchIcon sx={{
+                {user?.role === "user" && !edit && !deleteItem && <LaunchIcon sx={{
                   cursor : "pointer"
                 }} onClick={() => handleRequest(field?.trainindId)} />}
                 </>
@@ -85,7 +87,7 @@ export default function TrainingCard({ field, i  , setTrainingId , handleRequest
                   color: "#4A4949",
                 }}
               >
-                {field?.courseDescription}
+                {field?.courseDescription?.slice(0,201)}
               </Typography>
             </CardContent>
           </Card>
