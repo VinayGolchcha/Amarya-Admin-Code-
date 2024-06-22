@@ -126,7 +126,7 @@ export default function DashboardPage() {
           <Grid item lg={5} md={12} sm={12} xs={12}>
             <ProjectCardsDashboard currentProject={currentProject} />
           </Grid>
-          <Grid item lg={7} md={12} sm={12} xs={12}>
+          <Grid item lg={6} md={12} sm={12} xs={12}>
             <DashboardGraph1 projectsThisYear={projectsThisYear} />
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>

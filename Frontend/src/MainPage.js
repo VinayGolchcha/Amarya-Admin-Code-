@@ -2,7 +2,7 @@ import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import WorkSheet from "./Pages/WorksheetPage";
 import NavBar from "./Components/NavBar";
@@ -147,6 +147,10 @@ const MainPage = (props) => {
             path="/activities/:activityId"
             element={<PrivateRoute element={ActivityPage} />}
           />
+          {/* <Route
+            path="*"
+            element={user ? <Navigate to="/" /> : <Navigate to="/login" />}
+          /> */}
         </Routes>
       </Box>
     </Box>

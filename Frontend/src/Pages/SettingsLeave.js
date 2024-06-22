@@ -24,7 +24,7 @@ export default function SettingsLeave() {
 
   const apiUrl = process.env.REACT_APP_API_URL;
   const { user } = useAuth();
-  const token = encodeURIComponent(user?.token || ""); 
+  const token = encodeURIComponent(user?.token || "");
   useEffect(() => {
     fetchLeaveData();
   }, []);
@@ -92,6 +92,7 @@ export default function SettingsLeave() {
             setFormData(newFormData);
             setSelectedInputIndex(null);
             setDeleteMode(false);
+            fetchLeaveData();
           })
           .catch((error) => {
             console.error("Error deleting leave type:", error);
@@ -145,6 +146,7 @@ export default function SettingsLeave() {
           .then((data) => {
             console.log("Leave type updated successfully:", data);
             toast.success(data.message || "Leave Type updated successfully");
+            fetchLeaveData();
           })
           .catch((error) => {
             console.error("Error updating leave type:", error);
@@ -174,8 +176,8 @@ export default function SettingsLeave() {
           })
           .then((data) => {
             console.log("Leave type created successfully:", data);
-            toast.success(data.message || "Leave Type Crea successfully");
-
+            toast.success(data.message || "Leave Type Created successfully");
+            fetchLeaveData();
             // Optionally update the form data with the newly created leave type ID
           })
           .catch((error) => {
@@ -200,7 +202,7 @@ export default function SettingsLeave() {
   };
   return (
     <Box sx={{ flexGrow: 1, m: "25px 0px 20px 5px" }}>
-      <Grid container spacing={4} sx={{marginLeft:"5%"}}>
+      <Grid container spacing={4} sx={{ marginLeft: "5%" }}>
         <Grid item xs={2.5}>
           <FormControl fullWidth>
             <FormLabel sx={{ color: "black", fontWeight: "600" }}>
@@ -233,7 +235,7 @@ export default function SettingsLeave() {
           </FormControl>
         </Grid>
 
-        <Grid item xs={1.5} >
+        <Grid item xs={1.5}>
           <FormControl fullWidth>
             <FormLabel sx={{ color: "black", fontWeight: "600" }}>
               Gender

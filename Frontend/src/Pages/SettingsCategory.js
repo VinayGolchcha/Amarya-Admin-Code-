@@ -91,6 +91,7 @@ export default function SettingsCategory() {
             setFormData(newFormData);
             setSelectedInputIndex(null);
             setDeleteMode(false);
+            fetchCategories();
           })
           .catch((error) => {
             console.error("Error deleting category:", error);
@@ -134,6 +135,7 @@ export default function SettingsCategory() {
           })
           .then((data) => {
             console.log("Category updated successfully:", data);
+            fetchCategories();
           })
           .catch((error) => {
             console.error("Error updating category:", error);

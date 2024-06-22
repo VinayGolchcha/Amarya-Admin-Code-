@@ -41,6 +41,8 @@ export default function FeedbackForm() {
         // Handle successful submission (e.g., display a success message, clear form, etc.)
         console.log("Feedback submitted successfully!");
         toast.success("Feedback submitted successfully!");
+        setSubject("");
+        setDescription("");
       } else {
         // Handle error response
         console.error("Failed to submit feedback");

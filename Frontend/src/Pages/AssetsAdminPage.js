@@ -164,7 +164,7 @@ export default function AssetsAdminPage() {
         },
       });
       if (response.data.success) {
-        const apiAssets = response.data.data.map((asset) => {
+        const apiAssets = response?.data?.data?.map((asset) => {
           return createData(
             asset.asset_id,
             new Date(asset.purchase_date).toLocaleDateString(),
@@ -358,7 +358,7 @@ export default function AssetsAdminPage() {
                       }}
                     >
                       {/* {renderItemImage(row.photo)} */}
-                      {/* Photo */}
+                      Photo
                     </TableCell>
                     <TableCell
                       align="center"
@@ -482,7 +482,7 @@ export default function AssetsAdminPage() {
                         align="center"
                         sx={{ fontFamily: "Poppins", padding: "8px" }}
                       >
-                        {row.assingnee}
+                        {row.assignee}
                       </TableCell>
                       <TableCell
                         align="center"
@@ -540,31 +540,33 @@ export default function AssetsAdminPage() {
                         alt="add"
                         onClick={handleOpen}
                       /> */}
-                    <AddOutlinedIcon
-                      onClick={handleOpen}
-                      color="action"
-                      sx={{
-                        borderRadius: "50px",
-                        backgroundColor: "rgb(222, 225, 231)",
-                        width: "30px",
-                        height: "30px",
-                        margin: "0px 2px",
-                        padding: "4px",
-                        cursor: "pointer",
-                      }}
-                    />
-                    <AddNewAssets
-                      assetsData={assetsData}
-                      handleAdd={setAssetsData}
-                      handleClose={handleClose}
-                      open={open}
-                      fetchAssets={fetchAssets}
-                    />
-                    <EditDeleteIcons
-                      deleteAction={handleDelete}
-                      rows={selectedRows}
-                      fetchAssets={fetchAssets}
-                    />
+                    <Box sx={{ cursor: "pointer", display: "flex",justifyContent:"center" }}>
+                      <AddOutlinedIcon
+                        onClick={handleOpen}
+                        color="action"
+                        sx={{
+                          borderRadius: "50px",
+                          backgroundColor: "rgb(222, 225, 231)",
+                          width: "30px",
+                          height: "30px",
+                          margin: "0px 2px",
+                          padding: "4px",
+                          cursor: "pointer",
+                        }}
+                      />
+                      <AddNewAssets
+                        assetsData={assetsData}
+                        handleAdd={setAssetsData}
+                        handleClose={handleClose}
+                        open={open}
+                        fetchAssets={fetchAssets}
+                      />
+                      <EditDeleteIcons
+                        deleteAction={handleDelete}
+                        rows={selectedRows}
+                        fetchAssets={fetchAssets}
+                      />
+                    </Box>
                   </TableCell>
                 </TableRow>
                 <TableFooter>

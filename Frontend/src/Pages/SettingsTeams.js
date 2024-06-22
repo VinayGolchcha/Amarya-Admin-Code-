@@ -89,6 +89,7 @@ export default function SettingsTeams() {
             setFormData(newFormData);
             setSelectedInputIndex(null);
             setDeleteMode(false);
+            fetchTeams();
           })
           .catch((error) => {
             console.error("Error deleting team:", error);
@@ -130,6 +131,7 @@ export default function SettingsTeams() {
           })
           .then((data) => {
             console.log("team updated successfully:", data);
+            fetchTeams();
           })
           .catch((error) => {
             console.error("Error updating team:", error);
@@ -167,6 +169,7 @@ export default function SettingsTeams() {
               };
               setFormData(updatedFormData);
             }
+            fetchTeams();
           })
           .catch((error) => {
             console.error("Error creating team:", error);
@@ -191,7 +194,7 @@ export default function SettingsTeams() {
   };
   return (
     <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
-      <Grid container spacing={4} sx={{marginLeft:"4%"}}>
+      <Grid container spacing={4} sx={{ marginLeft: "4%" }}>
         <Grid item xs={4}>
           {formData.slice(0, midPoint).map((data, index) => (
             <FormControl fullWidth>

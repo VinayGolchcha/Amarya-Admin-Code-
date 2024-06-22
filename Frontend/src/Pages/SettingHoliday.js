@@ -119,6 +119,7 @@ export default function SettingHoliday() {
             setFormData(newFormData);
             setSelectedInputIndex(null);
             setDeleteMode(false);
+            fetchHolidayData();
           })
           .catch((error) => {
             console.error("Error deleting holiday:", error);
@@ -173,6 +174,7 @@ export default function SettingHoliday() {
           })
           .then((data) => {
             console.log("Holiday updated successfully:", data);
+            fetchHolidayData();
           })
           .catch((error) => {
             console.error("Error updating holiday:", error);
@@ -218,6 +220,7 @@ export default function SettingHoliday() {
               };
               setFormData(updatedFormData);
             }
+            fetchHolidayData();
           })
           .catch((error) => {
             console.error("Error creating holiday:", error);

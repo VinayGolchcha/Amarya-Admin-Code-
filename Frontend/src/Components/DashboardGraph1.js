@@ -28,7 +28,10 @@ export default function DashboardGraph1({ projectsThisYear }) {
       </StyledText>
     );
   }
-
+  const year =
+    projectsThisYear?.length > 0
+      ? projectsThisYear[0].start_month.split("/")[1]
+      : "N/A";
   useEffect(() => {
     setDivWidth(document.getElementById("pie-chart")?.offsetWidth || 0);
     const handleResize = () => {
@@ -39,6 +42,14 @@ export default function DashboardGraph1({ projectsThisYear }) {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+  const colors = [
+    "#0A166C",
+    "#3D4895",
+    "#CCCCCC",
+    "#4BC0C0",
+    "#9966FF",
+    "#FF9F40",
+  ];
 
   return (
     <Box
@@ -68,18 +79,19 @@ export default function DashboardGraph1({ projectsThisYear }) {
           }}
           variant="p"
         >
-          {projectsThisYear ? projectsThisYear.length : '--'}
+          {projectsThisYear ? projectsThisYear.length : "--"}
         </Typography>
       </Box>
       <Box sx={{ mt: -3 }}>
         <PieChart
           series={[
             {
-              data: projectsThisYear?.map(project => ({
-                value: project.value || 0,
-                label: project.label || '--',
-                color: project.color || '#CCCCCC'
-              })) || [],
+              data:
+                projectsThisYear?.map((project, index) => ({
+                  value: project.project_duration || 0,
+                  label: project.project || "--",
+                  color: colors[index % colors.length],
+                })) || [],
               paddingAngle: 5,
               innerRadius: Math.max(Math.max(divWidth * 0.14, 95), 35),
               outerRadius: Math.max(Math.min(divWidth * 0.24, 165), 55),
@@ -111,7 +123,7 @@ export default function DashboardGraph1({ projectsThisYear }) {
             bottom: 0,
           }}
         >
-          <PieCenterLabel>2023</PieCenterLabel>
+          <PieCenterLabel>20{year}</PieCenterLabel>
         </PieChart>
       </Box>
     </Box>

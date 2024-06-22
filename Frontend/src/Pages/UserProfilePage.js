@@ -16,6 +16,7 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import { useTheme } from "@mui/system";
 import { AuthProvider, useAuth } from "../Components/AuthContext";
+import ProjectDetails from "../Components/ProjectDetails";
 
 const UserProfilePage = () => {
   const theme = useTheme();
@@ -40,7 +41,8 @@ const UserProfilePage = () => {
   //     ecpna: "None",
   //     ecn: "0",
   //   });a
-  const { user } = useAuth();
+  const { user, setProfilePhoto } = useAuth();
+  console.log(user);
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   const [formData, setFormData] = useState({
@@ -122,7 +124,7 @@ const UserProfilePage = () => {
   const projectDetailsFields = [
     { type: "text", label: "Project ID", field: "project_id" },
     // { type: "text", label: "Current Project", field: "current_project" },
-    { type: "text", label: "Technology", field: "tech" },
+    { type: "text", label: "Working Technology", field: "tech" },
     // { type: "text", label: "Team ID", field: "team_id" },
     { type: "text", label: "Start Month", field: "start_month" },
     { type: "text", label: "End Month", field: "end_month" },
@@ -172,75 +174,75 @@ const UserProfilePage = () => {
       setIsEditing2(true);
     }
   };
-  const handleCreateProject = async () => {
-    try {
-      const response = await axios.post(
-        `${apiUrl}/project/create-user-project`,
-        projectsData.currentProject
-      );
-      console.log("Project created successfully:", response.data);
-      // Optionally, you can perform additional actions after project creation
-    } catch (error) {
-      console.error("Error creating project:", error.message);
-    }
-    setIsEditing(false);
-  };
-  const fetchUserProject = async () => {
-    try {
-      const empId = user.user_id; // Example employee ID
-      const response = await axios.get(
-        `https://amarya-admin-backend-code.onrender.com/api/v1/project/fetch-user-project/${empId}`,
-        {
-          headers: {
-            "x-access-token": token,
-          },
-        }
-      );
-      // setProjectsData(response.data);
-      const fetchedProject = response.data.data[0]; // Assuming only one project is fetched
-      setProjectsData((prevState) => ({
-        ...prevState,
-        currentProject: {
-          project_id: fetchedProject.project_id,
-          emp_id: fetchedProject.emp_id,
-          tech: fetchedProject.tech,
-          team_id: fetchedProject.team_id,
-          start_month: fetchedProject.start_month,
-          end_month: fetchedProject.end_month,
-          project_manager: fetchedProject.project_manager,
-        },
-      }));
-      console.log(fetchedProject);
-    } catch (error) {
-      console.error("Error fetching user project:", error.message);
-    }
-  };
+  // const handleCreateProject = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${apiUrl}/project/create-user-project`,
+  //       projectsData.currentProject
+  //     );
+  //     console.log("Project created successfully:", response.data);
+  //     // Optionally, you can perform additional actions after project creation
+  //   } catch (error) {
+  //     console.error("Error creating project:", error.message);
+  //   }
+  //   setIsEditing(false);
+  // };
+  // const fetchUserProject = async () => {
+  //   try {
+  //     const empId = user.user_id; // Example employee ID
+  //     const response = await axios.get(
+  //       `https://amarya-admin-backend-code.onrender.com/api/v1/project/fetch-user-project/${empId}`,
+  //       {
+  //         headers: {
+  //           "x-access-token": token,
+  //         },
+  //       }
+  //     );
+  //     // setProjectsData(response.data);
+  //     const fetchedProject = response.data.data[0]; // Assuming only one project is fetched
+  //     setProjectsData((prevState) => ({
+  //       ...prevState,
+  //       currentProject: {
+  //         project_id: fetchedProject.project_id,
+  //         emp_id: fetchedProject.emp_id,
+  //         tech: fetchedProject.tech,
+  //         team_id: fetchedProject.team_id,
+  //         start_month: fetchedProject.start_month,
+  //         end_month: fetchedProject.end_month,
+  //         project_manager: fetchedProject.project_manager,
+  //       },
+  //     }));
+  //     console.log(fetchedProject);
+  //   } catch (error) {
+  //     console.error("Error fetching user project:", error.message);
+  //   }
+  // };
 
-  const handleUpdateProject = async () => {
-    if (isEditing2 === false) return;
+  // const handleUpdateProject = async () => {
+  //   if (isEditing2 === false) return;
 
-    try {
-      const empId = user.user_id; // Example employee ID
-      const projectId = projectsData.currentProject.project_id;
-      const response = await axios.put(
-        `https://amarya-admin-backend-code.onrender.com/api/v1/project/update-user-project/${empId}/${projectId}`,
-        projectsData.currentProject,
-        {
-          headers: {
-            "x-access-token": token,
-          },
-        }
-      );
-      if (response.data.success) {
-        console.log("Project updated successfully:", response.data);
-        setIsEditing2(false);
-      } else {
-        console.error("Error updating project:", response.data.message);
-      }
-    } catch (error) {
-      console.error("Error updating project:", error.message);
-    }
-  };
+  //   try {
+  //     const empId = user.user_id; // Example employee ID
+  //     const projectId = projectsData.currentProject.project_id;
+  //     const response = await axios.put(
+  //       `https://amarya-admin-backend-code.onrender.com/api/v1/project/update-user-project/${empId}/${projectId}`,
+  //       projectsData.currentProject,
+  //       {
+  //         headers: {
+  //           "x-access-token": token,
+  //         },
+  //       }
+  //     );
+  //     if (response.data.success) {
+  //       console.log("Project updated successfully:", response.data);
+  //       setIsEditing2(false);
+  //     } else {
+  //       console.error("Error updating project:", response.data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error updating project:", error.message);
+  //   }
+  // };
 
   const handleDoubleClick = (field) => {
     // document.getElementById("test").disabled = false;
@@ -307,7 +309,7 @@ const UserProfilePage = () => {
         // Request configuration object
         {
           headers: {
-            "x-access-token":token
+            "x-access-token": token,
           },
         }
       );
@@ -338,6 +340,7 @@ const UserProfilePage = () => {
         public_id: userData.public_id === null ? "" : userData.public_id,
       });
       console.log(userData);
+      setProfilePhoto(userData.profile_picture); // Set the profile photo in context
     } catch (error) {
       console.error("Error fetching user data:", error.message);
       // toast.error("Error fetching user data. Please try again later.");
@@ -347,7 +350,6 @@ const UserProfilePage = () => {
   useEffect(() => {
     fetchUserData();
     fetchProjectTimeline();
-    fetchUserProject();
   }, []);
 
   function formatDate2(inputDate) {
@@ -374,9 +376,14 @@ const UserProfilePage = () => {
     formDataToSend.append("last_name", formData.last_name);
     formDataToSend.append("password", formData.password);
     formDataToSend.append("mobile_number", formData.mobile_number);
-    formDataToSend.append("emergency_contact_number", formData.emergency_contact_number);
-    formDataToSend.append("emergency_contact_person_info", formData.emergency_contact_person_info);
-
+    formDataToSend.append(
+      "emergency_contact_number",
+      formData.emergency_contact_number
+    );
+    formDataToSend.append(
+      "emergency_contact_person_info",
+      formData.emergency_contact_person_info
+    );
 
     if (formData.file) {
       formDataToSend.append("file", formData.file);
@@ -703,161 +710,84 @@ const UserProfilePage = () => {
           </Container>
         </Box>
       </Box>
-      <Box sx={{ display: "flex", flexDirection: "column", margin: "2% 2.3%" }}>
+      {user?.role === "user" && (
         <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "stretch", // Ensure equal height
-            marginTop: "2%",
-          }}
+          sx={{ display: "flex", flexDirection: "column", margin: "2% 2.3%" }}
         >
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: "700", color: "#121843" }}
-            gutterBottom
+          <ProjectDetails />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "stretch", // Ensure equal height
+              marginTop: "2%",
+            }}
           >
-            Project Details
-            <IconButton onClick={() => handleEditClick("PD")}>
-              <EditIcon />
-            </IconButton>
-          </Typography>
-          <Container sx={{ padding: "0 !important", marginTop: "10px" }}>
-            <form onSubmit={handleSubmit}>
-              <Grid container spacing={1}>
-                {projectDetailsFields?.map((item, index) => (
-                  <Grid item xs={12} md={4} key={index}>
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      sx={{ fontWeight: "600", overflow: "hidden" }}
-                    >
-                      {item.label}
-                    </Typography>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      type={item.type}
-                      name={item.field}
-                      value={projectsData?.currentProject[item.field]}
-                      onChange={handleChange2}
-                      disabled={!isEditing2}
-                      sx={{
-                        [theme.breakpoints.up("md")]: {
-                          width: "80%",
-                        },
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderWidth: "2px",
-                          borderColor: "#b3b3b3",
-                          borderRadius: "10px",
-                        },
-                      }}
-                    />
+            <Typography
+              variant="h5"
+              sx={{ fontWeight: "700", color: "#121843" }}
+              gutterBottom
+            >
+              Project Timeline
+            </Typography>
+            <Container sx={{ padding: "0 !important", marginTop: "10px" }}>
+              <form onSubmit={handleSubmit}>
+                {projectsData?.projects?.map((project, index) => (
+                  <Grid container spacing={1} key={project.id}>
+                    {projectTimelineFields.map((item, index) => (
+                      <Grid
+                        item
+                        xs={12}
+                        md={index === 0 || index === 1 ? "1.5" : "3"}
+                        key={index}
+                      >
+                        <Typography
+                          variant="subtitle1"
+                          gutterBottom
+                          sx={{ fontWeight: "600", overflow: "hidden" }}
+                        >
+                          {item.label}
+                        </Typography>
+                        <TextField
+                          fullWidth
+                          id="text"
+                          variant="outlined"
+                          type={item.type}
+                          name={item.field}
+                          value={
+                            item.field === "startedOn" ||
+                            item.field === "completedOn"
+                              ? project[item.field].toLocaleString("en-US", {
+                                  month: "short",
+                                  year: "numeric",
+                                })
+                              : project[item.field]
+                          }
+                          onChange={handleChange}
+                          onDoubleClick={handleDoubleClick}
+                          onBlur={() => handleBlur(item.field)}
+                          onKeyPress={(e) => handleKeyPress(e, item.field)}
+                          disabled
+                          sx={{
+                            [theme.breakpoints.up("md")]: {
+                              width: "80%",
+                            },
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderWidth: "2px",
+                              borderColor: "#b3b3b3",
+                              borderRadius: "10px",
+                            },
+                          }}
+                        />
+                      </Grid>
+                    ))}
                   </Grid>
                 ))}
-                <Button
-                  onClick={handleUpdateProject}
-                  sx={{ display: "flex", flexDirection: "column" }}
-                >
-                  <img
-                    src="/Images/icons8-edit-64.png"
-                    height="50%"
-                    style={{ marginTop: "10px" }}
-                  />
-                  <Typography sx={{ color: "#B3B3B3", fontWeight: "600" }}>
-                    Edit
-                  </Typography>
-                </Button>
-
-                <Button
-                  onClick={handleCreateProject}
-                  sx={{ display: "flex", flexDirection: "column" }}
-                >
-                  <img
-                    src="/Images/icons8-save-100.png"
-                    height="50%"
-                    style={{ marginTop: "10px" }}
-                  />
-                  <Typography sx={{ color: "#B3B3B3", fontWeight: "600" }}>
-                    Save
-                  </Typography>
-                </Button>
-              </Grid>
-            </form>
-          </Container>
+              </form>
+            </Container>
+          </Box>
         </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "stretch", // Ensure equal height
-            marginTop: "2%",
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: "700", color: "#121843" }}
-            gutterBottom
-          >
-            Project Timeline
-          </Typography>
-          <Container sx={{ padding: "0 !important", marginTop: "10px" }}>
-            <form onSubmit={handleSubmit}>
-              {projectsData?.projects?.map((project, index) => (
-                <Grid container spacing={1} key={project.id}>
-                  {projectTimelineFields.map((item, index) => (
-                    <Grid
-                      item
-                      xs={12}
-                      md={index === 0 || index === 1 ? "1.5" : "3"}
-                      key={index}
-                    >
-                      <Typography
-                        variant="subtitle1"
-                        gutterBottom
-                        sx={{ fontWeight: "600", overflow: "hidden" }}
-                      >
-                        {item.label}
-                      </Typography>
-                      <TextField
-                        fullWidth
-                        id="text"
-                        variant="outlined"
-                        type={item.type}
-                        name={item.field}
-                        value={
-                          item.field === "startedOn" ||
-                          item.field === "completedOn"
-                            ? project[item.field].toLocaleString("en-US", {
-                                month: "short",
-                                year: "numeric",
-                              })
-                            : project[item.field]
-                        }
-                        onChange={handleChange}
-                        onDoubleClick={handleDoubleClick}
-                        onBlur={() => handleBlur(item.field)}
-                        onKeyPress={(e) => handleKeyPress(e, item.field)}
-                        disabled
-                        sx={{
-                          [theme.breakpoints.up("md")]: {
-                            width: "80%",
-                          },
-                          "& .MuiOutlinedInput-notchedOutline": {
-                            borderWidth: "2px",
-                            borderColor: "#b3b3b3",
-                            borderRadius: "10px",
-                          },
-                        }}
-                      />
-                    </Grid>
-                  ))}
-                </Grid>
-              ))}
-            </form>
-          </Container>
-        </Box>
-      </Box>
+      )}
     </Box>
   );
 };

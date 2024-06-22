@@ -208,6 +208,7 @@ export default function SettingsProject() {
           newFormData.splice(index, 1);
           setFormData(newFormData);
           toast.success("Project deleted successfully!");
+          fetchProjects();
         } else {
           console.error("Error deleting project:", data.error);
           if (data.errors && data.errors.length > 0) {
@@ -256,6 +257,7 @@ export default function SettingsProject() {
         if (data.success) {
           setEditMode(null);
           toast.success("Project updated successfully!");
+          fetchProjects();
         } else {
           console.error("Error updating project:", data.error);
           if (data.errors && data.errors.length > 0) {

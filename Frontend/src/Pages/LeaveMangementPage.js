@@ -131,6 +131,7 @@ export default function LeaveMangementPage() {
         }
       );
       setRows(res?.data?.data || []); // Ensure to handle empty response data gracefully
+      console.log(res?.data?.data);
     } catch (err) {
       console.log(err);
     }
@@ -399,6 +400,7 @@ export default function LeaveMangementPage() {
                     flexWrap: "wrap",
                     color: "#161E54",
                     fontSize: "1.4rem",
+                    marginLeft: "15px",
                   }}
                 >
                   Leave Application{" "}
@@ -523,6 +525,7 @@ export default function LeaveMangementPage() {
                     display: "flex",
                     flexWrap: "wrap",
                     justifyContent: "space-between",
+                    marginLeft: "15px",
                   }}
                 >
                   Leaves Overview
@@ -549,6 +552,7 @@ export default function LeaveMangementPage() {
                     color: "#686868",
                     fontSize: "12px",
                     marginTop: "4px",
+                    marginLeft: "10px",
                   }}
                 >
                   {" "}
@@ -618,7 +622,7 @@ export default function LeaveMangementPage() {
                       component="img"
                       src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
                       alt="Check"
-                      sx={{ paddingRight: "10px" }}
+                      sx={{ paddingRight: "20px" }}
                       // onClick= {handleClick}
                     />
                     S.no
@@ -696,7 +700,7 @@ export default function LeaveMangementPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  rows?.map((row) => (
+                  rows?.map((row, index) => (
                     <TableRow key={row.id}>
                       <TableCell
                         style={{ fontFamily: "Poppins", minWidth: "110px" }}
@@ -706,39 +710,39 @@ export default function LeaveMangementPage() {
                           src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
                           alt="Check"
                           style={{ filter: "invert(1)" }}
-                          sx={{ paddingRight: "9px" }}
+                          sx={{ paddingRight: "29px" }}
                         />
-                        {row.id}
+                        {index + 1}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.startDate}
+                        {row.from_date}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.endDate}
+                        {row.to_date}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.days}
+                        {row.total_days}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.leaveType}
+                        {row.leave_type}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.extendedLeave}
+                        {row.extendedLeave || "-"}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.approvedrejected}
+                        {row.status}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}

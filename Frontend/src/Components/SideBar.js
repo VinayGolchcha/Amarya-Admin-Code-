@@ -38,13 +38,17 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const responsiveTheme = responsiveFontSizes(theme);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, activeItem, setActiveItem } = useAuth();
 
   const menu = [
     { text: "Dashboard", link: "", icon: <DashboardIcon /> },
     { text: "Assets", link: "assets", icon: <PersonAddAlt1Icon /> },
     // Only include "Leave Planner" if user's role is not "admin"
-    user?.role !== "admin" && { text: "Leave Planner", link: "leaves", icon: <InsertInvitationIcon /> },
+    user?.role !== "admin" && {
+      text: "Leave Planner",
+      link: "leaves",
+      icon: <InsertInvitationIcon />,
+    },
     { text: "Trainings", link: "trainings", icon: <GroupsIcon /> },
     { text: "Worksheet", link: "worksheet", icon: <GroupWorkIcon /> },
   ].filter(Boolean); //
@@ -57,8 +61,6 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
       icon: <SettingsIcon />,
     },
   ];
-
-  const [activeItem, setActiveItem] = useState("Dashboard");
 
   useEffect(() => {
     // Extract the last part of the pathname (e.g., 'dashboard', 'assets')

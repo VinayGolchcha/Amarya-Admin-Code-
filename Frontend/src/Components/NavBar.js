@@ -76,7 +76,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const NavBar = ({ handleDrawerToggle }) => {
   const { logout } = useAuth();
-  const { user } = useAuth();
+  const { user, profilePhoto, setActiveItem } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -92,6 +92,7 @@ const NavBar = ({ handleDrawerToggle }) => {
 
   const handleSearch = () => {
     // Navigate to the page based on the search query
+    setActiveItem(`${searchQuery}`);
     navigate(`/${searchQuery}`);
   };
 
@@ -173,8 +174,8 @@ const NavBar = ({ handleDrawerToggle }) => {
       onMouseUp={toggleArrow}
       sx={{ marginTop: "2.5rem" }}
     >
-       <MenuItem
-        onClick={()=>{
+      <MenuItem
+        onClick={() => {
           navigate("/profile");
         }}
         sx={{ color: "#ff5151", fontWeight: "bold" }}
@@ -419,8 +420,8 @@ const NavBar = ({ handleDrawerToggle }) => {
                   sx={{ marginRight: -1 }}
                 >
                   <Avatar
-                    alt={user.username}
-                    src={user.profile_picture}
+                    alt={user?.username}
+                    src={profilePhoto || user?.profile_picture}
                   />
                 </IconButton>
                 <IconButton

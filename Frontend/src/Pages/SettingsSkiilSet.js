@@ -99,6 +99,7 @@ export default function SettingsSkillSet() {
             setSelectedInputIndex(null);
             setDeleteMode(false);
             toast.success("Skill deleted successfully.");
+            fetchSkills();
           })
           .catch((error) => {
             console.error("Error deleting skill:", error);

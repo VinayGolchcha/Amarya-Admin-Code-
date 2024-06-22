@@ -145,6 +145,16 @@ const WorksheetPage = () => {
   };
 
   const handleSaveRow = async () => {
+    if (
+      !newRow.team ||
+      !newRow.category ||
+      !newRow.project ||
+      !newRow.skillset.length
+    ) {
+      toast.error("Please fill all the required fields.");
+      return;
+    }
+    
     try {
       setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
       setNewRow(null);
@@ -194,9 +204,11 @@ const WorksheetPage = () => {
         fetchWorksheetDataForEmployee();
         console.log(responseData);
       } else {
+        fetchWorksheetDataForEmployee();
         toast.error("Failed to submit data: " + responseData.message);
       }
     } catch (error) {
+      fetchWorksheetDataForEmployee();
       console.error("Error saving row and submitting data:", error);
       toast.error("An error occurred while saving row and submitting data.");
     }
