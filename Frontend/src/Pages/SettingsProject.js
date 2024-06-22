@@ -18,23 +18,7 @@ export default function SettingsProject() {
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || "");
 
-<<<<<<< HEAD
-  const [formData, setFormData] = useState([
-    {
-      "Project Name": "",
-      "Client Name": "",
-      "Project Lead": "",
-      "Project Manager": "",
-      "Start Of The Project": null,
-      "End Of The Project": null,
-      "Project Status": "",
-      "Category": "",
-      "category_id": null, // Add category_id field
-    },
-  ]);
-=======
   const [formData, setFormData] = useState([]);
->>>>>>> a977ca4 (setting page bugs fixes)
 
   const [categories, setCategories] = useState([]); // State to store categories
   const [editMode, setEditMode] = useState(null);

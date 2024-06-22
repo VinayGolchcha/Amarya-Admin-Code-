@@ -25,14 +25,9 @@ import WorksheetPage from "./Pages/WorksheetPage";
 import TrainingsPageAdmin from "./Pages/TrainingsPageAdmin";
 import ActivityPage from "./Pages/ActivityPage";
 import { useAuth } from "./Components/AuthContext";
-<<<<<<< HEAD
-<<<<<<< HEAD
 import AdminLeaveManagement from "./Pages/AdminLeaveManagement";
-=======
->>>>>>> 4dbe98c (worked on role access)
-=======
 import PrivateRoute from "./Pages/PrivateComponent";
->>>>>>> 62ad5a9 (implement  Protected route)
+
 
 const drawerWidth = 240;
 
@@ -40,17 +35,10 @@ const MainPage = (props) => {
   const [mobileOpen, setMobileOpen] = React.useState(true);
   const { user } = useAuth(); // Using useAuth hook to access user data
   const role = user?.role;
-<<<<<<< HEAD
-=======
-
-<<<<<<< HEAD
->>>>>>> 4dbe98c (worked on role access)
   if (!user) {
     return <LoginPage />;
   }
 
-=======
->>>>>>> 62ad5a9 (implement  Protected route)
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -92,7 +80,6 @@ const MainPage = (props) => {
         }}
       >
         <Routes>
-<<<<<<< HEAD
           {role === "user" && <Route path="/" element={<DashboardPage />} />}
           {role === "user" && <Route path="/assets" element={<AssetsPage />} />}
           <Route path="/leaves" element={<LeaveManagementPage />} />
@@ -120,14 +107,9 @@ const MainPage = (props) => {
             <Route path="/assets" element={<AssetsAdminPage />} />
           )}
           {role === "admin" && (<Route path="/" element={<AdminDashboard />} />)}
-<<<<<<< HEAD
           {role === "admin" && (<Route path="/admin-leave" element={<AdminLeaveManagement />} />)}
-=======
->>>>>>> 4dbe98c (worked on role access)
           {role === "admin" && (<Route path="/anouncement" element={<AdminAnnouncement />} />)}
           <Route path="/activities/:activityId" element={<ActivityPage />} />
-=======
->>>>>>> 62ad5a9 (implement  Protected route)
           <Route path="/login" element={<LoginPage />} />
           <Route
             path="/"

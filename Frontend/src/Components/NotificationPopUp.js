@@ -15,22 +15,15 @@ import { useAuth } from "./AuthContext";
 export default function NotificationPopUp() {
   const navigate = useNavigate();
   const { notifications, setNotifications } = useContext(NotificationContext);
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = process.env.REACT_APP_API_URI;
   const { user } = useAuth();
-  const token = encodeURIComponent(user?.token || "");
 
   useEffect(() => {
-    if (notifications.length === 0) {
+    if (notifications?.length === 0) {
       axios
         .get(`${apiUrl}/announcement/fetch-announcement`, {
-<<<<<<< HEAD
-          headers: { "x-access-token": user?.token },
-        })
-        .get(`${apiUrl}/announcement/fetch-announcement`,{
-=======
->>>>>>> a977ca4 (setting page bugs fixes)
           headers: {
-            "x-access-token": token,
+            "x-access-token": user?.token,
           },
         })
         .then((response) => {

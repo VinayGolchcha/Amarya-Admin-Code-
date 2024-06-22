@@ -6,17 +6,12 @@ import OtpP from "./OtpPop";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import CloseIcon from '@mui/icons-material/Close';
+import { useAuth } from "../Components/AuthContext";
 
-<<<<<<< HEAD
-function EmailP({ closeEmailP }) {
-    const [email, setEmail] = useState("");
-    const[openOtpP,setOpenOtpP]=useState(false)
-=======
 function EmailP({ closeEmailP, openOtpP, setEmail }) {
   const [email, setEmailInput] = useState("");
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || "");
->>>>>>> a977ca4 (setting page bugs fixes)
 
 const handleUpdate = async () => {
   
@@ -28,13 +23,8 @@ const handleUpdate = async () => {
         }
       );
       console.log(response);
-<<<<<<< HEAD
-     } catch (error) {
-=======
       setEmail(email);
-      openOtpP();
     } catch (error) {
->>>>>>> a977ca4 (setting page bugs fixes)
       console.log("Error data:", error.response.data.errors[0]?.msg);
     
     }
@@ -134,7 +124,6 @@ const handleUpdate = async () => {
               variant="contained"
               color="primary"
               // onClick={handleUpdate}
-           onClick={()=>setOpenOtpP(true)}
           
              
               
@@ -143,13 +132,7 @@ const handleUpdate = async () => {
               Send OTP
               
             </Button>
-<<<<<<< HEAD
-            { openOtpP && <OtpP closeOtpP={setOpenOtpP}/>}
-            
-            <br></br>
-=======
             <br />
->>>>>>> a977ca4 (setting page bugs fixes)
           </div>
         </div>
       </div>

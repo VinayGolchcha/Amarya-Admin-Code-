@@ -57,16 +57,11 @@ export default function LeaveMangementPage() {
   const [leaveType, setLeaveType] = React.useState("Casual Leave");
   const [subject, setSubject] = React.useState("");
   const [body, setBody] = React.useState("");
-<<<<<<< HEAD
-  const [rows , setRows] = React.useState([]);
-  const [leaveOverviewData , setLeaveOverviewData] = React.useState([]);
-=======
   const [rows, setRows] = React.useState([]);
   const [leaveOverviewData, setLeaveOverviewData] = React.useState([]);
   const [leaveTypes, setLeaveTypes] = React.useState([]); // State for le
   const apiUrl = process.env.REACT_APP_API_URL;
 
->>>>>>> a977ca4 (setting page bugs fixes)
   ////
 
   // new code
@@ -76,12 +71,8 @@ export default function LeaveMangementPage() {
   const [loading, setLoading] = React.useState(true);
 
   const [errorr, setErrorr] = React.useState(null);
-<<<<<<< HEAD
-  const {user} = useAuth();
-=======
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
->>>>>>> a977ca4 (setting page bugs fixes)
   const today = new Date();
 
   // const [error, setError]  = React.useState(null);
@@ -90,15 +81,6 @@ export default function LeaveMangementPage() {
   // const handleClick = async() => {
 
   const leaveOverView = async () => {
-<<<<<<< HEAD
-    try{
-      const res = await axios.post(`${process.env.REACT_APP_API_URI}/leave/fetch-leave-overview` ,{
-        emp_id : user?.user_id,
-        status : "approved"
-      } , {
-        headers : {
-          "x-access-token" : user?.token
-=======
     try {
       const res = await axios.post(
         `${apiUrl}/leave/fetch-leave-overview`,
@@ -111,29 +93,12 @@ export default function LeaveMangementPage() {
             "Content-Type": "application/json",
             "x-access-token": token,
           },
->>>>>>> a977ca4 (setting page bugs fixes)
         }
-      })
+      )
       setLeaveOverviewData(res?.data?.data)
     }catch(err){
       toast.error(err?.response?.message);
     }
-<<<<<<< HEAD
-  }
-    
-  const getUserLeaves = async() => {
-    try{
-      const res = await axios.get(`${process.env.REACT_APP_API_URI}/leave/user-all-leave-data` , {
-        headers : {
-          "x-access-token" : user?.token
-        }
-      });
-      setRows(res?.data?.data);
-    }catch(err){
-      console.log(err);
-    }
-  }
-=======
   };
   const fetchLeaveData = async () => {
     try {
@@ -171,7 +136,6 @@ export default function LeaveMangementPage() {
       console.log(err);
     }
   };
->>>>>>> a977ca4 (setting page bugs fixes)
   React.useEffect(() => {
     async function getData() {
       try {
@@ -179,19 +143,12 @@ export default function LeaveMangementPage() {
 
         const response = await axios.get(
           // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
-<<<<<<< HEAD
-          `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data/${user?.user_id}` , {
-            headers : {
-              "x-access-token" : user?.token
-            }
-=======
           `${apiUrl}/leave/get-user-leave-dashboard-data/${user?.user_id}`,
           {
             headers: {
               "Content-Type": "application/json",
               "x-access-token": token,
             },
->>>>>>> a977ca4 (setting page bugs fixes)
           }
         );
         setData(response?.data?.data);
@@ -204,24 +161,12 @@ export default function LeaveMangementPage() {
       }
     }
     const fetchData = async () => {
-<<<<<<< HEAD
-      await Promise.all([
-        getData(),
-        getUserLeaves(),
-        leaveOverView()
-      ]);
-      setIsLoading(false);
-    }
-    fetchData();
-  },[]);
-=======
       await Promise.all([getData(), getUserLeaves(), leaveOverView()]);
       fetchLeaveData(); // Fetch leave types on component mount
       setIsLoading(false);
     };
     fetchData();
   }, []);
->>>>>>> a977ca4 (setting page bugs fixes)
 
   const handleUpdate = async () => {
 
@@ -236,20 +181,12 @@ export default function LeaveMangementPage() {
           to_date: toDate,
           subject: subject,
           body: body,
-<<<<<<< HEAD
-        } , {
-          headers : {
-              "x-access-token" : user?.token
-            }
-          
-=======
         },
         {
           headers: {
             "Content-Type": "application/json",
             "x-access-token": token,
           },
->>>>>>> a977ca4 (setting page bugs fixes)
         }
       );
 
@@ -528,16 +465,11 @@ export default function LeaveMangementPage() {
                   sx={{ width: "100%", backgroundColor: "#fafafa" }}
                   onChange={handleChange}
                 >
-<<<<<<< HEAD
-                  <MenuItem value={"Casual leave"}>casual  </MenuItem>
-                  <MenuItem value={"Sick leave"}>Sick </MenuItem>
-=======
                   {leaveTypes?.map((type) => (
                     <MenuItem key={type.leave_type} value={type.leave_type}>
                       {type.leave_type}
                     </MenuItem>
                   ))}
->>>>>>> a977ca4 (setting page bugs fixes)
                 </Select>
                 <br />
                 <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
@@ -640,12 +572,6 @@ export default function LeaveMangementPage() {
                       height: { lg: "340px", md: "362px", sm: "305px" },
                     }}
                   >
-<<<<<<< HEAD
-<<<<<<< HEAD
-                    {leaveOverviewData?.map((item) => (<ListItem
-=======
-=======
->>>>>>> 2e2bcaf (leave page change)
                     {leaveOverviewData?.map((item) => (
                       <ListItem
                         sx={{
@@ -666,70 +592,6 @@ export default function LeaveMangementPage() {
                         />
                       </ListItem>
                     ))}
-<<<<<<< HEAD
-                    <ListItem
->>>>>>> a977ca4 (setting page bugs fixes)
-                      sx={{
-                        backgroundColor: "#fafafa",
-                        margin: "5px 0px",
-                        border: "0.5px solid #E0E0E0",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <ListItemText
-<<<<<<< HEAD
-                        primary={item?.leave_type}
-                        secondary={
-                          <React.Fragment>
-                            {formattedLeaveDate(item?.from_date)} - {formattedLeaveDate(item?.to_date)}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>))}
-=======
-                        primary="Rakhi Leave"
-                        secondary={
-                          <React.Fragment>{"15th Aug 2021"}</React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <ListItem
-                      sx={{
-                        backgroundColor: "#fafafa",
-                        margin: "5px 0px",
-                        border: "0.5px solid #E0E0E0",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <ListItemText
-                        primary="Due to personal reason "
-                        secondary={
-                          <React.Fragment>
-                            {"1st Sep 2021 - 4th Sep 2021"}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
-                    <ListItem
-                      sx={{
-                        backgroundColor: "#fafafa",
-                        margin: "5px 0px",
-                        border: "0.5px solid #E0E0E0",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <ListItemText
-                        primary="Due to personal reason "
-                        secondary={
-                          <React.Fragment>
-                            {"1st Sep 2021 - 4th Sep 2021"}
-                          </React.Fragment>
-                        }
-                      />
-                    </ListItem>
->>>>>>> a977ca4 (setting page bugs fixes)
-=======
->>>>>>> 2e2bcaf (leave page change)
                   </List>
                 </Box>
               </Box>

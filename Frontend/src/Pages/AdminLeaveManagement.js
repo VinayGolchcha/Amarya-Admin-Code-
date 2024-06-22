@@ -19,7 +19,10 @@ import {
     Select,
     InputLabel,
     MenuItem,
+    Autocomplete,
   } from "@mui/material";
+import FormControl from '@mui/material/FormControl';
+import NativeSelect from '@mui/material/NativeSelect';
   import axios from "axios";
   import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
   import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -59,22 +62,55 @@ import {
     const [body, setBody] = React.useState("");
     const [rows , setRows] = React.useState([]);
     const [leaveOverviewData , setLeaveOverviewData] = React.useState([]);
-    ////
-  
-    // new code
+    const { user } = useAuth();
+    const token = encodeURIComponent(user?.token || ""); 
     const [error, setError] = React.useState("");
     const [data, setData] = React.useState(null);
-  
+    const [employees, setEmployees] = React.useState([]);
+    const [filterEmpId, setFilterEmpId] = React.useState(""); 
     const [loading, setLoading] = React.useState(true);
-  
+    const apiUrl = process.env.REACT_APP_API_URL;
     const [errorr, setErrorr] = React.useState(null);
-    const {user} = useAuth();
+    const [filterDropdown, setFilterDropdown] = React.useState([]);
     const today = new Date();
   
     // const [error, setError]  = React.useState(null);
     
   
     // const handleClick = async() => {
+      
+  const handleFilterChange = (event, newValue) => {
+    if (newValue) {
+      setFilterEmpId(newValue.emp_id); // Set the employee ID for fetching data
+      getData(newValue.emp_id); // Fetch worksheet data for selected employee
+    } else {
+      setFilterEmpId("");
+    }
+  };
+
+      const fetchAllEmployees = async () => {
+        try {
+          const response = await fetch(`${apiUrl}/user/fetch-all-employee-ids`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "x-access-token": token,
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          const data = await response.json();
+          if (data.success) {
+            setEmployees(data.data); // Assuming data.data contains the list of employees
+            setFilterDropdown(data.data.map((emp) => emp.emp_id)); // Assuming emp_id is the identifier
+          } else {
+            console.error("Failed to fetch employees:", data.message);
+          }
+        } catch (error) {
+          console.error("Error fetching employees:", error);
+        }
+      };
   
     const leaveOverView = async () => {
       try{
@@ -104,37 +140,38 @@ import {
         console.log(err);
       }
     }
-    React.useEffect(() => {
-      async function getData() {
-        try {
-          setLoading(true);
-  
-          const response = await axios.get(
-            // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
-            `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data/${user?.user_id}` , {
-              headers : {
-                "x-access-token" : user?.token
-              }
+    const getData = async ( empId) =>  {
+      try {
+        setLoading(true);
+
+        const response = await axios.get(
+          // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
+          `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data/${empId}` , {
+            headers : {
+              "x-access-token" : user?.token
             }
-            // "https://localhost:4000/api/v1/training/request-new-training"
-          );
-          setData(response?.data?.data);
-  
-          setLoading(false);
-        } catch (errorr) {
-          setErrorr(errorr);
-  
-          setLoading(false);
-        }
+          }
+          // "https://localhost:4000/api/v1/training/request-new-training"
+        );
+        setData(response?.data?.data);
+
+        setLoading(false);
+      } catch (errorr) {
+        setErrorr(errorr);
+
+        setLoading(false);
       }
+    }
+    React.useEffect(() => {
+      
       const fetchData = async () => {
         await Promise.all([
-          getData(),
           getUserLeaves(),
           leaveOverView()
         ]);
         setIsLoading(false);
       }
+      fetchAllEmployees();
       fetchData();
     },[]);
   
@@ -223,6 +260,7 @@ import {
             }}
           >
             <ToastContainer/>
+            <Box sx={{display : "flex" , justifyContent : "space-between"}}>
             <Typography
               sx={{
                 margin: "12px 0px",
@@ -237,6 +275,34 @@ import {
             >
               Leave Management
             </Typography>
+            <FormControl sx={{ minWidth: 220, mt: "10px" }}>
+          <InputLabel
+            id="demo-simple-select-label"
+            sx={{ color: "#333333", fontWeight: "400" }}
+          >
+            {/* Select Employee */}
+          </InputLabel>
+          {/* Replace the Select component with Autocomplete */}
+          <Autocomplete
+            options={employees}
+            getOptionLabel={(option) => option.name} // Display employee names
+            filterOptions={(options, state) => {
+              return options.filter(option =>
+                option.name.toLowerCase().includes(state.inputValue.toLowerCase())
+              );
+            }}
+            value={employees.find((emp) => emp.emp_id === filterEmpId) || null}
+            onChange={handleFilterChange}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select Employee"
+                variant="standard"
+              />
+            )}
+          />
+        </FormControl>
+            </Box>
             <Typography
               sx={{
                 margin: "12px 0px",

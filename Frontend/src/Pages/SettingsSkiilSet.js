@@ -216,16 +216,6 @@ export default function SettingsSkillSet() {
   };
 
   return (
-<<<<<<< HEAD
-    <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
-      <Grid container spacing={4}>
-        <Grid item xs={4}>
-          {formData.slice(0, midPoint).map((data, index) => (
-            <FormControl fullWidth>
-              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-                Skill {index + 1}
-              </FormLabel>
-=======
     <Box
       sx={{
         display: "flex",
@@ -248,7 +238,6 @@ export default function SettingsSkillSet() {
                 <FormLabel sx={{ color: "black", fontWeight: "600" }}>
                   Skill {index + 1}
                 </FormLabel>
->>>>>>> a977ca4 (setting page bugs fixes)
 
                 <TextField
                   key={index}
@@ -373,11 +362,7 @@ export default function SettingsSkillSet() {
             </Box>
           </Grid>
         </Grid>
-<<<<<<< HEAD
-      </Grid>
-=======
       </Box>
->>>>>>> a977ca4 (setting page bugs fixes)
     </Box>
   );
 }

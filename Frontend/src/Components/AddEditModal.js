@@ -9,7 +9,6 @@ import Grid from "@mui/material/Grid";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
-import dayjs from "dayjs";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -55,13 +54,12 @@ const labelStyle = {
   color: "rgb(120, 120, 122)",
 };
 
-export default function AddEditModal({ rows,fetchAssets }) {
+export default function AddEditModal({ rows }) {
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   const [open, setOpen] = useState(false);
   const [editedData, setEditedData] = useState({
-<<<<<<< HEAD
     asset_type: "",
     item: "",
     purchase_date: "",
@@ -71,49 +69,23 @@ export default function AddEditModal({ rows,fetchAssets }) {
     item_description: "",
     image_url: "",
     file: null,
-<<<<<<< HEAD
-<<<<<<< HEAD
-    public_id: "",
-=======
->>>>>>> 4dbe98c (worked on role access)
-=======
-    public_id: "",
->>>>>>> 3a0e9bc (fixed user dashboard page)
-=======
-
->>>>>>> a977ca4 (setting page bugs fixes)
   });
 
   const apiUrl = process.env.REACT_APP_API_URL;
   console.log(rows);
-  function calculateWarrantyPeriod(dop, warrantyEnd) {
-    const purchaseDate = dayjs(dop, "DD/MM/YYYY");
-    const warrantyEndDate = dayjs(warrantyEnd, "DD/MM/YYYY");
-    const warrantyPeriod = warrantyEndDate.diff(purchaseDate, "year");
-    return warrantyPeriod.toString();
-  }
+
   useEffect(() => {
     if (rows.length === 1) {
       const rowData = rows[0];
       setEditedData({
         asset_type: rowData.asset_type || "",
         item: rowData.item || "",
-        purchase_date:
-          dayjs(rowData.dop, "DD/MM/YYYY").format("YYYY-MM-DD") || "",
-        warranty_period:
-          calculateWarrantyPeriod(rowData.dop, rowData.warranty_End) || "",
+        purchase_date: rowData.dop || "",
+        warranty_period: rowData.warranty_period || "",
         price: rowData.price || "",
         model_number: rowData.model_number || "",
         item_description: rowData.description || "",
         image_url: rowData.photo || "",
-<<<<<<< HEAD
-<<<<<<< HEAD
-        public_id: rowData.public_id || "", // Store the public_id
-=======
->>>>>>> 4dbe98c (worked on role access)
-=======
-        public_id: rowData.public_id || "", // Store the public_id
->>>>>>> 3a0e9bc (fixed user dashboard page)
       });
     }
   }, [rows]);
@@ -121,19 +93,7 @@ export default function AddEditModal({ rows,fetchAssets }) {
   function handleUpdate() {
     const formData = new FormData();
     formData.append("asset_type", editedData.asset_type);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    formData.append("item", editedData.item); 
-=======
     formData.append("item", editedData.item);
->>>>>>> 4dbe98c (worked on role access)
-=======
-    formData.append("item", editedData.item); 
->>>>>>> 3a0e9bc (fixed user dashboard page)
-=======
-    formData.append("item", editedData.item);
->>>>>>> a977ca4 (setting page bugs fixes)
     formData.append("purchase_date", editedData.purchase_date);
     formData.append("warranty_period", editedData.warranty_period);
     formData.append("price", editedData.price);
@@ -141,26 +101,8 @@ export default function AddEditModal({ rows,fetchAssets }) {
     formData.append("item_description", editedData.item_description);
     if (editedData.file) {
       formData.append("file", editedData.file);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-      formData.append("public_id",editedData?.public_id);
     }
 
-=======
-    }
->>>>>>> 4dbe98c (worked on role access)
-=======
-      formData.append("public_id",editedData?.public_id);
-    }
-
->>>>>>> 3a0e9bc (fixed user dashboard page)
-
-=======
-      formData.append("public_id", editedData?.public_id);
-    }
-
->>>>>>> a977ca4 (setting page bugs fixes)
     axios
       .put(`${apiUrl}/asset/admin/update-asset/${rows[0]?.inId}`, formData, {
         headers: {
@@ -170,7 +112,6 @@ export default function AddEditModal({ rows,fetchAssets }) {
       })
       .then((response) => {
         toast.success("Asset updated successfully");
-        fetchAssets();
         setOpen(false);
       })
       .catch((error) => {

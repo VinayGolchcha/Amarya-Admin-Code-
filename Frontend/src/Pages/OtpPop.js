@@ -1,3 +1,4 @@
+
 import { TextField, Button } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
@@ -5,25 +6,6 @@ import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import "./../App.css";
 import Model from "./Model";
-<<<<<<< HEAD
-
-function OtpP({ closeOtpP }) {
-    const [otp, setOtp] = useState("");
-     const[openModel,setOpenModel]=useState(false)
-
-const handleUpdate = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/user/update-password",
-        {
-         otp,
-        }
-      );
-      console.log(response);
-     } catch (error) {
-      console.log("Error data:", error.response.data.errors[0]?.msg);
-    
-=======
 import OtpInput from "./OtpInput";
 
 function OtpP({ closeOtpP, email }) {
@@ -48,7 +30,6 @@ function OtpP({ closeOtpP, email }) {
       }
     } catch (error) {
       console.log("Error data:", error);
->>>>>>> a977ca4 (setting page bugs fixes)
     }
   };
   return (
@@ -57,16 +38,6 @@ function OtpP({ closeOtpP, email }) {
         style={{
           backgroundColor: "white",
           borderRadius: "10px",
-<<<<<<< HEAD
-          height: "100vh",
-          width: "100vw",
-          position: "absolute",
-          top: "-250px",
-        //   left: "800px",
-          zIndex: "11",
-=======
-
->>>>>>> a977ca4 (setting page bugs fixes)
         }}
         className="modelbackgroundd"
       >
@@ -113,20 +84,12 @@ function OtpP({ closeOtpP, email }) {
 
           <div>
             <h1>OTP Verification</h1>
-<<<<<<< HEAD
-            <p >
-             Please Enter The OTP Sent To Your Email To <br></br>
-            Complete The Verification process
-            </p>  
-        <TextField
-=======
             <p>
               Please Enter The OTP Sent To Your Email To <br></br>
               Complete The Verification process
             </p>
             <OtpInput numInputs={4} onOtpChange={setOtp} />
             {/* <TextField
->>>>>>> a977ca4 (setting page bugs fixes)
               id="filled-basic"
               variant="filled"
               inputProps={{ maxLength: 1 }} 
@@ -189,13 +152,8 @@ function OtpP({ closeOtpP, email }) {
                 borderRadius: "5px",
                 border: "1px solid #FF5151",
                 backgroundColor: "white",
-<<<<<<< HEAD
-              }}
-            />
-=======
               }} */}
             {/* /> */}
->>>>>>> a977ca4 (setting page bugs fixes)
             <br></br>
             <br></br>
            
@@ -214,22 +172,12 @@ function OtpP({ closeOtpP, email }) {
               }}
               variant="contained"
               color="primary"
-<<<<<<< HEAD
-            //   onClick={handleUpdate}
-              onClick={()=>setOpenModel(true)}
-          
-            >
-              Verify otp
-            </Button>
-            { openModel && <Model closeModel={setOpenModel}/>}
-=======
               onClick={handleUpdate}
               // onClick={()=>setOpenModel(true)}
             >
               Verify otp
             </Button>
             {openModel && <Model closeModel={setOpenModel} email={email} />}
->>>>>>> a977ca4 (setting page bugs fixes)
 
             <br></br>
           </div>

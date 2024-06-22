@@ -9,12 +9,9 @@ import "./EmailPop";
 import EmailP from "./EmailPop";
 import { useAuth } from "../Components/AuthContext";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
-=======
 import "react-toastify/dist/ReactToastify.css";
 import OtpP from "./OtpPop";
 import { toast } from "react-toastify";
->>>>>>> a977ca4 (setting page bugs fixes)
 
 const LoginPage = () => {
   const { login } = useAuth();

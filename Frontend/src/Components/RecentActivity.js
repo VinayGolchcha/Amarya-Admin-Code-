@@ -9,17 +9,6 @@ export default function RecentActivity({ activities }) {
   
   // Get the most recent activity
   const recentActivity = sortedActivities.length > 0 ? sortedActivities[0] : null;
-
-<<<<<<< HEAD
-=======
-export default function RecentActivity({ activities }) {
-  // Sort activities by created_at in descending order to get the most recent one first
-  const sortedActivities = activities.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-  
-  // Get the most recent activity
-  const recentActivity = sortedActivities.length > 0 ? sortedActivities[0] : null;
-
->>>>>>> 3a0e9bc (fixed user dashboard page)
   return (
     <Box sx={{ p: 0, border: "1px solid #E0E0E0", borderRadius: "12px" }}>
       <Box
