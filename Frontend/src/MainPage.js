@@ -25,7 +25,9 @@ import WorksheetPage from "./Pages/WorksheetPage";
 import TrainingsPageAdmin from "./Pages/TrainingsPageAdmin";
 import ActivityPage from "./Pages/ActivityPage";
 import { useAuth } from "./Components/AuthContext";
+import AdminLeaveManagement from "./Pages/AdminLeaveManagement";
 import PrivateRoute from "./Pages/PrivateComponent";
+
 
 const drawerWidth = 240;
 
@@ -78,6 +80,35 @@ const MainPage = (props) => {
         }}
       >
         <Routes>
+          {/* {role === "user" && <Route path="/" element={<DashboardPage />} />} */}
+          {/* {role === "user" && <Route path="/assets" element={<AssetsPage />} />} */}
+          <Route path="/leaves" element={role === "user" ? <LeaveManagementPage /> : <AdminLeaveManagement />} />
+          {/* {role === "user" && (
+            <Route path="/trainings" element={<TrainingsPage />} />
+          )} */}
+          {/* <Route path="/policies" element={<PoliciesPage />} />
+          {role === "admin" && (
+            <Route path="/settings" element={<SettingsPage />} />
+          )}
+          {role === "admin" && (
+            <Route path="/trainings" element={<TrainingsPageAdmin />} />
+          )} */}
+          <Route path="/profile" element={<UserProfilePage />}></Route>
+          <Route path="/announcements" element={<AnnouncementPage />}></Route>
+          <Route path="/activities" element={<ActivitiesPage />} />
+          {/* {role === "admin" && (
+            <Route path="/worksheet" element={<AdminWorkSheet />} />
+          )} */}
+          {/* {role === "user" && (
+            <Route path="/worksheet" element={<WorksheetPage />} />
+          )} */}
+
+          {/* {role === "admin" && (
+            <Route path="/assets" element={<AssetsAdminPage />} />
+          )} */}
+          {/* {role === "admin" && (<Route path="/" element={<AdminDashboard />} />)} */}
+          {/* {role === "admin" && (<Route path="/anouncement" element={<AdminAnnouncement />} />)} */}
+          <Route path="/activities/:activityId" element={<ActivityPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route
             path="/"
@@ -94,10 +125,6 @@ const MainPage = (props) => {
                 element={role === "user" ? AssetsPage : AssetsAdminPage}
               />
             }
-          />
-          <Route
-            path="/leaves"
-            element={<PrivateRoute element={LeaveManagementPage} />}
           />
           <Route
             path="/trainings"

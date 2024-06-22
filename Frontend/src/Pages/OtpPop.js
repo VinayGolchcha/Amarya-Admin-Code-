@@ -1,3 +1,4 @@
+
 import { TextField, Button } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
@@ -37,7 +38,6 @@ function OtpP({ closeOtpP, email }) {
         style={{
           backgroundColor: "white",
           borderRadius: "10px",
-
         }}
         className="modelbackgroundd"
       >

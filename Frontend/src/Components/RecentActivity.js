@@ -8,7 +8,6 @@ export default function RecentActivity({ activities }) {
   const navigate = useNavigate();
   // Get the most recent activity
   const recentActivity = sortedActivities.length > 0 ? sortedActivities[0] : null;
-
   return (
     <Box sx={{ p: 0, border: "1px solid #E0E0E0", borderRadius: "12px" }}>
       <Box

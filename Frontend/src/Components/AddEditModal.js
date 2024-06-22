@@ -84,7 +84,6 @@ export default function AddEditModal({ rows,fetchAssets }) {
         model_number: rowData.model_number || "",
         item_description: rowData.description || "",
         image_url: rowData.photo || "",
-        public_id: rowData.public_id || "", // Store the public_id
       });
     }
   }, [rows]);

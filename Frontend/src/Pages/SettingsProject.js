@@ -78,7 +78,7 @@ export default function SettingsProject() {
             "Start Of The Project": startMonth,
             "End Of The Project": endMonth,
             "Project Status": item.project_status,
-            Category: item.category,
+            "Category": item.category,
             category_id: item.category_id,
             project_id: item.project_id,
           };

@@ -196,6 +196,7 @@ export default function SettingsSkillSet() {
 
       setEditMode(false);
     }
+     
   };
 
   const handleInputChange = (index, fieldName, value) => {

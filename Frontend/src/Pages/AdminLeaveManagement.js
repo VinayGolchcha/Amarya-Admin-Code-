@@ -19,7 +19,10 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  Autocomplete,
 } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import NativeSelect from "@mui/material/NativeSelect";
 import axios from "axios";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -49,79 +52,83 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 const cls = "";
 
-export default function LeaveMangementPage() {
+export default function AdminLeaveManagement() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [fromDate, setFromDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
-  const [leaveType, setLeaveType] = React.useState("Casual Leave");
+  const [leaveType, setLeaveType] = React.useState("");
+  const [filterEmpName, setFilterEmpName] = React.useState("");
   const [subject, setSubject] = React.useState("");
   const [body, setBody] = React.useState("");
   const [rows, setRows] = React.useState([]);
   const [leaveOverviewData, setLeaveOverviewData] = React.useState([]);
-  const [leaveTypes, setLeaveTypes] = React.useState([]); // State for le
-  const apiUrl = process.env.REACT_APP_API_URL;
-
-  ////
-
-  // new code
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || "");
   const [error, setError] = React.useState("");
   const [data, setData] = React.useState(null);
-
+  const [employees, setEmployees] = React.useState([]);
+  const [filterEmpId, setFilterEmpId] = React.useState("");
   const [loading, setLoading] = React.useState(true);
-
+  const apiUrl = process.env.REACT_APP_API_URI;
   const [errorr, setErrorr] = React.useState(null);
-  const { user } = useAuth();
-  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+  const [filterDropdown, setFilterDropdown] = React.useState([]);
   const today = new Date();
 
   // const [error, setError]  = React.useState(null);
 
   // const handleClick = async() => {
 
-  const leaveOverView = async () => {
-    try {
-      const res = await axios.post(
-        `${apiUrl}/leave/fetch-leave-overview`,
-        {
-          emp_id: user?.user_id,
-          status: "approved",
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-access-token": token,
-          },
-        }
-      );
-      setLeaveOverviewData(res?.data?.data);
-    } catch (err) {
-      toast.error(err?.response?.message);
+  const handleFilterChange = (event, newValue) => {
+    if (newValue === null) {
+      setData([]);
+      setRows([]);
+      setFilterEmpName("");
+      setFilterEmpId("");
+      return;
     }
-  };
-  const fetchLeaveData = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_API_URI}/leave/fetch-leave-type-and-count`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "x-access-token": token,
-          },
-        }
-      );
-      setLeaveTypes(response.data.data); // Update the leave types state
-    } catch (error) {
-      console.error("Error fetching leave types:", error);
+    if (newValue) {
+      setFilterEmpId(newValue.emp_id); // Set the employee ID for fetching data
+      setFilterEmpName(newValue.name);
+      getData(newValue.emp_id);
+      getUserLeaves(newValue.emp_id);
+      // Fetch worksheet data for selected employee
+    } else {
+      setFilterEmpName("");
+      setFilterEmpId("");
     }
   };
 
-  const getUserLeaves = async () => {
+  const fetchAllEmployees = async () => {
+    try {
+      const response = await fetch(`${apiUrl}/user/fetch-all-employee-ids`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": token,
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      if (data.success) {
+        setEmployees(data.data); // Assuming data.data contains the list of employees
+        setFilterDropdown(data.data.map((emp) => emp.emp_id)); // Assuming emp_id is the identifier
+      } else {
+        console.error("Failed to fetch employees:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching employees:", error);
+    }
+  };
+
+  const getUserLeaves = async (empId) => {
     try {
       const res = await axios.post(
         `${apiUrl}/leave/user-all-leave-data`,
         {
-          emp_id: user?.user_id,
+          emp_id: empId,
         },
         {
           headers: {
@@ -133,44 +140,40 @@ export default function LeaveMangementPage() {
       setRows(res?.data?.data || []); // Ensure to handle empty response data gracefully
     } catch (err) {
       console.log(err);
+      setRows([]);
+    }
+  };
+  const getData = async (empId) => {
+    try {
+      setLoading(true);
+
+      const response = await axios.get(
+        // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
+        `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data/${empId}`,
+        {
+          headers: {
+            "x-access-token": user?.token,
+          },
+        }
+        // "https://localhost:4000/api/v1/training/request-new-training"
+      );
+      setData(response?.data?.data);
+
+      setLoading(false);
+    } catch (errorr) {
+      setErrorr(errorr);
+
+      setLoading(false);
     }
   };
   React.useEffect(() => {
-    async function getData() {
-      try {
-        setLoading(true);
-
-        const response = await axios.get(
-          // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
-          `${apiUrl}/leave/get-user-leave-dashboard-data/${user?.user_id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "x-access-token": token,
-            },
-          }
-        );
-        setData(response?.data?.data);
-
-        setLoading(false);
-      } catch (errorr) {
-        setErrorr(errorr);
-
-        setLoading(false);
-      }
-    }
-    const fetchData = async () => {
-      await Promise.all([getData(), getUserLeaves(), leaveOverView()]);
-      fetchLeaveData(); // Fetch leave types on component mount
-      setIsLoading(false);
-    };
-    fetchData();
+    fetchAllEmployees();
   }, []);
 
   const handleUpdate = async () => {
     try {
       const response = await axios.post(
-        `${apiUrl}/leave/leave-request`,
+        `${process.env.REACT_APP_API_URI}/leave/leave-request`,
         {
           emp_id: user?.user_id,
           leave_type: leaveType,
@@ -181,8 +184,7 @@ export default function LeaveMangementPage() {
         },
         {
           headers: {
-            "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-access-token": user?.token,
           },
         }
       );
@@ -233,7 +235,7 @@ export default function LeaveMangementPage() {
   const currentDate = new Date();
 
   let row;
-  if (isLoading) {
+  if (!isLoading) {
     return <Loading />;
   } else {
     return (
@@ -248,20 +250,53 @@ export default function LeaveMangementPage() {
           }}
         >
           <ToastContainer />
-          <Typography
-            sx={{
-              margin: "12px 0px",
-              width: "630px",
-              height: "42px",
-              fontFamily: "Poppins",
-              fontSize: "24px",
-              fontWeight: "500",
-              lineHeight: "42px",
-              color: "#121843",
-            }}
-          >
-            Leave Management
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography
+              sx={{
+                margin: "12px 0px",
+                width: "630px",
+                height: "42px",
+                fontFamily: "Poppins",
+                fontSize: "24px",
+                fontWeight: "500",
+                lineHeight: "42px",
+                color: "#121843",
+              }}
+            >
+              Leave Management
+            </Typography>
+            <FormControl sx={{ minWidth: 220, mt: "10px" }}>
+              <InputLabel
+                id="demo-simple-select-label"
+                sx={{ color: "#333333", fontWeight: "400" }}
+              >
+                {/* Select Employee */}
+              </InputLabel>
+              {/* Replace the Select component with Autocomplete */}
+              <Autocomplete
+                options={employees}
+                getOptionLabel={(option) => option.name} // Display employee names
+                filterOptions={(options, state) => {
+                  return options.filter((option) =>
+                    option.name
+                      .toLowerCase()
+                      .includes(state.inputValue.toLowerCase())
+                  );
+                }}
+                value={
+                  employees.find((emp) => emp.emp_id === filterEmpId) || null
+                }
+                onChange={handleFilterChange}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Select Employee"
+                    variant="standard"
+                  />
+                )}
+              />
+            </FormControl>
+          </Box>
           <Typography
             sx={{
               margin: "12px 0px",
@@ -274,7 +309,7 @@ export default function LeaveMangementPage() {
               color: "#121843",
             }}
           >
-            {user?.user_id} - {user?.user_name}
+            {filterEmpName} - {filterEmpId}
           </Typography>
           <Box
             sx={{
@@ -376,226 +411,6 @@ export default function LeaveMangementPage() {
               </ol>
             </Card>
           </Box>
-          <Grid
-            container
-            spacing={1}
-            sx={{ margin: "6px 0px", justifyContent: "space-between" }}
-          >
-            <Grid item lg={6} md={6} sm={12} xs={12}>
-              <Box
-                p={1}
-                sx={{
-                  backgroundColor: "#FFFFFF",
-                  height: "auto",
-                  width: "auto",
-                  border: "1px solid #E0E0E0E0",
-                  borderRadius: "12px",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    color: "#161E54",
-                    fontSize: "1.4rem",
-                    marginLeft: "15px",
-                  }}
-                >
-                  Leave Application{" "}
-                  <Box
-                    sx={{
-                      width: { lg: "35%", md: "40%", sm: "40%", xs: "43%" },
-                    }}
-                  >
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DatePicker
-                        sx={{
-                          margin: "4px 0px",
-                          "&.MuiTextField-root .MuiInputBase-input::placeholder":
-                            {
-                              fontSize:
-                                "14px" /* Adjust the font size as needed */,
-                            },
-                        }}
-                        label="From Date"
-                        value={fromDate}
-                        minDate={currentDate}
-                        onChange={handleFromDateChange}
-                        renderInput={(params) => (
-                          <TextField {...params} size="small" />
-                        )}
-                        slotProps={{ textField: { size: "small" } }}
-                      />
-                      <DatePicker
-                        label="To Date"
-                        sx={{
-                          "&.MuiTextField-root .MuiInputBase-input::placeholder":
-                            {
-                              fontSize:
-                                "14px" /* Adjust the font size as needed */,
-                            },
-                        }}
-                        value={toDate}
-                        minDate={fromDate} // Set the minDate based on fromDate
-                        // onChange={(newDate) => setToDate(newDate)}
-                        onChange={handleToDateChange}
-                        renderInput={(params) => (
-                          <TextField {...params} size="small" />
-                        )}
-                        slotProps={{ textField: { size: "small" } }}
-                      />
-                    </LocalizationProvider>
-                  </Box>
-                </Box>
-                <InputLabel
-                  id="demo-simple-select-label"
-                  sx={{ fontSize: "12px" }}
-                >
-                  Leave Type
-                </InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={leaveType}
-                  label="leaveType"
-                  sx={{ width: "100%", backgroundColor: "#fafafa" }}
-                  onChange={handleChange}
-                >
-                  {leaveTypes?.map((type) => (
-                    <MenuItem key={type.leave_type} value={type.leave_type}>
-                      {type.leave_type}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <br />
-                <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
-                <TextField
-                  variant="outlined"
-                  onChange={(e) => setSubject(e.target.value)}
-                  sx={{ width: "100%", backgroundColor: "#fafafa" }}
-                />
-                <FormLabel sx={{ margin: "2px 0px", fontSize: "12px" }}>
-                  Body
-                </FormLabel>
-                <TextField
-                  multiline
-                  rows={3}
-                  variant="outlined"
-                  onChange={(e) => setBody(e.target.value)}
-                  sx={{ width: "100%", backgroundColor: "#fafafa" }}
-                />
-              </Box>
-              <Button
-                variant="outlined"
-                sx={{
-                  color: "red",
-                  borderColor: "white",
-                  border: "1px solid #E0E0E0E0",
-                  width: "100%",
-                  borderBottomLeftRadius: "12px",
-                  borderBottomRightRadius: "12px",
-                  textTransform: "none",
-                  marginTop: "9px",
-                  "&:hover": {
-                    borderColor: "#E0E0E0E0",
-                  },
-                }}
-                onClick={handleUpdate}
-              >
-                Send to admin
-              </Button>
-            </Grid>
-            <Grid item lg={6} md={6} sm={12} xs={12}>
-              <Box
-                p={1}
-                sx={{
-                  backgroundColor: "#FFFFFF",
-                  height: "auto",
-                  width: "auto",
-                  border: "1px solid #E0E0E0E0",
-                  borderRadius: "12px",
-                }}
-              >
-                <Box
-                  sx={{
-                    color: "#161E54",
-                    fontSize: "1.4rem",
-                    display: "flex",
-                    flexWrap: "wrap",
-                    justifyContent: "space-between",
-                    marginLeft: "15px",
-                  }}
-                >
-                  Leaves Overview
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      sx={{
-                        width: "35%",
-                        "&.MuiTextField-root .MuiInputBase-input::placeholder":
-                          {
-                            fontSize:
-                              "14px" /* Adjust the font size as needed */,
-                          },
-                      }}
-                      label={"MM/YYYY"}
-                      views={["month", "year"]}
-                      slotProps={{ textField: { size: "small" } }}
-                    />
-                  </LocalizationProvider>
-                  {/* date code ends here */}
-                </Box>
-                <Typography
-                  sx={{
-                    fontFamily: "Poppins",
-                    color: "#686868",
-                    fontSize: "12px",
-                    marginTop: "4px",
-                    marginLeft: "10px",
-                  }}
-                >
-                  {" "}
-                  Details of Leave taken in the Past
-                </Typography>
-                <Box
-                  sx={{
-                    width: "auto",
-                    overflow: "auto",
-                    margin: "4px 0px",
-                  }}
-                >
-                  <List
-                    sx={{
-                      width: "100%",
-                      padding: "4px 0px",
-                      height: { lg: "340px", md: "362px", sm: "305px" },
-                    }}
-                  >
-                    {leaveOverviewData?.map((item) => (
-                      <ListItem
-                        sx={{
-                          backgroundColor: "#fafafa",
-                          margin: "5px 0px",
-                          border: "0.5px solid #E0E0E0",
-                          borderRadius: "6px",
-                        }}
-                      >
-                        <ListItemText
-                          primary={item?.leave_type}
-                          secondary={
-                            <React.Fragment>
-                              {formattedLeaveDate(item?.from_date)} -{" "}
-                              {formattedLeaveDate(item?.to_date)}
-                            </React.Fragment>
-                          }
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-                </Box>
-              </Box>
-            </Grid>
-          </Grid>
           <Typography
             color="error"
             variant="h6"
@@ -621,7 +436,7 @@ export default function LeaveMangementPage() {
                       component="img"
                       src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
                       alt="Check"
-                      sx={{ paddingRight: "20px" }}
+                      sx={{ paddingRight: "10px" }}
                       // onClick= {handleClick}
                     />
                     S.no
@@ -669,16 +484,7 @@ export default function LeaveMangementPage() {
                       fontFamily: "Poppins",
                     }}
                   >
-                    Extended Leave
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      backgroundColor: "#161e54",
-                      color: "#ffffff",
-                      fontFamily: "Poppins",
-                    }}
-                  >
-                    Approved/Rejected
+                    Status
                   </TableCell>
                   <TableCell
                     style={{
@@ -699,8 +505,8 @@ export default function LeaveMangementPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  rows?.map((row, index) => (
-                    <TableRow key={row.id}>
+                  rows?.map((row, i) => (
+                    <TableRow key={row?._id}>
                       <TableCell
                         style={{ fontFamily: "Poppins", minWidth: "110px" }}
                       >
@@ -709,44 +515,39 @@ export default function LeaveMangementPage() {
                           src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
                           alt="Check"
                           style={{ filter: "invert(1)" }}
-                          sx={{ paddingRight: "29px" }}
+                          sx={{ paddingRight: "9px" }}
                         />
-                        {index + 1}
+                        {i + 1}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.from_date}
+                        {row?.from_date}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.to_date}
+                        {row?.to_date}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.total_days}
+                        {row?.total_days}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.leave_type}
+                        {row?.leave_type}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.extendedLeave || "-"}
+                        {row?.status}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.status}
-                      </TableCell>
-                      <TableCell
-                        style={{ fontFamily: "Poppins", color: "#74828F" }}
-                      >
-                        {row.manager}
+                        {row?.manager}
                       </TableCell>
                     </TableRow>
                   ))
