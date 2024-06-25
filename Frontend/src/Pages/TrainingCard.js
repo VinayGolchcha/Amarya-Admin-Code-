@@ -87,7 +87,7 @@ export default function TrainingCard({ field, i  , setTrainingId , handleRequest
                   color: "#4A4949",
                 }}
               >
-                {field?.courseDescription?.slice(0,201)}
+                {field?.courseDescription?.slice(0,201)}...
               </Typography>
             </CardContent>
           </Card>

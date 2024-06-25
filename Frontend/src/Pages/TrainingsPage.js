@@ -105,7 +105,7 @@ export default function TrainingsPage(props) {
       coursedescription: item?.course_description,
       completedinprogress: item?.progress_status,
       approvedon: "Nov 1, 22",
-      approvedrejected: "Approved",
+      approvedrejected: item?.status,
       manager: "HR",
     })));
 

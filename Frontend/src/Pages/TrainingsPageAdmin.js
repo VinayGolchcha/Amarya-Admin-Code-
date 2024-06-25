@@ -127,6 +127,10 @@ export default function TrainingsPageAdmin( ) {
     course_description: "HTML, CSS, React JS, Node JS, Express Js, MongoDB",
     details: "HTML, CSS, React JS, Node JS, Express Js, MongoD"
   });
+
+  const handleReset = () => {
+    setEdit(false);
+  }
   
   const addTraining = async (body) => {
     try {
@@ -145,6 +149,7 @@ export default function TrainingsPageAdmin( ) {
         });
     }
   }
+  
   const fecthTrainings = async () => {
     setIsLoading(true);
     try {
@@ -383,7 +388,7 @@ export default function TrainingsPageAdmin( ) {
               justifyContent: "center",
             }}
           >
-            <Grid container spacing={2}>
+            <Grid container spacing={2} onClick = {handleReset} >
               {courses?.map((course) => {
                 return <TrainingCard field={course}   key={course.training_id}  logo= {DeleteOutlineIcon} edit={edit} deleteItem = {deleteItem} handleDeleteApi = {handleConfirmDelete} setTrainingId = {setTrainingId} setSelectedTr = {setSelectedTr} setEditOpen = {setEditOpen}/>;
               })}

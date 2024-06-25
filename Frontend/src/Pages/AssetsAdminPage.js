@@ -27,6 +27,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
+import ConfirmDelete from "../Components/ConfirmDelete";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -145,14 +146,18 @@ const rows = [
 ];
 let row;
 export default function AssetsAdminPage() {
+  const [openConDel, setOpenConDel] = React.useState(false);
+  const handleOpenConDel = () => setOpenConDel(true);
+  const handleCloseConDel = () => setOpenConDel(false);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [assetsData, setAssetsData] = React.useState(rows);
   const [isAdd, setIsAdd] = React.useState(false);
+  const [id , setId] = useState(null);
   const [open, setOpen] = React.useState(false);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = process.env.REACT_APP_API_URI;
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
@@ -244,12 +249,19 @@ export default function AssetsAdminPage() {
     setPage(0);
   };
 
-  function handleDelete() {
-    // Filter out the rows that are selected for deletion
+  const handleConfirmDelete = () => {
+    console.log("delete called")
     const selectedIds = selectedRows.map((row) => row.inId);
-    console.log(selectedIds[0]);
+    setId(selectedIds[0]);
+    handleOpenConDel();
+  }
+
+  function handleDelete(id) {
+    // Filter out the rows that are selected for deletion
+    // const selectedIds = selectedRows.map((row) => row.inId);
+    // console.log(selectedIds[0]);
     axios
-      .delete(`${apiUrl}/asset/admin/delete-asset/${selectedIds[0]}`, {
+      .delete(`${apiUrl}/asset/admin/delete-asset/${id}`, {
         headers: {
           "x-access-token": token,
         },
@@ -260,12 +272,14 @@ export default function AssetsAdminPage() {
           setSelectedRows([]);
           fetchAssets();
           toast.success("Selected asset deleted successfully");
+          handleCloseConDel();
         } else {
           const errorMessage =
             response.data.message ||
             "An error occurred while deleting the asset";
           console.log(errorMessage);
           toast.error(errorMessage);
+          handleCloseConDel();
         }
       })
       .catch((error) => {
@@ -318,6 +332,7 @@ export default function AssetsAdminPage() {
             Assets
           </Typography>
           <Box sx={{ boxSizing: "border-box" }}>
+          <ConfirmDelete open={openConDel} handleClose={handleCloseConDel} handleIncomeDelete ={handleDelete} id ={id}/>
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
@@ -563,7 +578,7 @@ export default function AssetsAdminPage() {
                       fetchAssets={fetchAssets}
                     />
                     <EditDeleteIcons
-                      deleteAction={handleDelete}
+                      deleteAction={handleConfirmDelete}
                       rows={selectedRows}
                     />
                   </TableCell>

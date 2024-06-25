@@ -398,7 +398,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                       5,
                       10,
                       25,
-                      { label: "All", value: -1 },
+                      { label: "All", value: approvalData?.length },
                     ]}
                     colSpan={6}
                     count={rows.length}

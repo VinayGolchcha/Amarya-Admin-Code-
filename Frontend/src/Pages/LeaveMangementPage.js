@@ -53,6 +53,7 @@ export default function LeaveMangementPage() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [fromDate, setFromDate] = React.useState(null);
+  const [date , setDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
   const [leaveType, setLeaveType] = React.useState("Casual Leave");
   const [subject, setSubject] = React.useState("");
@@ -60,7 +61,7 @@ export default function LeaveMangementPage() {
   const [rows, setRows] = React.useState([]);
   const [leaveOverviewData, setLeaveOverviewData] = React.useState([]);
   const [leaveTypes, setLeaveTypes] = React.useState([]); // State for le
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = process.env.REACT_APP_API_URI;
 
   ////
 
@@ -79,6 +80,28 @@ export default function LeaveMangementPage() {
   
 
   // const handleClick = async() => {
+
+  const leaveOverViewByDate = async (date) => {
+    try {
+      const res = await axios.post(
+        `${apiUrl}/leave/fetch-leave-overview`,
+        {
+          emp_id: user?.user_id,
+          date : date,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "x-access-token": token,
+          },
+        }
+      )
+      setLeaveOverviewData(res?.data?.data)
+    }catch(err){
+      toast.error(err?.response?.message);
+    }
+  };
+  
 
   const leaveOverView = async () => {
     try {
@@ -194,7 +217,7 @@ export default function LeaveMangementPage() {
       toast.success(response?.data?.message);
     } catch (error) {
       const errors = error?.response?.data?.errors;
-      errors.forEach((item) => {
+      errors?.forEach((item) => {
         toast.error(item?.msg);
       });
       console.error("Error:", error);
@@ -230,6 +253,14 @@ export default function LeaveMangementPage() {
     setLeaveType(e.target.value);
   }
 
+  function handleDateChange(newDate){
+    const date = new Date(newDate);
+    const isoDate = date?.toISOString()?.split("T")[0];
+    leaveOverViewByDate(isoDate);
+    setDate(isoDate);
+    
+  }
+
   const formattedLeaveDate = (date) => {
     const newdate = new Date(date);
     const dateStr = newdate.toString().split(" ");
@@ -239,7 +270,7 @@ export default function LeaveMangementPage() {
 
   let row;
   if (isLoading) {
-    return <Loading />;
+    return (<Loading />);
   } else {
     return (
       <>
@@ -531,21 +562,26 @@ export default function LeaveMangementPage() {
                   }}
                 >
                   Leaves Overview
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker
-                      sx={{
-                        width: "35%",
-                        "&.MuiTextField-root .MuiInputBase-input::placeholder":
-                          {
-                            fontSize:
-                              "14px" /* Adjust the font size as needed */,
-                          },
-                      }}
-                      label={"MM/YYYY"}
-                      views={["month", "year"]}
-                      slotProps={{ textField: { size: "small" } }}
-                    />
-                  </LocalizationProvider>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        sx={{
+                          width: "35%",
+                          "&.MuiTextField-root .MuiInputBase-input::placeholder":
+                            {
+                              fontSize:
+                                "14px" /* Adjust the font size as needed */,
+                            },
+                        }}
+                        label="Select Date"
+                        value={date}
+                        minDate={currentDate}
+                        onChange={handleDateChange}
+                        renderInput={(params) => (
+                          <TextField {...params} size="small" />
+                        )}
+                        slotProps={{ textField: { size: "small" } }}
+                      />
+                    </LocalizationProvider>
                   {/* date code ends here */}
                 </Box>
                 <Typography
@@ -671,16 +707,7 @@ export default function LeaveMangementPage() {
                       fontFamily: "Poppins",
                     }}
                   >
-                    Extended Leave
-                  </TableCell>
-                  <TableCell
-                    style={{
-                      backgroundColor: "#161e54",
-                      color: "#ffffff",
-                      fontFamily: "Poppins",
-                    }}
-                  >
-                    Approved/Rejected
+                    Status
                   </TableCell>
                   <TableCell
                     style={{
@@ -701,7 +728,7 @@ export default function LeaveMangementPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  rows?.map((row) => (
+                  rows?.map((row , i) => (
                     <TableRow key={row.id}>
                       <TableCell
                         style={{ fontFamily: "Poppins", minWidth: "110px" }}
@@ -713,42 +740,37 @@ export default function LeaveMangementPage() {
                           style={{ filter: "invert(1)" }}
                           sx={{ paddingRight: "9px" }}
                         />
-                        {row.id}
+                        {i+1}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.startDate}
+                        {row?.from_date}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.endDate}
+                        {row?.to_date}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.days}
+                        {row?.total_days}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.leaveType}
+                        {row?.leave_type}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.extendedLeave}
+                        {row?.status}
                       </TableCell>
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.approvedrejected}
-                      </TableCell>
-                      <TableCell
-                        style={{ fontFamily: "Poppins", color: "#74828F" }}
-                      >
-                        {row.manager}
+                        {row?.manager}
                       </TableCell>
                     </TableRow>
                   ))
