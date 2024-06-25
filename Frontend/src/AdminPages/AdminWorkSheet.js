@@ -202,6 +202,7 @@ const WorkSheet = () => {
   };
 
   const handleChangePage = (event, newPage) => {
+    console.log(newPage);
     setCurrentPage(newPage);
   };
   const [selectedOption, setSelectedOption] = useState("");

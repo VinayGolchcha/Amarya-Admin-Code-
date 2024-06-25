@@ -388,6 +388,7 @@ const UserProfilePage = () => {
 
     if (formData.file) {
       formDataToSend.append("file", formData.file);
+      setProfilePhoto(formData.profile_picture); // Set the profile photo in context
     }
 
     try {

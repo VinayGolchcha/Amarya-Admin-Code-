@@ -115,7 +115,7 @@ export default function TrainingCard({
                   color: "#4A4949",
                 }}
               >
-                {field?.courseDescription?.slice(0,201)}
+                {field?.courseDescription?.slice(0,201)}...
               </Typography>
             </CardContent>
           </Card>

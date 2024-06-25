@@ -91,18 +91,33 @@ const ProjectDetails = () => {
         toast.success(response.data.message);
         fetchUserProjects();
       } else {
-        console.error("Error updating project:", response.data.message || response.data.errors.map(error => `${error.path}: ${error.msg}`).join(', '));
-        toast.error(response.data.message || response.data.errors.map(error => `${error.path}: ${error.msg}`).join(', '));
+        console.error(
+          "Error updating project:",
+          response.data.message ||
+            response.data.errors
+              .map((error) => `${error.path}: ${error.msg}`)
+              .join(", ")
+        );
+        toast.error(
+          response.data.message ||
+            response.data.errors
+              .map((error) => `${error.path}: ${error.msg}`)
+              .join(", ")
+        );
       }
     } catch (error) {
-        if (error.response && error.response.status === 400) {
-            // Handle 400 errors specifically
-            const errors = error.response.data.errors;
-            const errorMessage = errors ? errors.map(err => `${err.path}: ${err.msg}`).join(', ') : error.response.data.message;
-        
-            console.error("Error updating project:", errorMessage);
-            toast.error(errorMessage);
-    }}};
+      if (error.response && error.response.status === 400) {
+        // Handle 400 errors specifically
+        const errors = error.response.data.errors;
+        const errorMessage = errors
+          ? errors.map((err) => `${err.path}: ${err.msg}`).join(", ")
+          : error.response.data.message;
+
+        console.error("Error updating project:", errorMessage);
+        toast.error(errorMessage);
+      }
+    }
+  };
 
   const handleChange2 = (e) => {
     const { name, value } = e.target;
@@ -422,6 +437,12 @@ const ProjectDetails = () => {
                 label={item.label}
                 value={newProject[item.field]}
                 onChange={handleNewProjectChange}
+                InputLabelProps={{
+                  shrink:
+                    item.field === "start_month" ||
+                    item.field === "end_month" ||
+                    newProject[item.field] !== "", // Add shrink prop
+                }}
               />
             ))}
             <FormControl fullWidth margin="normal">
