@@ -177,6 +177,7 @@ const AssetsPage = () => {
           draggable: true,
           progress: undefined,
         });
+        fetchData();
       })
       .catch((error) => {
         // Handle error
@@ -207,33 +208,32 @@ const AssetsPage = () => {
         });
       });
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          `${apiUrl}/asset/user-asset`,
-          {
-            emp_id: user?.user_id,
+  const fetchData = async () => {
+    try {
+      const response = await axios.post(
+        `${apiUrl}/asset/user-asset`,
+        {
+          emp_id: user?.user_id,
+        },
+        {
+          headers: {
+            "x-access-token": user?.token,
           },
-          {
-            headers: {
-              "x-access-token": user?.token,
-            },
-          }
-        );
-        if (response.data.success) {
-          setAssetData(response.data.data);
-          console.log(response.data.data);
-        } else {
-          console.error("Error fetching asset data:", response.data.message);
         }
-        setIsLoading(false);
-      } catch (error) {
-        setIsLoading(false);
-        console.error("Error fetching asset data:", error);
+      );
+      if (response.data.success) {
+        setAssetData(response.data.data);
+        console.log(response.data.data);
+      } else {
+        console.error("Error fetching asset data:", response.data.message);
       }
-    };
-
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error fetching asset data:", error);
+    }
+  };
+  useEffect(() => {
     fetchData();
   }, []);
   if (isLoading) {

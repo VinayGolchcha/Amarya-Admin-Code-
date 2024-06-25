@@ -19,6 +19,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useHistory } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import PopupState, { bindTrigger, bindPopover } from "material-ui-popup-state";
@@ -79,13 +80,11 @@ const NavBar = ({ handleDrawerToggle }) => {
   const { user, profilePhoto, setActiveItem } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const token = encodeURIComponent(user?.token || ""); //
 
   const [arrow, updateArrow] = React.useState(false);
+  const [stickeyNotesData, setStickeyNotesData] = React.useState([]);
 
-  const [stickeyNotes, setStickeyNotes] = React.useState([
-    "Conduct an inventory check of all IT assets, including hardware and software licenses.",
-    "Perform a regular backup of important data and verify its integrity.",
-  ]);
   const [addIcon, setAddIcon] = React.useState(false);
   const [addTask, setAddTask] = React.useState("");
   const [searchQuery, setSearchQuery] = React.useState("");
@@ -95,7 +94,22 @@ const NavBar = ({ handleDrawerToggle }) => {
     setActiveItem(`${searchQuery}`);
     navigate(`/${searchQuery}`);
   };
-
+  const handleGetNotes = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/stickynotes/get-user-notes/${user?.user_id}`,
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+      console.log(response.data);
+      setStickeyNotesData(response.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   function handleIconClick() {
     setAddIcon(!addIcon);
   }
@@ -104,17 +118,51 @@ const NavBar = ({ handleDrawerToggle }) => {
     setAddTask(event.target.value);
   }
 
-  function handleDelete(index) {
-    setStickeyNotes((prevStickyNotes) => {
-      const newStickyNotes = [...prevStickyNotes];
-      newStickyNotes.splice(index, 1);
-      return newStickyNotes;
-    });
-  }
+  const handleDelete = async (id) => {
+    const emp_id = id;
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/stickynotes/delete-stickynotes/${id}/${user?.user_id}`,
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+      setStickeyNotesData((prevStickyNotes) =>
+        prevStickyNotes.filter((note) => note._id !== id)
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleAddStickyNote = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/stickynotes/add-stickynotes`,
+        {
+          emp_id: user?.user_id,
+          note: addTask,
+        },
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+      setStickeyNotesData((prevStickyNotes) => [
+        ...prevStickyNotes,
+        response.data.data,
+      ]);
+      setAddTask("");
+      handleGetNotes();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   function handleKeyDown(e) {
     if (e.key === "Enter") {
-      setStickeyNotes((prevStickyNotes) => [...prevStickyNotes, addTask]);
-      setAddTask("");
+      handleAddStickyNote();
     }
   }
   const [anchorE2, setAnchorE2] = React.useState(null);
@@ -122,7 +170,9 @@ const NavBar = ({ handleDrawerToggle }) => {
   const handleClick = (event) => {
     setAnchorE2(anchorE2 ? null : event.currentTarget);
   };
-
+  React.useEffect(() => {
+    handleGetNotes();
+  }, []);
   const open = Boolean(anchorE2);
   const id = open ? "simple-popper" : undefined;
   const toggleArrow = () => {
@@ -375,7 +425,7 @@ const NavBar = ({ handleDrawerToggle }) => {
                         />
                       )}
                     </Box>
-                    {stickeyNotes.map((item, index) => {
+                    {stickeyNotesData?.map((item, index) => {
                       return (
                         <Box
                           key={index}
@@ -399,9 +449,11 @@ const NavBar = ({ handleDrawerToggle }) => {
                               fontFamily: "Lato",
                             }}
                           >
-                            {item}{" "}
+                            {item.note}{" "}
                             <Box>
-                              <CloseIcon onClick={() => handleDelete(index)} />
+                              <CloseIcon
+                                onClick={() => handleDelete(item._id)}
+                              />
                             </Box>
                           </Typography>
                         </Box>

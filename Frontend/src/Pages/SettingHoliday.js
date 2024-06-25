@@ -40,7 +40,14 @@ export default function SettingHoliday() {
         },
       }
     )
-      .then((response) => response.json())
+    .then((response) => {
+      if (response.status === 404) {
+        // Handle 404 Not Found
+        setEditMode(true);
+        return null;
+      }
+      return response.json();
+    })
       .then((data) => {
         const formattedData = data.data.map((item) => ({
           _id: item._id,

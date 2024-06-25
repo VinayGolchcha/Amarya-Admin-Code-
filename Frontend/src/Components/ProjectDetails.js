@@ -17,6 +17,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ProjectDetails = () => {
   const { user } = useAuth();
@@ -36,6 +38,7 @@ const ProjectDetails = () => {
   const [allProjects, setAllProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [open, setOpen] = useState(false);
+  const [selectedProjectName, setSelectedProjectName] = useState("");
   const [newProject, setNewProject] = useState({
     project_id: "",
     emp_id: user?.user_id || "",
@@ -55,7 +58,12 @@ const ProjectDetails = () => {
     { type: "text", label: "End Month", field: "end_month" },
     { type: "text", label: "Project Manager", field: "project_manager" },
   ];
-
+  const projectDetailsFields2 = [
+    { type: "text", label: "Working Technology", field: "tech" },
+    { type: "date", label: "Start Month", field: "start_month" },
+    { type: "date", label: "End Month", field: "end_month" },
+    { type: "text", label: "Project Manager", field: "project_manager" },
+  ];
   const handleUpdateProject = async () => {
     if (isEditing2 === false) return;
 
@@ -80,13 +88,21 @@ const ProjectDetails = () => {
       if (response.data.success) {
         console.log("Project updated successfully:", response.data);
         setIsEditing2(false);
+        toast.success(response.data.message);
+        fetchUserProjects();
       } else {
-        console.error("Error updating project:", response.data.message);
+        console.error("Error updating project:", response.data.message || response.data.errors.map(error => `${error.path}: ${error.msg}`).join(', '));
+        toast.error(response.data.message || response.data.errors.map(error => `${error.path}: ${error.msg}`).join(', '));
       }
     } catch (error) {
-      console.error("Error updating project:", error.message);
-    }
-  };
+        if (error.response && error.response.status === 400) {
+            // Handle 400 errors specifically
+            const errors = error.response.data.errors;
+            const errorMessage = errors ? errors.map(err => `${err.path}: ${err.msg}`).join(', ') : error.response.data.message;
+        
+            console.error("Error updating project:", errorMessage);
+            toast.error(errorMessage);
+    }}};
 
   const handleChange2 = (e) => {
     const { name, value } = e.target;
@@ -147,7 +163,7 @@ const ProjectDetails = () => {
           ...prevState,
           projects: fetchedProjects,
         }));
-        setSelectedProjectId(fetchedProjects[0].project_name);
+        setSelectedProjectName(fetchedProjects[0].project_name);
         setProjectsData((prevState) => ({
           ...prevState,
           currentProject: fetchedProjects[0],
@@ -164,10 +180,10 @@ const ProjectDetails = () => {
   }, []);
 
   const handleProjectChange = (e) => {
-    const projectId = e.target.value;
-    setSelectedProjectId(projectId);
+    const projectName = e.target.value;
+    setSelectedProjectName(projectName);
     const selectedProject = projectsData.projects.find(
-      (project) => project.project_id === projectId
+      (project) => project.project_name === selectedProjectName
     );
     setProjectsData((prevState) => ({
       ...prevState,
@@ -180,6 +196,7 @@ const ProjectDetails = () => {
 
   const handleNewProjectChange = (e) => {
     const { name, value } = e.target;
+
     setNewProject((prevState) => ({
       ...prevState,
       [name]: value,
@@ -188,25 +205,64 @@ const ProjectDetails = () => {
 
   const handleCreateProject = async () => {
     try {
+      const formattedProject = {
+        ...newProject,
+        start_month: formatDate(newProject.start_month),
+        end_month: formatDate(newProject.end_month),
+      };
+
       const response = await axios.post(
         `${apiUrl}/project/create-user-project`,
-        newProject,
+        formattedProject,
         {
           headers: {
             "x-access-token": token,
           },
         }
       );
+
       if (response.data.success) {
         console.log("Project created successfully:", response.data);
         fetchUserProjects(); // Refresh the project list
         handleClose(); // Close the modal
+        toast.success("Project created successfully:");
       } else {
         console.error("Error creating project:", response.data.message);
+        if (response.data.errors && response.data.errors.length > 0) {
+          const error = response.data.errors[0];
+          toast.error(error.msg); // Display the specific error message
+        } else {
+          toast.error(
+            response.data.message || "An error occurred. Please try again."
+          );
+        }
       }
     } catch (error) {
       console.error("Error creating project:", error.message);
+      if (error.response) {
+        const { status, data } = error.response;
+
+        if (status === 404 && data.message) {
+          toast.error(data.message); // Display the specific 404 error message
+        } else if (data.errors) {
+          const serverErrors = data.errors;
+          if (serverErrors.length > 0) {
+            const errorMsg = serverErrors.map((err) => err.msg).join(", ");
+            toast.error(errorMsg); // Display server validation errors
+          } else {
+            toast.error("An error occurred. Please try again.");
+          }
+        } else {
+          toast.error("An error occurred. Please try again.");
+        }
+      } else {
+        toast.error("An error occurred. Please try again.");
+      }
     }
+  };
+  const formatDate = (date) => {
+    const options = { year: "2-digit", month: "2-digit" };
+    return new Date(date).toLocaleDateString(undefined, options);
   };
 
   return (
@@ -253,12 +309,12 @@ const ProjectDetails = () => {
               <FormControl fullWidth>
                 <InputLabel>Project</InputLabel>
                 <Select
-                  value={selectedProjectId || ""}
+                  value={selectedProjectName || ""}
                   onChange={handleProjectChange}
                   label="Project ID"
                   disabled={!isEditing2}
                 >
-                  {projectsData?.projects.map((project) => (
+                  {projectsData?.projects?.map((project) => (
                     <MenuItem
                       key={project.project_id}
                       value={project.project_name}
@@ -314,7 +370,7 @@ const ProjectDetails = () => {
                 src="/Images/icons8-save-100.png"
                 height="50%"
                 style={{ marginTop: "10px" }}
-                onClick={() => setIsEditing2(!isEditing2)}
+                onClick={() => setIsEditing2(false)}
               />
               <Typography sx={{ color: "#B3B3B3", fontWeight: "600" }}>
                 Save
@@ -355,7 +411,7 @@ const ProjectDetails = () => {
             Add New Project
           </Typography>
           <form>
-            {projectDetailsFields.map((item, index) => (
+            {projectDetailsFields2?.map((item, index) => (
               <TextField
                 key={index}
                 fullWidth
@@ -375,7 +431,7 @@ const ProjectDetails = () => {
                 onChange={handleNewProjectChange}
                 name="project_id"
               >
-                {allProjects.map((project) => (
+                {allProjects?.map((project) => (
                   <MenuItem key={project.project_id} value={project.project_id}>
                     {project["Project Name"]}
                   </MenuItem>

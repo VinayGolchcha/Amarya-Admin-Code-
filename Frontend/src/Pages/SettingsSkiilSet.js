@@ -40,8 +40,10 @@ export default function SettingsSkillSet() {
       },
     })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch skills");
+        if (response.status === 404) {
+          // Handle 404 Not Found
+          setEditMode(true);
+          return null;
         }
         return response.json();
       })
@@ -148,6 +150,7 @@ export default function SettingsSkillSet() {
             console.log("Skill updated successfully:", data);
             fetchSkills();
             toast.success("Skill updated successfully.");
+            setEditMode(false);
           })
           .catch((error) => {
             console.error("Error updating skill:", error);
@@ -187,6 +190,7 @@ export default function SettingsSkillSet() {
               };
               setFormData(updatedFormData);
             }
+            setEditMode(false);
           })
           .catch((error) => {
             console.error("Error creating skill:", error);
@@ -194,9 +198,8 @@ export default function SettingsSkillSet() {
           });
       });
 
-      setEditMode(false);
+      
     }
-     
   };
 
   const handleInputChange = (index, fieldName, value) => {

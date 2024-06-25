@@ -188,6 +188,7 @@ export default function LeaveMangementPage() {
       );
 
       toast.success(response?.data?.message);
+      getUserLeaves();
     } catch (error) {
       const errors = error?.response?.data?.errors;
       errors.forEach((item) => {

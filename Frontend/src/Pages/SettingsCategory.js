@@ -5,9 +5,7 @@ import { Button, FormControl, FormLabel, TextField } from "@mui/material";
 import { useAuth } from "../Components/AuthContext";
 
 export default function SettingsCategory() {
-  const [formData, setFormData] = useState([
-    { category: "", points: "" },
-  ]);
+  const [formData, setFormData] = useState([{ category: "", points: "" }]);
   useEffect(() => {}, []);
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
@@ -32,6 +30,11 @@ export default function SettingsCategory() {
       },
     })
       .then((response) => {
+        if (response.status === 404) {
+          // Handle 404 Not Found
+          setEditMode(true);
+          return null;
+        }
         if (!response.ok) {
           throw new Error("Failed to fetch categories");
         }
@@ -185,7 +188,7 @@ export default function SettingsCategory() {
   };
   return (
     <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
-      <Grid container spacing={4} sx={{marginLeft:"6%"}}>
+      <Grid container spacing={4} sx={{ marginLeft: "6%" }}>
         <Grid item xs={4}>
           {formData.map((data, index) => (
             <FormControl fullWidth>

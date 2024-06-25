@@ -17,6 +17,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useTheme } from "@mui/system";
 import { AuthProvider, useAuth } from "../Components/AuthContext";
 import ProjectDetails from "../Components/ProjectDetails";
+import { toast } from "react-toastify";
 
 const UserProfilePage = () => {
   const theme = useTheme();
@@ -403,6 +404,7 @@ const UserProfilePage = () => {
         }
       );
       console.log(response.data);
+      toast.success("User profile updated successfully.");
       fetchUserData();
       setIsEditing(false);
     } catch (error) {
@@ -479,7 +481,7 @@ const UserProfilePage = () => {
             </IconButton>
           </Typography>
 
-          <Container maxWidth="md" sx={{ padding: "0 !important" }}>
+          <Container maxWidth="lg" sx={{ padding: "0 !important" }}>
             <form onSubmit={handleSubmit}>
               <Grid container spacing={1}>
                 {inputFields?.map((item, index) => (
@@ -561,7 +563,7 @@ const UserProfilePage = () => {
           sx={{
             flexGrow: "1",
             [theme.breakpoints.up("lg")]: {
-              maxWidth: "30%",
+              maxWidth: "40%",
             },
             [theme.breakpoints.down("md")]: {
               marginTop: "2rem",

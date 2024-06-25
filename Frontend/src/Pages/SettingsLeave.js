@@ -37,7 +37,14 @@ export default function SettingsLeave() {
         "x-access-token": token,
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.status === 404) {
+          // Handle 404 Not Found
+          setEditMode(true);
+          return null;
+        }
+        return response.json();
+      })
       .then((data) => {
         const categories = data.data;
         setFormData(

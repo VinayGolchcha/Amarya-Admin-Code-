@@ -139,7 +139,7 @@ const WorkSheet = () => {
     },
   ]);
   const [currentPage, setCurrentPage] = useState(0);
-  const rowsPerPage = 5;
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const [newRow, setNewRow] = useState(null);
   const [editingRowIndex, setEditingRowIndex] = useState(null);
@@ -147,7 +147,7 @@ const WorkSheet = () => {
 
   const [filterEmpId, setFilterEmpId] = useState(""); // State to store the selected employee ID for filtering
   const [filterEmpName, setFilterEmpName] = useState("");
-  
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getFullYear()}-${(date.getMonth() + 1)
@@ -343,6 +343,11 @@ const WorkSheet = () => {
       console.error("Error fetching employees:", error);
     }
   };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    // setPage(0);
+  };
+
   return (
     <Box style={{ margin: "20px 20px 20px 20px" }}>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -403,7 +408,7 @@ const WorkSheet = () => {
           color: "#161E54",
         }}
       >
-        { filterEmpName } - { filterEmpId }
+        {filterEmpName} - {filterEmpId}
       </Typography>
       <Box
         sx={{
@@ -488,6 +493,7 @@ const WorkSheet = () => {
           count={rows.length}
           rowsPerPage={rowsPerPage}
           page={currentPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
           onPageChange={handleChangePage}
         />
         {/* </Box> */}

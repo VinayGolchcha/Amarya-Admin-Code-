@@ -1,4 +1,3 @@
-
 import { TextField, Button } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
@@ -25,6 +24,7 @@ function OtpP({ closeOtpP, email }) {
       console.log(response);
       if (response.data.success) {
         setOpenModel(true);
+        // closeOtpP(false);
       } else {
         console.error("Email is incorrect");
       }
@@ -173,7 +173,13 @@ function OtpP({ closeOtpP, email }) {
             >
               Verify otp
             </Button>
-            {openModel && <Model closeModel={setOpenModel} email={email} />}
+            {openModel && (
+              <Model
+                closeModel={setOpenModel}
+                closeOtpP={closeOtpP}
+                email={email}
+              />
+            )}
 
             <br></br>
           </div>

@@ -2,7 +2,15 @@
 
 // LoginPage.js
 import React, { useEffect, useState } from "react";
-import { Box, Typography, TextField, Button, Paper } from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  Paper,
+  IconButton,
+  InputAdornment,
+} from "@mui/material";
 import axios from "axios";
 import "./EmailPop";
 // import { EmailP } from "@mui/icons-material";
@@ -12,12 +20,14 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import OtpP from "./OtpPop";
 import { toast } from "react-toastify";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const LoginPage = () => {
   const { login } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [openOtpP, setOpenOtpP] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
   const [email, setEmail] = useState("");
   //new
   // const[openModel,setOpenModel]=useState(false)
@@ -160,10 +170,22 @@ const LoginPage = () => {
             }}
             InputProps={{
               style: { color: "white" },
+              // endAdornment: (
+              //   <InputAdornment position="end">
+              //     <IconButton
+              //       onClick={() => setShowPassword(!showPassword)}
+              //       edge="end"
+              //       sx={{ color: "white" }}
+              //     >
+              //       {showPassword ? <VisibilityOff /> : <Visibility />}
+              //     </IconButton>
+              //   </InputAdornment>
+              // ),
             }}
             label="Password"
             variant="standard"
-            type="password"
+            type={showPassword ? "text" : "password"}
+            value={password} // Ensure the value prop is set to the password state
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
           />
@@ -193,9 +215,7 @@ const LoginPage = () => {
                 setEmail={setEmail}
               />
             )}
-            {openOtpP && (
-              <OtpP closeOtpP={() => setOpenOtpP(false)} email={email} />
-            )}
+            {openOtpP && <OtpP closeOtpP={setOpenOtpP} email={email} />}
           </Typography>
           <Button
             sx={{
@@ -205,9 +225,9 @@ const LoginPage = () => {
               padding: "10px",
               color: "#010101",
               fontWeight: 600,
-              "&:hover" : {
-                backgroundColor : "#FF5151"
-              }
+              "&:hover": {
+                backgroundColor: "#FF5151",
+              },
             }}
             variant="contained"
             color="primary"

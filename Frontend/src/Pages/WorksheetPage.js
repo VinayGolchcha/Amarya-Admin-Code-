@@ -29,7 +29,7 @@ import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
 
 const WorksheetPage = () => {
-  const [isLoading , setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [teams, setTeams] = useState([]);
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
@@ -75,7 +75,8 @@ const WorksheetPage = () => {
 
   const [rows, setRows] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const rowsPerPage = 5;
+  // const rowsPerPage = 5;
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const [newRow, setNewRow] = useState(null);
   const [textValue, setTextValue] = useState("");
@@ -154,7 +155,7 @@ const WorksheetPage = () => {
       toast.error("Please fill all the required fields.");
       return;
     }
-    
+
     try {
       setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
       setNewRow(null);
@@ -453,11 +454,14 @@ const WorksheetPage = () => {
       console.error("Error fetching skills:", error);
     }
   };
-  if(isLoading){
-    return(
-      <Loading/>
-    )
-  }else{
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    // setPage(0);
+  };
+  
+  if (isLoading) {
+    return <Loading />;
+  } else {
     return (
       <Box style={{ margin: "20px 20px 20px 20px" }}>
         <Typography
@@ -487,7 +491,7 @@ const WorksheetPage = () => {
             color: "#161E54",
           }}
         >
-           {user?.user_id} - {user?.user_name}
+          {user?.user_id} - {user?.user_name}
         </Typography>
         <Box
           sx={{
@@ -562,7 +566,7 @@ const WorksheetPage = () => {
                     </TableCell>
                   </TableRow>
                 ))}
-  
+
               {newRow && (
                 <TableRow>
                   <TableCell
@@ -609,13 +613,17 @@ const WorksheetPage = () => {
                       variant="standard"
                       type="date"
                       value={newRow.date}
-                      onChange={(e) => handleNewRowChange("date", e.target.value)}
+                      onChange={(e) =>
+                        handleNewRowChange("date", e.target.value)
+                      }
                       sx={{ width: "120px", marginTop: "15px" }}
                     />
                   </TableCell>
                   <TableCell>
                     <FormControl>
-                      <InputLabel htmlFor="category-select">Category</InputLabel>
+                      <InputLabel htmlFor="category-select">
+                        Category
+                      </InputLabel>
                       <Select
                         id="category"
                         value={newRow.category}
@@ -667,7 +675,9 @@ const WorksheetPage = () => {
                   </TableCell>
                   <TableCell>
                     <FormControl>
-                      <InputLabel htmlFor="skillset-select">Skillset</InputLabel>
+                      <InputLabel htmlFor="skillset-select">
+                        Skillset
+                      </InputLabel>
                       <Select
                         multiple
                         id="skillset"
@@ -685,7 +695,7 @@ const WorksheetPage = () => {
                       </Select>
                     </FormControl>
                   </TableCell>
-  
+
                   <TableCell>
                     <Box
                       component="img"
@@ -713,6 +723,7 @@ const WorksheetPage = () => {
             count={rows.length}
             rowsPerPage={rowsPerPage}
             page={currentPage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
             onPageChange={handleChangePage}
           />
         </Box>

@@ -6,27 +6,24 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
 import "./../App.css";
 import { useAuth } from "../Components/AuthContext";
-function Model({ closeModel, email }) {
+function Model({ closeModel,closeOtpP, email }) {
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirm_password] = useState("");
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleUpdate = async () => {
     try {
-      const response = await axios.post(
-        `${apiUrl}/user/update-password`,
-        {
-          password,
-          confirm_password,
-          email,
-        }
-      );
-      console.log(response);
-
-      //   // Handle login error
+      const response = await axios.post(`${apiUrl}/user/update-password`, {
+        password,
+        confirm_password,
+        email,
+      });
+      if (response.status === 200) {
+        closeModel(false);
+        closeOtpP(false);
+      }
     } catch (error) {
       console.log("Error data:", error.response.data.errors[0]?.msg);
-      // setRes(error.response.data.errors[0]?.msg);
     }
   };
 

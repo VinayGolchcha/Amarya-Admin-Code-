@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-const OtpInput = ({ numInputs,onOtpChange }) => {
+const OtpInput = ({ numInputs, onOtpChange }) => {
   const [otp, setOtp] = useState(new Array(numInputs).fill(''));
   const inputs = useRef([]);
 
@@ -8,24 +8,21 @@ const OtpInput = ({ numInputs,onOtpChange }) => {
     const newOtp = [...otp];
     newOtp[index] = event.target.value;
     setOtp(newOtp);
-    // Move to the next input field automatically
     if (event.target.nextSibling && event.target.value !== '') {
       event.target.nextSibling.focus();
     }
-    onOtpChange(newOtp.join(''))
+    onOtpChange(newOtp.join(''));
   };
 
   const handleKeyDown = (index, event) => {
-    // Move to the previous input field when pressing backspace
     if (event.key === 'Backspace' && index !== 0 && otp[index] === '') {
       inputs.current[index - 1].focus();
     }
   };
 
   return (
-    <div className='otpInput-style'>
+    <div style={{ display: 'flex', justifyContent: 'center' }}>
       {[...Array(numInputs)].map((_, index) => (
-        
         <input
           key={index}
           type="text"
@@ -35,7 +32,15 @@ const OtpInput = ({ numInputs,onOtpChange }) => {
           onKeyDown={(e) => handleKeyDown(index, e)}
           ref={(el) => (inputs.current[index] = el)}
           required
-          className='input-varifiy-otp'
+          style={{
+            width: '40px',
+            height: '40px',
+            margin: '0 10px',
+            textAlign: 'center',
+            fontSize: '18px',
+            borderRadius: '5px',
+            border: '1px solid #FF5151',
+          }}
         />
       ))}
     </div>
