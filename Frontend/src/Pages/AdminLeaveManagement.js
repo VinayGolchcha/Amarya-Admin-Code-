@@ -501,7 +501,7 @@ export default function AdminLeaveManagement() {
                 {rows?.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8}>
-                      <Alert severity="warning">Data not found.</Alert>
+                      <Alert severity="warning">Leave not found.</Alert>
                     </TableCell>
                   </TableRow>
                 ) : (

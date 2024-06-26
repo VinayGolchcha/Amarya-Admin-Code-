@@ -174,6 +174,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
   const[foreignId , setForeignId] = useState("");
 
   const handleChangePage = (event, newPage) => {
+    console.log("setPage is calling");
     setPage(newPage);
   };
 
@@ -187,6 +188,8 @@ export default function AdminApprovals({approvalData , approvalReq}) {
     const dateStr = newDate.toString().split(" ");
     return dateStr[2] + " " + dateStr[1] + " "+ dateStr[3];
   }
+
+  
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
