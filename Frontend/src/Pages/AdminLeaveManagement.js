@@ -167,7 +167,31 @@ export default function AdminLeaveManagement() {
     }
   };
   React.useEffect(() => {
+    const getData = async () => {
+      try {
+        setLoading(true);
+
+        const response = await axios.get(
+          // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
+          `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data`,
+          {
+            headers: {
+              "x-access-token": user?.token,
+            },
+          }
+          // "https://localhost:4000/api/v1/training/request-new-training"
+        );
+        setData(response?.data?.data);
+
+        setLoading(false);
+      } catch (errorr) {
+        setErrorr(errorr);
+
+        setLoading(false);
+      }
+    };
     fetchAllEmployees();
+    getData();
   }, []);
 
   const handleUpdate = async () => {
