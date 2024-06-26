@@ -5,8 +5,10 @@ import { Button, FormControl, FormLabel, TextField } from "@mui/material";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../Components/AuthContext";
+import Loading from "../sharable/Loading";
 
 export default function SettingsLeave() {
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState([
     {
       leave_type: "",
@@ -59,6 +61,7 @@ export default function SettingsLeave() {
         );
         setOriginalFormData([...categories]);
         console.log(data);
+        setLoading(false);
       })
       .catch((error) => console.error("Error fetching leave data:", error));
   };
@@ -207,155 +210,145 @@ export default function SettingsLeave() {
       setSelectedInputIndex(index);
     }
   };
-  return (
-    <Box sx={{ flexGrow: 1, m: "25px 0px 20px 5px" }}>
-      <Grid container spacing={4} sx={{ marginLeft: "5%" }}>
-        <Grid item xs={2.5}>
-          <FormControl fullWidth>
-            <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-              Leave Type
-            </FormLabel>
-            {formData.map((data, index) => (
-              <TextField
-                key={index}
-                type="text"
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                  margin: "10px 0px",
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={data.leave_type}
-                onChange={(e) =>
-                  handleInputChange(index, "leave_type", e.target.value)
-                }
-                onClick={() => handleInputClick(index)}
-                disabled={!editMode}
-              />
-            ))}
-          </FormControl>
-        </Grid>
+  if (loading) {
+    return <Loading />;
+  } else {
+    return (
+      <Box sx={{ flexGrow: 1, m: "25px 0px 20px 5px" }}>
+        <Grid container spacing={4} sx={{ marginLeft: "5%" }}>
+          <Grid item xs={2.5}>
+            <FormControl fullWidth>
+              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                Leave Type
+              </FormLabel>
+              {formData.map((data, index) => (
+                <TextField
+                  key={index}
+                  type="text"
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "2px",
+                      borderColor: "#b3b3b3",
+                      borderRadius: "10px",
+                    },
+                    margin: "10px 0px",
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={data.leave_type}
+                  onChange={(e) =>
+                    handleInputChange(index, "leave_type", e.target.value)
+                  }
+                  onClick={() => handleInputClick(index)}
+                  disabled={!editMode}
+                />
+              ))}
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={1.5}>
-          <FormControl fullWidth>
-            <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-              Gender
-            </FormLabel>
-            {formData.map((data, index) => (
-              <TextField
-                key={index}
-                type="text"
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                  margin: "10px 0px",
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={data.gender}
-                onChange={(e) =>
-                  handleInputChange(index, "gender", e.target.value)
-                }
-                onClick={() => handleInputClick(index)}
-                disabled={!editMode}
-              />
-            ))}
-          </FormControl>
-        </Grid>
+          <Grid item xs={1.5}>
+            <FormControl fullWidth>
+              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                Gender
+              </FormLabel>
+              {formData.map((data, index) => (
+                <TextField
+                  key={index}
+                  type="text"
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "2px",
+                      borderColor: "#b3b3b3",
+                      borderRadius: "10px",
+                    },
+                    margin: "10px 0px",
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={data.gender}
+                  onChange={(e) =>
+                    handleInputChange(index, "gender", e.target.value)
+                  }
+                  onClick={() => handleInputClick(index)}
+                  disabled={!editMode}
+                />
+              ))}
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={1.5}>
-          <FormControl fullWidth>
-            <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-              Count
-            </FormLabel>
-            {formData.map((data, index) => (
-              <TextField
-                key={index}
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                  margin: "10px 0px",
-                }}
-                value={data.leave_count}
-                onChange={(e) =>
-                  handleInputChange(index, "leave_count", e.target.value)
-                }
-                onClick={() => handleInputClick(index)}
-                disabled={!editMode}
-              />
-            ))}
-          </FormControl>
-        </Grid>
-        <Grid item xs={3.5}>
-          <FormControl fullWidth>
-            <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-              Description
-            </FormLabel>
-            {formData.map((data, index) => (
-              <TextField
-                key={index}
-                type="text"
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                  margin: "10px 0px",
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={data.description}
-                onChange={(e) =>
-                  handleInputChange(index, "description", e.target.value)
-                }
-                onClick={() => handleInputClick(index)}
-                disabled={!editMode}
-              />
-            ))}
-          </FormControl>
-        </Grid>
-        <Grid item xs={2}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center ",
-              width: "100%",
-              height: "100%",
-              gap: "40px",
-            }}
-          >
-            <Button
-              variant="contained"
-              color="error"
+          <Grid item xs={1.5}>
+            <FormControl fullWidth>
+              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                Count
+              </FormLabel>
+              {formData.map((data, index) => (
+                <TextField
+                  key={index}
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "2px",
+                      borderColor: "#b3b3b3",
+                      borderRadius: "10px",
+                    },
+                    margin: "10px 0px",
+                  }}
+                  value={data.leave_count}
+                  onChange={(e) =>
+                    handleInputChange(index, "leave_count", e.target.value)
+                  }
+                  onClick={() => handleInputClick(index)}
+                  disabled={!editMode}
+                />
+              ))}
+            </FormControl>
+          </Grid>
+          <Grid item xs={3.5}>
+            <FormControl fullWidth>
+              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                Description
+              </FormLabel>
+              {formData.map((data, index) => (
+                <TextField
+                  key={index}
+                  type="text"
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "2px",
+                      borderColor: "#b3b3b3",
+                      borderRadius: "10px",
+                    },
+                    margin: "10px 0px",
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={data.description}
+                  onChange={(e) =>
+                    handleInputChange(index, "description", e.target.value)
+                  }
+                  onClick={() => handleInputClick(index)}
+                  disabled={!editMode}
+                />
+              ))}
+            </FormControl>
+          </Grid>
+          <Grid item xs={2}>
+            <Box
               sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center ",
+                width: "100%",
+                height: "100%",
+                gap: "40px",
               }}
-              onClick={handleAddNew}
             >
-              Add New
-            </Button>
-            {editMode && (
               <Button
                 variant="contained"
                 color="error"
@@ -364,38 +357,52 @@ export default function SettingsLeave() {
                   backgroundColor: "#ff5151",
                   width: "60%",
                 }}
-                onClick={handleSave}
+                onClick={handleAddNew}
               >
-                Save
+                Add New
               </Button>
-            )}
-            <Button
-              variant="contained"
-              color="error"
-              sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
-              }}
-              onClick={handleEdit}
-            >
-              {editMode ? "Cancel Edit" : "Edit"}
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
-              }}
-              onClick={handleDelete}
-            >
-              {deleteMode ? "Confirm Delete" : "Delete"}
-            </Button>
-          </Box>
+              {editMode && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  sx={{
+                    display: "block",
+                    backgroundColor: "#ff5151",
+                    width: "60%",
+                  }}
+                  onClick={handleSave}
+                >
+                  Save
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                color="error"
+                sx={{
+                  display: "block",
+                  backgroundColor: "#ff5151",
+                  width: "60%",
+                }}
+                onClick={handleEdit}
+              >
+                {editMode ? "Cancel Edit" : "Edit"}
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                sx={{
+                  display: "block",
+                  backgroundColor: "#ff5151",
+                  width: "60%",
+                }}
+                onClick={handleDelete}
+              >
+                {deleteMode ? "Confirm Delete" : "Delete"}
+              </Button>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
-  );
+      </Box>
+    );
+  }
 }

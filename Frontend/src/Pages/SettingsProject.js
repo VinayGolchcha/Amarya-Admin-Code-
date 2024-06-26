@@ -20,10 +20,12 @@ import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../Components/AuthContext";
+import Loading from "../sharable/Loading";
 
 export default function SettingsProject() {
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || "");
+  const [isLoading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState([]);
 
@@ -91,6 +93,7 @@ export default function SettingsProject() {
           };
         });
         setFormData(adjustedData);
+        setLoading(false);
       })
       .catch((error) => console.error("Error fetching projects:", error));
   };
@@ -321,46 +324,31 @@ export default function SettingsProject() {
     setFormData(newFormData);
   };
 
-  return (
-    <Box>
-      {formData?.map((data, index) => (
-        <Box
-          key={index}
-          sx={{
-            borderRadius: "10px",
-            padding: "30px",
-            boxShadow: "0px 0px 5px rgba(0,0,0,0.2)",
-            margin: "10px 0px",
-          }}
-        >
+  if (isLoading) {
+    return <Loading />;
+  } else {
+    return (
+      <Box>
+        {formData?.map((data, index) => (
           <Box
+            key={index}
             sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: "10px",
+              borderRadius: "10px",
+              padding: "30px",
+              boxShadow: "0px 0px 5px rgba(0,0,0,0.2)",
+              margin: "10px 0px",
             }}
           >
-            <RemoveIcon
-              color="action"
-              onClick={() => handleDelete(index)}
+            <Box
               sx={{
-                borderRadius: "50px",
-                backgroundColor: "rgb(222, 225, 231)",
-                width: "30px",
-                height: "30px",
-                margin: "0px 2px 50px 10px",
-                padding: "4px",
-                cursor: "pointer",
+                display: "flex",
+                justifyContent: "flex-end",
+                marginBottom: "10px",
               }}
-            />
-            {editMode === index || newProjectIndex === index ? (
-              <SaveIcon
+            >
+              <RemoveIcon
                 color="action"
-                onClick={() => {
-                  newProjectIndex === index
-                    ? handleSaveNewProject(index)
-                    : handleSave(index);
-                }}
+                onClick={() => handleDelete(index)}
                 sx={{
                   borderRadius: "50px",
                   backgroundColor: "rgb(222, 225, 231)",
@@ -371,98 +359,93 @@ export default function SettingsProject() {
                   cursor: "pointer",
                 }}
               />
-            ) : (
-              <EditIcon
-                color="action"
-                onClick={() => handleEdit(index)}
-                sx={{
-                  borderRadius: "50px",
-                  backgroundColor: "rgb(222, 225, 231)",
-                  width: "30px",
-                  height: "30px",
-                  margin: "0px 2px 50px 10px",
-                  padding: "4px",
-                  cursor: "pointer",
-                }}
-              />
-            )}
-          </Box>
-          <Grid container spacing={4}>
-            {labels?.map((item, i) => (
-              <Grid item xs={4} key={i}>
-                <FormControl fullWidth>
-                  <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-                    {item}
-                  </FormLabel>
-                  {item === "Start Of The Project" && (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        label={'"month", "year"'}
-                        views={["month", "year"]}
-                        value={dayjs(data[item]) || ""}
-                        sx={{
-                          "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
-                            borderWidth: "2px",
-                            borderColor: "#b3b3b3",
-                            borderRadius: "10px",
-                          },
-                          margin: "10px 0px",
-                        }}
-                        onChange={(date) =>
-                          handleInputChange(index, item, date)
-                        }
-                      />
-                    </LocalizationProvider>
-                  )}
-                  {item === "End Of The Project" && (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DatePicker
-                        label={'"month", "year"'}
-                        views={["month", "year"]}
-                        value={dayjs(data[item]) || ""}
-                        sx={{
-                          "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
-                            borderWidth: "2px",
-                            borderColor: "#b3b3b3",
-                            borderRadius: "10px",
-                          },
-                          margin: "10px 0px",
-                        }}
-                        onChange={(date) =>
-                          handleInputChange(index, item, date)
-                        }
-                      />
-                    </LocalizationProvider>
-                  )}
-                  {item === "Category" ? (
-                    <Select
-                      value={data[item]}
-                      onChange={(e) =>
-                        handleInputChange(index, item, e.target.value)
-                      }
-                      sx={{
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderWidth: "2px",
-                          borderColor: "#b3b3b3",
-                          borderRadius: "10px",
-                        },
-                        margin: "10px 0px",
-                      }}
-                      disabled={editMode !== index && newProjectIndex !== index}
-                    >
-                      {categories?.map((category) => (
-                        <MenuItem key={category._id} value={category.value}>
-                          {category.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  ) : (
-                    item !== "End Of The Project" &&
-                    item !== "Start Of The Project" && (
-                      <TextField
+              {editMode === index || newProjectIndex === index ? (
+                <SaveIcon
+                  color="action"
+                  onClick={() => {
+                    newProjectIndex === index
+                      ? handleSaveNewProject(index)
+                      : handleSave(index);
+                  }}
+                  sx={{
+                    borderRadius: "50px",
+                    backgroundColor: "rgb(222, 225, 231)",
+                    width: "30px",
+                    height: "30px",
+                    margin: "0px 2px 50px 10px",
+                    padding: "4px",
+                    cursor: "pointer",
+                  }}
+                />
+              ) : (
+                <EditIcon
+                  color="action"
+                  onClick={() => handleEdit(index)}
+                  sx={{
+                    borderRadius: "50px",
+                    backgroundColor: "rgb(222, 225, 231)",
+                    width: "30px",
+                    height: "30px",
+                    margin: "0px 2px 50px 10px",
+                    padding: "4px",
+                    cursor: "pointer",
+                  }}
+                />
+              )}
+            </Box>
+            <Grid container spacing={4}>
+              {labels?.map((item, i) => (
+                <Grid item xs={4} key={i}>
+                  <FormControl fullWidth>
+                    <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                      {item}
+                    </FormLabel>
+                    {item === "Start Of The Project" && (
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label={'"month", "year"'}
+                          views={["month", "year"]}
+                          value={dayjs(data[item]) || ""}
+                          sx={{
+                            "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
+                              borderWidth: "2px",
+                              borderColor: "#b3b3b3",
+                              borderRadius: "10px",
+                            },
+                            margin: "10px 0px",
+                          }}
+                          onChange={(date) =>
+                            handleInputChange(index, item, date)
+                          }
+                        />
+                      </LocalizationProvider>
+                    )}
+                    {item === "End Of The Project" && (
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                          label={'"month", "year"'}
+                          views={["month", "year"]}
+                          value={dayjs(data[item]) || ""}
+                          sx={{
+                            "& .css-1d3z3hw-MuiOutlinedInput-notchedOutline": {
+                              borderWidth: "2px",
+                              borderColor: "#b3b3b3",
+                              borderRadius: "10px",
+                            },
+                            margin: "10px 0px",
+                          }}
+                          onChange={(date) =>
+                            handleInputChange(index, item, date)
+                          }
+                        />
+                      </LocalizationProvider>
+                    )}
+                    {item === "Category" ? (
+                      <Select
                         value={data[item]}
-                        type="text"
-                        fullWidth
+                        onChange={(e) =>
+                          handleInputChange(index, item, e.target.value)
+                        }
                         sx={{
                           "& .MuiOutlinedInput-notchedOutline": {
                             borderWidth: "2px",
@@ -471,41 +454,67 @@ export default function SettingsProject() {
                           },
                           margin: "10px 0px",
                         }}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                        onChange={(e) =>
-                          handleInputChange(index, item, e.target.value)
-                        }
                         disabled={
                           editMode !== index && newProjectIndex !== index
                         }
-                      />
-                    )
-                  )}
-                </FormControl>
-              </Grid>
-            ))}
-          </Grid>
+                      >
+                        {categories?.map((category) => (
+                          <MenuItem key={category._id} value={category.value}>
+                            {category.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    ) : (
+                      item !== "End Of The Project" &&
+                      item !== "Start Of The Project" && (
+                        <TextField
+                          value={data[item]}
+                          type="text"
+                          fullWidth
+                          sx={{
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderWidth: "2px",
+                              borderColor: "#b3b3b3",
+                              borderRadius: "10px",
+                            },
+                            margin: "10px 0px",
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) =>
+                            handleInputChange(index, item, e.target.value)
+                          }
+                          disabled={
+                            editMode !== index && newProjectIndex !== index
+                          }
+                        />
+                      )
+                    )}
+                  </FormControl>
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
+        ))}
+        <Box
+          sx={{ display: "flex", justifyContent: "center", margin: "10px 0px" }}
+        >
+          <AddOutlinedIcon
+            color="action"
+            onClick={handleAddNew}
+            sx={{
+              borderRadius: "50px",
+              backgroundColor: "rgb(222, 225, 231)",
+              width: "30px",
+              height: "30px",
+              margin: "0px 2px",
+              padding: "4px",
+              cursor: "pointer",
+            }}
+          />
         </Box>
-      ))}
-      <Box
-        sx={{ display: "flex", justifyContent: "center", margin: "10px 0px" }}
-      >
-        <AddOutlinedIcon
-          color="action"
-          onClick={handleAddNew}
-          sx={{
-            borderRadius: "50px",
-            backgroundColor: "rgb(222, 225, 231)",
-            width: "30px",
-            height: "30px",
-            margin: "0px 2px",
-            padding: "4px",
-            cursor: "pointer",
-          }}
-        />
       </Box>
-    </Box>
-  );
+    );
+  }
 }

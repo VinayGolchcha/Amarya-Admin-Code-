@@ -6,6 +6,8 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import "./../App.css";
 import Model from "./Model";
 import OtpInput from "./OtpInput";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function OtpP({ closeOtpP, email }) {
   const [otp, setOtp] = useState("");
@@ -23,15 +25,20 @@ function OtpP({ closeOtpP, email }) {
       );
       console.log(response);
       if (response.data.success) {
+        toast.success(response.data.message);
         setOpenModel(true);
-        // closeOtpP(false);
       } else {
-        console.error("Email is incorrect");
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.log("Error data:", error);
+      console.log(
+        "Error data:",
+        error.response?.data?.message || error.message
+      );
+      toast.error(error.response?.data?.message || "An error occurred");
     }
   };
+
   return (
     <>
       <div
@@ -165,13 +172,16 @@ function OtpP({ closeOtpP, email }) {
                 fontWeight: 600,
 
                 textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FF5151",
+                },
               }}
               variant="contained"
               color="primary"
               onClick={handleUpdate}
               // onClick={()=>setOpenModel(true)}
             >
-              Verify otp
+              Verify OTP
             </Button>
             {openModel && (
               <Model

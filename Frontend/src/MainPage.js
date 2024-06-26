@@ -149,7 +149,7 @@ const MainPage = (props) => {
             element={<PrivateRoute element={UserProfilePage} />}
           />
           <Route
-            path="/announcements"
+            path="/anouncement"
             element={
               <PrivateRoute
                 element={

@@ -27,6 +27,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { format } from "date-fns";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useAuth } from "../Components/AuthContext";
+import Loading from "../sharable/Loading";
 
 const teams = [
   { value: "", label: "Select Team" },
@@ -127,17 +128,7 @@ const WorkSheet = () => {
     "Javascript",
   ]);
 
-  const [rows, setRows] = useState([
-    {
-      empid: "",
-      team: "",
-      date: "",
-      category: "",
-      project: "",
-      description: "",
-      skillset: [],
-    },
-  ]);
+  const [rows, setRows] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -184,6 +175,7 @@ const WorkSheet = () => {
         setRows(worksheetData);
       } else {
         console.error("Failed to fetch worksheet data:", data.message);
+        setRows([]);
       }
     } catch (error) {
       console.error("Error fetching worksheet data:", error);
@@ -198,6 +190,8 @@ const WorkSheet = () => {
     } else {
       setFilterEmpId("");
       setFilterEmpName("");
+      // fetchWorksheetDataForEmployee(null); // Fetch worksheet data for selected employee
+      setRows([]);
     }
   };
 

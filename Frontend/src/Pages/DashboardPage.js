@@ -88,10 +88,10 @@ export default function DashboardPage() {
         console.log(pointsResponse);
         setPointsData(pointsData.data || { month_data: [], year_data: [] });
         console.log(pointsData);
-        setIsLoading(false);
+        // setIsLoading(false);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
-        setIsLoading(false);
+        // setIsLoading(false);
       }
     };
     fetchDashboardData();

@@ -465,7 +465,7 @@ const ProjectDetails = () => {
               onClick={handleCreateProject}
               sx={{ mt: 2 }}
             >
-              Create Project
+              Add Project
             </Button>
           </form>
         </Box>

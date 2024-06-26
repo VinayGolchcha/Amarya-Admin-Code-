@@ -18,6 +18,7 @@ import { useTheme } from "@mui/system";
 import { AuthProvider, useAuth } from "../Components/AuthContext";
 import ProjectDetails from "../Components/ProjectDetails";
 import { toast } from "react-toastify";
+import Loading from "../sharable/Loading";
 
 const UserProfilePage = () => {
   const theme = useTheme();
@@ -140,7 +141,7 @@ const UserProfilePage = () => {
   ];
 
   const [projectTimeline, setProjectTimeline] = useState([]);
-
+  const [isLoading, setLoading] = useState(true);
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleChange = (e) => {
@@ -342,6 +343,7 @@ const UserProfilePage = () => {
       });
       console.log(userData);
       setProfilePhoto(userData.profile_picture); // Set the profile photo in context
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error.message);
       // toast.error("Error fetching user data. Please try again later.");
@@ -450,274 +452,22 @@ const UserProfilePage = () => {
   var formattedDate = formatDate(inputDate);
   console.log(formattedDate); // Output: "Aug 2021"
 
-  return (
-    <Box>
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          margin: "2% 2.3%",
-          "@media (max-width:960px)": {
-            flexDirection: "column", // Change direction to column on smaller screens
-          },
-        }}
-      >
+  if (isLoading) {
+    return <Loading />;
+  } else {
+    return (
+      <Box>
         <Box
           sx={{
             display: "flex",
-            flexDirection: "column",
-            alignItems: "stretch", // Ensure equal height
-            marginTop: "2%",
-          }}
-        >
-          <Typography
-            variant="h5"
-            sx={{ fontWeight: "700", color: "#121843" }}
-            gutterBottom
-          >
-            User profile
-            <IconButton onClick={() => handleEditClick("UP")}>
-              <EditIcon />
-            </IconButton>
-          </Typography>
-
-          <Container maxWidth="lg" sx={{ padding: "0 !important" }}>
-            <form onSubmit={handleSubmit}>
-              <Grid container spacing={1}>
-                {inputFields?.map((item, index) => (
-                  <Grid item xs={12} md={index === 6 ? 12 : 6} key={index}>
-                    <Typography
-                      variant="subtitle1"
-                      gutterBottom
-                      sx={{ fontWeight: "600", overflow: "hidden" }}
-                    >
-                      {item.label}
-                    </Typography>
-                    <TextField
-                      fullWidth
-                      variant="outlined"
-                      type={item.type}
-                      name={item.field}
-                      value={
-                        item.field === "dob"
-                          ? formatDateForInput(formData[item.field])
-                          : formData[item.field]
-                      }
-                      onChange={handleChange}
-                      disabled={!isEditing}
-                      sx={{
-                        [theme.breakpoints.up("md")]: {
-                          width: index === 6 ? "90%" : "80%",
-                        },
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderWidth: "2px",
-                          borderColor: "#b3b3b3",
-                          borderRadius: "10px",
-                        },
-                      }}
-                    />
-                  </Grid>
-                ))}
-                <Grid item xs={12} md={6}>
-                  <Typography
-                    variant="subtitle1"
-                    gutterBottom
-                    sx={{ fontWeight: "600", overflow: "hidden" }}
-                  >
-                    Profile Picture
-                  </Typography>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    type="file"
-                    name="file"
-                    onChange={handleChange}
-                    disabled={!isEditing}
-                    sx={{
-                      [theme.breakpoints.up("md")]: {
-                        width: "80%",
-                      },
-                      "& .MuiOutlinedInput-notchedOutline": {
-                        borderWidth: "2px",
-                        borderColor: "#b3b3b3",
-                        borderRadius: "10px",
-                      },
-                    }}
-                  />
-                </Grid>
-              </Grid>
-              {isEditing && (
-                <Button
-                  onClick={handleUserUpdate}
-                  variant="contained"
-                  color="primary"
-                  sx={{ marginTop: "1rem" }}
-                >
-                  Save Changes
-                </Button>
-              )}
-            </form>
-          </Container>
-        </Box>
-        <Box
-          sx={{
-            flexGrow: "1",
-            [theme.breakpoints.up("lg")]: {
-              maxWidth: "40%",
-            },
-            [theme.breakpoints.down("md")]: {
-              marginTop: "2rem",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            margin: "2% 2.3%",
+            "@media (max-width:960px)": {
+              flexDirection: "column", // Change direction to column on smaller screens
             },
           }}
         >
-          <Container
-            maxWidth="md"
-            sx={{
-              backgroundColor: "#777492",
-              borderRadius: "20px",
-              height: "100%",
-            }}
-          >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "space-around",
-                marginTop: "2%",
-                padding: "2%",
-                height: "100%",
-              }}
-            >
-              <Card
-                elevation={3}
-                sx={{
-                  width: "100%",
-                  height: "auto",
-                  marginBottom: "2%",
-                  borderRadius: "20px",
-                }}
-              >
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <CardContent>
-                    <div style={{ fontWeight: "900" }}>
-                      <Typography variant="button" color="#79838b">
-                        {formData.designation}
-                      </Typography>
-                    </div>
-                    <div>
-                      <Typography variant="caption" color="#b8c5d0">
-                        Type
-                      </Typography>
-                    </div>
-                    <div>
-                      <Typography color="#79838b">
-                        {formData.designation_type}
-                      </Typography>
-                    </div>
-                    <div>
-                      <Typography variant="caption" color="#b8c5d0">
-                        Joined
-                      </Typography>
-                    </div>
-                    <div>
-                      <Typography color="#79838b">
-                        {formatDate(formData.joining_date)}
-                      </Typography>
-                    </div>
-                    <div>
-                      <Typography variant="caption" color="#b8c5d0">
-                        Experience
-                      </Typography>
-                    </div>
-                    <div>
-                      <Typography color="#79838b">
-                        {formData.experience} years
-                      </Typography>
-                    </div>
-                  </CardContent>
-                  <Box
-                    component="img"
-                    height="200"
-                    src={formData.file}
-                    // image={formData.profile_picture}
-                    alt="green iguana"
-                    sx={{
-                      objectFit: "cover",
-                      objectPosition: "center center",
-                      borderRadius: "20px",
-                      margin: "0.5rem",
-                      maxWidth: "40%",
-                    }}
-                  />
-                </Box>
-              </Card>
-              <box>
-                <Box sx={{ textAlign: "center", marginBottom: "1rem" }}>
-                  <Chip
-                    label="Work"
-                    sx={{
-                      backgroundColor: "#4bc9fe",
-                      color: "white",
-                      fontWeight: "700",
-                      marginBottom: "0",
-                    }}
-                  />
-                </Box>
-                <Grid container spacing={2} sx={{ display: "flex" }}>
-                  {cardsData?.map((item) => (
-                    <Grid
-                      item
-                      xs={12}
-                      sm={6}
-                      key={item.info}
-                      sx={{ display: "flex" }}
-                    >
-                      <Card
-                        elevation={2}
-                        sx={{
-                          borderRadius: "20px",
-                          flex: 1,
-                          flexDirection: "column",
-                          textAlign: "center",
-                        }}
-                      >
-                        <CardContent>
-                          <Typography
-                            sx={{
-                              fontSize: "3vw",
-                            }}
-                            gutterBottom
-                            color="#6e7880"
-                          >
-                            {item.value}
-                          </Typography>
-                          <Typography variant="subtitle1" color="#9fadb8">
-                            {item.info}
-                          </Typography>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                  ))}
-                </Grid>
-              </box>
-            </Box>
-          </Container>
-        </Box>
-      </Box>
-      {user?.role === "user" && (
-        <Box
-          sx={{ display: "flex", flexDirection: "column", margin: "2% 2.3%" }}
-        >
-          <ProjectDetails />
           <Box
             sx={{
               display: "flex",
@@ -731,68 +481,324 @@ const UserProfilePage = () => {
               sx={{ fontWeight: "700", color: "#121843" }}
               gutterBottom
             >
-              Project Timeline
+              User profile
+              <IconButton onClick={() => handleEditClick("UP")}>
+                <EditIcon />
+              </IconButton>
             </Typography>
-            <Container sx={{ padding: "0 !important", marginTop: "10px" }}>
+
+            <Container maxWidth="lg" sx={{ padding: "0 !important" }}>
               <form onSubmit={handleSubmit}>
-                {projectsData?.projects?.map((project, index) => (
-                  <Grid container spacing={1} key={project.id}>
-                    {projectTimelineFields.map((item, index) => (
-                      <Grid
-                        item
-                        xs={12}
-                        md={index === 0 || index === 1 ? "1.5" : "3"}
-                        key={index}
+                <Grid container spacing={1}>
+                  {inputFields?.map((item, index) => (
+                    <Grid item xs={12} md={index === 6 ? 12 : 6} key={index}>
+                      <Typography
+                        variant="subtitle1"
+                        gutterBottom
+                        sx={{ fontWeight: "600", overflow: "hidden" }}
                       >
-                        <Typography
-                          variant="subtitle1"
-                          gutterBottom
-                          sx={{ fontWeight: "600", overflow: "hidden" }}
-                        >
-                          {item.label}
-                        </Typography>
-                        <TextField
-                          fullWidth
-                          id="text"
-                          variant="outlined"
-                          type={item.type}
-                          name={item.field}
-                          value={
-                            item.field === "startedOn" ||
-                            item.field === "completedOn"
-                              ? project[item.field].toLocaleString("en-US", {
-                                  month: "short",
-                                  year: "numeric",
-                                })
-                              : project[item.field]
-                          }
-                          onChange={handleChange}
-                          onDoubleClick={handleDoubleClick}
-                          onBlur={() => handleBlur(item.field)}
-                          onKeyPress={(e) => handleKeyPress(e, item.field)}
-                          disabled
-                          sx={{
-                            [theme.breakpoints.up("md")]: {
-                              width: "80%",
-                            },
-                            "& .MuiOutlinedInput-notchedOutline": {
-                              borderWidth: "2px",
-                              borderColor: "#b3b3b3",
-                              borderRadius: "10px",
-                            },
-                          }}
-                        />
-                      </Grid>
-                    ))}
+                        {item.label}
+                      </Typography>
+                      <TextField
+                        fullWidth
+                        variant="outlined"
+                        type={item.type}
+                        name={item.field}
+                        value={
+                          item.field === "dob"
+                            ? formatDateForInput(formData[item.field])
+                            : formData[item.field]
+                        }
+                        onChange={handleChange}
+                        disabled={!isEditing}
+                        sx={{
+                          [theme.breakpoints.up("md")]: {
+                            width: index === 6 ? "90%" : "80%",
+                          },
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderWidth: "2px",
+                            borderColor: "#b3b3b3",
+                            borderRadius: "10px",
+                          },
+                        }}
+                      />
+                    </Grid>
+                  ))}
+                  <Grid item xs={12} md={6}>
+                    <Typography
+                      variant="subtitle1"
+                      gutterBottom
+                      sx={{ fontWeight: "600", overflow: "hidden" }}
+                    >
+                      Profile Picture
+                    </Typography>
+                    <TextField
+                      fullWidth
+                      variant="outlined"
+                      type="file"
+                      name="file"
+                      onChange={handleChange}
+                      disabled={!isEditing}
+                      sx={{
+                        [theme.breakpoints.up("md")]: {
+                          width: "80%",
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderWidth: "2px",
+                          borderColor: "#b3b3b3",
+                          borderRadius: "10px",
+                        },
+                      }}
+                    />
                   </Grid>
-                ))}
+                </Grid>
+                {isEditing && (
+                  <Button
+                    onClick={handleUserUpdate}
+                    variant="contained"
+                    color="primary"
+                    sx={{ marginTop: "1rem" }}
+                  >
+                    Save Changes
+                  </Button>
+                )}
               </form>
             </Container>
           </Box>
+          <Box
+            sx={{
+              flexGrow: "1",
+              [theme.breakpoints.up("lg")]: {
+                maxWidth: "40%",
+              },
+              [theme.breakpoints.down("md")]: {
+                marginTop: "2rem",
+              },
+            }}
+          >
+            <Container
+              maxWidth="md"
+              sx={{
+                backgroundColor: "#777492",
+                borderRadius: "20px",
+                height: "100%",
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "space-around",
+                  marginTop: "2%",
+                  padding: "2%",
+                  height: "100%",
+                }}
+              >
+                <Card
+                  elevation={3}
+                  sx={{
+                    width: "100%",
+                    height: "auto",
+                    marginBottom: "2%",
+                    borderRadius: "20px",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <CardContent>
+                      <div style={{ fontWeight: "900" }}>
+                        <Typography variant="button" color="#79838b">
+                          {formData.designation}
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography variant="caption" color="#b8c5d0">
+                          Type
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography color="#79838b">
+                          {formData.designation_type}
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography variant="caption" color="#b8c5d0">
+                          Joined
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography color="#79838b">
+                          {formatDate(formData.joining_date)}
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography variant="caption" color="#b8c5d0">
+                          Experience
+                        </Typography>
+                      </div>
+                      <div>
+                        <Typography color="#79838b">
+                          {formData.experience} years
+                        </Typography>
+                      </div>
+                    </CardContent>
+                    <Box
+                      component="img"
+                      height="200"
+                      src={formData.file}
+                      // image={formData.profile_picture}
+                      alt="green iguana"
+                      sx={{
+                        objectFit: "cover",
+                        objectPosition: "center center",
+                        borderRadius: "20px",
+                        margin: "0.5rem",
+                        maxWidth: "40%",
+                      }}
+                    />
+                  </Box>
+                </Card>
+                <box>
+                  <Box sx={{ textAlign: "center", marginBottom: "1rem" }}>
+                    <Chip
+                      label="Work"
+                      sx={{
+                        backgroundColor: "#4bc9fe",
+                        color: "white",
+                        fontWeight: "700",
+                        marginBottom: "0",
+                      }}
+                    />
+                  </Box>
+                  <Grid container spacing={2} sx={{ display: "flex" }}>
+                    {cardsData?.map((item) => (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        key={item.info}
+                        sx={{ display: "flex" }}
+                      >
+                        <Card
+                          elevation={2}
+                          sx={{
+                            borderRadius: "20px",
+                            flex: 1,
+                            flexDirection: "column",
+                            textAlign: "center",
+                          }}
+                        >
+                          <CardContent>
+                            <Typography
+                              sx={{
+                                fontSize: "3vw",
+                              }}
+                              gutterBottom
+                              color="#6e7880"
+                            >
+                              {item.value}
+                            </Typography>
+                            <Typography variant="subtitle1" color="#9fadb8">
+                              {item.info}
+                            </Typography>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </box>
+              </Box>
+            </Container>
+          </Box>
         </Box>
-      )}
-    </Box>
-  );
+        {user?.role === "user" && (
+          <Box
+            sx={{ display: "flex", flexDirection: "column", margin: "2% 2.3%" }}
+          >
+            <ProjectDetails />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "stretch", // Ensure equal height
+                marginTop: "2%",
+              }}
+            >
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: "700", color: "#121843" }}
+                gutterBottom
+              >
+                Project Timeline
+              </Typography>
+              <Container sx={{ padding: "0 !important", marginTop: "10px" }}>
+                <form onSubmit={handleSubmit}>
+                  {projectsData?.projects?.map((project, index) => (
+                    <Grid container spacing={1} key={project.id}>
+                      {projectTimelineFields.map((item, index) => (
+                        <Grid
+                          item
+                          xs={12}
+                          md={index === 0 || index === 1 ? "1.5" : "3"}
+                          key={index}
+                        >
+                          <Typography
+                            variant="subtitle1"
+                            gutterBottom
+                            sx={{ fontWeight: "600", overflow: "hidden" }}
+                          >
+                            {item.label}
+                          </Typography>
+                          <TextField
+                            fullWidth
+                            id="text"
+                            variant="outlined"
+                            type={item.type}
+                            name={item.field}
+                            value={
+                              item.field === "startedOn" ||
+                              item.field === "completedOn"
+                                ? project[item.field].toLocaleString("en-US", {
+                                    month: "short",
+                                    year: "numeric",
+                                  })
+                                : project[item.field]
+                            }
+                            onChange={handleChange}
+                            onDoubleClick={handleDoubleClick}
+                            onBlur={() => handleBlur(item.field)}
+                            onKeyPress={(e) => handleKeyPress(e, item.field)}
+                            disabled
+                            sx={{
+                              [theme.breakpoints.up("md")]: {
+                                width: "80%",
+                              },
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                borderWidth: "2px",
+                                borderColor: "#b3b3b3",
+                                borderRadius: "10px",
+                              },
+                            }}
+                          />
+                        </Grid>
+                      ))}
+                    </Grid>
+                  ))}
+                </form>
+              </Container>
+            </Box>
+          </Box>
+        )}
+      </Box>
+    );
+  }
 };
 
 export default UserProfilePage;

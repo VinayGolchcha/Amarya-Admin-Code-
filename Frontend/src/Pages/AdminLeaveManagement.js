@@ -58,7 +58,7 @@ export default function AdminLeaveManagement() {
   const [fromDate, setFromDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
   const [leaveType, setLeaveType] = React.useState("");
-  const [filterEmpName, setFilterEmpName] = React.useState("");
+  const [filterEmpName, setFilterEmpName] = React.useState("Sanjana Jain");
   const [subject, setSubject] = React.useState("");
   const [body, setBody] = React.useState("");
   const [rows, setRows] = React.useState([]);
@@ -68,7 +68,7 @@ export default function AdminLeaveManagement() {
   const [error, setError] = React.useState("");
   const [data, setData] = React.useState(null);
   const [employees, setEmployees] = React.useState([]);
-  const [filterEmpId, setFilterEmpId] = React.useState("");
+  const [filterEmpId, setFilterEmpId] = React.useState("AMEMP002");
   const [loading, setLoading] = React.useState(true);
   const apiUrl = process.env.REACT_APP_API_URI;
   const [errorr, setErrorr] = React.useState(null);

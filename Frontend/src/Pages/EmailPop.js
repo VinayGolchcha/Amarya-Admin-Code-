@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { TextField, Button } from "@mui/material";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import OtpP from "./OtpPop";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useAuth } from "../Components/AuthContext";
@@ -9,7 +11,6 @@ function EmailP({ closeEmailP, openOtpP, setEmail }) {
   const [email, setEmailInput] = useState("");
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || "");
-
   const handleUpdate = async () => {
     try {
       // Replace with your actual API URL from environment variable
@@ -27,25 +28,25 @@ function EmailP({ closeEmailP, openOtpP, setEmail }) {
         }
       );
       console.log(response);
-      setEmail(email);
-      openOtpP();
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setEmail(email);
+        openOtpP();
+      } else {
+        toast.error(response.data.message);
+      }
     } catch (error) {
-      console.log("Error data:", error.response.data.errors[0]?.msg);
+      console.log("Error data:", error.response?.data?.errors[0]?.msg || error.response?.data?.message || error.message);
+      toast.error(error.response?.data?.errors[0]?.msg || error.response?.data?.message || "An error occurred");
     }
   };
-
+  
   return (
     <>
       <div
         style={{
           backgroundColor: "white",
           borderRadius: "10px",
-          // height: "100vh",
-          // width: "100vw",
-          // position: "absolute",
-          // top: "57px",
-          // left: "117px",
-          // zIndex: "11",
         }}
         className="modelbackground"
       >
@@ -113,6 +114,9 @@ function EmailP({ closeEmailP, openOtpP, setEmail }) {
                 color: "white",
                 fontWeight: 600,
                 textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FF5151",
+                },
               }}
               variant="contained"
               color="primary"
@@ -124,6 +128,7 @@ function EmailP({ closeEmailP, openOtpP, setEmail }) {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </>
   );
 }

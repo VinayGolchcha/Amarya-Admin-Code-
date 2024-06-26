@@ -33,7 +33,10 @@ const AssetsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [fullName, setFullName] = useState("");
   const [employeeID, setEmployeeID] = useState("");
-  const [todayDate, setTodayDate] = useState("");
+  const [todayDate, setTodayDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
+  });
   const [selectedRequestTypes, setSelectedRequestTypes] = useState([]);
   const [selectedHardwareItems, setSelectedHardwareItems] = useState([]);
   const [requirement_type, setRequirementType] = useState("");

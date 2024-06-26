@@ -192,9 +192,9 @@ const LoginPage = () => {
           <Typography
             variant="body2"
             sx={{
-              color: "white",
               marginTop: 1,
-              marginLeft: { xs: "30%", md: "45%" },
+              marginLeft: { xs: "30%", md: "48%" },
+              color: "#FFFFFF",
             }}
           >
             <a
@@ -202,6 +202,7 @@ const LoginPage = () => {
               onClick={() => {
                 setOpenEmailP(true);
               }}
+              style={{ color: "#FFFFFF", }}
             >
               Forgot/Reset Password?
             </a>

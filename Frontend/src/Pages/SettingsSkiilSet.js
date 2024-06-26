@@ -155,6 +155,7 @@ export default function SettingsSkillSet() {
           .catch((error) => {
             console.error("Error updating skill:", error);
             toast.error("Failed to update skill.");
+            
           });
       });
 

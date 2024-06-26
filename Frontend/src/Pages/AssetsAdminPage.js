@@ -127,21 +127,7 @@ function createData(
   };
 }
 
-const rows = [
-  createData(
-    "AM1211",
-    "1st Jan ‘21",
-    "laptop",
-    "Sanjana Jain",
-    "Laptop",
-    "Your text here",
-    "1st Jan ‘21",
-    "Present",
-    "1-time",
-    "YES",
-    "14th Dec ‘23"
-  ),
-];
+const rows = [];
 let row;
 export default function AssetsAdminPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -287,7 +273,7 @@ export default function AssetsAdminPage() {
     );
   };
   if (isLoading) {
-    return <Loading />;
+      return <Loading />
   } else {
     return (
       <>
@@ -540,7 +526,13 @@ export default function AssetsAdminPage() {
                         alt="add"
                         onClick={handleOpen}
                       /> */}
-                    <Box sx={{ cursor: "pointer", display: "flex",justifyContent:"center" }}>
+                    <Box
+                      sx={{
+                        cursor: "pointer",
+                        display: "flex",
+                        justifyContent: "center",
+                      }}
+                    >
                       <AddOutlinedIcon
                         onClick={handleOpen}
                         color="action"

@@ -3,6 +3,9 @@ import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
 import { useAuth } from "../Components/AuthContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Loading from "../sharable/Loading";
 
 export default function SettingsTeams() {
   const [formData, setFormData] = useState([{ _id: "", team: "" }]);
@@ -10,13 +13,14 @@ export default function SettingsTeams() {
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedInputIndex, setSelectedInputIndex] = useState(null);
+  const [focusedInputIndex, setFocusedInputIndex] = useState(null);
   const len = formData.length;
   const [originalFormData, setOriginalFormData] = useState([]);
   const midPoint = Math.floor(formData.length / 2);
   const apiUrl = process.env.REACT_APP_API_URL;
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
-
+  const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     fetchTeams();
   }, []);
@@ -50,6 +54,7 @@ export default function SettingsTeams() {
           data.data.map((team) => ({ _id: team._id, team: team.team }))
         );
         setOriginalFormData([...teams]);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -187,103 +192,99 @@ export default function SettingsTeams() {
   };
 
   const handleInputClick = (index) => {
+    // if (focusedInputIndex !== null && focusedInputIndex !== index) {
+    //   toast.warn("You can only edit or delete one field at a time.");
+    //   return;
+    // }
+    // setFocusedInputIndex(index);
+
     if (deleteMode) {
       setSelectedInputIndex(index);
-      console.log(selectedInputIndex);
     }
   };
-  return (
-    <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
-      <Grid container spacing={4} sx={{ marginLeft: "4%" }}>
-        <Grid item xs={4}>
-          {formData.slice(0, midPoint).map((data, index) => (
-            <FormControl fullWidth>
-              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-                Team {index + 1}
-              </FormLabel>
-              <TextField
-                key={index}
-                type="text"
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                  margin: "10px 0px",
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={data.team}
-                onChange={(e) =>
-                  handleInputChange(index, "team", e.target.value)
-                }
-                onClick={() => handleInputClick(index)}
-                disabled={!editMode}
-              />
-            </FormControl>
-          ))}
-        </Grid>
 
-        <Grid item xs={4}>
-          {formData.slice(midPoint, len).map((data, index) => (
-            <FormControl fullWidth>
-              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-                Team {index + midPoint + 1}
-              </FormLabel>
+  if (isLoading) {
+    return <Loading />;
+  } else {
+    return (
+      <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
+        <Grid container spacing={4} sx={{ marginLeft: "4%" }}>
+          <Grid item xs={4}>
+            {formData.slice(0, midPoint).map((data, index) => (
+              <FormControl fullWidth>
+                <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                  Team {index + 1}
+                </FormLabel>
+                <TextField
+                  key={index}
+                  type="text"
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "2px",
+                      borderColor: "#b3b3b3",
+                      borderRadius: "10px",
+                    },
+                    margin: "10px 0px",
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={data.team}
+                  onChange={(e) =>
+                    handleInputChange(index, "team", e.target.value)
+                  }
+                  onClick={() => handleInputClick(index)}
+                  disabled={!editMode}
+                />
+              </FormControl>
+            ))}
+          </Grid>
 
-              <TextField
-                key={index}
-                type="text"
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                  margin: "10px 0px",
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={data.team}
-                onChange={(e) =>
-                  handleInputChange(index + midPoint, "team", e.target.value)
-                }
-                onClick={() => handleInputClick(index + midPoint)}
-                disabled={!editMode}
-              />
-            </FormControl>
-          ))}
-        </Grid>
+          <Grid item xs={4}>
+            {formData.slice(midPoint, len).map((data, index) => (
+              <FormControl fullWidth>
+                <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                  Team {index + midPoint + 1}
+                </FormLabel>
 
-        <Grid item xs={4}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center ",
-              width: "100%",
-              height: "100%",
-              gap: "40px",
-            }}
-          >
-            <Button
-              variant="contained"
-              color="error"
+                <TextField
+                  key={index}
+                  type="text"
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "2px",
+                      borderColor: "#b3b3b3",
+                      borderRadius: "10px",
+                    },
+                    margin: "10px 0px",
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={data.team}
+                  onChange={(e) =>
+                    handleInputChange(index + midPoint, "team", e.target.value)
+                  }
+                  onClick={() => handleInputClick(index + midPoint)}
+                  disabled={!editMode}
+                />
+              </FormControl>
+            ))}
+          </Grid>
+
+          <Grid item xs={4}>
+            <Box
               sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center ",
+                width: "100%",
+                height: "100%",
+                gap: "40px",
               }}
-              onClick={handleAddNew}
             >
-              Add New
-            </Button>
-            {editMode && (
               <Button
                 variant="contained"
                 color="error"
@@ -292,40 +293,54 @@ export default function SettingsTeams() {
                   backgroundColor: "#ff5151",
                   width: "60%",
                 }}
-                onClick={handleSave}
+                onClick={handleAddNew}
               >
-                Save
+                Add New
               </Button>
-            )}
-            <Button
-              variant="contained"
-              color="error"
-              sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
-              }}
-              onClick={handleEdit}
-            >
-              {editMode ? "Cancel Edit" : "Edit"}
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
-              }}
-              onClick={handleDelete}
-            >
-              {deleteMode ? "Confirm Delete" : "Delete"}
-            </Button>
-          </Box>
+              {editMode && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  sx={{
+                    display: "block",
+                    backgroundColor: "#ff5151",
+                    width: "60%",
+                  }}
+                  onClick={handleSave}
+                >
+                  Save
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                color="error"
+                sx={{
+                  display: "block",
+                  backgroundColor: "#ff5151",
+                  width: "60%",
+                }}
+                onClick={handleEdit}
+              >
+                {editMode ? "Cancel Edit" : "Edit"}
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                sx={{
+                  display: "block",
+                  backgroundColor: "#ff5151",
+                  width: "60%",
+                }}
+                onClick={handleDelete}
+              >
+                {deleteMode ? "Confirm Delete" : "Delete"}
+              </Button>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
-  );
+      </Box>
+    );
+  }
 }
 /*import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";

@@ -3,6 +3,9 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
 import { useAuth } from "../Components/AuthContext";
+import Loading from "../sharable/Loading";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SettingHoliday() {
   const [formData, setFormData] = useState([
@@ -10,6 +13,7 @@ export default function SettingHoliday() {
   ]);
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedInputIndex, setSelectedInputIndex] = useState(null);
   const [originalFormData, setOriginalFormData] = useState([]);
   const days = [
@@ -40,14 +44,14 @@ export default function SettingHoliday() {
         },
       }
     )
-    .then((response) => {
-      if (response.status === 404) {
-        // Handle 404 Not Found
-        setEditMode(true);
-        return null;
-      }
-      return response.json();
-    })
+      .then((response) => {
+        if (response.status === 404) {
+          // Handle 404 Not Found
+          setEditMode(true);
+          return null;
+        }
+        return response.json();
+      })
       .then((data) => {
         const formattedData = data.data.map((item) => ({
           _id: item._id,
@@ -64,6 +68,7 @@ export default function SettingHoliday() {
         }));
         setOriginalFormData(formattedOriginalData);
         console.log(originalFormData);
+        setLoading(false);
       })
       .catch((error) => console.error("Error fetching holiday data:", error));
   };
@@ -116,6 +121,7 @@ export default function SettingHoliday() {
           .then((response) => {
             if (!response.ok) {
               throw new Error("Failed to delete holiday");
+              toast.error("Failed to delete skill.");
             }
             return response.json();
           })
@@ -126,10 +132,12 @@ export default function SettingHoliday() {
             setFormData(newFormData);
             setSelectedInputIndex(null);
             setDeleteMode(false);
+            toast.success("Skill deleted successfully.");
             fetchHolidayData();
           })
           .catch((error) => {
             console.error("Error deleting holiday:", error);
+            toast.error("Failed to delete skill.");
           });
       } else {
         setDeleteMode(false);
@@ -159,6 +167,7 @@ export default function SettingHoliday() {
         // const formattedDate = formatDateForAPI(editedHoliday.date);
         // console.log(formattedDate);
         const formattedDate = formatDateForAPI2(editedHoliday.date);
+        console.log(editedHoliday,formattedDate);
         fetch(
           `https://amarya-admin-backend-code.onrender.com/api/v1/leave/admin/update-holiday/${editedHoliday._id}`,
           {
@@ -182,9 +191,11 @@ export default function SettingHoliday() {
           .then((data) => {
             console.log("Holiday updated successfully:", data);
             fetchHolidayData();
+            toast.success("Skill updated successfully.");
           })
           .catch((error) => {
             console.error("Error updating holiday:", error);
+            toast.error("Failed to update skill.");
           });
       });
 
@@ -254,124 +265,114 @@ export default function SettingHoliday() {
     }
   };
 
-  return (
-    <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
-      <Grid container spacing={4} sx={{marginLeft:"2%"}}>
-        <Grid item xs={3}>
-          <FormControl fullWidth>
-            <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-              Date
-            </FormLabel>
-            {formData.map((data, index) => (
-              <TextField
-                key={index}
-                type="date"
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                  margin: "10px 0px",
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={
-                  data.date ? data.date.split("/").reverse().join("-") : ""
-                }
-                onChange={(e) =>
-                  handleInputChange(index, "date", e.target.value)
-                }
-                onClick={() => handleInputClick(index)}
-                disabled={!editMode}
-              />
-            ))}
-          </FormControl>
-        </Grid>
+  if (loading) {
+    return <Loading />;
+  } else {
+    return (
+      <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
+        <Grid container spacing={4} sx={{ marginLeft: "2%" }}>
+          <Grid item xs={3}>
+            <FormControl fullWidth>
+              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                Date
+              </FormLabel>
+              {formData.map((data, index) => (
+                <TextField
+                  key={index}
+                  type="date"
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "2px",
+                      borderColor: "#b3b3b3",
+                      borderRadius: "10px",
+                    },
+                    margin: "10px 0px",
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={
+                    data.date ? data.date.split("/").reverse().join("-") : ""
+                  }
+                  onChange={(e) =>
+                    handleInputChange(index, "date", e.target.value)
+                  }
+                  onClick={() => handleInputClick(index)}
+                  disabled={!editMode}
+                />
+              ))}
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={3}>
-          <FormControl fullWidth>
-            <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-              Day
-            </FormLabel>
-            {formData.map((data, index) => (
-              <TextField
-                key={index}
-                type="text"
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                  margin: "10px 0px",
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                value={data.day}
-                disabled
-              />
-            ))}
-          </FormControl>
-        </Grid>
+          <Grid item xs={3}>
+            <FormControl fullWidth>
+              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                Day
+              </FormLabel>
+              {formData.map((data, index) => (
+                <TextField
+                  key={index}
+                  type="text"
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "2px",
+                      borderColor: "#b3b3b3",
+                      borderRadius: "10px",
+                    },
+                    margin: "10px 0px",
+                  }}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                  value={data.day}
+                  disabled
+                />
+              ))}
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={3}>
-          <FormControl fullWidth>
-            <FormLabel sx={{ color: "black", fontWeight: "600" }}>
-              Holiday
-            </FormLabel>
-            {formData.map((data, index) => (
-              <TextField
-                key={index}
-                label="Holiday"
-                fullWidth
-                sx={{
-                  "& .MuiOutlinedInput-notchedOutline": {
-                    borderWidth: "2px",
-                    borderColor: "#b3b3b3",
-                    borderRadius: "10px",
-                  },
-                  margin: "10px 0px",
-                }}
-                value={data.holiday}
-                onChange={(e) =>
-                  handleInputChange(index, "holiday", e.target.value)
-                }
-                onClick={() => handleInputClick(index)}
-                disabled={!editMode}
-              />
-            ))}
-          </FormControl>
-        </Grid>
+          <Grid item xs={3}>
+            <FormControl fullWidth>
+              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                Holiday
+              </FormLabel>
+              {formData.map((data, index) => (
+                <TextField
+                  key={index}
+                  label="Holiday"
+                  fullWidth
+                  sx={{
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderWidth: "2px",
+                      borderColor: "#b3b3b3",
+                      borderRadius: "10px",
+                    },
+                    margin: "10px 0px",
+                  }}
+                  value={data.holiday}
+                  onChange={(e) =>
+                    handleInputChange(index, "holiday", e.target.value)
+                  }
+                  onClick={() => handleInputClick(index)}
+                  disabled={!editMode}
+                />
+              ))}
+            </FormControl>
+          </Grid>
 
-        <Grid item xs={3}>
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center ",
-              width: "100%",
-              height: "100%",
-              gap: "40px",
-            }}
-          >
-            <Button
-              variant="contained"
-              color="error"
+          <Grid item xs={3}>
+            <Box
               sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center ",
+                width: "100%",
+                height: "100%",
+                gap: "40px",
               }}
-              onClick={handleAddNew}
             >
-              Add New
-            </Button>
-            {editMode && (
               <Button
                 variant="contained"
                 color="error"
@@ -380,38 +381,52 @@ export default function SettingHoliday() {
                   backgroundColor: "#ff5151",
                   width: "60%",
                 }}
-                onClick={handleSave}
+                onClick={handleAddNew}
               >
-                Save
+                Add New
               </Button>
-            )}
-            <Button
-              variant="contained"
-              color="error"
-              sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
-              }}
-              onClick={handleEdit}
-            >
-              {editMode ? "Cancel Edit" : "Edit"}
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{
-                display: "block",
-                backgroundColor: "#ff5151",
-                width: "60%",
-              }}
-              onClick={handleDelete}
-            >
-              {deleteMode ? "Confirm Delete" : "Delete"}
-            </Button>
-          </Box>
+              {editMode && (
+                <Button
+                  variant="contained"
+                  color="error"
+                  sx={{
+                    display: "block",
+                    backgroundColor: "#ff5151",
+                    width: "60%",
+                  }}
+                  onClick={handleSave}
+                >
+                  Save
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                color="error"
+                sx={{
+                  display: "block",
+                  backgroundColor: "#ff5151",
+                  width: "60%",
+                }}
+                onClick={handleEdit}
+              >
+                {editMode ? "Cancel Edit" : "Edit"}
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                sx={{
+                  display: "block",
+                  backgroundColor: "#ff5151",
+                  width: "60%",
+                }}
+                onClick={handleDelete}
+              >
+                {deleteMode ? "Confirm Delete" : "Delete"}
+              </Button>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </Box>
-  );
+      </Box>
+    );
+  }
 }

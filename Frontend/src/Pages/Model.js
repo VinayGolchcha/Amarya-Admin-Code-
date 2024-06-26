@@ -2,11 +2,13 @@ import { TextField, Button } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import CloseIcon from "@mui/icons-material/Close";
 import "./../App.css";
 import { useAuth } from "../Components/AuthContext";
-function Model({ closeModel,closeOtpP, email }) {
+function Model({ closeModel, closeOtpP, email }) {
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirm_password] = useState("");
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -18,12 +20,28 @@ function Model({ closeModel,closeOtpP, email }) {
         confirm_password,
         email,
       });
-      if (response.status === 200) {
+      if (response.data.success) {
+        toast.success("Password updated successfully");
         closeModel(false);
         closeOtpP(false);
+      } else {
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.log("Error data:", error.response.data.errors[0]?.msg);
+      if (error.response && error.response.data && error.response.data.errors) {
+        error.response.data.errors.forEach((err) => {
+          toast.error(err.msg);
+        });
+      } else if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("An error occurred");
+      }
+      console.log("Error data:", error);
     }
   };
 
@@ -162,6 +180,9 @@ function Model({ closeModel,closeOtpP, email }) {
                 fontWeight: 600,
 
                 textTransform: "none",
+                "&:hover": {
+                  backgroundColor: "#FF5151",
+                },
               }}
               variant="contained"
               color="primary"

@@ -225,6 +225,11 @@ const NavBar = ({ handleDrawerToggle }) => {
       sx={{ marginTop: "2.5rem" }}
     >
       <MenuItem
+        sx={{ color: "#ff5151", fontWeight: "bold" }}
+      >
+        {user?.user_id}
+      </MenuItem>
+      <MenuItem
         onClick={() => {
           navigate("/profile");
         }}

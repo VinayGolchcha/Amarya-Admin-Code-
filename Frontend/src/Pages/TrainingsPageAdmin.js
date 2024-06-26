@@ -187,7 +187,7 @@ export default function TrainingsPageAdmin( ) {
           courses: item?.course_name,
           coursedescription: item?.course_description,
           completedinprogress: item?.progress_status,
-          approvedon: "Nov 1, 22",
+          approvedon: item?.approval_date,
           approvedrejected: "Approved",
           manager: "HR",
       })));
