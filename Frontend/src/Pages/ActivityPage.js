@@ -177,7 +177,7 @@ const ActivityPage = () => {
             border: "solid 1px #74787e",
             borderRadius: "15px",
             height: "50vh",
-            width: "90%",
+            width: "100%",
             position: "relative",
           }}
         >

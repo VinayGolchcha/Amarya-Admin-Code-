@@ -105,12 +105,15 @@ import NativeSelect from '@mui/material/NativeSelect';
           const data = await response.json();
           if (data.success) {
             setEmployees(data.data); // Assuming data.data contains the list of employees
-            setFilterDropdown(data.data.map((emp) => emp.emp_id)); // Assuming emp_id is the identifier
+            setFilterDropdown(data.data.map((emp) => emp.emp_id));
+            setIsLoading(false); // Assuming emp_id is the identifier
           } else {
             console.error("Failed to fetch employees:", data.message);
+            setIsLoading(false);
           }
         } catch (error) {
           console.error("Error fetching employees:", error);
+          setIsLoading(false);
         }
       };
       
@@ -157,6 +160,30 @@ import NativeSelect from '@mui/material/NativeSelect';
       }
     }
     React.useEffect(() => {
+      async function getData() {
+        try {
+          setLoading(true);
+  
+          const response = await axios.get(
+            // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
+            `${apiUrl}/leave/get-user-leave-dashboard-data/${user?.user_id}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                "x-access-token": token,
+              },
+            }
+          );
+          setData(response?.data?.data);
+  
+          setLoading(false);
+        } catch (errorr) {
+          setErrorr(errorr);
+  
+          setLoading(false);
+        }
+      }
+      getData()
       fetchAllEmployees();
     },[]);
   
@@ -334,30 +361,39 @@ import NativeSelect from '@mui/material/NativeSelect';
                 }}
                 spacing={2}
               >
-                {data?.user_data?.map((item) => (<Card
+              {data?.user_data?.map((item) => (
+                <Card
                   sx={{
-                    minHeight : "110px" ,
-                    minWidth : "144px",
+                    minHeight: "91px",
+                    minWidth: "144px",
                     width: "125px",
                     height: "70px",
                     margin: "10px 0px",
                     marginRight: "10px",
                     backgroundColor: "#FFEFE7",
                     padding: "3px 3px 3px 15px",
-                    display : "flex" , 
-                    flexDirection : "column" ,
-                    justifyContent : "space-between"
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
                   }}
                 >
-                  <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
+                  <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" , fontSize : "0.9rem" }}>
                     {item?.leave_type}
                   </Typography>
-                  <CardContent sx={{ padding: "0px" }}>
-                    <Typography sx={{ fontWeight: "500", fontFamily: "Poppins" }}>
-                      <strong style={{ fontSize: "1.5rem" }}>{item?.leave_taken_count}</strong>/{item?.leave_count}
+                  <CardContent sx={{ padding: "0px" ,  "&:last-child": {
+                      paddingBottom: "7px",
+                    },}}>
+                    <Typography
+                      sx={{ fontWeight: "500", fontFamily: "Poppins" }}
+                    >
+                      <strong style={{ fontSize: "1.5rem" }}>
+                        {item?.leave_taken_count}
+                      </strong>
+                      /{item?.leave_count}
                     </Typography>
                   </CardContent>
-                </Card>))}
+                </Card>
+              ))}
               </Box>
               <Typography
                 variant="h6"
@@ -480,7 +516,7 @@ import NativeSelect from '@mui/material/NativeSelect';
                   {rows?.length === 0 ?
                   (<TableRow >
                     <TableCell colSpan={8}>
-                      <Alert severity="warning">Data not found.</Alert>
+                      <Alert severity="warning">Leaves not found.</Alert>
                     </TableCell>
                     
                   </TableRow>) : 

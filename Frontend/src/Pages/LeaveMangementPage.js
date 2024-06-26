@@ -98,6 +98,7 @@ export default function LeaveMangementPage() {
       )
       setLeaveOverviewData(res?.data?.data)
     }catch(err){
+      setLeaveOverviewData([]);
       toast.error(err?.response?.message);
     }
   };
@@ -254,6 +255,7 @@ export default function LeaveMangementPage() {
   }
 
   function handleDateChange(newDate){
+    console.log("handle date change called");
     const date = new Date(newDate);
     const isoDate = date?.toISOString()?.split("T")[0];
     leaveOverViewByDate(isoDate);
@@ -348,7 +350,7 @@ export default function LeaveMangementPage() {
               {data?.user_data?.map((item) => (
                 <Card
                   sx={{
-                    minHeight: "110px",
+                    minHeight: "91px",
                     minWidth: "144px",
                     width: "125px",
                     height: "70px",
@@ -361,10 +363,12 @@ export default function LeaveMangementPage() {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
+                  <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" , fontSize : "0.9rem" }}>
                     {item?.leave_type}
                   </Typography>
-                  <CardContent sx={{ padding: "0px" }}>
+                  <CardContent sx={{ padding: "0px" ,  "&:last-child": {
+                      paddingBottom: "7px",
+                    },}}>
                     <Typography
                       sx={{ fontWeight: "500", fontFamily: "Poppins" }}
                     >
@@ -724,7 +728,7 @@ export default function LeaveMangementPage() {
                 {rows?.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={8}>
-                      <Alert severity="warning">Data not found.</Alert>
+                      <Alert severity="warning">Leaves not found.</Alert>
                     </TableCell>
                   </TableRow>
                 ) : (
