@@ -173,7 +173,7 @@ export default function AdminLeaveManagement() {
 
         const response = await axios.get(
           // `${process.env.REACT_APP_BASE_URL}/api/v1/leave/get-all-leave-count/AMEMP010`
-          `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data`,
+          `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data/${filterEmpId}`,
           {
             headers: {
               "x-access-token": user?.token,
@@ -190,8 +190,30 @@ export default function AdminLeaveManagement() {
         setLoading(false);
       }
     };
+    const getUserLeaves = async () => {
+      const empId = filterEmpId;
+      try {
+        const res = await axios.post(
+          `${apiUrl}/leave/user-all-leave-data`,
+          {
+            emp_id: empId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-access-token": token,
+            },
+          }
+        );
+        setRows(res?.data?.data || []); // Ensure to handle empty response data gracefully
+      } catch (err) {
+        console.log(err);
+        setRows([]);
+      }
+    };
     fetchAllEmployees();
     getData();
+    getUserLeaves();
   }, []);
 
   const handleUpdate = async () => {

@@ -167,7 +167,7 @@ export default function SettingHoliday() {
         // const formattedDate = formatDateForAPI(editedHoliday.date);
         // console.log(formattedDate);
         const formattedDate = formatDateForAPI2(editedHoliday.date);
-        console.log(editedHoliday,formattedDate);
+        console.log(editedHoliday, formattedDate);
         fetch(
           `https://amarya-admin-backend-code.onrender.com/api/v1/leave/admin/update-holiday/${editedHoliday._id}`,
           {
@@ -191,11 +191,11 @@ export default function SettingHoliday() {
           .then((data) => {
             console.log("Holiday updated successfully:", data);
             fetchHolidayData();
-            toast.success("Skill updated successfully.");
+            toast.success("Holiday updated successfully.");
           })
           .catch((error) => {
             console.error("Error updating holiday:", error);
-            toast.error("Failed to update skill.");
+            toast.error("Failed to update Holiday.");
           });
       });
 
@@ -239,9 +239,11 @@ export default function SettingHoliday() {
               setFormData(updatedFormData);
             }
             fetchHolidayData();
+            toast.success("Holiday created successfully.");
           })
           .catch((error) => {
             console.error("Error creating holiday:", error);
+            toast.success("Error creating holiday.");
           });
       });
 

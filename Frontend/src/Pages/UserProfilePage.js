@@ -19,6 +19,7 @@ import { AuthProvider, useAuth } from "../Components/AuthContext";
 import ProjectDetails from "../Components/ProjectDetails";
 import { toast } from "react-toastify";
 import Loading from "../sharable/Loading";
+import Avatar from "@mui/material/Avatar";
 
 const UserProfilePage = () => {
   const theme = useTheme();
@@ -55,7 +56,7 @@ const UserProfilePage = () => {
     password: "",
     state_name: "Madhya Pradesh",
     city_name: "",
-    file: "https://www.google.com/imgres?q=image%20url&imgurl=https%3A%2F%2Fd27jswm5an3efw.cloudfront.net%2Fapp%2Fuploads%2F2019%2F08%2Fimage-url-3.jpg&imgrefurl=https%3A%2F%2Fwww.canto.com%2Fblog%2Fimage-url%2F&docid=aKW_r6CRcOAGeM&tbnid=v5iXxFTM6IuVGM&vet=12ahUKEwjU1oieqaOGAxVmsFYBHSmlCLgQM3oECGEQAA..i&w=800&h=824&hcb=2&ved=2ahUKEwjU1oieqaOGAxVmsFYBHSmlCLgQM3oECGEQAA",
+    file: "",
     blood_group: "",
     mobile_number: "",
     emergency_contact_number: "",
@@ -391,6 +392,7 @@ const UserProfilePage = () => {
     if (formData.file) {
       formDataToSend.append("file", formData.file);
       setProfilePhoto(formData.profile_picture); // Set the profile photo in context
+      console.log(formData.file);
     }
 
     try {
@@ -649,20 +651,29 @@ const UserProfilePage = () => {
                         </Typography>
                       </div>
                     </CardContent>
-                    <Box
-                      component="img"
-                      height="200"
-                      src={formData.file}
-                      // image={formData.profile_picture}
-                      alt="green iguana"
-                      sx={{
-                        objectFit: "cover",
-                        objectPosition: "center center",
-                        borderRadius: "20px",
-                        margin: "0.5rem",
-                        maxWidth: "40%",
-                      }}
-                    />
+                    {formData.file ? (
+                      <CardMedia
+                        component="img"
+                        src={formData.file}
+                        alt="Profile"
+                        style={{
+                          width: 100,
+                          height: 100,
+                          borderRadius: "50%",
+                          marginRight: "1rem",
+                          objectFit: "cover",
+                        }}
+                      />
+                    ) : (
+                      <IconButton
+                        size="large"
+                        aria-label="show 4 new mails"
+                        color="inherit"
+                        sx={{ marginRight: -1 }}
+                      >
+                        <Avatar alt={user?.username} src={formData.file} />
+                      </IconButton>
+                    )}
                   </Box>
                 </Card>
                 <box>
