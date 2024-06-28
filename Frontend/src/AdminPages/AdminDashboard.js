@@ -381,7 +381,7 @@ const AdminDashboard = () => {
                           fontWeight: "600",
                         }}
                       >
-                        <img src="icons/pin.svg" />
+                        
                         <img src="icons/3dots.svg" />
                       </Box>
                     </ListItem>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
   Typography,
@@ -168,10 +168,27 @@ const rows = [
 ];
 
 export default function AdminApprovals({approvalData , approvalReq}) {
-
+  const [search, setSearch] = useState('');
   const [page, setPage] = useState(0);
+  const [filteredItems, setFilteredItems] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const[foreignId , setForeignId] = useState("");
+
+  useEffect(() => {
+    if (search) {
+      setFilteredItems(
+        approvalData.filter((item) =>
+          item?.request_type?.toLowerCase().includes(search.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredItems(approvalData);
+    }
+  }, [search, approvalData]);
+
+  const handleSearchChange = (e) => {
+    setSearch(e.target.value);
+  };
 
   const handleChangePage = (event, newPage) => {
     console.log("setPage is calling");
@@ -189,8 +206,18 @@ export default function AdminApprovals({approvalData , approvalReq}) {
     return dateStr[2] + " " + dateStr[1] + " "+ dateStr[3];
   }
 
-  
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+  }
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      setSearch(event.target.value);
+      const filteredItems = approvalData.filter(item => 
+        item?.request_type?.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+};
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
   const handleClick = (val , status) => {
@@ -244,6 +271,8 @@ export default function AdminApprovals({approvalData , approvalReq}) {
               placeholder="Search…"
               sx={{ border: "1px solid black", borderRadius: "9px" }}
               inputProps={{ "aria-label": "search" }}
+              value={search}
+              onChange={handleSearchChange}
             />
           </Search>
         </Box>
@@ -266,6 +295,12 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                     sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                   >
                     Item
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                  >
+                    Asset Type
                   </TableCell>
                   <TableCell
                     align="left"
@@ -313,11 +348,11 @@ export default function AdminApprovals({approvalData , approvalReq}) {
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? approvalData?.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                  : rows
+                  ? filteredItems.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : filteredItems
                 )?.map((row , i) => (
                   <TableRow
                     key={row.sNo}
@@ -337,10 +372,13 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                       {row?.item}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
+                      {row?.asset_type}
+                    </TableCell>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {row?.full_name}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
-                      {row?.foreign_id ? (row?.foreign_id) : (<TextField variant="standard" onChange={(e) => setForeignId(e.target.value)} />)}
+                      {row?.foreign_id ? (row?.foreign_id) : (<TextField variant="standard" sx={{fontSize : "0.9rem"}} onChange={(e) => setForeignId(e.target.value)} />)}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {formattedDate(row.request_date)}

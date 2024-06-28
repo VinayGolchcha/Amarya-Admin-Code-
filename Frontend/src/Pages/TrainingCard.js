@@ -72,8 +72,7 @@ export default function TrainingCard({
                 color="text.secondary"
                 gutterBottom
               >
-                Training{" "}
-                {field?.trainindId?.toString()[field?.trainindId?.length - 1]}
+                Training {field?.trainindId?.toString().slice(-2)}
                 <>
                 
                 {user?.role === "user" && !edit && !deleteItem && <LaunchIcon sx={{
