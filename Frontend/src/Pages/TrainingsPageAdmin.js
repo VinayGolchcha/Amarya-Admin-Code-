@@ -158,15 +158,17 @@ export default function TrainingsPageAdmin( ) {
           "x-access-token" : user?.token
         }
       });
+      const size = 
       setfields(res?.data?.data?.map((item , i) => (
         {
           courseName : item?.course_name ,
           trainindId : item?.training_id,
           roadmapurl : item?.roadmap_url,
           courseDescription : item?.course_description,
-          color : field[i].color
+          color : field[i%field.length]?.color
         }
       )));
+      console.log("courses on the trainings " , courses);
       setIsLoading(false);
     }catch(err){
       console.log(err);
@@ -509,7 +511,7 @@ export default function TrainingsPageAdmin( ) {
                     <Box sx={{display : 'flex'}}>
                       <img src="Check.svg" style={{ margin: "-4px 6px" }} />
                       Tr.No
-                      {filter && <FilterAltIcon onClick={handleTrId} />}
+                      {/* {filter && <FilterAltIcon onClick={handleTrId} />} */}
                     </Box>
                   </TableCell>
                   <TableCell
@@ -616,11 +618,13 @@ export default function TrainingsPageAdmin( ) {
     {filter ? (
       data?.map((row, i) => (
         <TableRow key={i}>
-          <TableCell style={{ fontFamily: "Poppins" }}>
-            <Checkbox
-              checked={selectedRows.includes(row.id)}
-              onChange={() => handleCheckboxChange(row.id)}
-            />
+          <TableCell style={{ fontFamily: "Poppins"    }}>
+          <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                      alt="Check"
+                      sx={{filter: "invert(1)"  , marginLeft : "25px"}}
+                    />
             {row.id}
           </TableCell>
           <TableCell style={{ fontFamily: "Poppins" }}>
@@ -644,10 +648,12 @@ export default function TrainingsPageAdmin( ) {
       filteredData?.map((row, i) => (
         <TableRow key={i}>
           <TableCell style={{ fontFamily: "Poppins" }}>
-            <Checkbox
-              checked={selectedRows.includes(row.id)}
-              onChange={() => handleCheckboxChange(row.id)}
-            />
+          <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                      alt="Check"
+                      sx={{filter: "invert(1)" , marginLeft : "25px"}}
+                    />
             {row.id}
           </TableCell>
           <TableCell style={{ fontFamily: "Poppins" }}>
