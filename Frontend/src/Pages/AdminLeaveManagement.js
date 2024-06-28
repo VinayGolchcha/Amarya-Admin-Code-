@@ -83,8 +83,10 @@ export default function AdminLeaveManagement() {
     if (newValue === null) {
       setData([]);
       setRows([]);
-      setFilterEmpName("");
-      setFilterEmpId("");
+      setFilterEmpName("Sanjana Jain");
+      setFilterEmpId("AMEMP002");
+      getData("AMEMP002");
+      getUserLeaves("AMEMP002");
       return;
     }
     if (newValue) {

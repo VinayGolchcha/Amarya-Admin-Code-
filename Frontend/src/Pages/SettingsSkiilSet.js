@@ -19,6 +19,7 @@ export default function SettingsSkillSet() {
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedInputIndex, setSelectedInputIndex] = useState(null);
   const [originalFormData, setOriginalFormData] = useState([]);
+  
   const len = formData.length;
   const midPoint = Math.floor(formData.length / 2);
   const apiUrl = process.env.REACT_APP_API_URL;

@@ -768,11 +768,6 @@ export default function LeaveMangementPage() {
                       <TableCell
                         style={{ fontFamily: "Poppins", color: "#74828F" }}
                       >
-                        {row.extendedLeave || "-"}
-                      </TableCell>
-                      <TableCell
-                        style={{ fontFamily: "Poppins", color: "#74828F" }}
-                      >
                         {row.status}
                       </TableCell>
                       <TableCell

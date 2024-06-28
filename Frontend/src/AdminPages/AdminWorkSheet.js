@@ -136,8 +136,8 @@ const WorkSheet = () => {
   const [editingRowIndex, setEditingRowIndex] = useState(null);
   const [textValue, setTextValue] = useState("");
 
-  const [filterEmpId, setFilterEmpId] = useState(""); // State to store the selected employee ID for filtering
-  const [filterEmpName, setFilterEmpName] = useState("");
+  const [filterEmpId, setFilterEmpId] = useState("AMEMP002"); // State to store the selected employee ID for filtering
+  const [filterEmpName, setFilterEmpName] = useState("Sanjana Jain");
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -183,6 +183,12 @@ const WorkSheet = () => {
   };
 
   const handleFilterChange = (event, newValue) => {
+    if (newValue === null) {
+      setFilterEmpName("Sanjana Jain");
+      setFilterEmpId("AMEMP002");
+      fetchWorksheetDataForEmployee("AMEMP002");
+      return;
+    }
     if (newValue) {
       setFilterEmpId(newValue.emp_id); // Set the employee ID for fetching data
       setFilterEmpName(newValue.name);

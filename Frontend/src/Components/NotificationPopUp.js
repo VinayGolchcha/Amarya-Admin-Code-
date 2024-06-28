@@ -54,7 +54,10 @@ export default function NotificationPopUp() {
         <div>
           <Box variant="text" {...bindTrigger(popupState)}>
             <Badge
-              badgeContent={notifications?.filter((notification) => !notification.read).length}
+              badgeContent={
+                notifications?.filter((notification) => !notification.read)
+                  .length
+              }
               color="error"
             >
               <NotificationsIcon sx={{ color: "#b4b4b4" }} fontSize="large" />
@@ -96,10 +99,12 @@ export default function NotificationPopUp() {
                     cursor: "pointer",
                   }}
                   onClick={() => {
-                    const updatedNotifications = notifications.map((notification) => ({
-                      ...notification,
-                      read: true,
-                    }));
+                    const updatedNotifications = notifications.map(
+                      (notification) => ({
+                        ...notification,
+                        read: true,
+                      })
+                    );
                     setNotifications(updatedNotifications);
                   }}
                 >
@@ -151,7 +156,8 @@ export default function NotificationPopUp() {
                         ></Box>
                       )}
                       <img
-                        src="amarya-logo.jpg"
+                        src={`${process.env.PUBLIC_URL}/Images/logo1.svg`}
+                        // src="logo1.svg"
                         alt="logo"
                         style={{
                           borderRadius: "50%",

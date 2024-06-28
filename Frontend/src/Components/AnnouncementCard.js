@@ -14,12 +14,13 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const CardComponenet = (props) => {
+const CardComponent = (props) => {
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
   return (
     <Card
       sx={{
@@ -33,20 +34,12 @@ const CardComponenet = (props) => {
           variant="h6"
           sx={{ fontWeight: "700", marginBottom: "10px" }}
         >
-          {props.data.title + ""}
+          {props.data.title}
         </Typography>
-        <Typography variant="h6" color="black" sx={{}}>
-          {props.data.description}
+        <Typography variant="h6" color="black">
+          {expanded ? props.data.description : props.data.description.slice(0, 100) + (props.data.description.length > 100 ? '...' : '')}
         </Typography>
-        <Collapse in={!expanded}>
-          <Typography>....</Typography>
-        </Collapse>
       </CardContent>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography variant="h6">{props.data.description}</Typography>
-        </CardContent>
-      </Collapse>
       <div
         style={{
           display: "flex",
@@ -56,29 +49,18 @@ const CardComponenet = (props) => {
           color: "#818181",
         }}
       >
-        <div>
-          <ExpandMore
-            expand={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label={expanded ? "Read less" : "Read more"}
-            sx={{ fontSize: "1rem" }}
-          >
-            {expanded ? "Read less" : "Read more"}
-          </ExpandMore>
-        </div>
-        {/* <div>
-                        <IconButton aria-label="thumbsup" sx={{ marginRight: "1rem" }}>
-                            <ThumbUpOutlinedIcon />
-                        </IconButton>
-                        <IconButton aria-label='chat'>
-
-                            <ChatOutlinedIcon />
-                        </IconButton>
-                    </div> */}
+        <ExpandMore
+          expand={expanded}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label={expanded ? "Read less" : "Read more"}
+          sx={{ fontSize: "1rem" }}
+        >
+          {expanded ? "Read less" : "Read more"}
+        </ExpandMore>
       </div>
     </Card>
   );
 };
 
-export default CardComponenet;
+export default CardComponent;

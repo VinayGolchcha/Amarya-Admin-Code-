@@ -11,6 +11,7 @@ import {
   MenuItem,
   Grid,
   DatePicker,
+  Alert,
 } from "@mui/material";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -318,7 +319,14 @@ const AssetsPage = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {formattedContent.map((row, rowIndex) => (
+                {formattedContent?.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={8}>
+                      <Alert severity="warning">Assets not found.</Alert>
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  formattedContent.map((row, rowIndex) => (
                     <TableRow key={rowIndex}>
                       <TableCell align="left">
                         <Box
@@ -345,7 +353,7 @@ const AssetsPage = () => {
                         </TableCell>
                       ))}
                     </TableRow>
-                  ))}
+                  )))}
                 </TableBody>
               </Table>
             </TableContainer>
