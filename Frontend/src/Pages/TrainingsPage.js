@@ -21,53 +21,53 @@ import Loading from "../sharable/Loading";
 import { toast } from "react-toastify";
 
 const field = [
-  // {
-  //   courseName: "Full Stack",
-  //   courseDescription:
-  //     "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
-  //   color: "#FDEBF9",
-  // },
-  // {
-  //   courseName: "DATA SCIENCE",
-  //   courseDescription:
-  //     "Topics Covered - Basics of Python, Pandas, Matplotlib, SKlearn, Scipy and ML Regression and Prediction Models.",
-  //   color: "#F3F8EB",
-  // },
-  // {
-  //   courseName: "REACT NATIVE",
-  //   courseDescription:
-  //     "Topics Covered - Basics of React, React Native topics and Syntax, Project for Whatsapp Replica with React Native.",
-  //   color: "#E8F0FB",
-  // },
-  // {
-  //   courseName: "VUE JS",
-  //   courseDescription:
-  //     "Topics Covered - HTML, CSS, Vue JS, Creating a dynamic Dashboard for professional use at organizational Level.",
-  //   color: "#F3F8EB",
-  // },
-  // {
-  //   courseName: "PYTHON",
-  //   courseDescription:
-  //     "Topics Covered - Python Basics, Intermediate and Advanced Python with Django Framework.",
-  //   color: "#E8F0FB",
-  // },
-  // {
-  //   courseName: "SAP ABAP",
-  //   courseDescription: "Topics Covered - Basics of ABAP Programming Language.",
-  //   color: "#FDEBF9",
-  // },
-  // {
-  //   courseName: "SAP - HR",
-  //   courseDescription:
-  //     "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
-  //   color: "#E8F0FB",
-  // },
-  // {
-  //   courseName: "SAP - CDS",
-  //   courseDescription:
-  //     "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
-  //   color: "#F3F8EB",
-  // },
+  {
+    courseName: "Full Stack",
+    courseDescription:
+      "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
+    color: "#FDEBF9",
+  },
+  {
+    courseName: "DATA SCIENCE",
+    courseDescription:
+      "Topics Covered - Basics of Python, Pandas, Matplotlib, SKlearn, Scipy and ML Regression and Prediction Models.",
+    color: "#F3F8EB",
+  },
+  {
+    courseName: "REACT NATIVE",
+    courseDescription:
+      "Topics Covered - Basics of React, React Native topics and Syntax, Project for Whatsapp Replica with React Native.",
+    color: "#E8F0FB",
+  },
+  {
+    courseName: "VUE JS",
+    courseDescription:
+      "Topics Covered - HTML, CSS, Vue JS, Creating a dynamic Dashboard for professional use at organizational Level.",
+    color: "#F3F8EB",
+  },
+  {
+    courseName: "PYTHON",
+    courseDescription:
+      "Topics Covered - Python Basics, Intermediate and Advanced Python with Django Framework.",
+    color: "#E8F0FB",
+  },
+  {
+    courseName: "SAP ABAP",
+    courseDescription: "Topics Covered - Basics of ABAP Programming Language.",
+    color: "#FDEBF9",
+  },
+  {
+    courseName: "SAP - HR",
+    courseDescription:
+      "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
+    color: "#E8F0FB",
+  },
+  {
+    courseName: "SAP - CDS",
+    courseDescription:
+      "Topics Covered - HTML, CSS, React JS, Node JS, Express Js, MongoDB",
+    color: "#F3F8EB",
+  },
 ];
 
 export default function TrainingsPage(props) {
@@ -127,7 +127,7 @@ export default function TrainingsPage(props) {
         trainindId : item?.training_id,
         roadmapurl : item?.roadmap_url,
         courseDescription : item?.course_description,
-        color : field[i].color
+        color : field[i%field.length].color
       }
     )));
   }catch(err){

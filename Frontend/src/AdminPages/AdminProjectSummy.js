@@ -195,7 +195,7 @@ const AdminProjectSummy = ({projects}) => {
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
-                  : rows
+                  : projects
                 )?.map((row , i) => (
                   <TableRow
                     key={i}
@@ -243,10 +243,10 @@ const AdminProjectSummy = ({projects}) => {
                       5,
                       10,
                       25,
-                      { label: "All", value: -1 },
+                      { label: "All", value: projects?.length },
                     ]}
                     colSpan={6}
-                    count={rows.length}
+                    count={projects?.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     SelectProps={{

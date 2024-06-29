@@ -509,14 +509,14 @@ export default function AssetsAdminPage() {
                     </TableRow>
                   ))}
 
-                  {emptyRows > 0 && (
+                  {/* {emptyRows > 0 && (
                     <TableRow style={{ height: 53 * emptyRows }}>
                       <TableCell
                         colSpan={12}
                         style={{ borderBottom: "none" }}
                       />
                     </TableRow>
-                  )}
+                  )} */}
                 </TableBody>
                 <TableRow>
                   <TableCell colSpan={12} sx={{ textAlign: "center" }}>
@@ -568,10 +568,10 @@ export default function AssetsAdminPage() {
                         5,
                         10,
                         25,
-                        { label: "All", value: -1 },
+                        { label: "All", value: assetsData?.length },
                       ]}
                       colSpan={12}
-                      count={rows.length}
+                      count={assetsData?.length}
                       rowsPerPage={rowsPerPage}
                       page={page}
                       SelectProps={{

@@ -327,6 +327,9 @@ import {
   Input,
   Box,
 } from "@mui/material";
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
@@ -457,16 +460,32 @@ function MyForm({
             variant="outlined"
             fullWidth
           />
+          
         </Grid>
         <Grid item xs={6}>
-          <TextField
+          {/* <TextField
             label="Priority"
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
             sx={{ backgroundColor: "rgb(250, 250, 250)" }}
             variant="outlined"
             fullWidth
-          />
+          /> */}
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">Priority</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={priority}
+              sx={{ backgroundColor: "rgb(250, 250, 250)" }}
+              label="Age"
+              onChange={(e) => setPriority(e.target.value)}
+            >
+              <MenuItem value={"low"}>low</MenuItem>
+              <MenuItem value={"medium"}>medium</MenuItem>
+              <MenuItem value={"high"}>high</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid item xs={6}>
           <TextField

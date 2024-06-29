@@ -446,6 +446,27 @@ const AdminNotificationTab = () => {
     handleOpen();
     setId(id);
   }
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Escape') {
+      setEdit(false);
+    }
+  };
+
+  useEffect(() => {
+    if (edit) {
+      document.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.removeEventListener('keydown', handleKeyDown);
+    }
+
+    // Clean up the event listener on component unmount or when isEditable changes
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [edit]);
+
+
   const handleDeleteNotification = async (id) => {
     try {
       const response = await axios.delete(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/admin/delete-${selectedTab}/${id}`, {

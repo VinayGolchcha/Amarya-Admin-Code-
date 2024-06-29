@@ -214,9 +214,14 @@ export default function LeaveMangementPage() {
       toast.success(response?.data?.message);
       getUserLeaves();
     } catch (error) {
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
       const errors = error?.response?.data?.errors;
       errors?.forEach((item) => {
-        toast.error(item?.msg);
+        toast.error(item);
       });
       console.error("Error:", error);
     }

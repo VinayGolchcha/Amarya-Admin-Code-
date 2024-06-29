@@ -73,6 +73,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
+  console.log("table pagination props" , props);
 
   const handleClick = (newPage) => {
     onPageChange(null, newPage);
@@ -191,7 +192,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
   };
 
   const handleChangePage = (event, newPage) => {
-    console.log("setPage is calling");
+    console.log("setPage is calling" , newPage);
     setPage(newPage);
   };
 
@@ -221,7 +222,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
   const handleClick = (val , status) => {
-    if(val?.request_type==="Inventory" || foreignId.length !== 0){
+    if(val?.request_type.toLowerCase()==="inventory" || foreignId.length !== 0){
       var regEx = /^[a-z0-9]+$/i;
       const isValid = regEx.test(foreignId);
       console.log(isValid)
@@ -234,6 +235,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
         emp_id: val?.emp_id,
         item: val?.item, // In case of leave
         foreign_id: (val.foreign_id ? val.foreign_id : foreignId),
+        asset_type : val?.request_type?.toLowerCase()==="inventory" ? val?.asset_type : "",
         status: status,
         request_type: val?.request_type
     };
@@ -372,7 +374,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                       {row?.item}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
-                      {row?.asset_type}
+                      {!row?.asset_type ? "-" : row?.asset_type}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {row?.full_name}
@@ -426,11 +428,11 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                     </TableCell>
                   </TableRow>
                 ))}
-                {emptyRows > 0 && (
+                {/* {emptyRows > 0 && (
                   <TableRow style={{ height: 53 * emptyRows }}>
                     <TableCell colSpan={6} />
                   </TableRow>
-                )}
+                )} */}
               </TableBody>
               <TableFooter sx={{ boxShadow: "none" }}>
                 <TableRow>
@@ -442,7 +444,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                       { label: "All", value: approvalData?.length },
                     ]}
                     colSpan={6}
-                    count={rows.length}
+                    count={filteredItems?.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
                     SelectProps={{
