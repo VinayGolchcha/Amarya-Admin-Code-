@@ -127,7 +127,7 @@ export default function TrainingsPage(props) {
         trainindId : item?.training_id,
         roadmapurl : item?.roadmap_url,
         courseDescription : item?.course_description,
-        color : field[i].color
+        color : field[i%field.length]?.color
       }
     )));
   }catch(err){
