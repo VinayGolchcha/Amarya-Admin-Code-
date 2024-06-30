@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
@@ -92,7 +92,7 @@ export default function SettingsLeave() {
         )
           .then((response) => {
             if (!response.ok) {
-              throw new Error("Failed to delete leave type");
+              throw new Error("Something went wrong, Please try again");
             }
             return response.json();
           })
@@ -103,9 +103,13 @@ export default function SettingsLeave() {
             setSelectedInputIndex(null);
             setDeleteMode(false);
             fetchLeaveData();
+            toast.success("Team deleted successfully");
           })
           .catch((error) => {
             console.error("Error deleting leave type:", error);
+            toast.error(
+              error.message || "Something went wrong, Please try again"
+            );
           });
       } else {
         setDeleteMode(false);
@@ -147,7 +151,9 @@ export default function SettingsLeave() {
         )
           .then((response) => {
             if (!response.ok) {
-              toast.error(response.message || "Leave Type Crea successfully");
+              toast.error(
+                response.message || "Something went wrong, Please try again"
+              );
 
               throw new Error("Failed to update leave type");
             }
@@ -155,7 +161,7 @@ export default function SettingsLeave() {
           })
           .then((data) => {
             console.log("Leave type updated successfully:", data);
-            toast.success(data.message || "Leave Type updated successfully");
+            toast.success(data.message || "Leave type updated successfully");
             fetchLeaveData();
           })
           .catch((error) => {
@@ -186,12 +192,13 @@ export default function SettingsLeave() {
           })
           .then((data) => {
             console.log("Leave type created successfully:", data);
-            toast.success(data.message || "Leave Type Created successfully");
+            toast.success(data.message || "Leave type created successfully");
             fetchLeaveData();
             // Optionally update the form data with the newly created leave type ID
           })
           .catch((error) => {
             console.error("Error creating leave type:", error);
+            toast.error("Something went wrong, Please try again");
           });
       });
 

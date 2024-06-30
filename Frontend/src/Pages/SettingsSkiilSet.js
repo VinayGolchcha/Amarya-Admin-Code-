@@ -19,7 +19,7 @@ export default function SettingsSkillSet() {
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedInputIndex, setSelectedInputIndex] = useState(null);
   const [originalFormData, setOriginalFormData] = useState([]);
-  
+
   const len = formData.length;
   const midPoint = Math.floor(formData.length / 2);
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -95,7 +95,6 @@ export default function SettingsSkillSet() {
             return response.json();
           })
           .then((data) => {
-            console.log("Skill deleted successfully:", data);
             const newFormData = [...formData];
             newFormData.splice(selectedInputIndex, 1);
             setFormData(newFormData);
@@ -105,7 +104,6 @@ export default function SettingsSkillSet() {
             fetchSkills();
           })
           .catch((error) => {
-            console.error("Error deleting skill:", error);
             toast.error("Failed to delete skill.");
           });
       } else {
@@ -156,7 +154,6 @@ export default function SettingsSkillSet() {
           .catch((error) => {
             console.error("Error updating skill:", error);
             toast.error("Failed to update skill.");
-            
           });
       });
 
@@ -199,8 +196,6 @@ export default function SettingsSkillSet() {
             // toast.error(error.message);
           });
       });
-
-      
     }
   };
 

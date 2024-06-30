@@ -83,21 +83,23 @@ export default function SettingsTeams() {
         })
           .then((response) => {
             if (!response.ok) {
-              throw new Error("Failed to delete team");
+              throw new Error("Something went wrong, Please try again");
             }
             return response.json();
           })
           .then((data) => {
-            console.log("Team deleted successfully:", data);
             const newFormData = [...formData];
             newFormData.splice(selectedInputIndex, 1);
             setFormData(newFormData);
             setSelectedInputIndex(null);
             setDeleteMode(false);
+            toast.success("Team deleted successfully");
             fetchTeams();
           })
           .catch((error) => {
-            console.error("Error deleting team:", error);
+            toast.error(
+              error.message || "Something went wrong, Please try again"
+            );
           });
       } else {
         setDeleteMode(false);
@@ -132,14 +134,16 @@ export default function SettingsTeams() {
             if (!response.ok) {
               throw new Error("Failed to update team");
             }
+            toast.error("Error updating team");
             return response.json();
           })
           .then((data) => {
-            console.log("team updated successfully:", data);
+            toast.success("Team updated successfully");
             fetchTeams();
           })
           .catch((error) => {
             console.error("Error updating team:", error);
+            toast.error(error.message || "Error updating team");
           });
       });
 
@@ -161,6 +165,7 @@ export default function SettingsTeams() {
           })
           .then((data) => {
             console.log("team created successfully:", data);
+            toast.success("Team created successfully");
             // Update the form data with the newly created team ID
             const updatedFormData = [...formData];
             console.log(updatedFormData);
@@ -178,6 +183,7 @@ export default function SettingsTeams() {
           })
           .catch((error) => {
             console.error("Error creating team:", error);
+            toast.error("something went wrong");
           });
       });
 

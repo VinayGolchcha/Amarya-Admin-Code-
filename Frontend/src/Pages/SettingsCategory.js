@@ -4,6 +4,8 @@ import Grid from "@mui/material/Grid";
 import { Button, FormControl, FormLabel, TextField } from "@mui/material";
 import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function SettingsCategory() {
   const [formData, setFormData] = useState([{ category: "", points: "" }]);
@@ -86,7 +88,7 @@ export default function SettingsCategory() {
         })
           .then((response) => {
             if (!response.ok) {
-              throw new Error("Failed to delete category");
+              throw new Error("Something went wrong, Please try again");
             }
             return response.json();
           })
@@ -97,10 +99,14 @@ export default function SettingsCategory() {
             setFormData(newFormData);
             setSelectedInputIndex(null);
             setDeleteMode(false);
+            toast.success("Category created successfully");
             fetchCategories();
           })
           .catch((error) => {
             console.error("Error deleting category:", error);
+            toast.error(
+              error.message || "Something went wrong, Please try again"
+            );
           });
       } else {
         setDeleteMode(false);
@@ -135,16 +141,18 @@ export default function SettingsCategory() {
         )
           .then((response) => {
             if (!response.ok) {
-              throw new Error("Failed to update category");
+              throw new Error("Something went wrong, Please try again");
             }
             return response.json();
           })
           .then((data) => {
             console.log("Category updated successfully:", data);
             fetchCategories();
+            toast.success("Category updated successfully");
           })
           .catch((error) => {
             console.error("Error updating category:", error);
+            toast.error("Something went wrong, Please try again");
           });
       });
 
@@ -161,16 +169,17 @@ export default function SettingsCategory() {
         })
           .then((response) => {
             if (!response.ok) {
-              throw new Error("Failed to create category");
+              throw new Error("Something went wrong, Please try again");
             }
             return response.json();
           })
           .then((data) => {
-            console.log("Category created successfully:", data);
+            toast.success("Category created successfully");
             fetchCategories(); // Refresh the categories after creation
           })
           .catch((error) => {
             console.error("Error creating category:", error);
+            toast.error("Something went wrong, Please try again");
           });
       });
 
