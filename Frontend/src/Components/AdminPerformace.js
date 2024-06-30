@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Typography, Paper, Box } from "@mui/material";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
+import { ToastContainer, toast } from "react-toastify";
 
 const CustomBarChart = ({ data }) => {
   return (
@@ -28,6 +29,7 @@ const CustomBarChart = ({ data }) => {
       <Typography variant="body1" gutterBottom>
         Measure how fast you're growing monthly recurring revenue.
       </Typography>
+      <ToastContainer/>
       <Box
         sx={{
           borderRadius: "20px",
@@ -132,8 +134,16 @@ const AdminPerformance = () => {
       });
       console.log(res);
       setTeamPerformance(res?.data?.data);
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.log(error);
     }
   }
   useEffect(() => {

@@ -109,8 +109,16 @@ export default function TrainingsPage(props) {
       manager: "HR",
     })));
 
-  }catch(err){
-    console.log(err);
+  }catch(error){
+    if(error?.response?.message){
+      toast.error(error?.response?.message);
+    }
+    if(error?.response?.data?.message){
+      console.log("true");
+      const item = error?.response?.data?.message
+      toast.error(item);
+    }
+    console.log(error);
   }
  }
 
@@ -130,8 +138,16 @@ export default function TrainingsPage(props) {
         color : field[i%field.length].color
       }
     )));
-  }catch(err){
-    console.log(err);
+  }catch(error){
+    if(error?.response?.message){
+      toast.error(error?.response?.message);
+    }
+    if(error?.response?.data?.message){
+      console.log("true");
+      const item = error?.response?.data?.message
+      toast.error(item);
+    }
+    console.log(error);
   }
  }
 
@@ -145,10 +161,16 @@ export default function TrainingsPage(props) {
     setIsLoading(false);
     toast.success(res?.data?.message);
     console.log(res);
-  }catch(err){
+  }catch(error){
     setIsLoading(false);
-    console.log(err);
-    toast.error(err?.response?.data?.message)
+    if(error?.response?.message){
+      toast.error(error?.response?.message);
+    }
+    if(error?.response?.data?.message){
+      console.log("true");
+      const item = error?.response?.data?.message
+      toast.error(item);
+    }
   }
  }
  const handleRequest = (val) => {

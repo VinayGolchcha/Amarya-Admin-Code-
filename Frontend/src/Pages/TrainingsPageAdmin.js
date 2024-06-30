@@ -141,10 +141,18 @@ export default function TrainingsPageAdmin( ) {
       })
       setOpen(false);
       fecthTrainings();
-    }catch(err){
-      console.log(err);
-      const errors = err?.response?.data?.errors;
-        errors.forEach((item) => {
+    }catch(error){
+      console.log(error);
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      const errors = error?.response?.data?.errors;
+        errors?.forEach((item) => {
           toast.error(item?.msg);
         });
     }
@@ -170,9 +178,17 @@ export default function TrainingsPageAdmin( ) {
       )));
       console.log("courses on the trainings " , courses);
       setIsLoading(false);
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      console.log(error);
       setIsLoading(false);
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
     }
    }
   
@@ -208,8 +224,16 @@ export default function TrainingsPageAdmin( ) {
       data = data?.filter(item =>
         item.empid.toLowerCase().includes(searchEmp.toLowerCase())
       );
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      console.log(error);
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
     }
    }
   // Function to handle the update operation
@@ -234,6 +258,14 @@ export default function TrainingsPageAdmin( ) {
         errors.forEach((item) => {
           toast.error(item?.msg);
         });
+        if(error?.response?.message){
+          toast.error(error?.response?.message);
+        }
+        if(error?.response?.data?.message){
+          console.log("true");
+          const item = error?.response?.data?.message
+          toast.error(item);
+        }
         // Handle error as needed
       });
   };
@@ -258,6 +290,14 @@ export default function TrainingsPageAdmin( ) {
       fecthTrainings();
       handleCloseConDel();
     } catch (error) {
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
       console.log(error.response.data.message);
     }
     // Axios DELETE request

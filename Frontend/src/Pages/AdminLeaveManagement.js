@@ -140,8 +140,16 @@ export default function AdminLeaveManagement() {
         }
       );
       setRows(res?.data?.data || []); // Ensure to handle empty response data gracefully
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.log(error);
       setRows([]);
     }
   };
@@ -162,10 +170,18 @@ export default function AdminLeaveManagement() {
       setData(response?.data?.data);
 
       setLoading(false);
-    } catch (errorr) {
-      setErrorr(errorr);
-
+    } catch (error) {
+      setErrorr(error);
       setLoading(false);
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.log(error);
     }
   };
   React.useEffect(() => {
@@ -186,10 +202,19 @@ export default function AdminLeaveManagement() {
         setData(response?.data?.data);
 
         setLoading(false);
-      } catch (errorr) {
-        setErrorr(errorr);
+      } catch (error) {
+        setErrorr(error);
 
         setLoading(false);
+        if(error?.response?.message){
+          toast.error(error?.response?.message);
+        }
+        if(error?.response?.data?.message){
+          console.log("true");
+          const item = error?.response?.data?.message
+          toast.error(item);
+        }
+        console.log(error);
       }
     };
     const getUserLeaves = async () => {
@@ -208,8 +233,16 @@ export default function AdminLeaveManagement() {
           }
         );
         setRows(res?.data?.data || []); // Ensure to handle empty response data gracefully
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        if(error?.response?.message){
+          toast.error(error?.response?.message);
+        }
+        if(error?.response?.data?.message){
+          console.log("true");
+          const item = error?.response?.data?.message
+          toast.error(item);
+        }
+        console.log(error);
         setRows([]);
       }
     };
@@ -395,7 +428,7 @@ export default function AdminLeaveManagement() {
               {data?.user_data?.map((item) => (
                 <Card
                   sx={{
-                    minHeight: "110px",
+                    minHeight: "91px",
                     minWidth: "144px",
                     width: "125px",
                     height: "70px",
@@ -408,10 +441,12 @@ export default function AdminLeaveManagement() {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" }}>
+                  <Typography sx={{ fontFamily: "Poppins", fontWeight: "500" , fontSize : "0.9rem" }}>
                     {item?.leave_type}
                   </Typography>
-                  <CardContent sx={{ padding: "0px" }}>
+                  <CardContent sx={{ padding: "0px" ,  "&:last-child": {
+                      paddingBottom: "7px",
+                    },}}>
                     <Typography
                       sx={{ fontWeight: "500", fontFamily: "Poppins" }}
                     >

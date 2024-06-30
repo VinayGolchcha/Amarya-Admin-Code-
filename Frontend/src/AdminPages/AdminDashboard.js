@@ -76,8 +76,15 @@ const AdminDashboard = () => {
       });
       toast.success(res?.data?.message);
       fetchApprovalData();
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
     }
   }
   const fetchFeedback = async () => {
@@ -88,8 +95,16 @@ const AdminDashboard = () => {
         }
       })
       setFeedback(res?.data?.data);
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.log(error);
     }
   }
   const fetchApprovalData = async () => {
@@ -101,8 +116,16 @@ const AdminDashboard = () => {
       });
       setApprovalData(res?.data?.data);
       console.log(approvalData);
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.log(error);
     }
   }
 
@@ -115,8 +138,16 @@ const AdminDashboard = () => {
       });
       setActivityAnnoucements(res?.data?.data);
       console.log(activityAnnoucements);
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.log(error);
     }
 
   }
@@ -134,8 +165,16 @@ const AdminDashboard = () => {
       setOnGoingProjects(projectInProgress.length);
       setTotalProjects(res?.data?.data?.length);
       setOnGoingProjects()
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.log(error);
     }
   }
   const adminDashboardApi = async() => {
@@ -147,8 +186,16 @@ const AdminDashboard = () => {
       })
       setApidata(res?.data?.data);
       console.log(res);
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.log(error);
     }
   }
   const dateFormat = (date) => {

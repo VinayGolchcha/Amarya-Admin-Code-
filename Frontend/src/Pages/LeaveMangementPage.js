@@ -96,9 +96,17 @@ export default function LeaveMangementPage() {
         }
       )
       setLeaveOverviewData(res?.data?.data)
-    }catch(err){
+    }catch(error){
       setLeaveOverviewData([]);
-      toast.error(err?.response?.message);
+      if(error?.response?.message) {
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      
     }
   };
   
@@ -119,8 +127,15 @@ export default function LeaveMangementPage() {
         }
       );
       setLeaveOverviewData(res?.data?.data);
-    } catch (err) {
-      toast.error(err?.response?.message);
+    } catch (error) {
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
     }
   };
   const fetchLeaveData = async () => {
@@ -136,6 +151,14 @@ export default function LeaveMangementPage() {
       );
       setLeaveTypes(response.data.data); // Update the leave types state
     } catch (error) {
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
       console.error("Error fetching leave types:", error);
     }
   };
@@ -155,8 +178,16 @@ export default function LeaveMangementPage() {
         }
       );
       setRows(res?.data?.data || []); // Ensure to handle empty response data gracefully
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.log(error);
     }
   };
   React.useEffect(() => {
@@ -177,9 +208,16 @@ export default function LeaveMangementPage() {
         setData(response?.data?.data);
 
         setLoading(false);
-      } catch (errorr) {
-        setErrorr(errorr);
-
+      } catch (error) {
+        setErrorr(error);
+        if(error?.response?.message){
+          toast.error(error?.response?.message);
+        }
+        if(error?.response?.data?.message){
+          console.log("true");
+          const item = error?.response?.data?.message
+          toast.error(item);
+        }
         setLoading(false);
       }
     }
