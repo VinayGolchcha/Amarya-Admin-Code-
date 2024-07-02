@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import axios from 'axios';
 import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
+import { ToastContainer, toast } from "react-toastify";
 
 const headingStyle = {
   margin: "2px 0px",
@@ -42,12 +43,21 @@ const PoliciesPage = () => {
         }
       });
       const data = response?.data?.data || [];
-      if (data.length > 0) {
+      console.log( "Policy data", data)
+      
         setPolicy(data);
-        setPolicyheading(data[0]?.policy_heads.split(","));
+        setPolicyheading(data?.policy_heads.split(","));
+      
+    } catch (error) {
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
       }
-    } catch (err) {
-      console.error(err);
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.error(error);
     } finally {
       setisLoading(false);
     }
@@ -93,26 +103,25 @@ const PoliciesPage = () => {
     addPolicy(body);
   };
 
-  const downloadFile = async (val) => {
-    try {
-      if (val?.file_data.data) {
-        const binaryData = new Uint8Array(val?.file_data.data);
-        const blob = new Blob([binaryData], { type: 'application/pdf' });
-        const imageUrl = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = imageUrl;
-        a.download = "policies.pdf";
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(imageUrl);
-        a.remove();
-      } else {
-        console.error('Image data not found in response');
-      }
-    } catch (error) {
-      console.error('Error downloading the file:', error);
-    }
-  };
+  // const downloadFile = async (val) => {
+  //   try {
+  //     console.log(val);
+  //     if (val) {
+  //       const imageUrl = window.URL.createObjectURL(blob);
+  //       const a = document.createElement('a');
+  //       a.href = imageUrl;
+  //       a.download = "policies.pdf";
+  //       document.body.appendChild(a);
+  //       a.click();
+  //       window.URL.revokeObjectURL(imageUrl);
+  //       a.remove();
+  //     } else {
+  //       console.error('Image data not found in response');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error downloading the file:', error);
+  //   }
+  // };
 
   if (isLoading) {
     return <Loading />;
@@ -130,6 +139,7 @@ const PoliciesPage = () => {
         fontSize: "0.9rem",
       }}
     >
+      <ToastContainer/>
       <Typography
         sx={{
           margin: "12px 0px",
@@ -209,7 +219,7 @@ const PoliciesPage = () => {
         </Grid>
       </Grid>
       <Box textAlign="center">
-        <p
+        <a
           style={{
             fontFamily: "Poppins",
             fontSize: '1.3rem',
@@ -218,10 +228,10 @@ const PoliciesPage = () => {
             cursor: "pointer",
             textDecoration: "underline"
           }}
-          onClick={() => downloadFile(policy[0])}
+          href={`${policy?.file_url}`} download="foo.pdf" target="_blank"
         >
           CLICK HERE TO DOWNLOAD THE POLICY DOCUMENT
-        </p>
+        </a>
       </Box>
     </Box>
   );

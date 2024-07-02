@@ -350,7 +350,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? filteredItems.slice(
+                  ? filteredItems?.slice(
                     page * rowsPerPage,
                     page * rowsPerPage + rowsPerPage
                   )

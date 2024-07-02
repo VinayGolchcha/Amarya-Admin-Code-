@@ -65,8 +65,22 @@ export default function PolicyPage() {
       console.log(res);
       toast.success(res?.data?.message);
       fecthPolicies()
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      const errors = error?.response?.data?.errors;
+      if(errors){
+        errors.forEach((item) => {
+          toast.error(item?.msg);
+        });
+      }   
+      console.log(error);
     }
   }
   const fecthPolicies = async () => {
@@ -79,10 +93,18 @@ export default function PolicyPage() {
       });
       console.log(response);
       setPolicies(response?.data?.data);
-      console.log(policies);
       setIsLoading(false);
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.log(error);
+      setIsLoading(false);
     }
   }
   useEffect(()=> {
@@ -107,9 +129,10 @@ export default function PolicyPage() {
     if (file && file.type === 'application/pdf') {
       const file = event.target.files[0];
       console.log(file);
-    const base64 = await convertBase64(file);
-    setFileBuffer(base64.toString().split(',')[1]);
+    // const base64 = await convertBase64(file);
+    // setFileBuffer(base64.toString().split(',')[1]);
       setFile(file);
+      toast.success("File uploaded successfully")
     } else {
       alert('Please upload a PDF file');
     }
@@ -131,18 +154,26 @@ export default function PolicyPage() {
         }
       });
       console.log(res);
+      setPolicies([]);
       fecthPolicies();
       handleClose();
       toast.error(res?.data?.message);
-    }catch(err){
-      console.log(err);
+    }catch(error){
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        console.log("true");
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+      console.log(error);
     }}
   };
- if(isLoading){
-  return(
-    <Loading/>
-  );
- }else{
+  if(isLoading){
+    return(<Loading/>);
+  }
+
    return (
      <Container sx={{marginTop : "5%"}}>
        <ToastContainer/>
@@ -174,7 +205,7 @@ export default function PolicyPage() {
              fullWidth
              disabled
              value={selectedFile ? selectedFile.name : ''}
-             label="Upload PDF"
+             label={selectedFile === "" && "Upload PDF"}
              InputProps={{
                endAdornment: (
                  <IconButton color="primary" aria-label="upload pdf" component="label" sx={{display : "flex" , justifyContent : "end"}}>
@@ -189,7 +220,9 @@ export default function PolicyPage() {
              <Button
                type="submit"
                variant="contained"
-               sx={{ background: "#FF5151", color: "#FFFFFF" }}
+               sx={{ background: "#FF5151", color: "#FFFFFF" , "&:hover" : {
+                background: "#FF5151"
+               } }}
                onClick={handleSave}
              >
                Save
@@ -215,11 +248,9 @@ export default function PolicyPage() {
                  onChange={(event) => setSelectedPolicy(event.target.value)}
                  IconComponent={() => (<img src="Images/policy/dropdown.png" alt="drow down" width = "20px" style={ { marginRight : "4%"}}/>)}
                >
-                 {policies?.map((item, index) => (
-                   <MenuItem key={item?._id} value={item?._id}>
-                     {item?.policy_heads.toString().split(",")[0]}...
+                   <MenuItem value={policies?.policy_id}>
+                     {policies?.policy_heads?.split(",")[0]}...
                    </MenuItem>
-                 ))}
                </Select>
              </FormControl>
            </Grid>
@@ -229,4 +260,3 @@ export default function PolicyPage() {
      </Container>
    );
  }
-}
