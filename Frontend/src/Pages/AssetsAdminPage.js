@@ -27,6 +27,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
+import ConfirmDelete from "../Components/ConfirmDelete";
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -130,6 +131,10 @@ function createData(
 const rows = [];
 let row;
 export default function AssetsAdminPage() {
+  const [openConDel, setOpenConDel] = React.useState(false);
+  const [ id , setId] = React.useState(null);
+  
+  const handleCloseConDel = () => setOpenConDel(false);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -140,6 +145,21 @@ export default function AssetsAdminPage() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+
+  const handleOpenConDel = () => {
+    if(selectedRows.length=== 0){
+      toast.warning("Please select the row to delete");
+    }else if(selectedRows.length > 1){
+      toast.warning("Can not delete the multiple rows");
+      const checkedvalue = assetsData.map((user) => {
+        return { ...user, isChecked: false };
+      });
+      setAssetsData(checkedvalue);
+      setSelectedRows(checkedvalue.filter((item) => item?.isChecked === true));
+    }else{
+      setOpenConDel(true);
+    }  
+  }
 
   console.log(user);
   const fetchAssets = async () => {
@@ -206,6 +226,9 @@ export default function AssetsAdminPage() {
       );
       setAssetsData(checkedvalue);
       setSelectedRows(checkedvalue.filter((item) => item?.isChecked === true));
+      const delSelecedRows = checkedvalue.filter((item) => item?.isChecked === true);
+      const selectedIds = delSelecedRows.map((row) => row.inId);
+      setId(selectedIds[0]);
     }
   };
   function handleOpen() {
@@ -229,12 +252,12 @@ export default function AssetsAdminPage() {
     setPage(0);
   };
 
-  function handleDelete() {
+  function handleDelete(id) {
     // Filter out the rows that are selected for deletion
-    const selectedIds = selectedRows.map((row) => row.inId);
-    console.log(selectedIds[0]);
+    // const selectedIds = selectedRows.map((row) => row.inId);
+    // console.log(selectedIds[0]);
     axios
-      .delete(`${apiUrl}/asset/admin/delete-asset/${selectedIds[0]}`, {
+      .delete(`${apiUrl}/asset/admin/delete-asset/${id}`, {
         headers: {
           "x-access-token": token,
         },
@@ -286,6 +309,7 @@ export default function AssetsAdminPage() {
             borderRadius: "10px",
           }}
         >
+          <ConfirmDelete open={openConDel} handleClose={handleCloseConDel} handleIncomeDelete ={handleDelete} id ={id}/>
           <Typography
             sx={{
               margin: "12px 0px",
@@ -557,6 +581,7 @@ export default function AssetsAdminPage() {
                         deleteAction={handleDelete}
                         rows={selectedRows}
                         fetchAssets={fetchAssets}
+                        handleOpenConDel = {handleOpenConDel}
                       />
                     </Box>
                   </TableCell>

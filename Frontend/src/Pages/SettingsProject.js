@@ -93,6 +93,7 @@ export default function SettingsProject() {
           };
         });
         setFormData(adjustedData);
+        console.log(formData);
         setLoading(false);
       })
       .catch((error) => console.error("Error fetching projects:", error));
@@ -440,6 +441,32 @@ export default function SettingsProject() {
                         />
                       </LocalizationProvider>
                     )}
+                    {item === "Project Status" && (
+                      <Select
+                        value={data[item]}
+                        onChange={(e) =>
+                          handleInputChange(index, item, e.target.value)
+                        }
+                        sx={{
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderWidth: "2px",
+                            borderColor: "#b3b3b3",
+                            borderRadius: "10px",
+                          },
+                          margin: "10px 0px",
+                        }}
+                        disabled={
+                          editMode !== index && newProjectIndex !== index
+                        }
+                      >
+                        <MenuItem value={"completed"}>
+                          Completed
+                        </MenuItem>
+                        <MenuItem value={"in progress"}>
+                          In Progress
+                        </MenuItem>
+                      </Select>
+                    )}
                     {item === "Category" ? (
                       <Select
                         value={data[item]}
@@ -466,7 +493,8 @@ export default function SettingsProject() {
                       </Select>
                     ) : (
                       item !== "End Of The Project" &&
-                      item !== "Start Of The Project" && (
+                      item !== "Start Of The Project" &&
+                      item !== "Project Status" && (
                         <TextField
                           value={data[item]}
                           type="text"

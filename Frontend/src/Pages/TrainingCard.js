@@ -127,7 +127,7 @@ export default function TrainingCard({
               sx={{
                 backgroundColor: dynamicColor,
                 padding: "10px",
-                height: "238px",
+                height: "280px",
                 width: "273px",
               }}
             >

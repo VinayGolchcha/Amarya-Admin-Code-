@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, Paper, Grid } from "@mui/material";
 import {
   BarChart,
@@ -40,6 +40,32 @@ const sanitizedMonthlyData = monthlyData?.map((month) => ({
 }));
 
 const ProjectOverview = ({ apiData }) => {
+  const [yearSpan , setYearSpan] = useState("");
+  const newSet = new Set();
+  apiData?.live_projects_data?.map((item) => {
+    const year = item?.month_start?.split(" ")[1];
+    newSet.add(year);
+  });
+
+  console.log("value of the set" ,newSet )
+  const getYearSpan = () => {
+    const v = "20";
+    let yearStr = "";
+    if(newSet.size===1){
+       newSet.forEach((item) => {
+        yearStr = v + item.toString();
+      })
+    }
+    if(newSet.size>1){
+      newSet.forEach((item) => {
+        const actdata = v + item.toString();
+        yearStr += actdata + "-"
+      });
+      yearStr = yearStr.slice(0, -1)
+    }
+    return yearStr;
+  }
+  
   console.log(apiData);
   const projectByMonth = apiData?.live_projects_data?.map((item) => {
     const month = item?.month_start?.toLowerCase();
@@ -120,7 +146,7 @@ const ProjectOverview = ({ apiData }) => {
           fontSize="1.1rem"
           fontFamily="Poppins"
         >
-          Project Overview - 2023
+          Project Overview - {getYearSpan()}
         </Typography>
         {/* Monthly Project Status Bar Chart */}
         <BarChart
@@ -191,9 +217,9 @@ const ProjectOverview = ({ apiData }) => {
               },
             }}
           >
-            {apiData?.employee_count_with_team?.[0]?.project_count}
+             {apiData?.employee_count_with_team[0][1]?.project_count}
             <br />
-            {apiData?.employee_count_with_team?.[0]?.team} Projects
+             SAP Projects
           </Typography>
         </Box>
         <Box
@@ -215,9 +241,9 @@ const ProjectOverview = ({ apiData }) => {
               },
             }}
           >
-            {/* {apiData?.employee_count_with_team[1]?.project_count} */}
+            {apiData?.employee_count_with_team[0][0]?.project_count}
             <br />
-            {/* {apiData?.employee_count_with_team[1]?.team} Projects */}
+            Full Stack and Data Science Projects
           </Typography>
         </Box>
         <Box
@@ -241,7 +267,7 @@ const ProjectOverview = ({ apiData }) => {
             }}
           >
             {employeeWithClientCount}/{totalEmployeeCount} <br />
-            Total Employees
+            Employees count with client
           </Typography>
         </Box>
       </Box>{" "}

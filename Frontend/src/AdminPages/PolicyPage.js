@@ -95,14 +95,14 @@ export default function PolicyPage() {
       setPolicies(response?.data?.data);
       setIsLoading(false);
     }catch(error){
-      if(error?.response?.message){
-        toast.error(error?.response?.message);
-      }
-      if(error?.response?.data?.message){
-        console.log("true");
-        const item = error?.response?.data?.message
-        toast.error(item);
-      }
+      // if(error?.response?.message){
+      //   toast.error(error?.response?.message);
+      // }
+      // if(error?.response?.data?.message){
+      //   console.log("true");
+      //   const item = error?.response?.data?.message
+      //   toast.error(item);
+      // }
       console.log(error);
       setIsLoading(false);
     }

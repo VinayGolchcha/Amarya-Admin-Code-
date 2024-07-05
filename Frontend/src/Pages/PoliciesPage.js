@@ -49,14 +49,14 @@ const PoliciesPage = () => {
         setPolicyheading(data?.policy_heads.split(","));
       
     } catch (error) {
-      if(error?.response?.message){
-        toast.error(error?.response?.message);
-      }
-      if(error?.response?.data?.message){
-        console.log("true");
-        const item = error?.response?.data?.message
-        toast.error(item);
-      }
+      // if(error?.response?.message){
+      //   toast.error(error?.response?.message);
+      // }
+      // if(error?.response?.data?.message){
+      //   console.log("true");
+      //   const item = error?.response?.data?.message
+      //   toast.error(item);
+      // }
       console.error(error);
     } finally {
       setisLoading(false);
@@ -215,6 +215,7 @@ const PoliciesPage = () => {
                 <li key={i} style={{ fontWeight: "600" }}>{item}</li>
               ))}
             </ul>
+            {policyheading.length===0 && <Typography textAlign="center" variant="h4" style={{ fontWeight: "600" , width : "100%" }}>No Policy Exists</Typography>}
           </Box>
         </Grid>
       </Grid>

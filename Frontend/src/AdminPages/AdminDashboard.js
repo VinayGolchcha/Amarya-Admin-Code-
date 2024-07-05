@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import ProjectOverview from "../Components/ProjectOverview";
 import EmployeeCountPieChart from "../Components/AdminPieChart";
 import AdminPerformace from "../Components/AdminPerformace";
@@ -244,48 +244,65 @@ const AdminDashboard = () => {
         >
           Welcome Admin !
         </Typography>
-        <Box sx={{ display: "flex" }}>
-          <Box
-            sx={{
-              borderRadius: "20px",
-              border: "1px solid rgba(0, 0, 0, 0.30)",
-              width: "auto",
-            }}
-          >
-            <ProjectOverview apiData = {apiData}/>
-          </Box>
-          <Box
-            sx={{
-              borderRadius: "20px",
-              border: "1px solid rgba(0, 0, 0, 0.30)",
-              margin: "0px 5px 0px 25px",
-            }}
-          >
-            <AdminPerformace />
-          </Box>
-        </Box>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Box
-            sx={{
-              borderRadius: "20px",
-              border: "1px solid rgba(0, 0, 0, 0.30)",
-              marginTop: "30px",
-              marginRight: "20px",
-              width: "50%",
-            }}
-          >
-            <EmployeeCountPieChart teamEmployeeCount = {apiData?.get_employee_team_count}/>
-          </Box>
-          <Box
-            sx={{
-              height : "100%",
-              width: "50%",
-              marginTop: "30px",
-            }}
-          >
-            <AdminActivity activityAnnoucements = {activityAnnoucements?.activity_data}/>
-          </Box>
-        </Box>
+        <Grid container spacing={2} sx={{
+          display : {md : "flex" },
+          justifyContent : "center"
+        }}>
+          {/* <Box sx={{ display: "flex" }}> */}
+          <Grid item xs={12} md={9} lg={7}>
+              <Box
+                sx={{
+                  borderRadius: "20px",
+                  border: "1px solid rgba(0, 0, 0, 0.30)",
+                  width: "auto",
+                  
+                }}
+              >
+                <ProjectOverview apiData = {apiData}/>
+              </Box>
+            </Grid>
+            <Grid item xs={12} md={9} lg={5}>
+              <Box
+                sx={{
+                  borderRadius: "20px",
+                  border: "1px solid rgba(0, 0, 0, 0.30)",
+                  height : "100%"
+                }}
+              >
+                <AdminPerformace />
+              </Box>
+            </Grid>
+          {/* </Box> */}
+        </Grid>
+        <Grid container spacing={2} sx={{
+          display : {md : "flex" },
+          justifyContent : "center"
+        }}>
+          <Grid item xs={12} md={9} lg={7}>
+            <Box
+              sx={{
+                borderRadius: "20px",
+                border: "1px solid rgba(0, 0, 0, 0.30)",
+                marginTop: "30px",
+                marginRight: "20px",
+                width: "100%",
+              }}
+            >
+              <EmployeeCountPieChart teamEmployeeCount = {apiData?.get_employee_team_count}/>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={9} lg={5}>
+            <Box
+              sx={{
+                height : "100%",
+                width: "100%",
+                marginTop: "30px",
+              }}
+            >
+              <AdminActivity activityAnnoucements = {activityAnnoucements?.activity_data}/>
+            </Box>
+          </Grid>
+        </Grid>
         <AdminProjectSummy projects = {apiData?.project_details}/>
   
         <DashboardPosComp />
