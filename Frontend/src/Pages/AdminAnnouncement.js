@@ -533,6 +533,13 @@ const AdminNotificationTab = () => {
         errors.forEach((item) => {
           toast.error(item?.msg);
         });
+        if(error?.response?.message){
+          toast.error(error?.response?.message);
+        }
+        if(error?.response?.data?.message){
+          const item = error?.response?.data?.message
+          toast.error(item);
+        }
     }
   };
 
@@ -558,7 +565,13 @@ const AdminNotificationTab = () => {
         errors.forEach((item) => {
           toast.error(item?.msg);
         });
-      
+        if(error?.response?.message){
+          toast.error(error?.response?.message);
+        }
+        if(error?.response?.data?.message){
+          const item = error?.response?.data?.message
+          toast.error(item);
+        }
     }
   }
 

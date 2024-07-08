@@ -658,7 +658,7 @@ export default function TrainingsPageAdmin( ) {
     {filter ? (
       data?.map((row, i) => (
         <TableRow key={i}>
-          <TableCell style={{ fontFamily: "Poppins"    }}>
+          <TableCell style={{ fontFamily: "Poppins" , minWidth: "144px"}}>
           <Box
                       component="img"
                       src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}

@@ -262,6 +262,9 @@ export default function LeaveMangementPage() {
         toast.error(item);
       });
       console.error("Error:", error);
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
     }
   };
 
