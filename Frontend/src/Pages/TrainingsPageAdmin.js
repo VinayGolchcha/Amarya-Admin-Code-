@@ -251,6 +251,7 @@ export default function TrainingsPageAdmin( ) {
       .then(response => {
         console.log('Update Training Response:', response);
         // Optionally, you can perform any additional actions after successful update
+        handleEditClose();
       })
       .catch(error => {
         console.error('Error updating training:', error);

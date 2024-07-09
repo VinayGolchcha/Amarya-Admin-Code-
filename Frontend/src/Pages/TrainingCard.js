@@ -153,11 +153,8 @@ export default function TrainingCard({
                   marginTop: "25px",
                   cursor: "pointer",
                 }}
-                onClick={() => {
-                  window.location = field?.roadmapurl;
-                }}
               >
-                Click here to download the roadmap....
+                <a href={`${field?.roadmapurl}`} target="_blank" style={{textDecoration : "none"}}>Click here to download the roadmap....</a>
                 <br />
               </Typography>
             </CardContent>

@@ -422,9 +422,15 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                       )}
                     </TableCell>
                     <TableCell align="left" sx={{ minWidth: "104px" }}>
-                      <FileDownloadDoneIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "approved")} />
-                      <NotInterestedIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "rejected")}/>
-                      <DeleteOutlineIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "deleted")}/>
+                      <FileDownloadDoneIcon sx={{ color: "#b1bacb", cursor:"pointer" , ":hover" : {
+                        color: "black"
+                      }}} onClick={() => handleClick(row , "approved")} />
+                      <NotInterestedIcon sx={{ color: "#b1bacb", cursor:"pointer" , ":hover" : {
+                        color: "black"
+                      }}} onClick={() => handleClick(row , "rejected")}/>
+                      <DeleteOutlineIcon sx={{ color: "#b1bacb", cursor:"pointer" , ":hover" : {
+                        color: "black"
+                      } }} onClick={() => handleClick(row , "deleted")}/>
                     </TableCell>
                   </TableRow>
                 ))}

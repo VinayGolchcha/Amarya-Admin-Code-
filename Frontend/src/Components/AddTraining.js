@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import { toast } from "react-toastify";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -64,6 +65,11 @@ export default function AddTraining({
 
   function handleSubmit(event) {
     event.preventDefault();
+    const couseName = parseInt(itemNewInId.current.value);
+    if(Number.isInteger(couseName)){
+      toast.warning("Course name should not be a number");
+      return;
+    }
     const newItem = {
       course_name : itemNewInId.current.value,
       course_description : itemNewDop.current.value,
@@ -71,6 +77,7 @@ export default function AddTraining({
       details : itemNewItem.current.value,
 
   };
+
   addTraining(newItem);
     // handleAdd((prevData) => [...prevData, newItem]);
   }

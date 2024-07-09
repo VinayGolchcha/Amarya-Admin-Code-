@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import { toast } from "react-toastify";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -68,7 +69,10 @@ export default function EditTraining({
   } , [selectedTr])
 
   function handleSubmit(event) {
-    event.preventDefault();
+    if(Number.isInteger(parseInt(courseName))){
+      toast.warning("Course name should not be a number");
+      return;
+    }
     const newItem = {
       course_name : courseName,
       course_description : courseDescription,

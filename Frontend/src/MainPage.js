@@ -111,6 +111,14 @@ const MainPage = (props) => {
           <Route path="/activities/:activityId" element={<ActivityPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route
+            path="/dashboard"
+            element={
+              <PrivateRoute
+                element={role === "user" ? DashboardPage : AdminDashboard}
+              />
+            }
+          />
+          <Route
             path="/"
             element={
               <PrivateRoute
