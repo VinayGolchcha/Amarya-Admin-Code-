@@ -622,7 +622,6 @@ export default function LeaveMangementPage() {
                         }}
                         label="Select Date"
                         value={date}
-                        minDate={currentDate}
                         onChange={handleDateChange}
                         renderInput={(params) => (
                           <TextField {...params} size="small" />
@@ -678,6 +677,25 @@ export default function LeaveMangementPage() {
                         />
                       </ListItem>
                     ))}
+                    {leaveOverviewData?.length === 0 && 
+                       <ListItem
+                       sx={{
+                         backgroundColor: "#fafafa",
+                         margin: "5px 0px",
+                         border: "0.5px solid #E0E0E0",
+                         borderRadius: "6px",
+                       }}
+                     >
+                       <ListItemText
+                         primary={""}
+                         secondary={
+                           <React.Fragment>
+                             Leaves not found for the selected month
+                           </React.Fragment>
+                         }
+                       />
+                     </ListItem>
+                    }
                   </List>
                 </Box>
               </Box>

@@ -104,7 +104,7 @@ const EmployeeCountPieChart = ({teamEmployeeCount}) => {
           </Typography>
         </Box>
       </Box>
-      <PieChart width={chartWidth} height={chartHeight}>
+      <PieChart width={chartWidth} height={chartHeight} >
         <Pie
           data={pieChartData}
           dataKey="value"

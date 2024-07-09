@@ -422,6 +422,9 @@ const UserProfilePage = () => {
       case "Projects done":
         item.value = formData.completed_projects;
         break;
+      case "Client reports":
+        item.value = formData.client_report;
+        break;
       case "Performance":
         // If formData value is a string representing a percentage
         // then remove '%' and convert to a number
@@ -512,7 +515,7 @@ const UserProfilePage = () => {
                             : formData[item.field]
                         }
                         onChange={handleChange}
-                        disabled={!isEditing}
+                        disabled={item.field === "dob" ? true : !isEditing}
                         sx={{
                           [theme.breakpoints.up("md")]: {
                             width: index === 6 ? "90%" : "80%",

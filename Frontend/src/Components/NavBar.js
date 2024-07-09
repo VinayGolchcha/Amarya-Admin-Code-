@@ -200,6 +200,9 @@ const NavBar = ({ handleDrawerToggle }) => {
     logout();
     navigate("/login");
   };
+  const handleOutSide = () => {
+    setAnchorE2(null)
+  }
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
@@ -309,6 +312,7 @@ const NavBar = ({ handleDrawerToggle }) => {
       <AppBar
         position="static"
         sx={{ backgroundColor: "white", color: "black", boxShadow: "none" }}
+        
       >
         <Toolbar>
           <IconButton

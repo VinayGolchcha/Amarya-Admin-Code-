@@ -306,174 +306,183 @@ const AdminDashboard = () => {
         <AdminProjectSummy projects = {apiData?.project_details}/>
   
         <DashboardPosComp />
-        <Box sx={{ display: "flex" }}>
-          <Box
-            sx={{
-              border: "1px solid #0000004D",
-              // marginTop: "25px",
-              // width: "fit-content",
-              width: "60%",
-              borderRadius: "12px",
-              marginRight: "20px",
-            }}
-          >
-            <Typography
-              sx={{
-                fontFamily: "Poppins",
-                backgroundColor: "#1B204A",
-                color: "#FFFFFF",
-                borderRadius: "12px 12px 0px 0px",
-                padding: "6px 16px",
-              }}
-            >
-              Suggestions Summary
-            </Typography>
-            <Box sx={{ padding: "0px 8px 8px 8px" }}>
-              <List sx={{ paddingBottom: "4px" }}>
-                {feedback?.slice(0,5)?.map((item) => {
-                  return (
-                    <ListItem
-                      sx={{
-                        padding: "4px",
-                        // width: "100%",
-                        border: "1px solid #00000033",
-                        borderRadius: "10px",
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Typography
-                        sx={{
-                          height: "100%",
-                          justifyContent: "center",
-                          display: "flex",
-                          alignItems: "center",
-                          padding: "20px",
-                          fontFamily: "Poppins",
-                          color: "#222B45",
-                          fontWeight: "400",
-                        }}
-                      >
-                        {item.description}
-                      </Typography>
-                      <Typography
-                        sx={{
-                          height: "100%",
-                          width: "23%",
-                          justifyContent: "center",
-                          display: "flex",
-                          alignItems: "center",
-                          fontFamily: "Poppins",
-                          color: "#222B45",
-                          fontWeight: "600",
-                        }}
-                      >
-                        
-                        {dateFormat(item.date)}
-                      </Typography>
-                    </ListItem>
-                  );
-                })}
-              </List>
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              border: "1px solid #0000004D",
-              // marginTop: "25px",
-              width: "fit-content",
-              borderRadius: "12px",
-              width: "40%",
-            }}
-          >
+        <Grid container spacing={2} sx={{
+          display : {md : "flex" },
+          justifyContent : {md : "center"}
+        }}>
+          <Grid item xs={12} md={9} lg={6}>
             <Box
               sx={{
-                backgroundColor: "#1B204A",
-                color: "#FFFFFF",
-                borderRadius: "12px 12px 0px 0px",
-                padding: "6px 16px",
+                border: "1px solid #0000004D",
+                // marginTop: "25px",
+                // width: "fit-content",
+                width: "100%",
+                borderRadius: "12px",
+                marginRight: "20px",
+                height : "100%"
               }}
             >
-              <Typography sx={{ fontFamily: "Poppins" }}>
-                New Announcement/Notice
+              <Typography
+                sx={{
+                  fontFamily: "Poppins",
+                  backgroundColor: "#1B204A",
+                  color: "#FFFFFF",
+                  borderRadius: "12px 12px 0px 0px",
+                  padding: "6px 16px",
+                }}
+              >
+                Suggestions Summary
               </Typography>
-            </Box>
-            <Box sx={{ margin: "0px 8px 8px 8px", marginTop: "1.5%" }}>
-              <List sx={{ paddingBottom: "0px" }}>
-                {activityAnnoucements?.announcement_data?.map((item) => {
-                  return (
-                    <ListItem
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        padding: "4px",
-                        border: "1px solid #00000033",
-                        marginBottom: "8px",
-                        backgroundColor: "#FAFAFA",
-                        borderRadius: "6px",
-                      }}
-                    >
-                      <Box
+              <Box sx={{ padding: "0px 8px 8px 8px" }}>
+                <List sx={{ paddingBottom: "4px" }}>
+                  {feedback?.slice(0,5)?.map((item) => {
+                    return (
+                      <ListItem
                         sx={{
-                          height: "100%",
-                          width: "250px",
-                          justifyContent: "center",
+                          padding: "4px",
+                          // width: "100%",
+                          border: "1px solid #00000033",
+                          borderRadius: "10px",
                           display: "flex",
-                          alignItems: "center",
-                          padding: "20px",
+                          justifyContent: "space-between",
                         }}
                       >
                         <Typography
                           sx={{
+                            height: "100%",
+                            justifyContent: "center",
+                            display: "flex",
+                            alignItems: "center",
+                            padding: "20px",
                             fontFamily: "Poppins",
-                            color: "#303030",
+                            color: "#222B45",
                             fontWeight: "400",
                           }}
                         >
                           {item.description}
                         </Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          height: "100%",
-                          width: "23%",
-                          justifyContent: "center",
-                          display: "flex",
-                          alignItems: "center",
-                          fontFamily: "Poppins",
-                          color: "#00000099",
-                          fontWeight: "600",
-                        }}
-                      >
-                        
-                        <img src="icons/3dots.svg" />
-                      </Box>
-                    </ListItem>
-                  );
-                })}
-              </List>
-              <Button
-                variant="outlined"
-                color="error"
+                        <Typography
+                          sx={{
+                            height: "100%",
+                            width: "23%",
+                            justifyContent: "center",
+                            display: "flex",
+                            alignItems: "center",
+                            fontFamily: "Poppins",
+                            color: "#222B45",
+                            fontWeight: "600",
+                          }}
+                        >
+                          
+                          {dateFormat(item.date)}
+                        </Typography>
+                      </ListItem>
+                    );
+                  })}
+                </List>
+              </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={9} lg={6}>
+            <Box
+              sx={{
+                border: "1px solid #0000004D",
+                // marginTop: "25px",
+                width: "fit-content",
+                borderRadius: "12px",
+                width: "100%",
+                height : "100%"
+              }}
+            >
+              <Box
                 sx={{
-                  textTransform: "none",
-                  fontFamily: "Poppins",
-                  width: "100%",
-                  border: "1px solid #00000033",
-                  color: "#FF5151",
-                  fontWeight: "500",
-                  borderRadius: "0px 0px 10px 10px",
-                  marginTop: "1%",
-                }}
-                onClick={() => {
-                  navigate("/anouncement")
+                  backgroundColor: "#1B204A",
+                  color: "#FFFFFF",
+                  borderRadius: "12px 12px 0px 0px",
+                  padding: "6px 16px",
                 }}
               >
-                New Announcement/Notice
-              </Button>
+                <Typography sx={{ fontFamily: "Poppins" }}>
+                  New Announcement/Notice
+                </Typography>
+              </Box>
+              <Box sx={{ margin: "0px 8px 8px 8px", marginTop: "1.5%" }}>
+                <List sx={{ paddingBottom: "0px" }}>
+                  {activityAnnoucements?.announcement_data?.map((item) => {
+                    return (
+                      <ListItem
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          padding: "4px",
+                          border: "1px solid #00000033",
+                          marginBottom: "8px",
+                          backgroundColor: "#FAFAFA",
+                          borderRadius: "6px",
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            height: "100%",
+                            width: "250px",
+                            justifyContent: "center",
+                            display: "flex",
+                            alignItems: "center",
+                            padding: "20px",
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              fontFamily: "Poppins",
+                              color: "#303030",
+                              fontWeight: "400",
+                            }}
+                          >
+                            {item.description}
+                          </Typography>
+                        </Box>
+                        <Box
+                          sx={{
+                            height: "100%",
+                            width: "23%",
+                            justifyContent: "center",
+                            display: "flex",
+                            alignItems: "center",
+                            fontFamily: "Poppins",
+                            color: "#00000099",
+                            fontWeight: "600",
+                          }}
+                        >
+                          
+                          <img src="icons/3dots.svg" />
+                        </Box>
+                      </ListItem>
+                    );
+                  })}
+                </List>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  sx={{
+                    textTransform: "none",
+                    fontFamily: "Poppins",
+                    width: "100%",
+                    border: "1px solid #00000033",
+                    color: "#FF5151",
+                    fontWeight: "500",
+                    borderRadius: "0px 0px 10px 10px",
+                    marginTop: "1%",
+                  }}
+                  onClick={() => {
+                    navigate("/anouncement")
+                  }}
+                >
+                  New Announcement/Notice
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </Box>
+          </Grid>
+        </Grid>
         <AdminApprovals approvalData = {approvalData} approvalReq={approvalReq}/>
       </Box>
     );

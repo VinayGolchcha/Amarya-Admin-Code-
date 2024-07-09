@@ -175,7 +175,7 @@ export default function NotificationPopUp() {
                             fontSize: "0.9rem",
                           }}
                         >
-                          {item.title}
+                          {item?.title}
                         </Typography>
                         <Typography
                           variant="subtitle2"
@@ -185,8 +185,8 @@ export default function NotificationPopUp() {
                             color: "#555",
                           }}
                         >
-                          {item.description.length > 90
-                            ? `${item.description.slice(0, 90)}...`
+                          {item.description.length > 50
+                            ? `${item.description.slice(0, 50)}...`
                             : item.description}
                         </Typography>
                         <Typography sx={{ color: "gray", fontSize: "0.75rem" }}>

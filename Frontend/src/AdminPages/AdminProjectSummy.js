@@ -141,7 +141,7 @@ const AdminProjectSummy = ({projects}) => {
           borderRadius: "15px",
           border: "1px solid #0000004D",
           p: 1,
-          margin: "10px",
+          margin: "10px 0px",
         }}
       >
         <Typography

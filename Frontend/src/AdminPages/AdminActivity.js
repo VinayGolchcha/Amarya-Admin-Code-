@@ -48,13 +48,12 @@ const AdminActivity = ({activityAnnoucements}) => {
     return timeStr;
   }
   return (
-    <div>
       <Box
         sx={{
           border: "1px solid #0000004D",
           borderRadius: "12px",
           width: "100%",
-          height: "100%",
+          height: "93%",
         }}
       >
         <Typography
@@ -154,7 +153,6 @@ const AdminActivity = ({activityAnnoucements}) => {
           </Button>
         </Box>
       </Box>
-    </div>
   );
 };
 

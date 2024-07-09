@@ -248,7 +248,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
           borderRadius: "15px",
           border: "1px solid #0000004D",
           p: 1,
-          margin: "10px",
+          margin: "10px 0px",
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
