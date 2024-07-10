@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Grid from "@mui/material/Grid";
 import MenuItem from "@mui/material/MenuItem";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography , Tooltip } from "@mui/material";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import DirectionsWalkSharpIcon from "@mui/icons-material/DirectionsWalkSharp";
@@ -53,33 +53,36 @@ function TextFieldsGrid() {
             padding: "10px",
           }}
         >
-          <Button
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              "&:hover": {
+          <Tooltip title="Add User" placement="top" arrow>
+            <Button
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                "&:hover": {
+                  backgroundImage:
+                    "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)",
+                },
+                margin: "0px 10px",
+                borderRadius: "72px",
                 backgroundImage:
-                  "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)",
-              },
-              margin: "0px 10px",
-              borderRadius: "72px",
-              backgroundImage:
-                selectedTab === "AddUser"
-                  ? "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)"
-                  : "none",
-            }}
-            onClick={() => {
-              handleTabChange("AddUser");
-            }}
-          >
-            <Box
-              component="img"
-              src={`${process.env.PUBLIC_URL}/Images/settings/userData.png`}
-              alt="userData"
-              sx={{ margin: "0px 10px", cursor: "pointer" }}
-            />
-          </Button>
+                  selectedTab === "AddUser"
+                    ? "linear-gradient(139.32deg, rgb(38, 203, 255) 2.928%,rgb(105, 128, 253) 111.948%)"
+                    : "none",
+              }}
+              onClick={() => {
+                handleTabChange("AddUser");
+              }}
+            >
+              <Box
+                component="img"
+                src={`${process.env.PUBLIC_URL}/Images/settings/userData.png`}
+                alt="userData"
+                sx={{ margin: "0px 10px", cursor: "pointer" }}
+              />
+            </Button>
+          </Tooltip>
+          <Tooltip title="Holiday" placement="top" arrow>
           <Button
             sx={{
               display: "flex",
@@ -107,6 +110,8 @@ function TextFieldsGrid() {
               sx={{ margin: "0px 10px", cursor: "pointer" }}
             />
           </Button>
+          </Tooltip>
+          <Tooltip title="Leaves" placement="top" arrow>
           <Button
             sx={{
               display: "flex",
@@ -134,6 +139,8 @@ function TextFieldsGrid() {
               sx={{ margin: "0px 10px", cursor: "pointer" }}
             />
           </Button>
+          </Tooltip>
+          <Tooltip title="Teams" placement="top" arrow>
           <Button
             sx={{
               display: "flex",
@@ -161,6 +168,8 @@ function TextFieldsGrid() {
               sx={{ margin: "0px 10px", cursor: "pointer" , height : "47px" , width : "38px" }}
             />
           </Button>
+          </Tooltip>
+          <Tooltip title="Category" placement="top" arrow>
           <Button
             sx={{
               display: "flex",
@@ -188,6 +197,8 @@ function TextFieldsGrid() {
               sx={{ margin: "0px 10px", cursor: "pointer" }}
             />
           </Button>
+          </Tooltip>
+          <Tooltip title="Policy" placement="top" arrow>
           <Button
             sx={{
               display: "flex",
@@ -215,6 +226,8 @@ function TextFieldsGrid() {
               sx={{ margin: "0px 10px", cursor: "pointer" , height : "60%"}}
             />
           </Button>
+          </Tooltip>
+          <Tooltip title="Project" placement="top" arrow>
           <Button
             sx={{
               display: "flex",
@@ -242,6 +255,8 @@ function TextFieldsGrid() {
               sx={{ margin: "0px 10px", cursor: "pointer" }}
             />
           </Button>
+          </Tooltip>
+          <Tooltip title="Skillset" placement="top" arrow>
           <Button
             sx={{
               display: "flex",
@@ -269,6 +284,7 @@ function TextFieldsGrid() {
               sx={{ margin: "0px 10px", cursor: "pointer" }}
             />
           </Button>
+          </Tooltip>
         </Box>
       </Box>
       <Box sx={{display:'flex',justifyContent:"center",alignItems:"center"}}>

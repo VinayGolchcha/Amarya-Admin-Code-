@@ -399,6 +399,7 @@ function MyForm({
   
 
   const handleFileChange = (e) => {
+
     const selectedFiles = Array.from(e.target.files);
     setFiles(selectedFiles);
     setParentFiles(selectedFiles);

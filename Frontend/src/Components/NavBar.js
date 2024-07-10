@@ -352,7 +352,11 @@ const NavBar = ({ handleDrawerToggle }) => {
               size="large"
               aria-label="show 17 new notifications"
               color="inherit"
-              sx={{ marginRight: 1 }}
+              sx={{ marginRight: 1 ,
+                 "&:hover": {
+                    backgroundColor: "rgba(0,0,0,0)",
+                 },
+              }}
             >
               {/* code for Notifications Pop Up */}
               <NotificationPopUp />
@@ -362,7 +366,11 @@ const NavBar = ({ handleDrawerToggle }) => {
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
-              sx={{ marginRight: 1 }}
+              sx={{ marginRight: 1 ,
+                "&:hover": {
+                  backgroundColor: "rgba(0,0,0,0)",
+                 },
+              }}
             >
               <div>
                 {/* <button aria-describedby={id} type="button" onClick={handleClick}>
@@ -371,7 +379,9 @@ const NavBar = ({ handleDrawerToggle }) => {
                 <Badge badgeContent={0} color="error">
                   {/* <MailIcon /> */}
                   <TextsmsIcon
-                    sx={{ color: "#b4b4b4" }}
+                    sx={{ color: "#b4b4b4",  "&:hover" : {
+                      color : "black"
+                    } }}
                     aria-describedby={id}
                     onClick={handleClick}
                   />

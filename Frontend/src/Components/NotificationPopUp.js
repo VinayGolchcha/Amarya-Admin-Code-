@@ -60,7 +60,9 @@ export default function NotificationPopUp() {
               }
               color="error"
             >
-              <NotificationsIcon sx={{ color: "#b4b4b4" }} fontSize="large" />
+              <NotificationsIcon sx={{ color: "#b4b4b4" , "&:hover" : {
+                color : "black"
+              }}} fontSize="large" />
             </Badge>
           </Box>
           <Popover
