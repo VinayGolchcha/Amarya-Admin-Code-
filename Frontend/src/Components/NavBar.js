@@ -492,7 +492,7 @@ const NavBar = ({ handleDrawerToggle }) => {
                 >
                   <Avatar
                     alt={user?.username}
-                    src={profilePhoto || user?.profile_picture}
+                    src={profilePhoto || user?.profile_picture} //src={profilePhoto || user?.profile_picture}
                   />
                 </IconButton>
                 <IconButton

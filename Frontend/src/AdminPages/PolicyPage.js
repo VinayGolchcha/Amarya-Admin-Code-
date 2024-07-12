@@ -204,8 +204,8 @@ export default function PolicyPage() {
            <TextField
              fullWidth
              disabled
-             value={selectedFile ? selectedFile.name : ''}
-             label={selectedFile === "" && "Upload PDF"}
+             value={file ? file.name : ''}
+             label={file ? '' : "Upload PDF"}
              InputProps={{
                endAdornment: (
                  <IconButton color="primary" aria-label="upload pdf" component="label" sx={{display : "flex" , justifyContent : "end"}}>
@@ -249,7 +249,7 @@ export default function PolicyPage() {
                  IconComponent={() => (<img src="Images/policy/dropdown.png" alt="drow down" width = "20px" style={ { marginRight : "4%"}}/>)}
                >
                    <MenuItem value={policies?.policy_id}>
-                     {policies?.policy_heads?.split(",")[0]}...
+                     {policies?.policy_heads?.split(",")[0]}{policies?.length > 0 && <>...</> }
                    </MenuItem>
                </Select>
              </FormControl>

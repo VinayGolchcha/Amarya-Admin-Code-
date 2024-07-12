@@ -359,7 +359,7 @@ const AdminDashboard = () => {
                             fontWeight: "400",
                           }}
                         >
-                          {item.description}
+                          {item?.description?.slice(0,20)}
                         </Typography>
                         <Typography
                           sx={{

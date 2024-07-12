@@ -518,35 +518,46 @@ function MyForm({
                 </Typography>
               )}
               {edit && files?.length > 0 &&
-                files?.map((item) => (
-                  <Typography
-                    key={item?.public_id}
-                    sx={{
-                      color: "green",
+                files?.map((item) => {
+                  // <Typography
+                  //   key={item?.public_id}
+                  //   sx={{
+                  //     color: "green",
+                  //     marginTop: "5px",
+                  //     padding: "1px 5px",
+                  //     display: "flex",
+                  //   }}
+                  // >
+                  //   <Box sx={{display : "flex" , cursor: "pointer"}} onClick={() => handleDeletePics(item?.public_id)}>{item?.original_filename} 
+
+                  //   <CloseIcon
+                        
+                  //       style={{  }}
+                  //     />
+
+                  //   </Box>
+                  //   </Typography>
+                    return(<div key={item?.public_id} style={{display : "flex"}}>
+                    <span style={{color: "green",
                       marginTop: "5px",
                       padding: "1px 5px",
-                      display: "flex",
-                    }}
-                  >
-                    <Box>{item?.original_filename} 
-                    </Box>
-                    <Box>
+                      display: "flex"}}>{item?.original_filename}</span>
                     <CloseIcon
-                        onClick={() => handleDeletePics(item?.public_id)}
-                        style={{ cursor: "pointer" }}
-                      />
-                    </Box>
-                  </Typography>
-                ))}
+                    sx={{  cursor: "pointer" , marginTop : "7px" , color : "green"}}
+                    onClick={() => handleDeletePics(item?.public_id)}
+                  />
+                  </div>);
+                  
+                })}
             </Box>
           )}
         </Grid>
         <Grid
           container
           spacing={2}
-          sx={{ paddingLeft: "20px", marginTop: "-8%" }}
+          sx={{ paddingLeft: "20px", marginTop: "-8%" , width : "50%"}}
         >
-          <Grid item xs={2.5}>
+          <Grid item xs={6}>
             <Typography variant="body1" color="#686868">
               From:
             </Typography>
@@ -559,7 +570,7 @@ function MyForm({
               sx={{ marginLeft: "20px", backgroundColor: "rgb(250, 250, 250)" }}
             />
           </Grid>
-          <Grid item xs={2.5}>
+          <Grid item xs={6}>
             <Typography
               variant="body1"
               sx={{ marginLeft: "20px", color: "#686868" }}

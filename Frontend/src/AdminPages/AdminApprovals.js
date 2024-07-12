@@ -14,6 +14,7 @@ import {
   TablePagination,
   IconButton,
   TextField,
+  Tooltip,
 } from "@mui/material";
 import FileDownloadDoneIcon from "@mui/icons-material/FileDownloadDone";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
@@ -422,15 +423,19 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                       )}
                     </TableCell>
                     <TableCell align="left" sx={{ minWidth: "104px" }}>
+                      <Tooltip title="Approve" placement="top" arrow>
                       <FileDownloadDoneIcon sx={{ color: "#b1bacb", cursor:"pointer" , ":hover" : {
                         color: "black"
                       }}} onClick={() => handleClick(row , "approved")} />
+                      </Tooltip>
+                      <Tooltip title="Reject" placement="top" arrow>
                       <NotInterestedIcon sx={{ color: "#b1bacb", cursor:"pointer" , ":hover" : {
                         color: "black"
-                      }}} onClick={() => handleClick(row , "rejected")}/>
+                      }}} onClick={() => handleClick(row , "rejected")}/></Tooltip>
+                      <Tooltip title="Delete" placement="top" arrow>
                       <DeleteOutlineIcon sx={{ color: "#b1bacb", cursor:"pointer" , ":hover" : {
                         color: "black"
-                      } }} onClick={() => handleClick(row , "deleted")}/>
+                      } }} onClick={() => handleClick(row , "deleted")}/></Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}

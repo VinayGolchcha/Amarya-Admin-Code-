@@ -99,7 +99,7 @@ export default function SettingsCategory() {
             setFormData(newFormData);
             setSelectedInputIndex(null);
             setDeleteMode(false);
-            toast.success("Category created successfully");
+            toast.success("Category deleted successfully");
             fetchCategories();
           })
           .catch((error) => {

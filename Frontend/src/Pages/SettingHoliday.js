@@ -121,7 +121,7 @@ export default function SettingHoliday() {
           .then((response) => {
             if (!response.ok) {
               throw new Error("Failed to delete holiday");
-              toast.error("Failed to delete skill.");
+              toast.error("Failed to delete holiday.");
             }
             return response.json();
           })
@@ -132,12 +132,12 @@ export default function SettingHoliday() {
             setFormData(newFormData);
             setSelectedInputIndex(null);
             setDeleteMode(false);
-            toast.success("Skill deleted successfully.");
+            toast.success("Holiday deleted successfully.");
             fetchHolidayData();
           })
           .catch((error) => {
             console.error("Error deleting holiday:", error);
-            toast.error("Failed to delete skill.");
+            toast.error("Failed to delete holiday.");
           });
       } else {
         setDeleteMode(false);
@@ -218,7 +218,7 @@ export default function SettingHoliday() {
           }
         )
           .then((response) => {
-            if (!response.ok) {
+            if (!(response.ok)) {
               throw new Error("Failed to create holiday");
             }
             return response.json();
@@ -232,9 +232,9 @@ export default function SettingHoliday() {
             );
             if (index !== -1) {
               updatedFormData[index] = {
-                _id: data.holiday._id,
-                date: data.holiday.date,
-                holiday: data.holiday.holiday,
+                _id: data?.holiday?._id,
+                date: data?.holiday?.date,
+                holiday: data?.holiday?.holiday,
               };
               setFormData(updatedFormData);
             }

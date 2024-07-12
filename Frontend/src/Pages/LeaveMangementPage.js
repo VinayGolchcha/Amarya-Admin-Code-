@@ -259,11 +259,14 @@ export default function LeaveMangementPage() {
       }
       const errors = error?.response?.data?.errors;
       errors?.forEach((item) => {
-        toast.error(item);
+        toast.error(item?.msg);
       });
       console.error("Error:", error);
       if(error?.response?.message){
         toast.error(error?.response?.message);
+      }
+      if(error?.message){
+        toast.error(error?.message);
       }
     }
   };
@@ -543,6 +546,7 @@ export default function LeaveMangementPage() {
                   label="leaveType"
                   sx={{ width: "100%", backgroundColor: "#fafafa" }}
                   onChange={handleChange}
+                  required
                 >
                   {leaveTypes?.map((type) => (
                     <MenuItem key={type.leave_type} value={type.leave_type}>

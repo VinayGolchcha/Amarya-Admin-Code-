@@ -131,6 +131,22 @@ export default function TrainingsPageAdmin( ) {
   const handleReset = () => {
     setEdit(false);
   }
+  const dateFormat = (dateStr) => {
+    let [day, month, year] = dateStr.split('-');
+
+    // Create a date object
+    let date = new Date(`20${year}-${month}-${day}`);
+
+    // Format the date components
+    let options = { year: '2-digit', month: 'long', day: '2-digit' };
+    let formattedDate = date.toLocaleDateString('en-US', options);
+
+    // Adjust the formatted string to the required format
+    let parts = formattedDate.split(' ');
+    let result = `${parts[2]}, ${parts[0]} ${parts[1].replace(',', '')}`;
+
+    return result;
+  }
   
   const addTraining = async (body) => {
     try {
@@ -141,6 +157,7 @@ export default function TrainingsPageAdmin( ) {
       })
       setOpen(false);
       fecthTrainings();
+      toast.success("Training added successfully");
     }catch(error){
       console.log(error);
       if(error?.response?.message){
@@ -205,7 +222,7 @@ export default function TrainingsPageAdmin( ) {
           courses: item?.course_name,
           coursedescription: item?.course_description,
           completedinprogress: item?.progress_status,
-          approvedon: "Nov 1, 22",
+          approvedon: item?.approval_date,
           approvedrejected: "Approved",
           manager: "HR",
       })));
@@ -247,11 +264,12 @@ export default function TrainingsPageAdmin( ) {
         "x-access-token" : user?.token
       }
     })
-    fecthTrainings()
       .then(response => {
         console.log('Update Training Response:', response);
+        toast.success("Training updated successfully");
         // Optionally, you can perform any additional actions after successful update
         handleEditClose();
+        fecthTrainings();
       })
       .catch(error => {
         console.error('Error updating training:', error);
@@ -289,6 +307,7 @@ export default function TrainingsPageAdmin( ) {
             console.log(response);
             handleEditClose(false);
       fecthTrainings();
+      toast.success("Training deleted successfully");
       handleCloseConDel();
     } catch (error) {
       if(error?.response?.message){
@@ -709,8 +728,8 @@ export default function TrainingsPageAdmin( ) {
           <TableCell style={{ fontFamily: "Poppins" }}>
             {row.completedinprogress}
           </TableCell>
-          <TableCell style={{ fontFamily: "Poppins" }}>
-            {row.approvedon}
+          <TableCell style={{ fontFamily: "Poppins", minWidth : "120px" }}>
+            {row?.approvedon===null ? "-" : dateFormat(row?.approvedon)}
           </TableCell>
         </TableRow>
       ))

@@ -89,6 +89,23 @@ export default function TrainingsPage(props) {
  ///chetan code
  const [trainingCards, setTrainingCards] = React.useState("");
 
+ const dateFormat = (dateStr) => {
+  let [day, month, year] = dateStr?.split('-');
+
+  // Create a date object
+  let date = new Date(`20${year}-${month}-${day}`);
+
+  // Format the date components
+  let options = { year: '2-digit', month: 'long', day: '2-digit' };
+  let formattedDate = date.toLocaleDateString('en-US', options);
+
+  // Adjust the formatted string to the required format
+  let parts = formattedDate.split(' ');
+  let result = `${parts[2]}, ${parts[0]} ${parts[1].replace(',', '')}`;
+
+  return result;
+}
+
  const getUserTraining = async () => {
   try {
     const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/get-user-training` , {
@@ -104,7 +121,7 @@ export default function TrainingsPage(props) {
       courses: item?.course_name,
       coursedescription: item?.course_description,
       completedinprogress: item?.progress_status,
-      approvedon: "Nov 1, 22",
+      approvedon: item?.approval_date,
       approvedrejected: item?.status,
       manager: "HR",
     })));
@@ -413,7 +430,7 @@ export default function TrainingsPage(props) {
                         {row.completedinprogress}
                       </TableCell>
                       <TableCell style={{ fontFamily: "Poppins" }}>
-                        {row.approvedon}
+                      {!row?.approvedon && "-"}
                       </TableCell>
                       <TableCell style={{ fontFamily: "Poppins" }}>
                         {row.approvedrejected}
