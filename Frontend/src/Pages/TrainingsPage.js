@@ -430,7 +430,7 @@ export default function TrainingsPage(props) {
                         {row.completedinprogress}
                       </TableCell>
                       <TableCell style={{ fontFamily: "Poppins" }}>
-                      {!row?.approvedon && "-"}
+                      {!row?.approvedon ? "-" : dateFormat(row?.approvedon)}
                       </TableCell>
                       <TableCell style={{ fontFamily: "Poppins" }}>
                         {row.approvedrejected}

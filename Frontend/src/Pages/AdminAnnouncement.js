@@ -509,7 +509,9 @@ const AdminNotificationTab = () => {
       toast.success("Notifications are filtered");
     } catch (error) {
       console.log(error);
-      toast.error(error.message);
+      if(selectedTab !== "activity"){
+        toast.error(error.message);
+      }
     }
   };
 
