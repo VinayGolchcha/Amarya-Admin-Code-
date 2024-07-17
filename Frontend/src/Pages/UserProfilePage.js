@@ -717,7 +717,7 @@ const UserProfilePage = () => {
                               gutterBottom
                               color="#6e7880"
                             >
-                              {item.value}
+                              {!item.value ? 0 : item.value}
                             </Typography>
                             <Typography variant="subtitle1" color="#9fadb8">
                               {item.info}

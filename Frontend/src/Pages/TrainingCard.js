@@ -3,7 +3,7 @@ import Grid from "@mui/material/Grid";
 import CardContent from "@mui/material/CardContent";
 import LaunchIcon from "@mui/icons-material/Launch";
 import Typography from "@mui/material/Typography";
-import { Card } from "@mui/material";
+import { Card, Tooltip } from "@mui/material";
 import ReactCardFlip from "react-card-flip";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -75,9 +75,10 @@ export default function TrainingCard({
                 Training {field?.trainindId?.toString().slice(-2)}
                 <>
                 
-                {user?.role === "user" && !edit && !deleteItem && <LaunchIcon sx={{
+                {user?.role === "user" && !edit && !deleteItem &&<> <Tooltip title="Request training" placement="top" arrow>
+                <LaunchIcon sx={{
                   cursor : "pointer"
-                }} onClick={() => handleRequest(field?.trainindId)} />}
+                }} onClick={() => handleRequest(field?.trainindId)} /></Tooltip></>}
                 </>
                 {edit && (
                   <EditIcon

@@ -170,24 +170,24 @@ const LoginPage = () => {
             }}
             InputProps={{
               style: { color: "white" },
-              // endAdornment: (
-              //   <InputAdornment position="end">
-              //     <IconButton
-              //       onClick={() => setShowPassword(!showPassword)}
-              //       edge="end"
-              //       sx={{ color: "white" }}
-              //     >
-              //       {showPassword ? <VisibilityOff /> : <Visibility />}
-              //     </IconButton>
-              //   </InputAdornment>
-              // ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="end"
+                    sx={{ color: "white" }}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
             }}
             label="Password"
             variant="standard"
             type={showPassword ? "text" : "password"}
             value={password} // Ensure the value prop is set to the password state
             onChange={(e) => setPassword(e.target.value)}
-            fullWidth
+            
           />
           <Typography
             variant="body2"
@@ -246,7 +246,7 @@ const LoginPage = () => {
           justifyContent: "flex-end",
           alignItems: "center",
           flex: 1,
-          marginLeft: { xs: "50%", lg: "0%" },
+          marginLeft: { xs: "60%", lg: "120px" },
           position: "relative",
           width: "50%",
         }}

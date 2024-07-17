@@ -157,7 +157,7 @@ export default function PolicyPage() {
       setPolicies([]);
       fecthPolicies();
       handleClose();
-      toast.error(res?.data?.message);
+      toast.success(res?.data?.message);
     }catch(error){
       if(error?.response?.message){
         toast.error(error?.response?.message);

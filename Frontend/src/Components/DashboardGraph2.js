@@ -10,7 +10,7 @@ export default function DashboardGraph2({ pointsData }) {
     <Box sx={{ p: 0, border: '1px solid rgba(0, 0, 0, 0.1)' }}>
       <Box sx={{ padding: 3, borderBottom: "2px solid #BCBCBC" }}>
         <Typography sx={{ fontFamily: "Prompt", fontWeight: "600", fontSize: "24px", lineHeight: '36px', color: '#828282' }} variant='p'>
-          Points Earned per month
+          Points earned per month
         </Typography>
       </Box>
       <Box sx={{ p: 2 }}>

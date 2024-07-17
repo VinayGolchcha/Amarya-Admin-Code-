@@ -40,7 +40,7 @@ const AssetsPage = () => {
   });
   const [selectedRequestTypes, setSelectedRequestTypes] = useState([]);
   const [selectedHardwareItems, setSelectedHardwareItems] = useState([]);
-  const [requirement_type, setRequirementType] = useState("");
+  const [requirement_type, setRequirementType] = useState("New Item");
   const [details, setDetails] = useState("");
   const [declarationChecked, setDeclarationChecked] = useState(false);
   const [primary_purpose, setPrimaryPurposeChange] = useState("");
@@ -493,7 +493,7 @@ const AssetsPage = () => {
               </FormControl>
             </Grid>
             <Grid item xs={4}>
-              <FormControl component="fieldset" fullWidth>
+              <FormControl component="fieldset" fullWidth disabled = {selectedRequestTypes !== "Hardware"}>
                 <FormLabel
                   component="legend"
                   sx={{
@@ -560,7 +560,7 @@ const AssetsPage = () => {
                   sx={{ backgroundColor: "rgb(250, 250, 250)" }}
                 >
                   {purposeOptions.map((option) => (
-                    <MenuItem key={option} value={option}>
+                    <MenuItem key={option} value={option} disabled = {option !== "New Item"}>
                       {option}
                     </MenuItem>
                   ))}

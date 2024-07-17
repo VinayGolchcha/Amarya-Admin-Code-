@@ -62,10 +62,19 @@ const AdminDashboard = () => {
   const [approvalData , setApprovalData] = useState([]);
   const [activityAnnoucements , setActivityAnnoucements] = useState([]);
   const [apiData , setApidata] = useState([]);
+  const [suggDes , setSuggDes] = useState(null);
+  const [annDes , setAnnDes] = useState(null);
   const [isLoading , setIsLoading] = useState(true);
 
   const {user} = useAuth();
   console.log(user);
+  const handleClick = (id) => {
+    setSuggDes(id);
+  }
+
+  const handleAnnDesChange = (id) => {
+    setAnnDes(id)
+  } 
 
   const approvalReq = async (body) => {
     try{
@@ -357,10 +366,30 @@ const AdminDashboard = () => {
                             fontFamily: "Poppins",
                             color: "#222B45",
                             fontWeight: "400",
+                            overflow: "auto",
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                            maxWidth: "70%"
                           }}
                         >
-                          {item?.description?.slice(0,20)}
+                          {suggDes === item?._id ? item?.description : item?.description?.slice(0,20)}
+                          <Box
+                          sx={{
+                            height: "100%",
+                            width: "23%",
+                            justifyContent: "center",
+                            display: "flex",
+                            alignItems: "center",
+                            fontFamily: "Poppins",
+                            color: "#00000099",
+                            fontWeight: "600",
+                          }}
+                        >
+                
+                          <img src="icons/3dots.svg" style={{cursor : "pointer"}} onClick={() => handleClick(item?._id)}/>
+                        </Box>
                         </Typography>
+                        
                         <Typography
                           sx={{
                             height: "100%",
@@ -373,7 +402,6 @@ const AdminDashboard = () => {
                             fontWeight: "600",
                           }}
                         >
-                          
                           {dateFormat(item.date)}
                         </Typography>
                       </ListItem>
@@ -438,7 +466,7 @@ const AdminDashboard = () => {
                               fontWeight: "400",
                             }}
                           >
-                            {item.description}
+                            {annDes === item?._id ? item?.description : item?.description?.slice(0,20)}
                           </Typography>
                         </Box>
                         <Box
@@ -454,7 +482,7 @@ const AdminDashboard = () => {
                           }}
                         >
                           
-                          <img src="icons/3dots.svg" />
+                          <img src="icons/3dots.svg" style={{cursor : "pointer"}} onClick={() => handleAnnDesChange(item?._id)} />
                         </Box>
                       </ListItem>
                     );

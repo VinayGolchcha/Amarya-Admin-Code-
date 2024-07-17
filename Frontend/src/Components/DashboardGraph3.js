@@ -17,7 +17,7 @@ export default function DashboardGraph3({ pointsData }) {
     <Box sx={{ p: 0 }}>
       <Box sx={{ padding: 3, borderBottom: "2px solid #BCBCBC" }}>
         <Typography sx={{ fontFamily: "Prompt", fontWeight: "600", fontSize: "24px", lineHeight: '36px', color: '#828282' }} variant='p'>
-          Points Earned along the years
+          Points earned along the years
         </Typography>
       </Box>
       <Box sx={{ p: 2 }}>

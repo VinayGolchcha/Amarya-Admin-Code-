@@ -28,13 +28,13 @@ export default function AnnouncementComp({ announcements }) {
       >
         Announcements
         {/* date code starts here */}
-        <Accordion
+        {/* <Accordion
           sx={{ margin: "0", height: "auto", zIndex: "1000", float: "right" }}
         >
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             sx={{ minHeight: "25px", height: "25px", p: 1 }}
-          >
+          > */}
             <Typography
               sx={{
                 fontSize: "0.6rem",
@@ -42,12 +42,16 @@ export default function AnnouncementComp({ announcements }) {
                 display: "flex",
                 alignItems: "center",
                 color: "gray",
+                float: "right" ,
+                backgroundColor : "white",
+                padding : "8px",
+                borderRadius : "4px"
               }}
             >
               {currentDate}
             </Typography>
-          </AccordionSummary>
-          <AccordionDetails
+          {/* </AccordionSummary> */}
+          {/* <AccordionDetails
             sx={{ backgroundColor: "white", position: "absolute" }}
           >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -55,8 +59,8 @@ export default function AnnouncementComp({ announcements }) {
                 <DatePicker label="Select" />
               </DemoContainer>
             </LocalizationProvider>
-          </AccordionDetails>
-        </Accordion>
+          </AccordionDetails> */}
+        {/* </Accordion> */}
         {/* date code ends here */}
       </Box>
       <Box sx={{ pt: 2, pb: 1 }}>
@@ -95,9 +99,9 @@ export default function AnnouncementComp({ announcements }) {
               </Typography>
             </Box>
             <Box sx={{ width: "50%", display: "contents" }}>
-              <Box sx={{ marginRight: "5px" }}>
+              {/* <Box sx={{ marginRight: "5px" }}>
                 <img src="icons/pin.svg" alt="pin" />
-              </Box>
+              </Box> */}
               <Box>
                 <img src="icons/3dots.svg" alt="options" />
               </Box>

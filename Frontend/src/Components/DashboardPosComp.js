@@ -14,7 +14,7 @@ export default function DashboardPosComp() {
         }}
         variant="h2"
       >
-        Boost Your Energy and Improve Posture!!!!
+        Boost Your Energy And Improve Posture!!!!
       </Typography>
       <Box sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
         <Box sx={{ margin: "0px 20px" }}>
