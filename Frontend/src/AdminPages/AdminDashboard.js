@@ -373,37 +373,41 @@ const AdminDashboard = () => {
                           }}
                         >
                           {suggDes === item?._id ? item?.description : item?.description?.slice(0,20)}
+                          
+                        </Typography>
+                        <Box sx={{display : "flex"}}>
                           <Box
-                          sx={{
-                            height: "100%",
-                            width: "23%",
-                            justifyContent: "center",
-                            display: "flex",
-                            alignItems: "center",
-                            fontFamily: "Poppins",
-                            color: "#00000099",
-                            fontWeight: "600",
-                          }}
-                        >
-                
-                          <img src="icons/3dots.svg" style={{cursor : "pointer"}} onClick={() => handleClick(item?._id)}/>
+                            sx={{
+                              height: "100%",
+                              padding : "8px",
+                              justifyContent: "center",
+                              display: "flex",
+                              alignItems: "center",
+                              fontFamily: "Poppins",
+                              color: "#00000099",
+                              fontWeight: "600",
+                            }}
+                          >
+                  
+                            <img src="icons/3dots.svg" style={{cursor : "pointer"}} onClick={() => handleClick(item?._id)}/>
+                          </Box>
+                          <Typography
+                            sx={{
+                              height: "100%",
+                              width: "100%",
+                              padding : "4px",
+                              justifyContent: "center",
+                              display: "flex",
+                              alignItems: "center",
+                              fontFamily: "Poppins",
+                              color: "#222B45",
+                              fontWeight: "600",
+                              
+                            }}
+                          >
+                            {dateFormat(item.date)}
+                          </Typography>
                         </Box>
-                        </Typography>
-                        
-                        <Typography
-                          sx={{
-                            height: "100%",
-                            width: "23%",
-                            justifyContent: "center",
-                            display: "flex",
-                            alignItems: "center",
-                            fontFamily: "Poppins",
-                            color: "#222B45",
-                            fontWeight: "600",
-                          }}
-                        >
-                          {dateFormat(item.date)}
-                        </Typography>
                       </ListItem>
                     );
                   })}
