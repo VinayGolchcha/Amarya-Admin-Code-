@@ -37,6 +37,7 @@ export default function SettingsCategory() {
         if (response.status === 404) {
           // Handle 404 Not Found
           setEditMode(true);
+          setLoading(false);
           return null;
         }
         if (!response.ok) {

@@ -67,7 +67,7 @@ const AdminDashboard = () => {
   const [isLoading , setIsLoading] = useState(true);
 
   const {user} = useAuth();
-  console.log(user);
+
   const handleClick = (id) => {
     setSuggDes(id);
   }
@@ -75,7 +75,10 @@ const AdminDashboard = () => {
   const handleAnnDesChange = (id) => {
     setAnnDes(id)
   } 
-
+  const handleAnnClick = () => {
+    setSuggDes(null);
+    setAnnDes(null);
+  }
   const approvalReq = async (body) => {
     try{
       const res = await axios.put(`${process.env.REACT_APP_API_URI}/approval/admin/approval` , body , {
@@ -236,7 +239,7 @@ const AdminDashboard = () => {
   }else{
 
     return (
-      <Box>
+      <Box >
         <ToastContainer/>
         <Typography
           variant="h4"
@@ -314,12 +317,12 @@ const AdminDashboard = () => {
         </Grid>
         <AdminProjectSummy projects = {apiData?.project_details}/>
   
-        <DashboardPosComp />
+        <DashboardPosComp/>
         <Grid container spacing={2} sx={{
           display : {md : "flex" },
           justifyContent : {md : "center"}
         }}>
-          <Grid item xs={12} md={9} lg={6}>
+          <Grid item xs={12} md={9} lg={6} >
             <Box
               sx={{
                 border: "1px solid #0000004D",

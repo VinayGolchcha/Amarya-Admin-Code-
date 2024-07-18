@@ -177,7 +177,7 @@ const LoginPage = () => {
                     edge="end"
                     sx={{ color: "white" }}
                   >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               ),

@@ -43,6 +43,7 @@ export default function SettingsLeave() {
         if (response.status === 404) {
           // Handle 404 Not Found
           setEditMode(true);
+          setLoading(false);
           return null;
         }
         return response.json();
@@ -103,7 +104,7 @@ export default function SettingsLeave() {
             setSelectedInputIndex(null);
             setDeleteMode(false);
             fetchLeaveData();
-            toast.success("Team deleted successfully");
+            toast.success("Leave deleted successfully");
           })
           .catch((error) => {
             console.error("Error deleting leave type:", error);

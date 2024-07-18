@@ -218,7 +218,7 @@ const AdminProjectSummy = ({projects}) => {
                       {row.project}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
-                      {row.project_status === "Delivered" ? (
+                      {row.project_status === "complete" || row.project_status === "completed" ? (
                         <>
                           <img src="Images/circle(1).svg" /> {row.project_status}
                         </>

@@ -48,6 +48,7 @@ export default function SettingHoliday() {
         if (response.status === 404) {
           // Handle 404 Not Found
           setEditMode(true);
+          setLoading(false);
           return null;
         }
         return response.json();

@@ -271,7 +271,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
+              placeholder="Search req. type"
               sx={{ border: "1px solid black", borderRadius: "9px" }}
               inputProps={{ "aria-label": "search" }}
               value={search}

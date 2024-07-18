@@ -55,7 +55,13 @@ export default function SettingsAddUser() {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-  
+    if(files){
+
+      if(files[0]?.type !==  "image/png" && files[0]?.type !==  "image/jpeg"){
+        toast.warning("Image should be in jpeg or png format only");
+        return;
+      }
+    }
     if (name === 'team_id') {
       // Extract the team_id from the selected option
       const selectedTeam = team.find((team) => team.label === value);
@@ -390,6 +396,7 @@ export default function SettingsAddUser() {
                       <TextField
                         onChange={handleChange}
                         value={formData.gender}
+                        select
                         label="gender"
                         name="gender"
                         fullWidth
@@ -400,7 +407,14 @@ export default function SettingsAddUser() {
                             borderRadius: "10px",
                           },
                         }}
-                      />
+                      >
+                        <MenuItem value={"male"}>
+                          Male
+                        </MenuItem>
+                        <MenuItem value={"female"}>
+                          Female
+                        </MenuItem>
+                    </TextField>
                     </Grid>
                   ) : rowIndex === 4 && colIndex === 1 ? (
                     <TextField

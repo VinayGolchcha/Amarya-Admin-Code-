@@ -586,6 +586,9 @@ const WorksheetPage = () => {
                         handleNewRowChange("empid", e.target.value)
                       }
                       sx={{ width: "80px", marginTop: "15px" }}
+                      inputProps={{
+                        readOnly: true
+                      }}
                     />
                   </TableCell>
                   <TableCell>
