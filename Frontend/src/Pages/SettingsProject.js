@@ -92,7 +92,7 @@ export default function SettingsProject() {
             project_id: item.project_id,
           };
         });
-        setFormData(adjustedData);
+        setFormData(adjustedData||[]);
         console.log(formData);
         setLoading(false);
       })

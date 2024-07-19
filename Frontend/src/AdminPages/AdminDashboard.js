@@ -69,11 +69,25 @@ const AdminDashboard = () => {
   const {user} = useAuth();
 
   const handleClick = (id) => {
-    setSuggDes(id);
+    const updatedNewFeedback = feedback?.map((item) => {
+      if(item._id == id){
+        return {...item , isActive : !item?.isActive}
+      }else{
+        return item;
+      }
+    });
+    setFeedback(updatedNewFeedback);
   }
 
   const handleAnnDesChange = (id) => {
-    setAnnDes(id)
+    const updatedNewActivityAnnoucements = activityAnnoucements?.map((item) => {
+      if(item._id == id){
+        return {...item , isActive : !item?.isActive}
+      }else{
+        return item;
+      }
+    });
+    setActivityAnnoucements(updatedNewActivityAnnoucements);
   } 
   const handleAnnClick = () => {
     setSuggDes(null);
@@ -106,7 +120,10 @@ const AdminDashboard = () => {
           "x-access-token" : user?.token,
         }
       })
-      setFeedback(res?.data?.data);
+      const newFeedbak = res?.data?.data?.map((item) => (
+        {...item , isActive : false}
+      ))
+      setFeedback(newFeedbak);
     }catch(error){
       if(error?.response?.message){
         toast.error(error?.response?.message);
@@ -148,8 +165,10 @@ const AdminDashboard = () => {
           "x-access-token" : user?.token
         }
       });
-      setActivityAnnoucements(res?.data?.data);
-      console.log(activityAnnoucements);
+      const newActivityAnnoucements = res?.data?.data?.announcement_data?.map((item) => (
+        {...item , isActive : false}
+      ));
+      setActivityAnnoucements(newActivityAnnoucements);
     }catch(error){
       if(error?.response?.message){
         toast.error(error?.response?.message);
@@ -369,13 +388,13 @@ const AdminDashboard = () => {
                             fontFamily: "Poppins",
                             color: "#222B45",
                             fontWeight: "400",
-                            overflow: "auto",
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
+                            //overflow: "auto",
+                            //whiteSpace: "nowrap",
+                            //textOverflow: "ellipsis",
                             maxWidth: "70%"
                           }}
                         >
-                          {suggDes === item?._id ? item?.description : item?.description?.slice(0,20)}
+                          {item.isActive ? item?.description : item?.description?.slice(0,20)}
                           
                         </Typography>
                         <Box sx={{display : "flex"}}>
@@ -443,7 +462,7 @@ const AdminDashboard = () => {
               </Box>
               <Box sx={{ margin: "0px 8px 8px 8px", marginTop: "1.5%" }}>
                 <List sx={{ paddingBottom: "0px" }}>
-                  {activityAnnoucements?.announcement_data?.map((item) => {
+                  {activityAnnoucements?.map((item) => {
                     return (
                       <ListItem
                         sx={{
@@ -473,7 +492,7 @@ const AdminDashboard = () => {
                               fontWeight: "400",
                             }}
                           >
-                            {annDes === item?._id ? item?.description : item?.description?.slice(0,20)}
+                            {item.isActive ? item?.description : item?.description?.slice(0,20)}
                           </Typography>
                         </Box>
                         <Box

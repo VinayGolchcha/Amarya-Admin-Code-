@@ -73,7 +73,9 @@ export default function SettingsCategory() {
   };
 
   const handleEdit = () => {
+    console.log(editMode)
     setEditMode(!editMode);
+    console.log(editMode);
   };
 
   const handleDelete = () => {
@@ -94,7 +96,6 @@ export default function SettingsCategory() {
             return response.json();
           })
           .then((data) => {
-            console.log("Category deleted successfully:", data);
             const newFormData = [...formData];
             newFormData.splice(selectedInputIndex, 1);
             setFormData(newFormData);
@@ -120,6 +121,7 @@ export default function SettingsCategory() {
 
   const handleSave = () => {
     if (editMode) {
+      console.log(formData);
       const editedCategories = formData.filter(
         (data, index) =>
           data &&
@@ -137,7 +139,7 @@ export default function SettingsCategory() {
               "Content-Type": "application/json",
               "x-access-token": token,
             },
-            body: JSON.stringify({ category: editedCategory.category }),
+            body: JSON.stringify({ category: editedCategory.category  , points : editedCategory.points}),
           }
         )
           .then((response) => {
@@ -158,7 +160,6 @@ export default function SettingsCategory() {
       });
 
       const newCategories = formData.filter((data) => !data._id);
-      console.log(newCategories);
       newCategories.forEach((newCategory) => {
         fetch(`${apiUrl}/category/admin/create-category`, {
           method: "POST",
@@ -166,7 +167,7 @@ export default function SettingsCategory() {
             "Content-Type": "application/json",
             "x-access-token": token,
           },
-          body: JSON.stringify({ category: newCategory.category, points: "1" }),
+          body: JSON.stringify({ category: newCategory.category, points: newCategory.points }),
         })
           .then((response) => {
             if (!response.ok) {
