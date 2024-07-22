@@ -109,7 +109,7 @@ const MainPage = (props) => {
           {/* {role === "admin" && (<Route path="/" element={<AdminDashboard />} />)} */}
           {/* {role === "admin" && (<Route path="/anouncement" element={<AdminAnnouncement />} />)} */}
           <Route path="/activities/:activityId" element={<ActivityPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          {!user && <Route path="/login" element={<LoginPage />} />}
           <Route
             path="/dashboard"
             element={
