@@ -91,7 +91,7 @@ const LoginPage = () => {
         justifyContent: "center",
         borderRadius: "50px",
         // minHeight: "95vh",
-        margin: "20px",
+        // margin: "20px",
       }}
     >
       {/* Left Side */}
@@ -246,7 +246,7 @@ const LoginPage = () => {
           justifyContent: "flex-end",
           alignItems: "center",
           flex: 1,
-          marginLeft: { xs: "60%", lg: "120px" },
+          marginLeft: { xs: "46%", lg: "120px" },
           position: "relative",
           width: "50%",
         }}

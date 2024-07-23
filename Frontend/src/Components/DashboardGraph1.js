@@ -57,6 +57,7 @@ export default function DashboardGraph1({ projectsThisYear }) {
       id="pie-chart"
     >
       <Box>
+        <Box sx={{display : "flex"}}>
         <Typography
           sx={{
             fontFamily: "Inter",
@@ -69,6 +70,12 @@ export default function DashboardGraph1({ projectsThisYear }) {
         >
           Projects
         </Typography>
+        <span styles={{fontFamily: "Inter",
+            fontWeight: "500",
+            fontSize: "20px",
+            lineHeight: "50px",
+            color: "#4D4D4D", marginTop : "20px"}}> &nbsp; duration given in months </span>
+        </Box>
         <Typography
           sx={{
             fontFamily: "Inter",
@@ -89,7 +96,7 @@ export default function DashboardGraph1({ projectsThisYear }) {
               data:
                 projectsThisYear?.map((project, index) => ({
                   value: project.project_duration || 0,
-                  label: project.project || "--",
+                  label: project.project  || "--",
                   color: colors[index % colors.length],
                 })) || [],
               paddingAngle: 5,

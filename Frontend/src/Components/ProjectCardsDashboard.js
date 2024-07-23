@@ -41,7 +41,7 @@ export default function ProjectCardsDashboard({ currentProject }) {
                         Working Technologies
                     </Typography>
                     <br></br>
-                    <Typography sx={{ fontFamily: "Poppins", fontWeight: "500", fontSize: "18px", lineHeight: '25px', color: '#161E54' }} variant='p'>
+                    <Typography sx={{ fontFamily: "Poppins", fontWeight: "500", fontSize: "30px", lineHeight: '25px', color: '#161E54' }} variant='p'>
                         {technologies}
                     </Typography>
                 </Box>

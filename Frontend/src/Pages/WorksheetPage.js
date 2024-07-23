@@ -299,7 +299,7 @@ const WorksheetPage = () => {
         const worksheetData = data?.data.map((rowData) => ({
           empid: rowData.emp_id, // Use emp_id from fetched data
           team: getTeamNameById(rowData.team_id), // Get team name by id
-          date: formatDate(rowData.created_at), // Use created_at as date
+          date: formatDate(rowData.date), // Use date as date
           category: getCategoryNameById(rowData.category_id), // Get category name by id
           project: getProjectNameById(rowData.project_id), // Get project name by id (if available)
           description: rowData.description,

@@ -222,7 +222,7 @@ const ActivityPage = () => {
             }}
           />
         </Card>
-        <Box sx={{display : "flex" , justifyContent : "center"}}>
+        <Box sx={{display : "flex" , justifyContent : "center" , marginTop : "20px" ,fontSize : "21px" , fontFamily : "Poppins" , backgroundColor : "#CCFF99" , padding : "8px" ,  borderRadius: "15px",}}>
           {activityData?.description}
         </Box>
       </Box>
