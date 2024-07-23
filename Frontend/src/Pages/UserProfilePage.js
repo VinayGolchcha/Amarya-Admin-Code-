@@ -356,6 +356,24 @@ const UserProfilePage = () => {
     fetchProjectTimeline();
   }, []);
 
+  const disabledList = (field) => {
+    if(field === "dob"){
+      return true;
+    }
+    if(field === "blood_group"){
+      return true;
+    }
+    if(field === "email"){
+      return true;
+    }
+    if(field === "gender"){
+      return true;
+    }
+    if(field === "address"){
+      return true;
+    }
+    return false;
+  }
   function formatDate2(inputDate) {
     // Split the input date by the appropriate delimiter
     const parts = inputDate.split(/[\/\-]/);
@@ -515,7 +533,7 @@ const UserProfilePage = () => {
                             : formData[item.field]
                         }
                         onChange={handleChange}
-                        disabled={item.field === "dob" ? true : !isEditing}
+                        disabled={disabledList(item.field) ? true : !isEditing}
                         sx={{
                           [theme.breakpoints.up("md")]: {
                             width: index === 6 ? "90%" : "80%",
