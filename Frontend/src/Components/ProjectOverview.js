@@ -167,7 +167,7 @@ const ProjectOverview = ({ apiData }) => {
           fontSize="1.1rem"
           fontFamily="Poppins"
         >
-          Project Overview - {getYearSpan()}
+          Project Overview - {getYearSpan()} FY
         </Typography>
         {/* Monthly Project Status Bar Chart */}
         <ResponsiveContainer width="100%" height={400}>
@@ -230,7 +230,7 @@ const ProjectOverview = ({ apiData }) => {
                 },
               }}
             >
-              {apiData?.employee_count_with_team[0][1]?.project_count}
+              {apiData?.employee_count_with_team[0][1]?.project_count || 0}
               <br />
               SAP Projects
             </Typography>
