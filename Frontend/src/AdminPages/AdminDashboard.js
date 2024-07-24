@@ -65,6 +65,7 @@ const AdminDashboard = () => {
   const [suggDes , setSuggDes] = useState(null);
   const [annDes , setAnnDes] = useState(null);
   const [isLoading , setIsLoading] = useState(true);
+  const [activityData , setActivityData] = useState([]);
 
   const {user} = useAuth();
 
@@ -169,6 +170,7 @@ const AdminDashboard = () => {
         {...item , isActive : false}
       ));
       setActivityAnnoucements(newActivityAnnoucements);
+      setActivityData(res?.data?.data?.activity_data)
     }catch(error){
       if(error?.response?.message){
         toast.error(error?.response?.message);
@@ -330,7 +332,7 @@ const AdminDashboard = () => {
                 marginTop: "30px",
               }}
             >
-              <AdminActivity activityAnnoucements = {activityAnnoucements?.activity_data}/>
+              <AdminActivity activityAnnoucements = {activityData}/>
             </Box>
           </Grid>
         </Grid>
