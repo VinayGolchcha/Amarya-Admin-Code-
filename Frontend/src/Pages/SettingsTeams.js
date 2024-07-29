@@ -6,10 +6,27 @@ import { useAuth } from "../Components/AuthContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Loading from "../sharable/Loading";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function SettingsTeams() {
-  const [formData, setFormData] = useState([{ _id: "", team: "" }]);
+  const theme = useTheme();
 
+  // Define breakpoints
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'));
+  const isSm = useMediaQuery(theme.breakpoints.between('xs', 'sm'));
+  const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isLg = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isXl = useMediaQuery(theme.breakpoints.up('xl'));
+
+  // Set spacing based on screen size
+  let spacing = 4; // default spacing
+  if (isXs) spacing = 0.5;
+  if (isSm) spacing = 2;
+  if (isMd) spacing = 3;
+  if (isLg) spacing = 4;
+  if (isXl) spacing = 4;
+  const [formData, setFormData] = useState([{ _id: "", team: "" }]);
   const [editMode, setEditMode] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
   const [selectedInputIndex, setSelectedInputIndex] = useState(null);
@@ -214,8 +231,8 @@ export default function SettingsTeams() {
   } else {
     return (
       <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
-        <Grid container spacing={4} sx={{ marginLeft: "4%" }}>
-          <Grid item xs={4}>
+        <Grid container spacing={spacing} sx={{ marginLeft: "4%" }}>
+          <Grid item lg={4} md = {4} xs ={8}>
             {formData.slice(0, midPoint).map((data, index) => (
               <FormControl fullWidth>
                 <FormLabel sx={{ color: "black", fontWeight: "600" }}>
@@ -247,7 +264,7 @@ export default function SettingsTeams() {
             ))}
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid item lg={4} md = {4} xs ={8}>
             {formData.slice(midPoint, len).map((data, index) => (
               <FormControl fullWidth>
                 <FormLabel sx={{ color: "black", fontWeight: "600" }}>
@@ -280,15 +297,17 @@ export default function SettingsTeams() {
             ))}
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid item lg={4} md = {4} xs ={8} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
             <Box
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center ",
+                alignitems : "center",
                 width: "100%",
                 height: "100%",
                 gap: "40px",
+                marginLeft : "25%"
               }}
             >
               <Button

@@ -531,7 +531,7 @@ export default function TrainingsPageAdmin( ) {
                 width: "542px",
                 height: "28px",
                 fontFamily: "Preahvihear",
-                fontSize: "20px",
+                fontSize: {lg : "20px" , md : "20px" , sm : "20px" , xs : "15px"},
                 lineHeight: "28px",
               }}
             >

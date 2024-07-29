@@ -1,4 +1,4 @@
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, Typography } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
@@ -52,7 +52,7 @@ function OtpP({ closeOtpP, email }) {
           style={{
             position: "fixed",
             zIndex: "1000",
-            width: "425px",
+            width: "77%",
             height: "300px",
             borderRadius: "10px",
 
@@ -87,7 +87,7 @@ function OtpP({ closeOtpP, email }) {
           </Button>
 
           <div>
-            <h1>OTP Verification</h1>
+            <Typography variant="h1" sx={{fontSize : { lg : "55px" , md : "50px" , sm : "45px" , xs : "26px" , marginTop : "10px" }}}>OTP Verification</Typography>
             <p>
               Please Enter The OTP Sent To Your Email To <br></br>
               Complete The Verification process

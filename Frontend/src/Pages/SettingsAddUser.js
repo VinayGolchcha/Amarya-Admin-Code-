@@ -14,8 +14,26 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../Components/AuthContext";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function SettingsAddUser() {
+   const theme = useTheme();
+
+  // Define breakpoints
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'));
+  const isSm = useMediaQuery(theme.breakpoints.between('xs', 'sm'));
+  const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isLg = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isXl = useMediaQuery(theme.breakpoints.up('xl'));
+
+  // Set spacing based on screen size
+  let spacing = 8; // default spacing
+  if (isXs) spacing = 1;
+  if (isSm) spacing = 2;
+  if (isMd) spacing = 3;
+  if (isLg) spacing = 4;
+  if (isXl) spacing = 5;
   const apiUrl = process.env.REACT_APP_API_URL;
   const { user } = useAuth();
   const token = encodeURIComponent(user?.token || "");
@@ -176,9 +194,9 @@ export default function SettingsAddUser() {
       <form onSubmit={handleSubmit}>
         <Grid container spacing={3.5}>
           {[...Array(5)].map((_, rowIndex) => (
-            <Grid container item spacing={8} key={rowIndex}>
+            <Grid container item spacing={spacing} key={rowIndex}>
               {[...Array(rowIndex === 4 ? 3 : 3)].map((_, colIndex) => (
-                <Grid item xs={colIndex === 0 ? 4 : 4} key={colIndex}>
+                <Grid item lg={4} md ={4} sm ={12} xs = {12} key={colIndex}>
                   {rowIndex === 0 && colIndex === 0 ? (
                     <TextField
                       onChange={handleChange}
@@ -455,8 +473,8 @@ export default function SettingsAddUser() {
               ))}
             </Grid>
           ))}
-          <Grid container item spacing={10}>
-            <Grid item xs={4}>
+          <Grid container item spacing={spacing}>
+            <Grid item lg={4} md={4} sm={12} xs={12}>
               <TextField
                 onChange={handleChange}
                 value={formData.address}
@@ -472,7 +490,7 @@ export default function SettingsAddUser() {
                 }}
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item lg={4} md={4} sm={12} xs={12}>
               <TextField
                 onChange={handleChange}
                 value={formData.blood_group}
@@ -488,7 +506,7 @@ export default function SettingsAddUser() {
                 }}
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item lg={4} md={4} sm={12} xs={12}>
               <TextField
                 fullWidth
                 variant="outlined"
@@ -508,7 +526,7 @@ export default function SettingsAddUser() {
               />
             </Grid>
           </Grid>
-          <Grid item xs={7} style={{ textAlign: "right" }}>
+          <Grid item xs={12} style={{ textAlign: "center" }}>
             <Button
               type="submit"
               variant="contained"

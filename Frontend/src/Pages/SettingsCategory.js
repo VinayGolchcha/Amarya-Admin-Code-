@@ -6,8 +6,26 @@ import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function SettingsCategory() {
+    const theme = useTheme();
+
+    // Define breakpoints
+    const isXs = useMediaQuery(theme.breakpoints.down('xs'));
+    const isSm = useMediaQuery(theme.breakpoints.between('xs', 'sm'));
+    const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+    const isLg = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+    const isXl = useMediaQuery(theme.breakpoints.up('xl'));
+
+    // Set spacing based on screen size
+    let spacing = 4; // default spacing
+    if (isXs) spacing = 0.5;
+    if (isSm) spacing = 1;
+    if (isMd) spacing = 3;
+    if (isLg) spacing = 4;
+    if (isXl) spacing = 4;
   const [formData, setFormData] = useState([{ category: "", points: "" }]);
   useEffect(() => {}, []);
   const [editMode, setEditMode] = useState(false);
@@ -205,11 +223,11 @@ export default function SettingsCategory() {
   } else {
     return (
       <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
-        <Grid container spacing={4} sx={{ marginLeft: "6%" }}>
+        <Grid container spacing={spacing} sx={{ marginLeft: "6%" }}>
           <Grid item xs={4}>
             {formData.map((data, index) => (
               <FormControl fullWidth>
-                <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                <FormLabel sx={{ color: "black", fontWeight: "600" , fontSize : {lg: "1rem" , md : "1rem" , sm : "1rem" ,xs : "15px"} }}>
                   Category {index + 1}
                 </FormLabel>
                 <TextField
@@ -240,7 +258,7 @@ export default function SettingsCategory() {
           <Grid item xs={4}>
             {formData.map((data, index) => (
               <FormControl fullWidth>
-                <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                <FormLabel sx={{ color: "black", fontWeight: "600", fontSize : {lg: "1rem" , md : "1rem" , sm : "1rem" ,xs : "15px"} }}>
                   Points
                 </FormLabel>
                 <TextField

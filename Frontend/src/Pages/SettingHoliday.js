@@ -6,8 +6,26 @@ import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function SettingHoliday() {
+  const theme = useTheme();
+
+  // Define breakpoints
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'));
+  const isSm = useMediaQuery(theme.breakpoints.between('xs', 'sm'));
+  const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isLg = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isXl = useMediaQuery(theme.breakpoints.up('xl'));
+
+  // Set spacing based on screen size
+  let spacing = 8; // default spacing
+  if (isXs) spacing = 0.5;
+  if (isSm) spacing = 2;
+  if (isMd) spacing = 3;
+  if (isLg) spacing = 4;
+  if (isXl) spacing = 5;
   const [formData, setFormData] = useState([
     { _id: "", date: "", day: "", holiday: "" },
   ]);
@@ -272,8 +290,8 @@ export default function SettingHoliday() {
     return <Loading />;
   } else {
     return (
-      <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" }}>
-        <Grid container spacing={4} sx={{ marginLeft: "2%" }}>
+      <Box sx={{ flexGrow: 1, m: "25px 0px 20px 25px" , margin : {md : "25px 0px 20px 0px"}}}>
+        <Grid container spacing={spacing} sx={{ marginLeft: "2%" }}>
           <Grid item xs={3}>
             <FormControl fullWidth>
               <FormLabel sx={{ color: "black", fontWeight: "600" }}>

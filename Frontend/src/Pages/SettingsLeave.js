@@ -6,8 +6,27 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
 
 export default function SettingsLeave() {
+  const theme = useTheme();
+
+  // Define breakpoints
+  const isXs = useMediaQuery(theme.breakpoints.down('xs'));
+  const isSm = useMediaQuery(theme.breakpoints.between('xs', 'sm'));
+  const isMd = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isLg = useMediaQuery(theme.breakpoints.between('md', 'lg'));
+  const isXl = useMediaQuery(theme.breakpoints.up('xl'));
+
+  // Set spacing based on screen size
+  let spacing = 4; // default spacing
+  if (isXs) spacing = 1;
+  if (isSm) spacing = 1;
+  if (isMd) spacing = 3;
+  if (isLg) spacing = 4;
+  if (isXl) spacing = 4;
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState([
     {
@@ -223,10 +242,10 @@ export default function SettingsLeave() {
   } else {
     return (
       <Box sx={{ flexGrow: 1, m: "25px 0px 20px 5px" }}>
-        <Grid container spacing={4} sx={{ marginLeft: "5%" }}>
+        <Grid container spacing={spacing} sx={{ marginLeft: "5%" }}>
           <Grid item xs={2.5}>
             <FormControl fullWidth>
-              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+              <FormLabel sx={{ color: "black", fontWeight: "600" , fontSize : {lg : "1rem" , md : "1rem" , sm : "1rem" , xs : "10px" } }}>
                 Leave Type
               </FormLabel>
               {formData.map((data, index) => (
@@ -239,6 +258,7 @@ export default function SettingsLeave() {
                       borderWidth: "2px",
                       borderColor: "#b3b3b3",
                       borderRadius: "10px",
+                      fontSize : {xs : "15px"}
                     },
                     margin: "10px 0px",
                   }}
@@ -258,7 +278,7 @@ export default function SettingsLeave() {
 
           <Grid item xs={1.5}>
             <FormControl fullWidth>
-              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+              <FormLabel sx={{ color: "black", fontWeight: "600" , fontSize : {lg : "1rem" , md : "1rem" , sm : "1rem" , xs : "10px" } }}>
                 Gender
               </FormLabel>
               {formData.map((data, index) => (
@@ -271,6 +291,7 @@ export default function SettingsLeave() {
                       borderWidth: "2px",
                       borderColor: "#b3b3b3",
                       borderRadius: "10px",
+                      fontSize : {xs : "15px"}
                     },
                     margin: "10px 0px",
                   }}
@@ -290,7 +311,7 @@ export default function SettingsLeave() {
 
           <Grid item xs={1.5}>
             <FormControl fullWidth>
-              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+              <FormLabel sx={{ color: "black", fontWeight: "600" , fontSize : {lg : "1rem" , md : "1rem" , sm : "1rem" , xs : "10px" }}}>
                 Count
               </FormLabel>
               {formData.map((data, index) => (
@@ -302,6 +323,7 @@ export default function SettingsLeave() {
                       borderWidth: "2px",
                       borderColor: "#b3b3b3",
                       borderRadius: "10px",
+                      fontSize : {xs : "15px"}
                     },
                     margin: "10px 0px",
                   }}
@@ -317,7 +339,7 @@ export default function SettingsLeave() {
           </Grid>
           <Grid item xs={3.5}>
             <FormControl fullWidth>
-              <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+              <FormLabel sx={{ color: "black", fontWeight: "600" , fontSize : {lg : "1rem" , md : "1rem" , sm : "1rem" , xs : "10px" } }}>
                 Description
               </FormLabel>
               {formData.map((data, index) => (
@@ -330,6 +352,7 @@ export default function SettingsLeave() {
                       borderWidth: "2px",
                       borderColor: "#b3b3b3",
                       borderRadius: "10px",
+                      fontSize : {xs : "15px"}
                     },
                     margin: "10px 0px",
                   }}

@@ -206,7 +206,7 @@ const AdminProjectSummy = ({projects}) => {
                       scope="row"
                       sx={{ fontFamily: "Poppins" }}
                     >
-                      {i+1}
+                      {page * rowsPerPage+i+1}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
                       {row.client_name}

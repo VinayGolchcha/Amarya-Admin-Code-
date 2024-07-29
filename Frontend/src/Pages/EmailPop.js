@@ -54,7 +54,7 @@ function EmailP({ closeEmailP, openOtpP, setEmail }) {
           style={{
             position: "absolute",
             zIndex: "1000",
-            width: "600px",
+            width: "77%",
             height: "300px",
             borderRadius: "10px",
             top: "50%",

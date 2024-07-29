@@ -490,7 +490,7 @@ export default function LeaveMangementPage() {
                   Leave Application{" "}
                   <Box
                     sx={{
-                      width: { lg: "35%", md: "40%", sm: "40%", xs: "43%" },
+                      width: { lg: "35%", md: "40%", sm: "53%", xs: "63%" },
                     }}
                   >
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -617,12 +617,15 @@ export default function LeaveMangementPage() {
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                       <DatePicker
                         sx={{
-                          width: "35%",
+                          width: {lg :"35%" , md : "35%" , sm : "35%" , xs : "66%"},
                           "&.MuiTextField-root .MuiInputBase-input::placeholder":
                             {
                               fontSize:
                                 "14px" /* Adjust the font size as needed */,
                             },
+                            "&.MuiFormLabel-root-MuiInputLabel-root" : {
+                              fontSize : "14px"
+                            }
                         }}
                         label="Select Date"
                         value={date}

@@ -366,7 +366,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                       scope="row"
                       sx={{ fontFamily: "Open Sans" }}
                     >
-                      {i+1}
+                      {page * rowsPerPage+i+1}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {row?.request_type}

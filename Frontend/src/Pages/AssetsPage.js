@@ -385,7 +385,7 @@ const AssetsPage = () => {
 
           {/* First Row */}
           <Grid container spacing={3} sx={{ marginBottom: "20px" }}>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={12} md={4} lg={4}>
               <TextField
                 variant="outlined"
                 sx={{ backgroundColor: "rgb(250, 250, 250)" }}
@@ -395,7 +395,7 @@ const AssetsPage = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={12} md={4} lg={4}>
               <TextField
                 variant="outlined"
                 label="Employee ID"
@@ -405,7 +405,7 @@ const AssetsPage = () => {
                 fullWidth
               />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={12} md={4} lg={4}>
               <Typography
                 color="#686868"
                 marginTop="-20px"
@@ -426,8 +426,9 @@ const AssetsPage = () => {
                 value={todayDate}
                 onChange={(e) => setTodayDate(e.target.value)}
                 sx={{
-                  marginLeft: "13%",
+                  marginLeft: {lg:"13%" , md :"13%" , sm : "13%" , xs : "0%"},
                   backgroundColor: "rgb(250, 250, 250)",
+                  width : {xs : "135px"}
                 }}
               />
             </Grid>
@@ -435,7 +436,7 @@ const AssetsPage = () => {
 
           {/* Second Row */}
           <Grid container spacing={3}>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={12} md={4} lg={4}>
               <FormControl component="fieldset" fullWidth>
                 <FormLabel
                   component="legend"
@@ -492,7 +493,7 @@ const AssetsPage = () => {
                 </FormGroup>
               </FormControl>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={12} md={4} lg={4}>
               <FormControl component="fieldset" fullWidth disabled = {selectedRequestTypes !== "Hardware"}>
                 <FormLabel
                   component="legend"
@@ -533,8 +534,8 @@ const AssetsPage = () => {
                 </FormGroup>
               </FormControl>
             </Grid>
-            <Grid item xs={4}>
-              <FormControl sx={{ marginLeft: "13%" }}>
+            <Grid item xs={4} sm={12} md={4} lg={4} width>
+              <FormControl sx={{ marginLeft: "13%" , width : {xs : "135px"} }}>
                 <FormLabel
                   component="legend"
                   sx={{
@@ -548,7 +549,7 @@ const AssetsPage = () => {
                     marginBottom: "10px",
                   }}
                 >
-                  New Item/Replacement/Renewal
+                  New Item/Replacement<br/>/Renewal
                 </FormLabel>
                 <Select
                   labelId="purpose-label"
@@ -571,7 +572,7 @@ const AssetsPage = () => {
 
           {/* Third Row */}
           <Grid container spacing={3} sx={{ marginTop: "35px" }}>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={12} md={4} lg={4}>
               <TextField
                 sx={{ backgroundColor: "rgb(250, 250, 250)" }}
                 variant="outlined"
@@ -585,7 +586,7 @@ const AssetsPage = () => {
 
           {/* Fourth Row */}
           <Grid container spacing={3} sx={{ marginTop: "1px" }}>
-            <Grid item xs={4}>
+            <Grid item xs={12} sm={12} md={4} lg={4}>
               <TextField
                 variant="outlined"
                 label="Details"

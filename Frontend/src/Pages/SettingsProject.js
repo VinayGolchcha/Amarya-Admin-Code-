@@ -93,6 +93,7 @@ export default function SettingsProject() {
           };
         });
         setFormData(adjustedData||[]);
+        console.log(adjustedData);
         console.log(formData);
         setLoading(false);
       })
@@ -396,7 +397,7 @@ export default function SettingsProject() {
             </Box>
             <Grid container spacing={4}>
               {labels?.map((item, i) => (
-                <Grid item xs={4} key={i}>
+                <Grid item lg={4} md = {4} xs ={10} key={i}>
                   <FormControl fullWidth>
                     <FormLabel sx={{ color: "black", fontWeight: "600" }}>
                       {item}

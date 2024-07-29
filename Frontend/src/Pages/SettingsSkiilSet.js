@@ -230,7 +230,7 @@ export default function SettingsSkillSet() {
           }}
         >
           <Grid container spacing={4} sx={{ marginLeft: "7%" }}>
-            <Grid item xs={4}>
+            <Grid item lg={4} md = {4} xs ={8}>
               {formData.slice(0, midPoint).map((data, index) => (
                 <FormControl fullWidth>
                   <FormLabel sx={{ color: "black", fontWeight: "600" }}>
@@ -263,7 +263,7 @@ export default function SettingsSkillSet() {
               ))}
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item lg={4} md = {4} xs ={8}>
               {formData.slice(midPoint, len).map((data, index) => (
                 <FormControl fullWidth>
                   <FormLabel sx={{ color: "black", fontWeight: "600" }}>
@@ -300,7 +300,7 @@ export default function SettingsSkillSet() {
               ))}
             </Grid>
 
-            <Grid item xs={4}>
+            <Grid item lg={4} md = {4} xs ={8}>
               <Box
                 sx={{
                   display: "flex",
@@ -309,6 +309,7 @@ export default function SettingsSkillSet() {
                   width: "100%",
                   height: "100%",
                   gap: "40px",
+                  marginLeft : "25%"
                 }}
               >
                 <Button

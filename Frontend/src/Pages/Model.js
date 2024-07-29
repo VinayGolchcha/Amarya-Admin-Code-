@@ -59,10 +59,9 @@ function Model({ closeModel, closeOtpP, email }) {
           style={{
             position: "fixed",
             zIndex: "1000",
-            width: "700px",
+            width: "118%",
             height: "400px",
             borderRadius: "10px",
-
             top: "50%",
             left: "50%",
             transform: "translate(-50%,-50%)",

@@ -360,41 +360,43 @@ const WorkSheet = () => {
               lg: "normal normal 600 22px/35px Poppins",
               md: "normal normal 600 22px/35px Poppins",
               sm: "normal normal 600 20px/30px Poppins",
-              xs: "normal normal 600 22px/30px Poppins",
+              xs: "normal normal 600 15px/30px Poppins",
             },
           }}
         >
           Worksheet Dashboard
         </Typography>
-        <FormControl sx={{ minWidth: 220, mt: "10px" }}>
-          <InputLabel
-            id="demo-simple-select-label"
-            sx={{ color: "#333333", fontWeight: "400" }}
-          >
-            {/* Select Employee */}
-          </InputLabel>
-          {/* Replace the Select component with Autocomplete */}
-          <Autocomplete
-            options={employees}
-            getOptionLabel={(option) => option.name} // Display employee names
-            filterOptions={(options, state) => {
-              return options.filter((option) =>
-                option.name
-                  .toLowerCase()
-                  .includes(state.inputValue.toLowerCase())
-              );
-            }}
-            value={employees.find((emp) => emp.emp_id === filterEmpId) || null}
-            onChange={handleFilterChange}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Select Employee"
-                variant="standard"
-              />
-            )}
-          />
-        </FormControl>
+        <Box sx={{width : "30%"}}>
+          <FormControl sx={{ minWidth: 220, mt: "10px" }}>
+            <InputLabel
+              id="demo-simple-select-label"
+              sx={{ color: "#333333", fontWeight: "400" }}
+            >
+              {/* Select Employee */}
+            </InputLabel>
+            {/* Replace the Select component with Autocomplete */}
+            <Autocomplete
+              options={employees}
+              getOptionLabel={(option) => option.name} // Display employee names
+              filterOptions={(options, state) => {
+                return options.filter((option) =>
+                  option.name
+                    .toLowerCase()
+                    .includes(state.inputValue.toLowerCase())
+                );
+              }}
+              value={employees.find((emp) => emp.emp_id === filterEmpId) || null}
+              onChange={handleFilterChange}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select Employee"
+                  variant="standard"
+                />
+              )}
+            />
+          </FormControl>
+        </Box>
       </Box>
       <Typography
         variant="h4"
