@@ -18,8 +18,8 @@ export default function DashboardProfile({ profileData }) {
         >
           <img
             src={profileData?.profile_picture}
-            width={"150px"}
-            height={"150px"}
+            width={"100px"}
+            height={"100px"}
             style={{ borderRadius: "50%" }}
           ></img>
           <Typography
