@@ -434,7 +434,7 @@ const AdminNotificationTab = () => {
   const [uniqueDates, setUniqueDates] = useState(["All Dates"]);
   const [edit, setEdit] = useState(false);
   const [selectedNoti, setSelectedNoti] = useState({});
-  const { user } = useAuth();
+  const { user , setActiveItem , activeItem} = useAuth();
   const [files , setFiles] = useState([]);
   const [publicIds , setPublicIds] = useState([]);
   const handleEditSelection = (obj) => {
@@ -465,7 +465,9 @@ const AdminNotificationTab = () => {
     };
   }, [edit]);
 
-
+  useEffect(()=> {
+    setActiveItem(null);
+  },[activeItem])
   const handleDeleteNotification = async (id) => {
     try {
       const response = await axios.delete(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/admin/delete-${selectedTab}/${id}`, {

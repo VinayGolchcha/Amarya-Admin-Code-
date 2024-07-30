@@ -136,8 +136,8 @@ const WorkSheet = () => {
   const [editingRowIndex, setEditingRowIndex] = useState(null);
   const [textValue, setTextValue] = useState("");
 
-  const [filterEmpId, setFilterEmpId] = useState("AMEMP002"); // State to store the selected employee ID for filtering
-  const [filterEmpName, setFilterEmpName] = useState("Sanjana Jain");
+  const [filterEmpId, setFilterEmpId] = useState(""); // State to store the selected employee ID for filtering
+  const [filterEmpName, setFilterEmpName] = useState("");
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -333,7 +333,12 @@ const WorkSheet = () => {
       const data = await response.json();
       if (data.success) {
         setEmployees(data.data); // Assuming data.data contains the list of employees
-        setFilterDropdown(data.data.map((emp) => emp.emp_id)); // Assuming emp_id is the identifier
+        setFilterDropdown(data.data.map((emp) => emp.emp_id));
+        if(data.data){
+          setFilterEmpName(data.data[0].name)// Assuming emp_id is the identifier
+          setFilterEmpId(data.data[0].emp_id)
+          fetchWorksheetDataForEmployee(data.data[0].emp_id);
+        }
       } else {
         console.error("Failed to fetch employees:", data.message);
       }

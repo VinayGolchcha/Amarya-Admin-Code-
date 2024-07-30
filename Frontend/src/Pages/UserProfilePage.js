@@ -340,7 +340,7 @@ const UserProfilePage = () => {
         gender: userData.gender,
         public_id: userData.public_id === null ? "" : userData.public_id,
       });
-      setProfilePhoto(userData.profile_picture); // Set the profile photo in context
+      setProfilePhoto(userData.profile_picture);// Set the profile photo in context
       setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error.message);
@@ -367,6 +367,9 @@ const UserProfilePage = () => {
       return true;
     }
     if(field === "address"){
+      return true;
+    }
+    if(field === "username"){
       return true;
     }
     return false;

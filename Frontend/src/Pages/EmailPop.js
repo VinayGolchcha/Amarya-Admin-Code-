@@ -4,6 +4,7 @@ import { TextField, Button } from "@mui/material";
 import { toast, ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import OtpP from "./OtpPop";
+import CloseIcon from "@mui/icons-material/Close";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useAuth } from "../Components/AuthContext";
 
@@ -63,6 +64,26 @@ function EmailP({ closeEmailP, openOtpP, setEmail }) {
           }}
           className="modelcontainer"
         >
+          <Button
+            sx={{
+              zIndex: "1",
+              position: "absolute",
+              right: "25px",
+              background: "white",
+              borderRadius: "50%",
+              width: "10px",
+              padding: "0",
+              minWidth: "30px",
+              height: "30px",
+              color: "black",
+              top: "10px",
+            }}
+            variant="contained"
+            color="primary"
+            onClick={() => closeEmailP(false)}
+          >
+            <CloseIcon />
+          </Button>
           <Button
             sx={{
               zIndex: "1",

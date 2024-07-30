@@ -73,12 +73,12 @@ export default function SettingsProject() {
             return str.charAt(0).toUpperCase() + str.slice(1);
           };
           const startMonth = item.start_month
-            ? `${capitalizeFirstLetter(item.start_month)} ${currentYear}`
+            ? `${capitalizeFirstLetter(item.start_month.split(" ")[0])} 20${item.start_month.split(" ")[1]}`
             : null;
           const endMonth = item.end_month
-            ? `${capitalizeFirstLetter(item.end_month)} ${currentYear}`
+            ? `${capitalizeFirstLetter(item.end_month.split(" ")[0])} 20${item.end_month.split(" ")[1]}`
             : null;
-
+          console.log("start month" , startMonth);
           return {
             "Project Name": item.project,
             "Client Name": item.client_name,

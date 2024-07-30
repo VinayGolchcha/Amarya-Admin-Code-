@@ -68,6 +68,26 @@ function OtpP({ closeOtpP, email }) {
             sx={{
               zIndex: "1",
               position: "absolute",
+              right: "25px",
+              background: "white",
+              borderRadius: "50%",
+              width: "10px",
+              padding: "0",
+              minWidth: "30px",
+              height: "30px",
+              color: "black",
+              top: "10px",
+            }}
+            variant="contained"
+            color="primary"
+            onClick={() => closeOtpP(false)}
+          >
+            <CloseIcon />
+          </Button>
+          <Button
+            sx={{
+              zIndex: "1",
+              position: "absolute",
               left: "8px",
               background: "none",
               borderRadius: "50%",

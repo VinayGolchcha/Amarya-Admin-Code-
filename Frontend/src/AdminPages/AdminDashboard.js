@@ -67,7 +67,7 @@ const AdminDashboard = () => {
   const [isLoading , setIsLoading] = useState(true);
   const [activityData , setActivityData] = useState([]);
 
-  const {user} = useAuth();
+  const {user , setActiveItem} = useAuth();
 
   const handleClick = (id) => {
     const updatedNewFeedback = feedback?.map((item) => {
@@ -245,6 +245,7 @@ const AdminDashboard = () => {
     fetchData();
     
   },[]);
+
   if(isLoading){
     return(
       <Loading/>
