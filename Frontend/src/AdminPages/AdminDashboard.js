@@ -108,7 +108,6 @@ const AdminDashboard = () => {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -130,7 +129,6 @@ const AdminDashboard = () => {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -145,13 +143,11 @@ const AdminDashboard = () => {
         }
       });
       setApprovalData(res?.data?.data);
-      console.log(approvalData);
     }catch(error){
       if(error?.response?.message){
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -176,7 +172,6 @@ const AdminDashboard = () => {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -203,7 +198,6 @@ const AdminDashboard = () => {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -218,13 +212,11 @@ const AdminDashboard = () => {
         }
       })
       setApidata(res?.data?.data);
-      console.log(res);
     }catch(error){
       if(error?.response?.message){
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }

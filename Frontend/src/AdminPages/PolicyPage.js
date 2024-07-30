@@ -62,7 +62,6 @@ export default function PolicyPage() {
           "x-access-token" : user?.token
         }
       });
-      console.log(res);
       toast.success(res?.data?.message);
       fecthPolicies()
     }catch(error){
@@ -70,7 +69,6 @@ export default function PolicyPage() {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -91,7 +89,6 @@ export default function PolicyPage() {
           "x-access-token" : user?.token
         }
       });
-      console.log(response);
       setPolicies(response?.data?.data);
       setIsLoading(false);
     }catch(error){
@@ -99,7 +96,6 @@ export default function PolicyPage() {
       //   toast.error(error?.response?.message);
       // }
       // if(error?.response?.data?.message){
-      //   console.log("true");
       //   const item = error?.response?.data?.message
       //   toast.error(item);
       // }
@@ -128,7 +124,6 @@ export default function PolicyPage() {
     const file = event.target.files[0];
     if (file && file.type === 'application/pdf') {
       const file = event.target.files[0];
-      console.log(file);
     // const base64 = await convertBase64(file);
     // setFileBuffer(base64.toString().split(',')[1]);
       setFile(file);
@@ -142,7 +137,6 @@ export default function PolicyPage() {
     setId(id);
   }
   const handleDelete = async (id) => {
-    console.log(id);
     if(!id){
       alert("please select the file to delete");
       return;
@@ -153,7 +147,6 @@ export default function PolicyPage() {
           "x-access-token" : user?.token
         }
       });
-      console.log(res);
       setPolicies([]);
       fecthPolicies();
       handleClose();
@@ -163,7 +156,6 @@ export default function PolicyPage() {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }

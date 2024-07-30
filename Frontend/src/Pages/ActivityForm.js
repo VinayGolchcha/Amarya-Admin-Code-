@@ -391,7 +391,6 @@ function MyForm({
 
   const handleDeletePics = 
     (id) => {
-      console.log("delete pics called")
       setParentPublicIds((prev) => [...prev , id]);
       setFiles((prev) => prev.filter((item) => item?.public_id !== id));
     };
@@ -421,8 +420,7 @@ function MyForm({
       description,
       // ...(selectedTab === "activity" && { files }),
       // ...(edit && selectedTab === "activity" && { public_ids: Array.from(publicIds) }),
-    };
-    console.log(body , edit) 
+    }; 
     if (selectedTab === "announcement") {
       if (edit) {
         handleAddAnnouncement(body, selectedNoti._id);

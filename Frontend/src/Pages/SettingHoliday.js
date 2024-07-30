@@ -86,7 +86,6 @@ export default function SettingHoliday() {
           day: days[new Date(item.date).getDay()],
         }));
         setOriginalFormData(formattedOriginalData);
-        console.log(originalFormData);
         setLoading(false);
       })
       .catch((error) => console.error("Error fetching holiday data:", error));
@@ -121,12 +120,9 @@ export default function SettingHoliday() {
   };
 
   const handleDelete = () => {
-    console.log(selectedInputIndex);
     if (deleteMode) {
       if (selectedInputIndex !== null) {
-        console.log(selectedInputIndex);
         const holidayId = formData[selectedInputIndex]._id;
-        console.log(holidayId);
         fetch(
           `https://amarya-admin-backend-code.onrender.com/api/v1/leave/admin/delete-holiday/${holidayId}`,
           {
@@ -145,7 +141,6 @@ export default function SettingHoliday() {
             return response.json();
           })
           .then((data) => {
-            console.log("Holiday deleted successfully:", data);
             const newFormData = [...formData];
             newFormData.splice(selectedInputIndex, 1);
             setFormData(newFormData);
@@ -176,7 +171,6 @@ export default function SettingHoliday() {
           (data.holiday !== originalFormData[index].holiday ||
             data.date !== originalFormData[index].date)
       );
-      console.log(editedHolidays);
       const newHolidays = formData.filter(
         (data) => data && !data._id && data.holiday
       );
@@ -186,7 +180,6 @@ export default function SettingHoliday() {
         // const formattedDate = formatDateForAPI(editedHoliday.date);
         // console.log(formattedDate);
         const formattedDate = formatDateForAPI2(editedHoliday.date);
-        console.log(editedHoliday, formattedDate);
         fetch(
           `https://amarya-admin-backend-code.onrender.com/api/v1/leave/admin/update-holiday/${editedHoliday._id}`,
           {
@@ -208,7 +201,6 @@ export default function SettingHoliday() {
             return response.json();
           })
           .then((data) => {
-            console.log("Holiday updated successfully:", data);
             fetchHolidayData();
             toast.success("Holiday updated successfully.");
           })
@@ -221,7 +213,6 @@ export default function SettingHoliday() {
       // Create new holidays
       newHolidays.forEach((newHoliday) => {
         const formattedDate = formatDateForAPI2(newHoliday.date);
-        console.log(formattedDate);
         fetch(
           `https://amarya-admin-backend-code.onrender.com/api/v1/leave/admin/add-holiday`,
           {
@@ -243,7 +234,6 @@ export default function SettingHoliday() {
             return response.json();
           })
           .then((data) => {
-            console.log("Holiday created successfully:", data);
             // Update the form data with the newly created holiday ID
             const updatedFormData = [...formData];
             const index = updatedFormData.findIndex(

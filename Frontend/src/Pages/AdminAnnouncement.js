@@ -437,7 +437,6 @@ const AdminNotificationTab = () => {
   const { user } = useAuth();
   const [files , setFiles] = useState([]);
   const [publicIds , setPublicIds] = useState([]);
-  console.log(process.env.REACT_APP_API_URI);
   const handleEditSelection = (obj) => {
     setEdit(true);
     setSelectedNoti(obj);
@@ -546,14 +545,11 @@ const AdminNotificationTab = () => {
   };
 
  const  handleAddActivity = async (body) => {
-  console.log("add activity called");
     try {
-      console.log("add fun")
-      console.log("Selected Tab:", selectedTab);
+
       const formData = new FormData();
       Object.keys(body).forEach((key) => formData.append(key, body[key]));
       files.forEach((file) => formData.append("files", file));
-      console.log(formData)
       const res = await axios.post(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/admin/add-${selectedTab}`, formData , {
         headers: { "x-access-token": user?.token  ,
           "Content-Type": "multipart/form-data" 
@@ -584,7 +580,6 @@ const AdminNotificationTab = () => {
         files.forEach((file) => formData.append("files", file));
         const formattedPublicIds = "[" + publicIds?.map((id) => `"${id.trim()}"`).join(",") + "]";
         formData.append("public_ids" , formattedPublicIds);
-      console.log(formData , body , id)
       const res = await axios.put(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/admin/update-${selectedTab}/${id}`, formData , {
         headers: { "x-access-token": user?.token ,
           "Content-Type": "multipart/form-data" 
@@ -602,7 +597,6 @@ const AdminNotificationTab = () => {
     }
   }
   const handleEditAnnouncement = async (body, id) => {
-    console.log("Edit activity called");
     try {
       const formData = new FormData();
       if (selectedTab === "activity") {
@@ -611,7 +605,6 @@ const AdminNotificationTab = () => {
         const formattedPublicIds = "[" + publicIds?.map((id) => `"${id.trim()}"`).join(",") + "]";
         formData.append("public_ids" , formattedPublicIds);
       }
-      console.log(formData , body , id)
       const res = await axios.put(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/admin/update-${selectedTab}/${id}`, selectedTab === "activity" ? formData : body, {
         headers: { "x-access-token": user?.token ,
           ...(selectedTab === "activity" && { "Content-Type": "multipart/form-data" }),

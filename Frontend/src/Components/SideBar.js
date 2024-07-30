@@ -61,7 +61,6 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   useEffect(() => {
     // Extract the last part of the pathname (e.g., 'dashboard', 'assets')
     const currentPath = location.pathname.split("/").pop();
-    console.log(currentPath);
     setActiveItem(currentPath || "");
     if (
       !menu.some((item) => item.link === currentPath) &&

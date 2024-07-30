@@ -135,7 +135,6 @@ const ActivitiesPage = () => {
        
       } );
       setActivityData(resData.data.data);
-      console.log(resData.data.data)
     }catch(error){
       console.log(error);
       toast.error(error.message);

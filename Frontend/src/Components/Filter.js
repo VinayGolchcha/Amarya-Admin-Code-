@@ -9,7 +9,6 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 const Filter = ({handleSelect}) => {
   const [anchorEl, setAnchorEl] = useState(null);
-  console.log(handleSelect)
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };

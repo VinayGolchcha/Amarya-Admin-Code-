@@ -102,7 +102,6 @@ export default function LeaveMangementPage() {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -132,7 +131,6 @@ export default function LeaveMangementPage() {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -155,7 +153,6 @@ export default function LeaveMangementPage() {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -183,7 +180,6 @@ export default function LeaveMangementPage() {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -214,7 +210,6 @@ export default function LeaveMangementPage() {
           toast.error(error?.response?.message);
         }
         if(error?.response?.data?.message){
-          console.log("true");
           const item = error?.response?.data?.message
           toast.error(item);
         }
@@ -253,7 +248,6 @@ export default function LeaveMangementPage() {
       getUserLeaves();
     } catch (error) {
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -300,7 +294,6 @@ export default function LeaveMangementPage() {
   }
 
   function handleDateChange(newDate){
-    console.log("handle date change called");
     const date = new Date(newDate);
     const isoDate = date?.toISOString()?.split("T")[0];
     leaveOverViewByDate(isoDate);

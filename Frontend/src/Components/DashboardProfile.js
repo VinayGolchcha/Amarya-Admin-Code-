@@ -3,7 +3,6 @@ import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function DashboardProfile({ profileData }) {
-  console.log(profileData);
   return (
     <Box
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}

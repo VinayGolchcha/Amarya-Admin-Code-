@@ -80,7 +80,6 @@ export default function SettingsLeave() {
           }))
         );
         setOriginalFormData([...categories]);
-        console.log(data);
         setLoading(false);
       })
       .catch((error) => console.error("Error fetching leave data:", error));
@@ -149,9 +148,8 @@ export default function SettingsLeave() {
           data.leave_count !== originalFormData[index].leave_count
       );
 
-      console.log(editedleaves);
+
       editedleaves.forEach((item) => {
-        console.log(item);
         const leaveId = item._id;
         const leaveTypeId = item.leave_type_id;
         fetch(
@@ -180,7 +178,6 @@ export default function SettingsLeave() {
             return response.json();
           })
           .then((data) => {
-            console.log("Leave type updated successfully:", data);
             toast.success(data.message || "Leave type updated successfully");
             fetchLeaveData();
           })
@@ -211,7 +208,6 @@ export default function SettingsLeave() {
             return response.json();
           })
           .then((data) => {
-            console.log("Leave type created successfully:", data);
             toast.success(data.message || "Leave type created successfully");
             fetchLeaveData();
             // Optionally update the form data with the newly created leave type ID

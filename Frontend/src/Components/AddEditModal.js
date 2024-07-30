@@ -63,7 +63,6 @@ export default function AddEditModal({ rows,fetchAssets }) {
   const [editedData, setEditedData] = useState({});
 
   const apiUrl = process.env.REACT_APP_API_URL;
-  console.log(rows);
   function calculateWarrantyPeriod(dop, warrantyEnd) {
     const purchaseDate = dayjs(dop, "DD/MM/YYYY");
     const warrantyEndDate = dayjs(warrantyEnd, "DD/MM/YYYY");

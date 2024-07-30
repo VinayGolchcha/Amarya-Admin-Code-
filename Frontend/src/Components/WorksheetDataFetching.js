@@ -13,7 +13,6 @@ export const fetchProjects = async () => {
           value: project, // Use the label as the value displayed to the user
           label: project,
         }));
-         console.log(projectOptions);
          return projectOptions;
       } else {
         console.error("Failed to fetch projects:", data.message);
@@ -72,7 +71,6 @@ export  const fetchCategories = async () => {
           label: skill,
         }));
         return skillOptions;
-        // console.log(skillOptions);
       } else {
         console.error("Failed to fetch skills:", data.message);
       }

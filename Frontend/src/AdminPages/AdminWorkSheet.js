@@ -202,7 +202,6 @@ const WorkSheet = () => {
   };
 
   const handleChangePage = (event, newPage) => {
-    console.log(newPage);
     setCurrentPage(newPage);
   };
   const [selectedOption, setSelectedOption] = useState("");
@@ -219,7 +218,6 @@ const WorkSheet = () => {
 
   const addOptionToDropdown = () => {
     // const daySelect = document.getElementById("project");
-    console.log(selectedOption);
 
     if (selectedOption === "Project") {
       setProjects((prevArray) => [
@@ -248,7 +246,6 @@ const WorkSheet = () => {
   };
 
   useEffect(() => {
-    console.log("Updated Filter Dropdown:", filterDropdown);
   }, [filterDropdown]);
 
   const handleAddRow = () => {

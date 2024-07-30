@@ -122,7 +122,6 @@ const ActivityPage = () => {
           "x-access-token" : user?.token
         }
       });
-      console.log(res);
       setActivityData(res?.data?.data[0]);
       setImages(res?.data?.data[1]);
     }catch(err){

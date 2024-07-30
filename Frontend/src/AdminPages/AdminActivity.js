@@ -21,7 +21,6 @@ const data = [
 ];
 const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 const AdminActivity = ({activityAnnoucements}) => {
-  console.log("activity" , activityAnnoucements);
   const navigate = useNavigate();
   const getDateDay = (date) => {
     const newdate = new Date(date);

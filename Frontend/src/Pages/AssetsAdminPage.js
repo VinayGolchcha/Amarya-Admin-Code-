@@ -160,8 +160,6 @@ export default function AssetsAdminPage() {
       setOpenConDel(true);
     }  
   }
-
-  console.log(user);
   const fetchAssets = async () => {
     try {
       const response = await axios.get(`${apiUrl}/asset/admin/fetch-assets`, {
@@ -198,7 +196,6 @@ export default function AssetsAdminPage() {
           );
         });
         setAssetsData(apiAssets);
-        console.log(apiAssets);
       } else {
         console.error("Error fetching assets:", response.data.message);
       }
@@ -272,7 +269,6 @@ export default function AssetsAdminPage() {
           const errorMessage =
             response.data.message ||
             "An error occurred while deleting the asset";
-          console.log(errorMessage);
           toast.error(errorMessage);
         }
       })

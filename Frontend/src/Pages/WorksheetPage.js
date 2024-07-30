@@ -87,18 +87,17 @@ const WorksheetPage = () => {
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleCheckboxChange = (field) => {
-    console.log(field + "hey");
     setSelectedOption(field);
   };
 
   const handleTextFieldChange = (field) => {
-    console.log(field + "hey");
+
     setTextValue(field);
   };
 
   const addOptionToDropdown = () => {
     // const daySelect = document.getElementById("project");
-    console.log(selectedOption);
+
 
     if (selectedOption === "Project") {
       setProjects((prevArray) => [
@@ -174,9 +173,9 @@ const WorksheetPage = () => {
       const selectedProject = projects.find(
         (project) => project.label === newRow.project
       );
-      console.log(selectedProject);
+
       const projectId = selectedProject ? selectedProject.project_id : null;
-      console.log(projectId);
+
 
       // Prepare the data object
       const postData = {
@@ -188,7 +187,7 @@ const WorksheetPage = () => {
         description: newRow.description,
         date: newRow.date,
       };
-      console.log(postData);
+
       // Send the data to the API endpoint
       const response = await fetch(`${apiUrl}/worksheet/create-worksheet`, {
         method: "POST",
@@ -203,7 +202,7 @@ const WorksheetPage = () => {
       if (responseData.success) {
         toast.success("Data submitted successfully!");
         fetchWorksheetDataForEmployee();
-        console.log(responseData);
+
       } else {
         fetchWorksheetDataForEmployee();
         toast.error("Failed to submit data: " + responseData.message);
@@ -366,7 +365,7 @@ const WorksheetPage = () => {
           label: project,
         }));
         setProjects(projectOptions);
-        console.log("project:", projectOptions); // Log fetched teams
+        
         return projectOptions;
       } else {
         console.error("Failed to fetch projects:", data.message);
@@ -393,7 +392,7 @@ const WorksheetPage = () => {
           label: team,
         }));
         setTeams(teamOptions);
-        console.log("Teams:", teamOptions); // Log fetched teams
+     
         return teamOptions;
       } else {
         console.error("Failed to fetch teams:", data.message);
@@ -419,7 +418,7 @@ const WorksheetPage = () => {
           label: category,
         }));
         setCategories(categoryOptions);
-        console.log("category:", categoryOptions); // Log fetched teams
+        
         return categoryOptions;
       } else {
         console.error("Failed to fetch categories:", data.message);
@@ -445,7 +444,7 @@ const WorksheetPage = () => {
           label: skill,
         }));
         setSkillsets(skillOptions);
-        console.log("skill:", skillOptions); // Log fetched teams
+        
         return skillOptions;
       } else {
         console.error("Failed to fetch skills:", data.message);

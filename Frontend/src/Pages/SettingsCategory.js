@@ -77,7 +77,6 @@ export default function SettingsCategory() {
             points: category.points,
           }))
         );
-        console.log(formData);
         setLoading(false);
       })
       .catch((error) => {
@@ -91,9 +90,7 @@ export default function SettingsCategory() {
   };
 
   const handleEdit = () => {
-    console.log(editMode)
     setEditMode(!editMode);
-    console.log(editMode);
   };
 
   const handleDelete = () => {
@@ -139,7 +136,6 @@ export default function SettingsCategory() {
 
   const handleSave = () => {
     if (editMode) {
-      console.log(formData);
       const editedCategories = formData.filter(
         (data, index) =>
           data &&
@@ -147,7 +143,7 @@ export default function SettingsCategory() {
           data.category !== originalFormData[index].category
       );
 
-      console.log(editedCategories);
+
       editedCategories.forEach((editedCategory) => {
         fetch(
           `${apiUrl}/category/admin/update-category/${editedCategory._id}`,
@@ -167,7 +163,6 @@ export default function SettingsCategory() {
             return response.json();
           })
           .then((data) => {
-            console.log("Category updated successfully:", data);
             fetchCategories();
             toast.success("Category updated successfully");
           })

@@ -131,7 +131,6 @@ export default function TrainingsPage(props) {
       toast.error(error?.response?.message);
     }
     if(error?.response?.data?.message){
-      console.log("true");
       const item = error?.response?.data?.message
       toast.error(item);
     }
@@ -160,7 +159,7 @@ export default function TrainingsPage(props) {
       toast.error(error?.response?.message);
     }
     if(error?.response?.data?.message){
-      console.log("true");
+
       const item = error?.response?.data?.message
       toast.error(item);
     }
@@ -177,14 +176,14 @@ export default function TrainingsPage(props) {
     });
     setIsLoading(false);
     toast.success(res?.data?.message);
-    console.log(res);
+
   }catch(error){
     setIsLoading(false);
     if(error?.response?.message){
       toast.error(error?.response?.message);
     }
     if(error?.response?.data?.message){
-      console.log("true");
+
       const item = error?.response?.data?.message
       toast.error(item);
     }
@@ -269,7 +268,7 @@ export default function TrainingsPage(props) {
 
 
   let row;
-  console.log(courses);
+
   if(isLoading){
     return(
       <Loading/>

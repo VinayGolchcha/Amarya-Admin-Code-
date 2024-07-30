@@ -29,6 +29,7 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import NotificationPopUp from "./NotificationPopUp";
 import { useAuth } from "./AuthContext";
+import StickyNotes from "./StickyNotes";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -104,7 +105,6 @@ const NavBar = ({ handleDrawerToggle }) => {
           },
         }
       );
-      console.log(response.data);
       setStickeyNotesData(response.data.data);
     } catch (error) {
       console.log(error);
@@ -272,18 +272,13 @@ const NavBar = ({ handleDrawerToggle }) => {
           aria-label="show 17 new notifications"
           color="inherit"
         >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
           <NotificationPopUp />
         </IconButton>
         <p>Notifications</p>
       </MenuItem>
       <MenuItem>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
+          <StickyNotes/>
         </IconButton>
         <p>Messages</p>
       </MenuItem>
@@ -299,7 +294,9 @@ const NavBar = ({ handleDrawerToggle }) => {
           <Avatar
             alt="Cindy Baker"
             src="/avatar.jpg"
-            sx={{ width: 24, height: 24, backgroundColor: "#262626" }}
+            sx={{ width: 24, height: 24, backgroundColor: "#b4b4b4" ,"&:hover" : {
+                color : "black"
+              }}}
           />
         </IconButton>
         <p>Profile</p>
@@ -372,115 +369,7 @@ const NavBar = ({ handleDrawerToggle }) => {
                  },
               }}
             >
-              <div>
-                {/* <button aria-describedby={id} type="button" onClick={handleClick}>
-                                    Toggle Popper
-                                </button> */}
-                <Badge badgeContent={0} color="error">
-                  {/* <MailIcon /> */}
-                  <TextsmsIcon
-                    sx={{ color: "#b4b4b4",  "&:hover" : {
-                      color : "black"
-                    } }}
-                    aria-describedby={id}
-                    onClick={handleClick}
-                  />
-                </Badge>
-                <Popper
-                  id={id}
-                  open={open}
-                  anchorEl={anchorE2}
-                  sx={{ marginTop: "20px", position: "relative" }}
-                  placement="bottom-start"
-                >
-                  <Box
-                    sx={{
-                      bgcolor: "#FFEBEB",
-                      position: "relative",
-                      top: "25px",
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        padding: addIcon ? "2px" : "8px",
-                        height: "64px",
-                        width: "380px",
-                        border: "1px solid #80808057",
-                        borderRadius: "4px",
-                        display: "flex",
-                        flexWrap: "wrap",
-                        alignItems: "center",
-                      }}
-                    >
-                      {!addIcon ? (
-                        <Typography
-                          sx={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            width: "100%",
-                            fontFamily: "Lato",
-                          }}
-                        >
-                          Add your task here…{" "}
-                          <Box>
-                            {" "}
-                            <AddIcon onClick={handleIconClick} />
-                          </Box>
-                        </Typography>
-                      ) : (
-                        <TextField
-                          sx={{
-                            width: "100%",
-                            height: "100%",
-                            "& .MuiOutlinedInput-root": {
-                              "&.Mui-focused": {
-                                borderColor: "transparent", // Set the border color to transparent when focused
-                              },
-                            },
-                          }}
-                          value={addTask}
-                          onChange={handleAddTask}
-                          onKeyDown={handleKeyDown}
-                        />
-                      )}
-                    </Box>
-                    {stickeyNotesData?.map((item, index) => {
-                      return (
-                        <Box
-                          key={index}
-                          sx={{
-                            p: 1,
-                            width: "380px",
-                            border: "1px solid #80808057",
-                            height: "64px",
-                            borderRadius: "4px",
-                            display: "flex",
-                            flexWrap: "wrap",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Typography
-                            sx={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              width: "100%",
-                              fontFamily: "Lato",
-                            }}
-                          >
-                            {item.note}{" "}
-                            <Box>
-                              <CloseIcon
-                                onClick={() => handleDelete(item._id)}
-                              />
-                            </Box>
-                          </Typography>
-                        </Box>
-                      );
-                    })}
-                  </Box>
-                </Popper>
-              </div>
+              <StickyNotes/>
             </IconButton>
             {user && ( // Conditional rendering for user profile information
               <>
@@ -506,7 +395,6 @@ const NavBar = ({ handleDrawerToggle }) => {
                   <div>
                     <Typography sx={{ display: "flex" }}>
                       {user.username}
-                      {console.log(user.username)}
                       {arrow ? (
                         <KeyboardArrowUpIcon />
                       ) : (

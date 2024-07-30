@@ -93,8 +93,6 @@ export default function SettingsProject() {
           };
         });
         setFormData(adjustedData||[]);
-        console.log(adjustedData);
-        console.log(formData);
         setLoading(false);
       })
       .catch((error) => console.error("Error fetching projects:", error));
@@ -117,7 +115,6 @@ export default function SettingsProject() {
           label: category,
         }));
         setCategories(categoryOptions);
-        console.log("category:", categoryOptions); // Log fetched categories
         return categoryOptions;
       } else {
         console.error("Failed to fetch categories:", data.message);
@@ -186,7 +183,7 @@ export default function SettingsProject() {
         return;
       }
 
-      console.log("Project created successfully:", data);
+
       setNewProjectIndex(null);
       setEditMode(null);
       fetchProjects();

@@ -164,7 +164,7 @@ export default function TrainingsPageAdmin( ) {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
+
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -193,7 +193,7 @@ export default function TrainingsPageAdmin( ) {
           color : field[i%field.length]?.color
         }
       )));
-      console.log("courses on the trainings " , courses);
+
       setIsLoading(false);
     }catch(error){
       console.log(error);
@@ -202,7 +202,7 @@ export default function TrainingsPageAdmin( ) {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
+
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -237,7 +237,7 @@ export default function TrainingsPageAdmin( ) {
         manager: "HR",
       }));
       setData(newData)
-      console.log(data , typeof data);
+
       data = data?.filter(item =>
         item.empid.toLowerCase().includes(searchEmp.toLowerCase())
       );
@@ -247,7 +247,7 @@ export default function TrainingsPageAdmin( ) {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
+
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -265,7 +265,7 @@ export default function TrainingsPageAdmin( ) {
       }
     })
       .then(response => {
-        console.log('Update Training Response:', response);
+
         toast.success("Training updated successfully");
         // Optionally, you can perform any additional actions after successful update
         handleEditClose();
@@ -281,7 +281,7 @@ export default function TrainingsPageAdmin( ) {
           toast.error(error?.response?.message);
         }
         if(error?.response?.data?.message){
-          console.log("true");
+
           const item = error?.response?.data?.message
           toast.error(item);
         }
@@ -304,7 +304,7 @@ export default function TrainingsPageAdmin( ) {
                 "x-access-token" : user?.token
               } // Include training ID in the request body
             });
-            console.log(response);
+
             handleEditClose(false);
       fecthTrainings();
       toast.success("Training deleted successfully");
@@ -314,11 +314,11 @@ export default function TrainingsPageAdmin( ) {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
+
         const item = error?.response?.data?.message
         toast.error(item);
       }
-      console.log(error.response.data.message);
+
     }
     // Axios DELETE request
     // await axios.delete("http://localhost:4000/api/v1/training/admin/delete-training",{

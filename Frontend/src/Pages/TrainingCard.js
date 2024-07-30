@@ -33,7 +33,7 @@ export default function TrainingCard({
   const handleEditObj = (val) => {
     setSelectedTr(val);
     setEditOpen(true);
-    console.log(val);
+
   };
   return (
     // <Box sx={{ flexGrow: 1 , flexWrap : 'wrap', p : 1}}>

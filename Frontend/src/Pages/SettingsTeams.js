@@ -135,7 +135,6 @@ export default function SettingsTeams() {
           originalFormData[index] &&
           data.team !== originalFormData[index].team
       );
-      console.log(editedteam);
       const newteam = formData.filter((data) => data && !data._id && data.team);
       // Update existing team
       editedteam.forEach((editedteam) => {
@@ -181,11 +180,9 @@ export default function SettingsTeams() {
             return response.json();
           })
           .then((data) => {
-            console.log("team created successfully:", data);
             toast.success("Team created successfully");
             // Update the form data with the newly created team ID
             const updatedFormData = [...formData];
-            console.log(updatedFormData);
             const index = updatedFormData.findIndex(
               (item) => item && item.team === newteam.team
             );

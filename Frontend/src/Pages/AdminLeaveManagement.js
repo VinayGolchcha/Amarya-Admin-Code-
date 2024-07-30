@@ -145,7 +145,6 @@ export default function AdminLeaveManagement() {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -177,7 +176,6 @@ export default function AdminLeaveManagement() {
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }
@@ -210,7 +208,6 @@ export default function AdminLeaveManagement() {
           toast.error(error?.response?.message);
         }
         if(error?.response?.data?.message){
-          console.log("true");
           const item = error?.response?.data?.message
           toast.error(item);
         }
@@ -238,7 +235,6 @@ export default function AdminLeaveManagement() {
           toast.error(error?.response?.message);
         }
         if(error?.response?.data?.message){
-          console.log("true");
           const item = error?.response?.data?.message
           toast.error(item);
         }

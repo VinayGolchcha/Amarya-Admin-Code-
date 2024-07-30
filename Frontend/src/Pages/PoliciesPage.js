@@ -43,7 +43,6 @@ const PoliciesPage = () => {
         }
       });
       const data = response?.data?.data || [];
-      console.log( "Policy data", data)
       
         setPolicy(data);
         setPolicyheading(data?.policy_heads.split(","));
@@ -70,7 +69,6 @@ const PoliciesPage = () => {
   const addPolicy = async (body) => {
     try {
       const res = await axios.post(`${process.env.REACT_APP_API_URI}/policy/add-policy`, body);
-      console.log(res);
     } catch (err) {
       console.error(err);
     }

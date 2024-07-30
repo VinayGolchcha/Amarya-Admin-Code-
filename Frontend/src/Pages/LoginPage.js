@@ -47,7 +47,6 @@ const LoginPage = () => {
 
       // Check response status
       if (response.status === 200) {
-        console.log("Login successful");
         // Redirect or handle successful login
         login(response.data.data[0]); // Pass user data to login function
         navigate("/");

@@ -127,8 +127,6 @@ export default function SettingsSkillSet() {
         (data) => data && !data._id && data.skill
       );
 
-      console.log(formData);
-      console.log(originalFormData);
       // Update existing skills
       editedSkills.forEach((editedSkill) => {
         fetch(`${apiUrl}/skillSet/admin/update-skill/${editedSkill._id}`, {
@@ -146,7 +144,7 @@ export default function SettingsSkillSet() {
             return response.json();
           })
           .then((data) => {
-            console.log("Skill updated successfully:", data);
+           
             fetchSkills();
             toast.success("Skill updated successfully.");
             setEditMode(false);
@@ -174,7 +172,7 @@ export default function SettingsSkillSet() {
             return response.json();
           })
           .then((data) => {
-            console.log("Skill created successfully:", data);
+         
             fetchSkills();
             toast.success("Skill created successfully.");
             // Update the form data with the newly created skill ID

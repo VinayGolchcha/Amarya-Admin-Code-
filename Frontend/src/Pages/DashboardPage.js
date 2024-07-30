@@ -40,7 +40,6 @@ export default function DashboardPage() {
             },
           }
         );
-        console.log(dashboardResponse);
         // const pointsResponse = await axios.get(
         //   `${apiUrl}/userDashboard/get-user-points-data-for-graph/${emp_id}`,
         //   {
@@ -64,7 +63,6 @@ export default function DashboardPage() {
         }
 
         setPointsData(pointsData.data || { month_data: [], year_data: [] });
-        console.log(pointsData);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
@@ -84,10 +82,7 @@ export default function DashboardPage() {
             },
           }
         );
-
-        console.log(pointsResponse);
         setPointsData(pointsData.data || { month_data: [], year_data: [] });
-        console.log(pointsData);
         // setIsLoading(false);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);

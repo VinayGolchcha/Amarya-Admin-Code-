@@ -74,7 +74,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 function TablePaginationActions(props) {
   const theme = useTheme();
   const { count, page, rowsPerPage, onPageChange } = props;
-  console.log("table pagination props" , props);
 
   const handleClick = (newPage) => {
     onPageChange(null, newPage);
@@ -193,7 +192,6 @@ export default function AdminApprovals({approvalData , approvalReq}) {
   };
 
   const handleChangePage = (event, newPage) => {
-    console.log("setPage is calling" , newPage);
     setPage(newPage);
   };
 
@@ -226,7 +224,6 @@ export default function AdminApprovals({approvalData , approvalReq}) {
     if(val?.request_type.toLowerCase()==="inventory" || foreignId.length !== 0){
       var regEx = /^[a-z0-9]+$/i;
       const isValid = regEx.test(foreignId);
-      console.log(isValid)
       if(!isValid){
         toast.error("Foreign id should be alphanumeric");
         return;

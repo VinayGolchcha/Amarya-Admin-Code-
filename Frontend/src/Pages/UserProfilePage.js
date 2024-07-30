@@ -45,7 +45,6 @@ const UserProfilePage = () => {
   //     ecn: "0",
   //   });a
   const { user, setProfilePhoto } = useAuth();
-  console.log(user);
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   const [formData, setFormData] = useState({
@@ -249,7 +248,6 @@ const UserProfilePage = () => {
 
   const handleDoubleClick = (field) => {
     // document.getElementById("test").disabled = false;
-    console.log("hello");
     setIsEditing((prev) => ({ ...prev, [field]: true }));
   };
 
@@ -261,7 +259,7 @@ const UserProfilePage = () => {
     if (e.key === "Enter") {
       setIsEditing((prev) => ({ ...prev, [field]: false }));
       // Call your save function here
-      console.log("Saved data:", formData[field]);
+
     }
   };
   const formatDateString = (dateString) => {
@@ -276,7 +274,7 @@ const UserProfilePage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your form submission logic here
-    console.log(formData);
+
   };
 
   const fetchProjectTimeline = async () => {
@@ -294,7 +292,7 @@ const UserProfilePage = () => {
         ...prevState,
         projects: response.data.data,
       }));
-      console.log(projectsData);
+
     } catch (error) {
       console.error("Error fetching project timeline:", error.message);
     }
@@ -342,7 +340,6 @@ const UserProfilePage = () => {
         gender: userData.gender,
         public_id: userData.public_id === null ? "" : userData.public_id,
       });
-      console.log(userData);
       setProfilePhoto(userData.profile_picture); // Set the profile photo in context
       setLoading(false);
     } catch (error) {
@@ -383,7 +380,6 @@ const UserProfilePage = () => {
       2,
       "0"
     )}-${parts[1].padStart(2, "0")}`;
-    console.log(formattedDate);
     return formattedDate;
   }
   const handleUserUpdate = async (e) => {
@@ -410,7 +406,7 @@ const UserProfilePage = () => {
     if (formData.file) {
       formDataToSend.append("file", formData.file);
       setProfilePhoto(formData.profile_picture); // Set the profile photo in context
-      console.log(formData.file);
+
     }
 
     try {
@@ -426,7 +422,6 @@ const UserProfilePage = () => {
           },
         }
       );
-      console.log(response.data);
       toast.success("User profile updated successfully.");
       fetchUserData();
       setIsEditing(false);
@@ -473,7 +468,7 @@ const UserProfilePage = () => {
 
   var inputDate = "08/11/2021";
   var formattedDate = formatDate(inputDate);
-  console.log(formattedDate); // Output: "Aug 2021"
+
 
   if (isLoading) {
     return <Loading />;

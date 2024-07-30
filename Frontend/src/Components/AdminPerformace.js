@@ -132,14 +132,12 @@ const AdminPerformance = () => {
           "x-access-token" : user?.token
         }
       });
-      console.log(res);
       setTeamPerformance(res?.data?.data);
     }catch(error){
       if(error?.response?.message){
         toast.error(error?.response?.message);
       }
       if(error?.response?.data?.message){
-        console.log("true");
         const item = error?.response?.data?.message
         toast.error(item);
       }

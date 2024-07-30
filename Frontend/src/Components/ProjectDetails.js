@@ -86,7 +86,6 @@ const ProjectDetails = () => {
         }
       );
       if (response.data.success) {
-        console.log("Project updated successfully:", response.data);
         setIsEditing2(false);
         toast.success(response.data.message);
         fetchUserProjects();
@@ -155,7 +154,6 @@ const ProjectDetails = () => {
           };
         });
         setAllProjects(adjustedData);
-        console.log(adjustedData);
       })
       .catch((error) => console.error("Error fetching projects:", error));
   };
@@ -172,7 +170,6 @@ const ProjectDetails = () => {
         }
       );
       const fetchedProjects = response.data.data;
-      console.log(fetchedProjects, "jkfs;f");
       if (fetchedProjects.length > 0) {
         setProjectsData((prevState) => ({
           ...prevState,
@@ -237,7 +234,6 @@ const ProjectDetails = () => {
       );
 
       if (response.data.success) {
-        console.log("Project created successfully:", response.data);
         fetchUserProjects(); // Refresh the project list
         handleClose(); // Close the modal
         toast.success("Project created successfully:");

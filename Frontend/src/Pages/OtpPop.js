@@ -23,7 +23,6 @@ function OtpP({ closeOtpP, email }) {
           email,
         }
       );
-      console.log(response);
       if (response.data.success) {
         toast.success(response.data.message);
         setOpenModel(true);

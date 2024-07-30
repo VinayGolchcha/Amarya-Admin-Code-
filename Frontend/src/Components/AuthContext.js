@@ -63,7 +63,6 @@ export const AuthProvider = ({ children }) => {
       if (response.status === 200) {
         setUser(null);
         Cookies.remove("app1_auth_token");
-        console.log("Logout successful");
       } else {
         console.error("Failed to logout:", response.statusText);
       }

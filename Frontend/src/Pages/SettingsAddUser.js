@@ -88,7 +88,6 @@ export default function SettingsAddUser() {
           ...prevState,
           team_id: selectedTeam._id, // Set the team_id instead of the value
         }));
-        console.log(formData,selectedTeam);
       } else {
         console.error('Selected team not found');
       }
@@ -97,7 +96,6 @@ export default function SettingsAddUser() {
         ...prevState,
         [name]: files[0],
       }));
-      console.log(files[0]);
     } else {
       setFormData((prevState) => ({
         ...prevState,
@@ -136,8 +134,7 @@ export default function SettingsAddUser() {
           value: team, // Use the label as the value displayed to the user
           label: team,
         }));
-        setTeams(teamOptions);
-        console.log("Teams:", teamOptions); // Log fetched teams
+        setTeams(teamOptions); 
         return teamOptions;
       } else {
         console.error("Failed to fetch teams:", data.message);
@@ -163,7 +160,6 @@ export default function SettingsAddUser() {
       }
     }
 
-    console.log("submit Data:", formDataToSend);
     try {
       const response = await axios.post(
         `${apiUrl}/user/admin/register`,

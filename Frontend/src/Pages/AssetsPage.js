@@ -161,7 +161,6 @@ const AssetsPage = () => {
       details: details,
     };
 
-    console.log(requestData);
 
     axios
       .post(`${apiUrl}/asset/asset-request`, requestData, {
@@ -171,7 +170,6 @@ const AssetsPage = () => {
       })
       .then((response) => {
         // Handle successful response
-        console.log("Data sent successfully:", response.data);
         toast.success("Asset request sent successfully!", {
           position: "top-right",
           autoClose: 3000, // Duration of the toast
@@ -227,7 +225,6 @@ const AssetsPage = () => {
       );
       if (response.data.success) {
         setAssetData(response.data.data);
-        console.log(response.data.data);
       } else {
         console.error("Error fetching asset data:", response.data.message);
       }
