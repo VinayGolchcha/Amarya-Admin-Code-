@@ -30,6 +30,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import NotificationPopUp from "./NotificationPopUp";
 import { useAuth } from "./AuthContext";
 import StickyNotes from "./StickyNotes";
+import stringSimilarity from "string-similarity";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -77,8 +78,49 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const NavBar = ({ handleDrawerToggle }) => {
-  const { logout } = useAuth();
+  const [routes , setRoutes] = React.useState([]);
   const { user, profilePhoto, setActiveItem } = useAuth();
+  React.useEffect(() => {
+    if(user?.role === "user"){
+      setRoutes([
+        "leaves",
+        "profile",
+        "announcements",
+        "activities",
+        "dashboard",
+        "assets",
+        "trainings",
+        "policies",
+        "worksheet",
+      ])
+    }else{
+      setRoutes([
+        "leaves",
+        "profile",
+        "announcements",
+        "activities",
+        "dashboard",
+        "assets",
+        "trainings",
+        "policies",
+        "settings",
+        "worksheet",
+      ])
+    }
+  },[user])
+  // const routes = [
+  //   "leaves",
+  //   "profile",
+  //   "announcements",
+  //   "activities",
+  //   "dashboard",
+  //   "assets",
+  //   "trainings",
+  //   "policies",
+  //   "settings",
+  //   "worksheet",
+  // ];
+  const { logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const token = encodeURIComponent(user?.token || ""); //
@@ -89,11 +131,25 @@ const NavBar = ({ handleDrawerToggle }) => {
   const [addIcon, setAddIcon] = React.useState(false);
   const [addTask, setAddTask] = React.useState("");
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [searchSuggestions, setSearchSuggestions] = React.useState([]);
 
-  const handleSearch = () => {
-    // Navigate to the page based on the search query
-    setActiveItem(`${searchQuery}`);
-    navigate(`/${searchQuery}`);
+
+  const handleSearchChange = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    setSearchSuggestions(routes.filter(route => route.includes(query)));
+  };
+
+  const handleSearch = (query) => {
+    const bestMatch = stringSimilarity.findBestMatch(query.toLowerCase(), routes);
+    const closestMatch = bestMatch.bestMatch.target;
+
+    setActiveItem(`${closestMatch}`);
+    navigate(`/${closestMatch}`);
+    setTimeout(() => {
+      setSearchQuery("");// setting the search query after navigating to the page
+    }, 400);
+    setSearchSuggestions([]);
   };
   const handleGetNotes = async () => {
     try {
@@ -206,6 +262,48 @@ const NavBar = ({ handleDrawerToggle }) => {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
+  };
+
+  const renderSuggestions = () => {
+    if (searchSuggestions.length === 0) {
+      return null;
+    }
+    return (
+      <Box
+        sx={{
+          position: "absolute",
+          top: "100%",
+          left: 0,
+          right: 0,
+          backgroundColor: "#fff",
+          border: "1px solid #ccc",
+          zIndex: 1,
+          borderBottomLeftRadius : "10px",
+          borderBottomRightRadius:"10px",
+          fontFamily : "Poppins"
+        }}
+      >
+        {searchSuggestions.map((suggestion, index) => (
+          <Box
+            key={index}
+            sx={{
+              padding: "8px",
+              cursor: "pointer",
+              "&:hover": {
+                backgroundColor: "#f0f0f0",
+              },
+            }}
+            onClick={() => {
+              setSearchQuery(suggestion);
+              setSearchSuggestions([]);
+              handleSearch(suggestion);
+            }}
+          >
+            {suggestion}
+          </Box>
+        ))}
+      </Box>
+    );
   };
 
   const menuId = "primary-search-account-menu";
@@ -335,13 +433,16 @@ const NavBar = ({ handleDrawerToggle }) => {
               placeholder="Search"
               inputProps={{ "aria-label": "search" }}
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
+              onFocus={() => setSearchSuggestions(routes)}
+              onBlur={() => setTimeout(() => setSearchSuggestions([]), 200)}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
-                  handleSearch();
+                  handleSearch(searchQuery);
                 }
               }}
             />
+            {renderSuggestions()}
           </Search>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>

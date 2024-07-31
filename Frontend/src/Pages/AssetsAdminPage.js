@@ -264,6 +264,7 @@ export default function AssetsAdminPage() {
           fetchAssets();
           setSelectedRows([]);
           fetchAssets();
+          handleCloseConDel();
           toast.success("Selected asset deleted successfully");
         } else {
           const errorMessage =
@@ -275,6 +276,7 @@ export default function AssetsAdminPage() {
       .catch((error) => {
         console.error("Error deleting asset:", error);
         toast.error("An error occurred while deleting the asset");
+        handleCloseConDel();
       });
 
     // const updatedItems = assetsData.filter((item) => item?.isChecked !== true);

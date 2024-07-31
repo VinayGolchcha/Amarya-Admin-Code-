@@ -33,6 +33,7 @@
     "recharts": "^2.10.4",
     "routes": "^2.1.0",
     "slick-carousel": "^1.8.1",
+    "string-similarity": "^4.0.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { useAuth } from "./AuthContext";
+import { toast } from "react-toastify";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -82,6 +83,12 @@ export default function AddNewAssets({
     formData.append("model_number", itemNewItem.current.value);
     formData.append("item_description", itemNewAssignee.current.value);
     formData.append("file", fileInputRef.current.files[0]);
+    if(fileInputRef.current.files){
+      if(fileInputRef.current.files[0]?.type !==  "image/png" && fileInputRef.current.files[0]?.type !==  "image/jpeg"){
+        toast.warning("Image should be in jpeg or png format only");
+        return;
+      }
+    }
 
     try {
       const response = await fetch(`${apiUrl}/asset/admin/create-asset`, {
@@ -91,8 +98,9 @@ export default function AddNewAssets({
         },
         body:formData
       });
-
+      
       if (!response.ok) {
+        toast.error("Please Fill all the fields");
         throw new Error("Network response was not ok");
       }
 
