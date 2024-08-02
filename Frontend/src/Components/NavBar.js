@@ -97,8 +97,7 @@ const NavBar = ({ handleDrawerToggle }) => {
       setRoutes([
         "leaves",
         "profile",
-        "announcements",
-        "activities",
+        "anouncement",
         "dashboard",
         "assets",
         "trainings",

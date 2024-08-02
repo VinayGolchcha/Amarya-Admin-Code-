@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
     safeJSONParse(Cookies.get("app1_auth_token"), null)
   );
   const [profilePhoto, setProfilePhoto] = useState("");
-  const [activeItem, setActiveItem] = useState("Dashboard");
+  const [activeItem, setActiveItem] = useState("dashboard");
 
   useEffect(() => {
     if (user) {

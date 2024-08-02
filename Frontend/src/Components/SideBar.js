@@ -41,7 +41,7 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const { user, activeItem, setActiveItem } = useAuth();
 
   const menu = [
-    { text: "Dashboard", link: "", icon: <DashboardIcon /> },
+    { text: "Dashboard", link: "dashboard", icon: <DashboardIcon /> },
     { text: "Assets", link: "assets", icon: <PersonAddAlt1Icon /> },
     // Only include "Leave Planner" if user's role is not "admin"
     { text: "Leave Planner", link: "leaves", icon: <InsertInvitationIcon /> },
@@ -61,12 +61,13 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   useEffect(() => {
     // Extract the last part of the pathname (e.g., 'dashboard', 'assets')
     const currentPath = location.pathname.split("/").pop();
-    setActiveItem(currentPath || "");
+    const currPathVar = currentPath || "dashboard";
+    setActiveItem(currPathVar);
     if (
       !menu.some((item) => item.link === currentPath) &&
       !other.some((item) => item.link === currentPath)
     ) {
-      setActiveItem("Dashboard");
+      setActiveItem("dashboard");
     }
   }, []);
 

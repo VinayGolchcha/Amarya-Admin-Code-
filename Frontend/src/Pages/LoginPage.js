@@ -145,6 +145,7 @@ const LoginPage = () => {
               style: { color: "white" },
             }}
             label="Username"
+            disabled ={openEmailP|| openOtpP}
             variant="standard"
             fullWidth
             onChange={(e) => setUsername(e.target.value)}
@@ -182,6 +183,7 @@ const LoginPage = () => {
               ),
             }}
             label="Password"
+            disabled ={openEmailP|| openOtpP}
             variant="standard"
             type={showPassword ? "text" : "password"}
             value={password} // Ensure the value prop is set to the password state
