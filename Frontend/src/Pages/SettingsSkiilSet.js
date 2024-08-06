@@ -307,7 +307,7 @@ export default function SettingsSkillSet() {
                   width: "100%",
                   height: "100%",
                   gap: "40px",
-                  marginLeft : "25%"
+                  marginLeft : "11%"
                 }}
               >
                 <Button

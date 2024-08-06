@@ -565,7 +565,7 @@ function MyForm({
               onChange={(e) => setFromDate(e.target.value)}
               variant="outlined"
               fullWidth
-              sx={{ marginLeft: "20px", backgroundColor: "rgb(250, 250, 250)" }}
+              sx={{ marginLeft:  {lg : "30px" , md : "30px" , sm : "30px" , xs : "0px"}, backgroundColor: "rgb(250, 250, 250)" }}
             />
           </Grid>
           <Grid item xs={6}>
@@ -581,7 +581,7 @@ function MyForm({
               onChange={(e) => setToDate(e.target.value)}
               variant="outlined"
               fullWidth
-              sx={{ marginLeft: "30px", backgroundColor: "rgb(250, 250, 250)" }}
+              sx={{ marginLeft: {lg : "30px" , md : "30px" , sm : "30px" , xs : "0px"}, backgroundColor: "rgb(250, 250, 250)" }}
             />
           </Grid>
         </Grid>

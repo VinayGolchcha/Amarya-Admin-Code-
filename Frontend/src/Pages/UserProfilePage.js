@@ -44,7 +44,7 @@ const UserProfilePage = () => {
   //     ecpna: "None",
   //     ecn: "0",
   //   });a
-  const { user, setProfilePhoto } = useAuth();
+  const { user, setProfilePhoto , profilePhoto } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   const [formData, setFormData] = useState({
@@ -340,7 +340,8 @@ const UserProfilePage = () => {
         gender: userData.gender,
         public_id: userData.public_id === null ? "" : userData.public_id,
       });
-      setProfilePhoto(userData.profile_picture);// Set the profile photo in context
+      const profilePicture = userData.profile_picture
+      setProfilePhoto(profilePicture);// Set the profile photo in context
       setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error.message);
@@ -385,6 +386,14 @@ const UserProfilePage = () => {
     )}-${parts[1].padStart(2, "0")}`;
     return formattedDate;
   }
+
+  useEffect(() => {
+    // Save the profileUrl to localStorage whenever it changes
+    if (profilePhoto) {
+      localStorage.setItem('profilePhoto', profilePhoto);
+    }
+  }, [profilePhoto]);
+
   const handleUserUpdate = async (e) => {
     e.preventDefault();
     const formDataToSend = new FormData();

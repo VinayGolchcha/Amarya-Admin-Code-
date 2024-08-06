@@ -401,6 +401,8 @@ const NavBar = ({ handleDrawerToggle }) => {
     </Menu>
   );
 
+
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -481,7 +483,7 @@ const NavBar = ({ handleDrawerToggle }) => {
                 >
                   <Avatar
                     alt={user?.username}
-                    src={profilePhoto || user?.profile_picture} //src={profilePhoto || user?.profile_picture}
+                    src={profilePhoto} //src={profilePhoto || user?.profile_picture}
                   />
                 </IconButton>
                 <IconButton

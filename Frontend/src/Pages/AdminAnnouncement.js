@@ -413,6 +413,7 @@ import {
   FormControl,
   Select,
   MenuItem,
+  Grid,
 } from "@mui/material";
 import ActivityForm from "./ActivityForm";
 import axios from 'axios';
@@ -470,7 +471,7 @@ const AdminNotificationTab = () => {
   },[activeItem])
   const handleDeleteNotification = async (id) => {
     try {
-      const response = await axios.delete(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/admin/delete-${selectedTab}/${id}`, {
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/${selectedTab}/admin/delete-${selectedTab}/${id}`, {
         headers: { "x-access-token": user?.token },
       });
       handleClose();
@@ -485,7 +486,7 @@ const AdminNotificationTab = () => {
   const fetchNotification = async () => {
     setIsLoading(true);
     try {
-      const resData = await axios.get(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/fetch-${selectedTab}`, {
+      const resData = await axios.get(`${process.env.REACT_APP_API_URL}/${selectedTab}/fetch-${selectedTab}`, {
         headers: { "x-access-token": user?.token },
       });
       setNotifications(resData.data.data);
@@ -503,7 +504,7 @@ const AdminNotificationTab = () => {
       return;
     }
     try {
-      const res = await axios.get(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/filter-${selectedTab}-by-date/${date}`, {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/${selectedTab}/filter-${selectedTab}-by-date/${date}`, {
         headers: { "x-access-token": user?.token },
       });
       setNotifications(res.data.data);
@@ -523,7 +524,7 @@ const AdminNotificationTab = () => {
       if (selectedTab === "activity") {
         body.files.forEach((file) => formData.append("files", file));
       }
-        const res = await axios.post(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/admin/add-${selectedTab}`, selectedTab === "activity" ? formData : body , {
+        const res = await axios.post(`${process.env.REACT_APP_API_URL}/${selectedTab}/admin/add-${selectedTab}`, selectedTab === "activity" ? formData : body , {
           headers: { "x-access-token": user?.token  ,
             ...(selectedTab === "activity" && { "Content-Type": "multipart/form-data" }),
           },
@@ -552,7 +553,7 @@ const AdminNotificationTab = () => {
       const formData = new FormData();
       Object.keys(body).forEach((key) => formData.append(key, body[key]));
       files.forEach((file) => formData.append("files", file));
-      const res = await axios.post(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/admin/add-${selectedTab}`, formData , {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/${selectedTab}/admin/add-${selectedTab}`, formData , {
         headers: { "x-access-token": user?.token  ,
           "Content-Type": "multipart/form-data" 
         },
@@ -582,7 +583,7 @@ const AdminNotificationTab = () => {
         files.forEach((file) => formData.append("files", file));
         const formattedPublicIds = "[" + publicIds?.map((id) => `"${id.trim()}"`).join(",") + "]";
         formData.append("public_ids" , formattedPublicIds);
-      const res = await axios.put(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/admin/update-${selectedTab}/${id}`, formData , {
+      const res = await axios.put(`${process.env.REACT_APP_API_URL}/${selectedTab}/admin/update-${selectedTab}/${id}`, formData , {
         headers: { "x-access-token": user?.token ,
           "Content-Type": "multipart/form-data" 
          },
@@ -607,7 +608,7 @@ const AdminNotificationTab = () => {
         const formattedPublicIds = "[" + publicIds?.map((id) => `"${id.trim()}"`).join(",") + "]";
         formData.append("public_ids" , formattedPublicIds);
       }
-      const res = await axios.put(`https://amarya-admin-backend-code.onrender.com/api/v1/${selectedTab}/admin/update-${selectedTab}/${id}`, selectedTab === "activity" ? formData : body, {
+      const res = await axios.put(`${process.env.REACT_APP_API_URL}/${selectedTab}/admin/update-${selectedTab}/${id}`, selectedTab === "activity" ? formData : body, {
         headers: { "x-access-token": user?.token ,
           ...(selectedTab === "activity" && { "Content-Type": "multipart/form-data" }),
          },
@@ -683,6 +684,7 @@ const AdminNotificationTab = () => {
             display: "flex",
             justifyContent: "space-between",
             marginBottom: "10px",
+            flexWrap : "wrap",
             background: " #7C85C170",
             borderRadius: "50px",
           }}
@@ -697,12 +699,20 @@ const AdminNotificationTab = () => {
                 borderRadius: "50px",
                 border: "none",
                 "&:hover": { border: "none" },
+                fontSize : ( tab === "activity" ? {xs : "0.6rem" , sm : "0.7rem" , md :"0.875rem" , lg : "0.875rem"} : {xs : "0.398rem" , sm : "0.7rem" , md :"0.875rem" , lg : "0.875rem"})
               }}
               variant="outlined"
               onClick={() => handleTabChange(tab)}
               disableRipple
             >
-              <img src="Images/Vector.png" style={{ marginRight: "15px", width: "20px" }} />
+              <Box
+                component="img"
+                src={'Images/Vector.png'}
+                sx={{
+                  marginRight: {xs : '10px', sm :'15px'},
+                  width: {xs : '15px' , sm : '20px'}
+                }}
+              />
               {tab === "announcement" ? "Notifications/Announcements" : "Activities"}
             </Button>
           ))}
@@ -718,7 +728,7 @@ const AdminNotificationTab = () => {
                     alignItems: "center",
                     marginBottom: "10px",
                     background: "#161E54",
-                    width: "200%",
+                    width: "100%",
                     padding: "10px",
                   }}
                 >
@@ -762,8 +772,11 @@ const AdminNotificationTab = () => {
             <TableBody>
               {notificationPairs?.map((pair, index) => (
                 <TableRow key={index}>
+                  <TableCell key={index} style={{ padding: "8px", width: "50%" }}>
+                  <Grid container spacing={2}>
                   {pair?.map((notification, index) => (
-                    <TableCell key={index} style={{ padding: "8px", width: "50%" }}>
+                    
+                    <Grid item xs={12} sm={6} key={index}>
                       {notification && (
                         <div
                           style={{
@@ -820,8 +833,10 @@ const AdminNotificationTab = () => {
                           </div>
                         </div>
                       )}
-                    </TableCell>
+                    </Grid>
                   ))}
+                  </Grid>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -20,7 +20,12 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() =>
     safeJSONParse(Cookies.get("app1_auth_token"), null)
   );
-  const [profilePhoto, setProfilePhoto] = useState("");
+  const [profilePhoto, setProfilePhoto] = useState(() => {
+    // Retrieve the profileUrl from localStorage when the component mounts
+    return localStorage.getItem('profilePhoto') || '';
+  });
+
+
   const [activeItem, setActiveItem] = useState("dashboard");
 
   useEffect(() => {
@@ -41,6 +46,7 @@ export const AuthProvider = ({ children }) => {
       const { user_id, token, profile_picture, user_name, role } = userData;
       const userDetails = { user_id, token, profile_picture, user_name, role };
       setUser(userDetails);
+      setProfilePhoto(userDetails?.profile_picture);
       Cookies.set("app1_auth_token", JSON.stringify(userDetails), {
         secure: process.env.NODE_ENV === 'production',
         sameSite: "lax",
@@ -57,11 +63,12 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await axios.get(
-        `https://amarya-admin-backend-code.onrender.com/api/v1/user/logout/${user.user_id}`
+        `${process.env.REACT_APP_API_URL}/user/logout/${user.user_id}`
       );
 
       if (response.status === 200) {
         setUser(null);
+        localStorage.setItem('profilePhoto', '');
         Cookies.remove("app1_auth_token");
       } else {
         console.error("Failed to logout:", response.statusText);
@@ -139,7 +146,7 @@ export const AuthProvider = ({ children }) => {
 
 //     try {
 //       const response = await axios.get(
-//         `https://amarya-admin-backend-code.onrender.com/api/v1/user/logout/${user.user_id}`
+//         `${process.env.REACT_APP_API_URL}/user/logout/${user.user_id}`
 //       );
 
 //       if (response.status === 200) {
