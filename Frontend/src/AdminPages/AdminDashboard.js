@@ -175,7 +175,6 @@ const AdminDashboard = () => {
         const item = error?.response?.data?.message
         toast.error(item);
       }
-      console.log(error);
     }
 
   }
