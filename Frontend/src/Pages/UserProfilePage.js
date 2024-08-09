@@ -193,7 +193,7 @@ const UserProfilePage = () => {
   //   try {
   //     const empId = user.user_id; // Example employee ID
   //     const response = await axios.get(
-  //       `https://amarya-admin-backend-code.onrender.com/api/v1/project/fetch-user-project/${empId}`,
+  //       `${process.env.REACT_APP_API_URL}/project/fetch-user-project/${empId}`,
   //       {
   //         headers: {
   //           "x-access-token": token,
@@ -227,7 +227,7 @@ const UserProfilePage = () => {
   //     const empId = user.user_id; // Example employee ID
   //     const projectId = projectsData.currentProject.project_id;
   //     const response = await axios.put(
-  //       `https://amarya-admin-backend-code.onrender.com/api/v1/project/update-user-project/${empId}/${projectId}`,
+  //       `${process.env.REACT_APP_API_URL}/project/update-user-project/${empId}/${projectId}`,
   //       projectsData.currentProject,
   //       {
   //         headers: {
@@ -281,7 +281,7 @@ const UserProfilePage = () => {
     try {
       const empId = user.user_id; // Example employee ID
       const response = await axios.get(
-        `https://amarya-admin-backend-code.onrender.com/api/v1/project/fetch-user-project-timeline/${empId}`,
+        `${process.env.REACT_APP_API_URL}/project/fetch-user-project-timeline/${empId}`,
         {
           headers: {
             "x-access-token": token,
@@ -304,7 +304,7 @@ const UserProfilePage = () => {
 
       // console.log(empId);
       const response = await axios.post(
-        `https://amarya-admin-backend-code.onrender.com/api/v1/user/get-user-profile/${empId}`,
+        `${process.env.REACT_APP_API_URL}/user/get-user-profile/${empId}`,
         // Request body
         {},
         // Request configuration object
@@ -425,7 +425,7 @@ const UserProfilePage = () => {
       const id = user?.user_id;
 
       const response = await axios.put(
-        `https://amarya-admin-backend-code.onrender.com/api/v1/user/update-user-profile/${id}`,
+        `${process.env.REACT_APP_API_URL}/user/update-user-profile/${id}`,
         formDataToSend,
         {
           headers: {
