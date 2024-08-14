@@ -53,7 +53,7 @@ export default function SettingHoliday() {
 
   const fetchHolidayData = () => {
     fetch(
-      "https://amarya-admin-backend-code.onrender.com/api/v1/leave/fetch-holiday-list",
+      `${process.env.REACT_APP_API_URL}/leave/fetch-holiday-list`,
       {
         method: "GET",
         headers: {
@@ -124,7 +124,7 @@ export default function SettingHoliday() {
       if (selectedInputIndex !== null) {
         const holidayId = formData[selectedInputIndex]._id;
         fetch(
-          `https://amarya-admin-backend-code.onrender.com/api/v1/leave/admin/delete-holiday/${holidayId}`,
+          `${process.env.REACT_APP_API_URL}/leave/admin/delete-holiday/${holidayId}`,
           {
             method: "DELETE",
             headers: {
@@ -181,7 +181,7 @@ export default function SettingHoliday() {
         // console.log(formattedDate);
         const formattedDate = formatDateForAPI2(editedHoliday.date);
         fetch(
-          `https://amarya-admin-backend-code.onrender.com/api/v1/leave/admin/update-holiday/${editedHoliday._id}`,
+          `${process.env.REACT_APP_API_URL}/leave/admin/update-holiday/${editedHoliday._id}`,
           {
             method: "PUT",
             headers: {
@@ -214,7 +214,7 @@ export default function SettingHoliday() {
       newHolidays.forEach((newHoliday) => {
         const formattedDate = formatDateForAPI2(newHoliday.date);
         fetch(
-          `https://amarya-admin-backend-code.onrender.com/api/v1/leave/admin/add-holiday`,
+          `${process.env.REACT_APP_API_URL}/leave/admin/add-holiday`,
           {
             method: "POST",
             headers: {

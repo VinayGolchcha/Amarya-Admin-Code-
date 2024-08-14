@@ -127,7 +127,7 @@ const AdminPerformance = () => {
   const {user} = useAuth();
   const fetchPerformance = async () => {
     try{
-      const res = await axios.get(`https://amarya-admin-backend-code.onrender.com/api/v1/worksheet/admin/calculate-team-performance` , {
+      const res = await axios.get(`${process.env.REACT_APP_API_URL}/worksheet/admin/calculate-team-performance` , {
         headers : {
           "x-access-token" : user?.token
         }

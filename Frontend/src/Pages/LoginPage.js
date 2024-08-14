@@ -38,7 +38,7 @@ const LoginPage = () => {
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "https://amarya-admin-backend-code.onrender.com/api/v1/user/login",
+        `${process.env.REACT_APP_API_URL}/user/login`,
         {
           username,
           password,
