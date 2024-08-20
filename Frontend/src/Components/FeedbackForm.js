@@ -23,7 +23,10 @@ export default function FeedbackForm() {
       subject,
       description,
     };
-
+    if(description.length > 100){
+      toast.error("Description must not be more than 100 characters");
+      return
+    }
     try {
       const response = await fetch(
         `${apiUrl}/userDashboard/user-dashboard-feedback`,
