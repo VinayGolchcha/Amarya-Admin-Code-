@@ -28,8 +28,13 @@ import {
   GroupWork as GroupWorkIcon,
   HeadsetMic as HeadsetMicIcon,
   Settings as SettingsIcon,
+
 } from "@mui/icons-material";
+import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
 import { useAuth } from "./AuthContext";
+import { Button } from "@mui/material";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const drawerWidth = 240;
 
@@ -38,7 +43,21 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const responsiveTheme = responsiveFontSizes(theme);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, activeItem, setActiveItem } = useAuth();
+  const { user, activeItem, setActiveItem , email , password } = useAuth();
+
+   const handleExtensionClick = async (item) => {
+    if(item === "Messenger"){
+      try{
+        const response = await axios.post(`${process.env.REACT_APP_API_MESSENGER_URI}/user/ghost-login` ,{
+          email : email,
+          password : password
+        } );
+        window.open("http://gfg.com", '_blank');
+      }catch(err){
+          toast.error("Could not login");
+      }
+    }
+  }
 
   const menu = [
     { text: "Dashboard", link: "dashboard", icon: <DashboardIcon /> },
@@ -55,6 +74,27 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
       text: "Settings",
       link: "settings",
       icon: <SettingsIcon />,
+    },
+  ];
+
+  const extensions = [
+    user?.role === "user" && {
+      text: "Messenger",
+      icon: <Box
+              component="img"
+              src={`${process.env.PUBLIC_URL}/messenger.png`}
+              alt="icon"
+              sx={{height:"20px" , width : "20px"}}
+            />,
+    },
+    user?.role === "user" && {
+      text: "Attendance",
+      icon: <Box
+              component="img"
+              src={`${process.env.PUBLIC_URL}/Object-detection.png`}
+              alt="icon"
+              sx={{height:"20px" , width : "20px"}}
+            />,
     },
   ];
 
@@ -115,7 +155,7 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
           >
             <ListItemButton>
               <ListItemIcon
-                sx={{ color: activeItem === item.link ? "#ff5151" : "default" }}
+                sx={{ color: activeItem === item.link ? "#ff5151" : "rgba(0, 0, 0, 0.3)" }}
               >
                 {item.icon}
               </ListItemIcon>
@@ -144,11 +184,36 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
           >
             <ListItemButton>
               <ListItemIcon
-                sx={{ color: activeItem === item.link ? "#ff5151" : "default" }}
+                sx={{ color: activeItem === item.link ? "#ff5151" : "rgba(0, 0, 0, 0.3)" }}
               >
                 {item.icon}
               </ListItemIcon>
               <ListItemText primary={item.text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Typography
+        variant="caption"
+        sx={{ fontWeight: "700", color: "#b1b1b1", padding: "0px 16px" }}
+      >
+        EXTENSIONS
+      </Typography>
+      <List>
+        {extensions.map((item) => (
+          <ListItem
+            key={item.text}
+            disablePadding
+          >
+            <ListItemButton>
+              <ListItemIcon
+                sx={{ color: activeItem === item.link ? "#ff5151" : "rgba(0, 0, 0, 0.3)" }}
+              >
+                {item.icon}
+              </ListItemIcon>
+              <Button sx={{backgroundColor: "#FF5151", fontSize : "0.7rem", fontFamily : "Poppins", color : "white" , borderRadius : "8px" , textTransform : "none" ,width : "65%", boxShadow: "0px 4px 6px -1px #FF5151", "&:hover" : {
+                backgroundColor: "#FF5151",
+              }}} onClick={() => handleExtensionClick(item.text)}>{item.text}</Button>
             </ListItemButton>
           </ListItem>
         ))}

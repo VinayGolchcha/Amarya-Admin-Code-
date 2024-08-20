@@ -49,6 +49,7 @@ const LoginPage = () => {
       if (response.status === 200) {
         // Redirect or handle successful login
         login(response.data.data[0]); // Pass user data to login function
+        localStorage.setItem("password" , password);
         navigate("/");
       } else {
         console.error("Login failed");

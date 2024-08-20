@@ -60,6 +60,7 @@ export default function DashboardPage() {
           setProfileData(data.emp_data || null);
           setCurrentProject(data.current_project || null);
           setProjectsThisYear(data.projects_this_year || []);
+          localStorage.setItem('email' , data.emp_data.email);
         }
 
         setPointsData(pointsData.data || { month_data: [], year_data: [] });
