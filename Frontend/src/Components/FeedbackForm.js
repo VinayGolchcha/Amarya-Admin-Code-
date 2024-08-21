@@ -81,6 +81,7 @@ export default function FeedbackForm() {
           <DatePicker
             label="Date"
             value={date}
+            format="DD-MM-YYYY"
             onChange={(newDate) => setDate(newDate)}
             sx={{ backgroundColor: "rgb(250, 250, 250)" }}
           />
