@@ -211,7 +211,7 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
               >
                 {item.icon}
               </ListItemIcon>
-              <Button sx={{backgroundColor: "#FF5151", fontSize : "0.7rem", fontFamily : "Poppins", color : "white" , borderRadius : "8px" , textTransform : "none" ,width : "65%", boxShadow: "0px 4px 6px -1px #FF5151", "&:hover" : {
+              <Button sx={{backgroundColor: "#FF5151", fontSize : "0.8rem", fontFamily : "Poppins", color : "white" , borderRadius : "8px" , textTransform : "none" ,width : "65%", boxShadow: "0px 4px 6px -1px #FF5151", "&:hover" : {
                 backgroundColor: "#FF5151",
               }}} onClick={() => handleExtensionClick(item.text)}>{item.text}</Button>
             </ListItemButton>
