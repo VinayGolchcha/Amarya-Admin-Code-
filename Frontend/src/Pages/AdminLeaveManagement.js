@@ -58,7 +58,7 @@ export default function AdminLeaveManagement() {
   const [fromDate, setFromDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
   const [leaveType, setLeaveType] = React.useState("");
-  const [filterEmpName, setFilterEmpName] = React.useState("Sanjana Jain");
+  const [filterEmpName, setFilterEmpName] = React.useState("");
   const [subject, setSubject] = React.useState("");
   const [body, setBody] = React.useState("");
   const [rows, setRows] = React.useState([]);
@@ -68,7 +68,7 @@ export default function AdminLeaveManagement() {
   const [error, setError] = React.useState("");
   const [data, setData] = React.useState(null);
   const [employees, setEmployees] = React.useState([]);
-  const [filterEmpId, setFilterEmpId] = React.useState("AMEMP002");
+  const [filterEmpId, setFilterEmpId] = React.useState("");
   const [loading, setLoading] = React.useState(true);
   const apiUrl = process.env.REACT_APP_API_URI;
   const [errorr, setErrorr] = React.useState(null);
@@ -117,6 +117,9 @@ export default function AdminLeaveManagement() {
       if (data.success) {
         setEmployees(data.data); // Assuming data.data contains the list of employees
         setFilterDropdown(data.data.map((emp) => emp.emp_id)); // Assuming emp_id is the identifier
+        console.log("Employee List" ,data.data);
+        setFilterEmpName(data.data[0].name);
+        setFilterEmpId(data.data[0].emp_id);
       } else {
         console.error("Failed to fetch employees:", data.message);
       }
@@ -334,7 +337,7 @@ export default function AdminLeaveManagement() {
                 width: "630px",
                 height: "42px",
                 fontFamily: "Poppins",
-                fontSize: "24px",
+                fontSize: {lg : "24px" , md : "20px" , sm : "18px" , xs : "15px"},
                 fontWeight: "500",
                 lineHeight: "42px",
                 color: "#121843",
