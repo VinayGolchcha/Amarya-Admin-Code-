@@ -176,7 +176,7 @@ export default function DashboardProfile({ profileData }) {
                 variant="h6"
               >
                 {" "}
-                {profileData?.email}
+                {profileData?.email && profileData?.email.split("@")[0]}
               </Typography>
               <Typography
                 sx={{
