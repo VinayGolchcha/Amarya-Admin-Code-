@@ -195,11 +195,11 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
       </List>
       <Typography
         variant="caption"
-        sx={{ fontWeight: "700", color: "#b1b1b1", padding: "0px 16px" }}
+        sx={{ fontWeight: "700", color: "#b1b1b1", padding: "0px 16px" ,  display: user?.role === "admin" && "none"   }}
       >
         EXTENSIONS
       </Typography>
-      <List>
+      <List sx={{ display: user?.role === "admin" && "none"}}>
         {extensions.map((item) => (
           <ListItem
             key={item.text}
