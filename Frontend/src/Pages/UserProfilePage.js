@@ -46,6 +46,7 @@ const UserProfilePage = () => {
   //   });a
   const { user, setProfilePhoto , profilePhoto } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+  const [processingReq , setProcessingReq] = useState(false);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -425,7 +426,7 @@ const UserProfilePage = () => {
 
     try {
       const id = user?.user_id;
-
+      setProcessingReq(true);
       const response = await axios.put(
         `${process.env.REACT_APP_API_URL}/user/update-user-profile/${id}`,
         formDataToSend,
@@ -438,9 +439,11 @@ const UserProfilePage = () => {
       );
       toast.success("User profile updated successfully.");
       fetchUserData();
+      setProcessingReq(false);
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating user profile:", error.message);
+      setProcessingReq(false);
     }
   };
 
@@ -589,9 +592,17 @@ const UserProfilePage = () => {
                     onClick={handleUserUpdate}
                     variant="contained"
                     color="primary"
-                    sx={{ marginTop: "1rem" }}
+                    sx={{ marginTop: "1rem" ,  
+                      ...(processingReq && {
+                        "&.MuiButtonBase-root.MuiButton-root.Mui-disabled": {
+                          backgroundColor: "#1976d2",
+                          color: "white",
+                        },
+                      }),
+                    }}
+                    disabled={processingReq}  // Disable the button if processingReq is true
                   >
-                    Save Changes
+                    {processingReq ? <>Loading...</> : <>Save Changes</>}
                   </Button>
                 )}
               </form>
