@@ -156,7 +156,7 @@ const WorksheetPage = () => {
     }
 
     try {
-      setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
+      // setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
       setNewRow(null);
 
       const selectedTeam = teams.find((team) => team.label === newRow.team);
@@ -201,7 +201,7 @@ const WorksheetPage = () => {
       const responseData = await response.json();
       if (responseData.success) {
         toast.success("Data submitted successfully!");
-        fetchWorksheetDataForEmployee();
+        fetchWorksheetDataForEmployee(user.user_id);
 
       } else {
         fetchWorksheetDataForEmployee();

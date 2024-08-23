@@ -69,6 +69,7 @@ const UserProfilePage = () => {
     completed_projects: 0,
     teams: 0,
     gender: "",
+    team_id : null
   });
   const inputFields = [
     { type: "text", label: "First Name", field: "first_name" },
@@ -337,6 +338,7 @@ const UserProfilePage = () => {
         experience: userData.experience,
         completed_projects: userData.completed_projects,
         teams: userData.teams,
+        team_id : userData.team_id,
         gender: userData.gender,
         public_id: userData.public_id === null ? "" : userData.public_id,
       });
@@ -761,7 +763,7 @@ const UserProfilePage = () => {
           <Box
             sx={{ display: "flex", flexDirection: "column", margin: "2% 2.3%" }}
           >
-            <ProjectDetails />
+            <ProjectDetails joiningDate = {formData.joining_date} teamId = {formData.team_id} fetchProjectTimeline = {fetchProjectTimeline}/>
             <Box
               sx={{
                 display: "flex",

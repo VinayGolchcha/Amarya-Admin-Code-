@@ -20,7 +20,7 @@ import { useAuth } from "./AuthContext";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const ProjectDetails = () => {
+const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
   const { user } = useAuth();
   const [isEditing2, setIsEditing2] = useState(false);
   const [projectsData, setProjectsData] = useState({
@@ -28,7 +28,7 @@ const ProjectDetails = () => {
       project_id: null,
       emp_id: "",
       tech: "",
-      team_id: 1112,
+      team_id: teamId,
       start_month: "",
       end_month: "",
       project_manager: "",
@@ -43,7 +43,7 @@ const ProjectDetails = () => {
     project_id: "",
     emp_id: user?.user_id || "",
     tech: "",
-    team_id: 1112,
+    team_id: teamId,
     start_month: "",
     end_month: "",
     project_manager: "",
@@ -235,6 +235,7 @@ const ProjectDetails = () => {
 
       if (response.data.success) {
         fetchUserProjects(); // Refresh the project list
+        fetchProjectTimeline();
         handleClose(); // Close the modal
         toast.success("Project created successfully:");
       } else {
@@ -423,7 +424,29 @@ const ProjectDetails = () => {
           </Typography>
           <form>
             {projectDetailsFields2?.map((item, index) => (
-              <TextField
+              item.field === "start_month" ? (
+                <TextField
+                key={index}
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                type={item.type}
+                name={item.field}
+                label={item.label}
+                value={newProject[item.field]}
+                onChange={handleNewProjectChange}
+                InputLabelProps={{
+                  shrink:
+                    item.field === "start_month" ||
+                    item.field === "end_month" ||
+                    newProject[item.field] !== "", // Add shrink prop
+                }}
+                inputProps={{
+                  min: joiningDate ? new Date(joiningDate).toISOString().split("T")[0] : "", // Setting the minDate to 01/09/2023
+                }}
+              />
+              ) : (
+                <TextField
                 key={index}
                 fullWidth
                 variant="outlined"
@@ -440,6 +463,7 @@ const ProjectDetails = () => {
                     newProject[item.field] !== "", // Add shrink prop
                 }}
               />
+              )
             ))}
             <FormControl fullWidth margin="normal">
               <InputLabel>Project</InputLabel>
