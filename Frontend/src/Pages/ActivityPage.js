@@ -84,7 +84,7 @@
 
 // export default ActivityPage;
 
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Box, Typography, Grid, Card, CardContent } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -113,6 +113,7 @@ const ActivityPage = () => {
   const [sliderIndex, setSliderIndex] = useState(0);
   const [activityData , setActivityData] = useState({});
   const [images , setImages] = useState([]);
+  const sliderRef = useRef(null); // Reference to the Slider component
   const {user} = useAuth();
 
   const fechActivityById = async () => {
@@ -147,13 +148,15 @@ const ActivityPage = () => {
   };
 
   const goToNextSlide = () => {
+    sliderRef.current.slickNext(); // Navigate to the next slide
     const nextIndex = sliderIndex + 1;
-    setSliderIndex(nextIndex >= activity.images.length ? 0 : nextIndex);
+    setSliderIndex(nextIndex >= images.length ? 0 : nextIndex);
   };
 
   const goToPrevSlide = () => {
+    sliderRef.current.slickPrev();
     const prevIndex = sliderIndex - 1;
-    setSliderIndex(prevIndex < 0 ? activity.images.length - 1 : prevIndex);
+    setSliderIndex(prevIndex < 0 ? images.length - 1 : prevIndex);
   };
 
   return (
@@ -183,6 +186,7 @@ const ActivityPage = () => {
           <Slider
             {...sliderSettings}
             initialSlide={sliderIndex}
+            ref={sliderRef}
             sx={{ maxHeight: "fit-content" }}
           >
             {images?.map((image, index) => (
