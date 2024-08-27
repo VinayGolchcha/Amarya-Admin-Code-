@@ -120,7 +120,9 @@ export default function AdminLeaveManagement() {
         setFilterDropdown(data.data.map((emp) => emp.emp_id)); // Assuming emp_id is the identifier
         console.log("Employee List" ,data.data);
         setFilterEmpName(data.data[0].name);
+        const firstEmplyeeId = data.data[0].emp_id;
         setFilterEmpId(data.data[0].emp_id);
+        getData(firstEmplyeeId);
       } else {
         console.error("Failed to fetch employees:", data.message);
       }
