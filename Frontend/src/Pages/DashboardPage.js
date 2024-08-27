@@ -16,7 +16,7 @@ import Loading from "../sharable/Loading";
 
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, encryptionKey} = useAuth();
   const [announcements, setAnnouncements] = useState([]);
   const [activities, setActivities] = useState([]);
   const [profileData, setProfileData] = useState(null);
