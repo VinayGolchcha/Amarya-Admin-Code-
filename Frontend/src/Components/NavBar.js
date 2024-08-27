@@ -79,7 +79,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const NavBar = ({ handleDrawerToggle }) => {
   const [routes , setRoutes] = React.useState([]);
-  const { user, profilePhoto, setActiveItem } = useAuth();
+  const { user, profilePhoto, setActiveItem , encryptionKey} = useAuth();
   React.useEffect(() => {
     if(user?.role === "user"){
       setRoutes([
@@ -156,7 +156,7 @@ const NavBar = ({ handleDrawerToggle }) => {
         `${process.env.REACT_APP_API_URL}/stickynotes/get-user-notes/${user?.user_id}`,
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -180,7 +180,7 @@ const NavBar = ({ handleDrawerToggle }) => {
         `${process.env.REACT_APP_API_URL}/stickynotes/delete-stickynotes/${id}/${user?.user_id}`,
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -201,7 +201,7 @@ const NavBar = ({ handleDrawerToggle }) => {
         },
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );

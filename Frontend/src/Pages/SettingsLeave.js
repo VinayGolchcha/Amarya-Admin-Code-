@@ -44,7 +44,7 @@ export default function SettingsLeave() {
   const [originalFormData, setOriginalFormData] = useState([]);
 
   const apiUrl = process.env.REACT_APP_API_URL;
-  const { user } = useAuth();
+  const { user ,encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || "");
   useEffect(() => {
     fetchLeaveData();
@@ -53,9 +53,10 @@ export default function SettingsLeave() {
   const fetchLeaveData = () => {
     fetch(`${apiUrl}/leave/fetch-leave-type-and-count`, {
       method: "GET",
+      credentials: 'include', // Include cookies in the request
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": token,
+        "x-encryption-key" : encryptionKey
       },
     })
       .then((response) => {
@@ -103,9 +104,10 @@ export default function SettingsLeave() {
           `${apiUrl}/leave/admin/delete-leave-type-and-count/${leaveId}/${leaveTypeId}`,
           {
             method: "DELETE",
+            credentials: 'include', // Include cookies in the request
             headers: {
               "Content-Type": "application/json",
-              "x-access-token": token,
+              "x-encryption-key" : encryptionKey
             },
           }
         )
@@ -156,9 +158,10 @@ export default function SettingsLeave() {
           `${apiUrl}/leave/admin/update-leave-type-and-count/${leaveId}/${leaveTypeId}`,
           {
             method: "PUT",
+            credentials: 'include', // Include cookies in the request
             headers: {
               "Content-Type": "application/json",
-              "x-access-token": token,
+              "x-encryption-key" : encryptionKey
             },
             body: JSON.stringify({
               leave_type: item.leave_type,
@@ -190,9 +193,10 @@ export default function SettingsLeave() {
       newLeaves.forEach((item) => {
         fetch(`${apiUrl}/leave/admin/add-leave-type-and-count`, {
           method: "POST",
+          credentials: 'include', // Include cookies in the request
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
           body: JSON.stringify({
             leave_type: item.leave_type,

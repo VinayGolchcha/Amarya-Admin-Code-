@@ -24,7 +24,7 @@ export default function SettingsSkillSet() {
   const midPoint = Math.floor(formData.length / 2);
   const apiUrl = process.env.REACT_APP_API_URL;
   const [loading, setLoading] = useState(false); // New state for loading
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   useEffect(() => {
@@ -35,9 +35,10 @@ export default function SettingsSkillSet() {
     setLoading(true); // Start loading
     fetch(`${apiUrl}/skillset/fetch-skills`, {
       method: "GET",
+      credentials: 'include', // Include cookies in the request
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": token,
+        "x-encryption-key" : encryptionKey
       },
     })
       .then((response) => {
@@ -83,9 +84,10 @@ export default function SettingsSkillSet() {
         const skillId = formData[selectedInputIndex]._id;
         fetch(`${apiUrl}/skillSet/admin/delete-skill/${skillId}`, {
           method: "DELETE",
+          credentials: 'include', // Include cookies in the request
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         })
           .then((response) => {
@@ -131,9 +133,10 @@ export default function SettingsSkillSet() {
       editedSkills.forEach((editedSkill) => {
         fetch(`${apiUrl}/skillSet/admin/update-skill/${editedSkill._id}`, {
           method: "PUT",
+          credentials: 'include', // Include cookies in the request
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
           body: JSON.stringify({ skill: editedSkill.skill }),
         })
@@ -159,9 +162,10 @@ export default function SettingsSkillSet() {
       newSkills.forEach((newSkill) => {
         fetch(`${apiUrl}/skillSet/admin/create-skill`, {
           method: "POST",
+          credentials: 'include', // Include cookies in the request
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
           body: JSON.stringify({ skill: newSkill.skill }),
         })

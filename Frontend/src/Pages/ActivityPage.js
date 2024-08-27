@@ -114,13 +114,13 @@ const ActivityPage = () => {
   const [activityData , setActivityData] = useState({});
   const [images , setImages] = useState([]);
   const sliderRef = useRef(null); // Reference to the Slider component
-  const {user} = useAuth();
+  const {user , encryptionKey} = useAuth();
 
   const fechActivityById = async () => {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/activity/get-activity/${activityId}` , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       });
       setActivityData(res?.data?.data[0]);

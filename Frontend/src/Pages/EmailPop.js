@@ -10,7 +10,7 @@ import { useAuth } from "../Components/AuthContext";
 
 function EmailP({ closeEmailP, openOtpP, setEmail }) {
   const [email, setEmailInput] = useState("");
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || "");
   const handleUpdate = async () => {
     try {
@@ -24,7 +24,7 @@ function EmailP({ closeEmailP, openOtpP, setEmail }) {
         },
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
