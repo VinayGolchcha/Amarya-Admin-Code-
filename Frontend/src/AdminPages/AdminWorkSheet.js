@@ -151,9 +151,10 @@ const WorkSheet = () => {
         `${apiUrl}/worksheet/fetch-user-worksheet/${empId}`,
         {
           method: "GET",
+          credentials: 'include', // Include cookies in the request
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -310,7 +311,7 @@ const WorkSheet = () => {
   ];
   const [employees, setEmployees] = useState([]);
   const apiUrl = process.env.REACT_APP_API_URL;
-  const { user } = useAuth();
+  const { user , encryptionKey } = useAuth();
   const token = encodeURIComponent(user?.token || ""); //
 
   useEffect(() => {
@@ -322,9 +323,10 @@ const WorkSheet = () => {
     try {
       const response = await fetch(`${apiUrl}/user/fetch-all-employee-ids`, {
         method: "GET",
+        credentials: 'include', // Include cookies in the request
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token,
+          "x-encryption-key" : encryptionKey
         },
       });
       if (!response.ok) {

@@ -32,7 +32,7 @@ import { useAuth } from "./AuthContext";
 
 export default function StickyNotes(){
     const { logout } = useAuth();
-  const { user, profilePhoto, setActiveItem } = useAuth();
+  const { user, profilePhoto, setActiveItem , encryptionKey} = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const token = encodeURIComponent(user?.token || ""); //
@@ -55,7 +55,7 @@ export default function StickyNotes(){
         `${process.env.REACT_APP_API_URL}/stickynotes/get-user-notes/${user?.user_id}`,
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -79,7 +79,7 @@ export default function StickyNotes(){
         `${process.env.REACT_APP_API_URL}/stickynotes/delete-stickynotes/${id}/${user?.user_id}`,
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -100,7 +100,7 @@ export default function StickyNotes(){
         },
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );

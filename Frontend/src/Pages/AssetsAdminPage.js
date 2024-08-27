@@ -143,7 +143,7 @@ export default function AssetsAdminPage() {
   const [open, setOpen] = React.useState(false);
   const [selectedRows, setSelectedRows] = React.useState([]);
   const apiUrl = process.env.REACT_APP_API_URL;
-  const { user } = useAuth();
+  const { user , encryptionKey } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   const handleOpenConDel = () => {
@@ -164,7 +164,7 @@ export default function AssetsAdminPage() {
     try {
       const response = await axios.get(`${apiUrl}/asset/admin/fetch-assets`, {
         headers: {
-          "x-access-token": token,
+          "x-encryption-key" : encryptionKey
         },
       });
       if (response.data.success) {
@@ -256,7 +256,7 @@ export default function AssetsAdminPage() {
     axios
       .delete(`${apiUrl}/asset/admin/delete-asset/${id}`, {
         headers: {
-          "x-access-token": token,
+          "x-encryption-key" : encryptionKey
         },
       })
       .then((response) => {

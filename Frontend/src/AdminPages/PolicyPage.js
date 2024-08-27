@@ -33,7 +33,7 @@ export default function PolicyPage() {
   const [file, setFile] = useState([]);
   const [policies , setPolicies] = useState([]);
   const [selectedPolicy , setSelectedPolicy] = useState(null);
-  const {user} = useAuth();
+  const {user , encryptionKey} = useAuth();
   const [policyContents, setPolicyContents] = React.useState('Welcome, Purpose, Human Resource Policy, Equal Employment Policy, Dress code Policy, Attendance Policy, Leave Policy, Learning and Development Policy, Prevention of Sexual Harassment Policy, Employee Separation Policy, Cooperative Social Responsibility Policy, Energizing Work Relation Policy');
 
   const handleChange = (event) => {
@@ -59,7 +59,7 @@ export default function PolicyPage() {
       // })
       const res = await axios.post(`${process.env.REACT_APP_API_URI}/policy/admin/add-policy` , formData , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       });
       toast.success(res?.data?.message);
@@ -86,7 +86,7 @@ export default function PolicyPage() {
     try{
       const response = await axios.get(`${process.env.REACT_APP_API_URI}/policy/fetch-policy` , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       });
       setPolicies(response?.data?.data);
@@ -144,7 +144,7 @@ export default function PolicyPage() {
     try{
       const res = await axios.delete(`${process.env.REACT_APP_API_URI}/policy/admin/delete-policy/${id}` , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       });
       setPolicies([]);

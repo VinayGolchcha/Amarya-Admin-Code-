@@ -24,6 +24,11 @@ export const AuthProvider = ({ children }) => {
     // Retrieve the profileUrl from localStorage when the component mounts
     return localStorage.getItem('profilePhoto') || '';
   });
+
+  const [encryptionKey , setEncriptionKey] = useState(() => {
+    return localStorage.getItem('encryptionKey') || '';
+  });
+
   const [email, setEmail] = useState(() => {
     // setting the email for the ghost login
     return localStorage.getItem('email') || '';
@@ -48,12 +53,13 @@ export const AuthProvider = ({ children }) => {
     }
   }, [user]);
 
-  const login = (userData) => {
+  const login = (userData , authKey) => {
     if (userData) {
       const { user_id, token, profile_picture, user_name, role } = userData;
       const userDetails = { user_id, token, profile_picture, user_name, role };
       setUser(userDetails);
       setProfilePhoto(userDetails?.profile_picture);
+      setEncriptionKey(authKey);
       localStorage.setItem('profilePhoto', userDetails?.profile_picture);
       Cookies.set("app1_auth_token", JSON.stringify(userDetails), {
         secure: process.env.NODE_ENV === 'production',
@@ -71,7 +77,11 @@ export const AuthProvider = ({ children }) => {
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_API_URL}/user/logout/${user.user_id}`
+        `${process.env.REACT_APP_API_URL}/user/logout/${user.user_id}`, {
+          headers : {
+            "x-encryption-key" : encryptionKey
+          }
+        }
       );
 
       if (response.status === 200) {
@@ -96,6 +106,7 @@ export const AuthProvider = ({ children }) => {
         profilePhoto,
         activeItem,
         setActiveItem,
+        encryptionKey,
         email,
         password
       }}

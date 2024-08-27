@@ -32,14 +32,14 @@ const PoliciesPage = () => {
   const [policy, setPolicy] = useState([]);
   const [policyheading, setPolicyheading] = useState([]);
   const [isLoading, setisLoading] = useState(true);
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const [fileBuffer, setFileBuffer] = useState(null);
 
   const fetchPolicy = useCallback(async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URI}/policy/fetch-policy`, {
         headers: {
-          "x-access-token": user?.token
+          "x-encryption-key" : encryptionKey
         }
       });
       const data = response?.data?.data || [];
@@ -68,7 +68,11 @@ const PoliciesPage = () => {
 
   const addPolicy = async (body) => {
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URI}/policy/add-policy`, body);
+      const res = await axios.post(`${process.env.REACT_APP_API_URI}/policy/add-policy`,{
+        headers : {
+          "x-encryption-key" : encryptionKey
+        }
+      } , body);
     } catch (err) {
       console.error(err);
     }

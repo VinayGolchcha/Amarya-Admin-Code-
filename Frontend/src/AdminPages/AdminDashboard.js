@@ -67,7 +67,7 @@ const AdminDashboard = () => {
   const [isLoading , setIsLoading] = useState(true);
   const [activityData , setActivityData] = useState([]);
 
-  const {user , setActiveItem} = useAuth();
+  const {user , setActiveItem , encryptionKey} = useAuth();
 
   const handleClick = (id) => {
     const updatedNewFeedback = feedback?.map((item) => {
@@ -98,7 +98,7 @@ const AdminDashboard = () => {
     try{
       const res = await axios.put(`${process.env.REACT_APP_API_URI}/approval/admin/approval` , body , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       });
       toast.success(res?.data?.message);
@@ -117,7 +117,7 @@ const AdminDashboard = () => {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/userDashboard/admin/fetch-user-feedback` , {
         headers : {
-          "x-access-token" : user?.token,
+          "x-encryption-key" : encryptionKey
         }
       })
       const newFeedbak = res?.data?.data?.map((item) => (
@@ -139,7 +139,7 @@ const AdminDashboard = () => {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/fetch-approval-data` , {
         headers : {
-          "x-access-token" : user?.token,
+          "x-encryption-key" : encryptionKey
         }
       });
       setApprovalData(res?.data?.data);
@@ -159,7 +159,7 @@ const AdminDashboard = () => {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/fetch-activity-announcement` , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       });
       const newActivityAnnoucements = res?.data?.data?.announcement_data?.map((item) => (
@@ -182,7 +182,7 @@ const AdminDashboard = () => {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/project/fetch-all-projects` , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       });
       setProjects(res?.data?.data);
@@ -207,7 +207,7 @@ const AdminDashboard = () => {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/admin-dashboard` , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       })
       setApidata(res?.data?.data);

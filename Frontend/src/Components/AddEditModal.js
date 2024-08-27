@@ -56,7 +56,7 @@ const labelStyle = {
 };
 
 export default function AddEditModal({ rows,fetchAssets }) {
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   const [open, setOpen] = useState(false);
@@ -107,7 +107,7 @@ export default function AddEditModal({ rows,fetchAssets }) {
     axios
       .put(`${apiUrl}/asset/admin/update-asset/${rows[0]?.inId}`, formData, {
         headers: {
-          "x-access-token": token,
+          "x-encryption-key" : encryptionKey,
           "Content-Type": "multipart/form-data",
         },
       })

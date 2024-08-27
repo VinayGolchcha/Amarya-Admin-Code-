@@ -52,7 +52,9 @@ const LoginPage = () => {
       // Check response status
       if (response.status === 200) {
         // Redirect or handle successful login
-        login(response.data.data[0]); // Pass user data to login function
+        const encryptionKey = response.headers['x-encryption-key'];
+        localStorage.setItem('encryptionKey' , encryptionKey);
+        login(response.data.data[0] , encryptionKey); // Pass user data to login function
         localStorage.setItem("password" , password);
         navigate("/");
         setIsLoading(false);

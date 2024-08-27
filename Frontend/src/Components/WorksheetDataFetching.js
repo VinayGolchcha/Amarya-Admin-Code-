@@ -1,10 +1,17 @@
 import axios from 'axios';
+import { useAuth } from './AuthContext';
 
 const apiUrl = process.env.REACT_APP_API_URL;
+const {encryptionKey} = useAuth();
 export const fetchProjects = async () => {
     try {
       const response = await fetch(
-        `${apiUrl}/project/fetch-all-projects`
+        `${apiUrl}/project/fetch-all-projects` , {
+          credentials: 'include', // Include cookies in the request
+          headers : {
+            "x-encryption-key" : encryptionKey
+          }
+        }
       );
       const data = await response.json();
       if (data.success) {
@@ -24,7 +31,12 @@ export const fetchProjects = async () => {
 
   export const fetchTeams = async () => {
     try {
-      const response = await fetch(`${apiUrl}/team/fetch-all-teams`);
+      const response = await fetch(`${apiUrl}/team/fetch-all-teams` , {
+        credentials: 'include', // Include cookies in the request
+        headers : {
+          "x-encryption-key" : encryptionKey
+        }
+      });
       const data = await response.json();
       if (data.success) {
         const teamOptions = data.data.map(({ _id, team }) => ({
@@ -43,7 +55,12 @@ export const fetchProjects = async () => {
 export  const fetchCategories = async () => {
     try {
       const response = await fetch(
-        `${apiUrl}/category/fetch-all-categories`
+        `${apiUrl}/category/fetch-all-categories` , {
+          credentials: 'include', // Include cookies in the request
+          headers : {
+            "x-encryption-key" : encryptionKey
+          }
+        }
       );
       const data = await response.json();
       if (data.success) {
@@ -62,7 +79,12 @@ export  const fetchCategories = async () => {
   };
   export const fetchSkills = async () => {
     try {
-      const response = await fetch(`${apiUrl}/skillset/fetch-skills`);
+      const response = await fetch(`${apiUrl}/skillset/fetch-skills` , {
+        credentials: 'include', // Include cookies in the request
+        headers : {
+          "x-encryption-key" : encryptionKey
+        }
+      });
       const data = await response.json();
       if (data.success) {
         const skillOptions = data.data.map(({ _id, skill }) => ({

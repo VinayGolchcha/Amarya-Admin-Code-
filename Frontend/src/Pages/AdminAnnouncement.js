@@ -435,7 +435,7 @@ const AdminNotificationTab = () => {
   const [uniqueDates, setUniqueDates] = useState(["All Dates"]);
   const [edit, setEdit] = useState(false);
   const [selectedNoti, setSelectedNoti] = useState({});
-  const { user , setActiveItem , activeItem} = useAuth();
+  const { user , setActiveItem , activeItem , encryptionKey} = useAuth();
   const [files , setFiles] = useState([]);
   const [publicIds , setPublicIds] = useState([]);
   const handleEditSelection = (obj) => {
@@ -472,7 +472,7 @@ const AdminNotificationTab = () => {
   const handleDeleteNotification = async (id) => {
     try {
       const response = await axios.delete(`${process.env.REACT_APP_API_URL}/${selectedTab}/admin/delete-${selectedTab}/${id}`, {
-        headers: { "x-access-token": user?.token },
+        headers: { "x-encryption-key" : encryptionKey },
       });
       handleClose();
       fetchNotification();
@@ -487,7 +487,7 @@ const AdminNotificationTab = () => {
     setIsLoading(true);
     try {
       const resData = await axios.get(`${process.env.REACT_APP_API_URL}/${selectedTab}/fetch-${selectedTab}`, {
-        headers: { "x-access-token": user?.token },
+        headers: { "x-encryption-key" : encryptionKey },
       });
       setNotifications(resData.data.data);
       setIsLoading(false);
@@ -505,7 +505,7 @@ const AdminNotificationTab = () => {
     }
     try {
       const res = await axios.get(`${process.env.REACT_APP_API_URL}/${selectedTab}/filter-${selectedTab}-by-date/${date}`, {
-        headers: { "x-access-token": user?.token },
+        headers: { "x-encryption-key" : encryptionKey },
       });
       setNotifications(res.data.data);
       toast.success("Notifications are filtered");
@@ -525,7 +525,7 @@ const AdminNotificationTab = () => {
         body.files.forEach((file) => formData.append("files", file));
       }
         const res = await axios.post(`${process.env.REACT_APP_API_URL}/${selectedTab}/admin/add-${selectedTab}`, selectedTab === "activity" ? formData : body , {
-          headers: { "x-access-token": user?.token  ,
+          headers: { "x-encryption-key" : encryptionKey  ,
             ...(selectedTab === "activity" && { "Content-Type": "multipart/form-data" }),
           },
         });
@@ -554,7 +554,7 @@ const AdminNotificationTab = () => {
       Object.keys(body).forEach((key) => formData.append(key, body[key]));
       files.forEach((file) => formData.append("files", file));
       const res = await axios.post(`${process.env.REACT_APP_API_URL}/${selectedTab}/admin/add-${selectedTab}`, formData , {
-        headers: { "x-access-token": user?.token  ,
+        headers: { "x-encryption-key" : encryptionKey ,
           "Content-Type": "multipart/form-data" 
         },
       });
@@ -584,7 +584,7 @@ const AdminNotificationTab = () => {
         const formattedPublicIds = "[" + publicIds?.map((id) => `"${id.trim()}"`).join(",") + "]";
         formData.append("public_ids" , formattedPublicIds);
       const res = await axios.put(`${process.env.REACT_APP_API_URL}/${selectedTab}/admin/update-${selectedTab}/${id}`, formData , {
-        headers: { "x-access-token": user?.token ,
+        headers: { "x-encryption-key" : encryptionKey ,
           "Content-Type": "multipart/form-data" 
          },
       });
@@ -609,7 +609,7 @@ const AdminNotificationTab = () => {
         formData.append("public_ids" , formattedPublicIds);
       }
       const res = await axios.put(`${process.env.REACT_APP_API_URL}/${selectedTab}/admin/update-${selectedTab}/${id}`, selectedTab === "activity" ? formData : body, {
-        headers: { "x-access-token": user?.token ,
+        headers: { "x-encryption-key" : encryptionKey ,
           ...(selectedTab === "activity" && { "Content-Type": "multipart/form-data" }),
          },
       });

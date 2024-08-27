@@ -45,7 +45,7 @@ const AssetsPage = () => {
   const [declarationChecked, setDeclarationChecked] = useState(false);
   const [primary_purpose, setPrimaryPurposeChange] = useState("");
   const [assetData, setAssetData] = useState([]);
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -165,7 +165,7 @@ const AssetsPage = () => {
     axios
       .post(`${apiUrl}/asset/asset-request`, requestData, {
         headers: {
-          "x-access-token": user?.token,
+          "x-encryption-key" : encryptionKey
         },
       })
       .then((response) => {
@@ -219,7 +219,7 @@ const AssetsPage = () => {
         },
         {
           headers: {
-            "x-access-token": user?.token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );

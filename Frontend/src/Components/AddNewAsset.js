@@ -56,7 +56,7 @@ export default function AddNewAssets({
   fetchAssets
 }) {
   const apiUrl = process.env.REACT_APP_API_URL;
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   const itemNewInId = useRef("");
@@ -93,8 +93,9 @@ export default function AddNewAssets({
     try {
       const response = await fetch(`${apiUrl}/asset/admin/create-asset`, {
         method: "POST",
+        credentials: 'include', // Include cookies in the request
         headers: {
-          "x-access-token": token, // Add your custom headers here
+          "x-encryption-key" : encryptionKey, // Add your custom headers here
         },
         body:formData
       });

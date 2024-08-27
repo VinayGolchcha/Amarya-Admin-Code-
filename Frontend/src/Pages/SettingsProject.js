@@ -23,7 +23,7 @@ import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
 
 export default function SettingsProject() {
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || "");
   const [isLoading, setLoading] = useState(true);
 
@@ -53,9 +53,10 @@ export default function SettingsProject() {
   const fetchProjects = () => {
     fetch(`${apiUrl}/project/fetch-all-projects`, {
       method: "GET",
+      credentials: 'include', // Include cookies in the request
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": token,
+        "x-encryption-key" : encryptionKey
       },
     })
       .then((response) => {
@@ -102,9 +103,10 @@ export default function SettingsProject() {
     try {
       const response = await fetch(`${apiUrl}/category/fetch-all-categories`, {
         method: "GET",
+        credentials: 'include', // Include cookies in the request
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token,
+          "x-encryption-key" : encryptionKey
         },
       });
       const data = await response.json();
@@ -165,9 +167,10 @@ export default function SettingsProject() {
     try {
       const response = await fetch(`${apiUrl}/project/admin/create-project`, {
         method: "POST",
+        credentials: 'include', // Include cookies in the request
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token,
+          "x-encryption-key" : encryptionKey
         },
         body: JSON.stringify(newProjectData),
       });
@@ -205,9 +208,10 @@ export default function SettingsProject() {
 
     fetch(`${apiUrl}/project/admin/delete-project/${id}/${category_id}`, {
       method: "DELETE",
+      credentials: 'include', // Include cookies in the request
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": token,
+        "x-encryption-key" : encryptionKey
       },
     })
       .then((response) => response.json())
@@ -255,9 +259,10 @@ export default function SettingsProject() {
 
     fetch(`${apiUrl}/project/admin/update-project/${id}/${category_id}`, {
       method: "PUT",
+      credentials: 'include', // Include cookies in the request
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": token,
+        "x-encryption-key" : encryptionKey
       },
       body: JSON.stringify(updatedProject),
     })

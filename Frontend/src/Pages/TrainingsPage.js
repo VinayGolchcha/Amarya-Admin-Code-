@@ -84,7 +84,7 @@ export default function TrainingsPage(props) {
         : [...prevSelected, rowId]
     );
   }; 
-  const {user} = useAuth();
+  const {user , encryptionKey} = useAuth();
 
  ///chetan code
  const [trainingCards, setTrainingCards] = React.useState("");
@@ -112,7 +112,7 @@ export default function TrainingsPage(props) {
       emp_id : user?.user_id
     }, {
       headers : {
-        "x-access-token" : user?.token
+       "x-encryption-key" : encryptionKey
       }
     });
     setRows(res?.data?.data?.map((item) => ({
@@ -142,7 +142,7 @@ export default function TrainingsPage(props) {
   try {
     const res = await axios.get(`${process.env.REACT_APP_API_URI}/training/training-cards` , {
       headers : {
-        "x-access-token" : user?.token
+        "x-encryption-key" : encryptionKey
       }
     });
     setfields(res?.data?.data?.map((item , i) => (
@@ -171,7 +171,7 @@ export default function TrainingsPage(props) {
   try{
     const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/request-new-training`, requestData , {
       headers : {
-        "x-access-token" : user?.token
+        "x-encryption-key" : encryptionKey
       }
     });
     setIsLoading(false);

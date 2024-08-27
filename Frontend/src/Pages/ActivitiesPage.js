@@ -124,13 +124,13 @@ const ActivitiesPage = () => {
 
   const [hoveredCard, setHoveredCard] = useState(null);
   const [activiyData , setActivityData] = useState([]);
-  const {user} = useAuth()
+  const {user , encryptionKey} = useAuth()
 
   const fetchNotification = async () => {
     try{
       const resData = await axios.get(`${process.env.REACT_APP_API_URI}/activity/fetch-activity`, {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
        
       } );
