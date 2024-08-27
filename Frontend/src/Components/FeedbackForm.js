@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function FeedbackForm() {
-  const { user } = useAuth();
+  const { user , encryptionKey } = useAuth();
   const token = encodeURIComponent(user?.token || "");
   const [date, setDate] = useState(dayjs());
   const [subject, setSubject] = useState("");
@@ -32,9 +32,10 @@ export default function FeedbackForm() {
         `${apiUrl}/userDashboard/user-dashboard-feedback`,
         {
           method: "POST",
+          credentials: 'include', // Include cookies in the request
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token, // Add your custom headers here
+            "x-encryption-key" : encryptionKey
           },
           body: JSON.stringify(feedbackData),
         }

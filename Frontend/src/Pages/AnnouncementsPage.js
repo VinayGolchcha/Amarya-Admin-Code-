@@ -3,17 +3,23 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import CardComponenet from "../Components/AnnouncementCard";
 import NotificationContext from "../ContextProvider/NotificationContext";
 import axios from "axios";
+import { useAuth } from "../Components/AuthContext";
 
 const AnnouncementPage = () => {
     const { notifications, setNotifications } = useContext(NotificationContext);
     const apiUrl = process.env.REACT_APP_API_URL;
+    const {encryptionKey} = useAuth()
     
 
     useEffect(() => {
         if (notifications?.length === 0) {
             axios
                 .get(`${apiUrl}/announcement
-                    /fetch-announcement`)
+                    /fetch-announcement` , {
+                        headers : {
+                            "x-encryption-key" : encryptionKey
+                        }
+                    })
                 .then((response) => {
                     const data = response.data;
                     if (data.success) {

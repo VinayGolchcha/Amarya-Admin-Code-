@@ -73,7 +73,7 @@ export default function LeaveMangementPage() {
   const [loading, setLoading] = React.useState(true);
 
   const [errorr, setErrorr] = React.useState(null);
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
   const today = new Date();
 
@@ -92,7 +92,7 @@ export default function LeaveMangementPage() {
         {
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       )
@@ -122,7 +122,7 @@ export default function LeaveMangementPage() {
         {
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -144,7 +144,7 @@ export default function LeaveMangementPage() {
         {
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -171,7 +171,7 @@ export default function LeaveMangementPage() {
         {
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -198,7 +198,7 @@ export default function LeaveMangementPage() {
           {
             headers: {
               "Content-Type": "application/json",
-              "x-access-token": token,
+              "x-encryption-key" : encryptionKey
             },
           }
         );

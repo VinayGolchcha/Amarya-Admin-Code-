@@ -36,7 +36,7 @@ export default function DashboardPage() {
           `${apiUrl}/userDashboard/user-dashboard/${emp_id}`,
           {
             headers: {
-              "x-access-token": encodeURIComponent(user?.token || ""),
+              "x-encryption-key" : encryptionKey
             },
           }
         );
@@ -79,7 +79,7 @@ export default function DashboardPage() {
           `${apiUrl}/userDashboard/get-user-points-data-for-graph/${emp_id}`,
           {
             headers: {
-              "x-access-token": encodeURIComponent(user?.token || ""),
+              "x-encryption-key" : encryptionKey
             },
           }
         );

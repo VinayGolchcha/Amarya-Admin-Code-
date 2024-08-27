@@ -63,7 +63,7 @@ export default function AdminLeaveManagement() {
   const [body, setBody] = React.useState("");
   const [rows, setRows] = React.useState([]);
   const [leaveOverviewData, setLeaveOverviewData] = React.useState([]);
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || "");
   const [error, setError] = React.useState("");
   const [data, setData] = React.useState(null);
@@ -105,9 +105,10 @@ export default function AdminLeaveManagement() {
     try {
       const response = await fetch(`${apiUrl}/user/fetch-all-employee-ids`, {
         method: "GET",
+        credentials: 'include', // Include cookies in the request
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token,
+          "x-encryption-key" : encryptionKey
         },
       });
       if (!response.ok) {
@@ -138,7 +139,7 @@ export default function AdminLeaveManagement() {
         {
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -164,7 +165,7 @@ export default function AdminLeaveManagement() {
         `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data/${empId}`,
         {
           headers: {
-            "x-access-token": user?.token,
+            "x-encryption-key" : encryptionKey
           },
         }
         // "https://localhost:4000/api/v1/training/request-new-training"
@@ -195,7 +196,7 @@ export default function AdminLeaveManagement() {
           `${process.env.REACT_APP_API_URI}/leave/get-user-leave-dashboard-data/${filterEmpId}`,
           {
             headers: {
-              "x-access-token": user?.token,
+              "x-encryption-key" : encryptionKey
             },
           }
           // "https://localhost:4000/api/v1/training/request-new-training"
@@ -228,7 +229,7 @@ export default function AdminLeaveManagement() {
           {
             headers: {
               "Content-Type": "application/json",
-              "x-access-token": token,
+              "x-encryption-key" : encryptionKey
             },
           }
         );
@@ -264,7 +265,7 @@ export default function AdminLeaveManagement() {
         },
         {
           headers: {
-            "x-access-token": user?.token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );

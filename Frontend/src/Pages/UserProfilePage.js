@@ -44,7 +44,7 @@ const UserProfilePage = () => {
   //     ecpna: "None",
   //     ecn: "0",
   //   });a
-  const { user, setProfilePhoto , profilePhoto } = useAuth();
+  const { user, setProfilePhoto , profilePhoto , encryptionKey } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
   const [processingReq , setProcessingReq] = useState(false);
 
@@ -286,7 +286,7 @@ const UserProfilePage = () => {
         `${process.env.REACT_APP_API_URL}/project/fetch-user-project-timeline/${empId}`,
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -312,7 +312,7 @@ const UserProfilePage = () => {
         // Request configuration object
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -433,7 +433,7 @@ const UserProfilePage = () => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );

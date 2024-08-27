@@ -16,7 +16,7 @@ export default function NotificationPopUp() {
   const navigate = useNavigate();
   const { notifications, setNotifications } = useContext(NotificationContext);
   const apiUrl = process.env.REACT_APP_API_URL;
-  const { user } = useAuth();
+  const { user  , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || "");
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function NotificationPopUp() {
       axios
         .get(`${apiUrl}/announcement/fetch-announcement`, {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         })
         .then((response) => {

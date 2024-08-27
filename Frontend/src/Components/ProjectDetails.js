@@ -21,7 +21,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const [isEditing2, setIsEditing2] = useState(false);
   const [projectsData, setProjectsData] = useState({
     currentProject: {
@@ -81,7 +81,7 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
         updateData,
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -140,9 +140,10 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
   const fetchProjects = () => {
     fetch(`${apiUrl}/project/fetch-all-projects`, {
       method: "GET",
+      credentials: 'include', // Include cookies in the request
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": token,
+        "x-encryption-key" : encryptionKey
       },
     })
       .then((response) => response.json())
@@ -165,7 +166,7 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
         `${apiUrl}/project/fetch-user-project/${empId}`,
         {
           headers: {
-            "x-access-token": token,
+           "x-encryption-key" : encryptionKey
           },
         }
       );
