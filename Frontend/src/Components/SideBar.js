@@ -44,17 +44,22 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, activeItem, setActiveItem , email , password } = useAuth();
+  const [showLogin , setShowLogin] = useState(false);
+
 
    const handleExtensionClick = async (item) => {
     if(item === "Messenger"){
       try{
+        setShowLogin(true);
         const response = await axios.post(`${process.env.REACT_APP_API_MESSENGER_URI}/user/ghost-login` ,{
           email : email,
           password : password
         } );
-        window.open("http://gfg.com", '_blank');
+        setShowLogin(false);
+        window.open("https://messenger-app-amarya-fe.vercel.app/chats", '_blank');
       }catch(err){
-          toast.error("Could not login");
+        setShowLogin(false);
+        toast.error("Could not login");
       }
     }
   }
@@ -205,15 +210,24 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
             key={item.text}
             disablePadding
           >
-            <ListItemButton>
+            <ListItemButton sx={{"&:hover" : {
+              backgroundColor : "white"
+            } , cursor : "default"}}>
               <ListItemIcon
                 sx={{ color: activeItem === item.link ? "#ff5151" : "rgba(0, 0, 0, 0.3)" }}
               >
                 {item.icon}
               </ListItemIcon>
-              <Button sx={{backgroundColor: "#FF5151", fontSize : "0.8rem", fontFamily : "Poppins", color : "white" , borderRadius : "8px" , textTransform : "none" ,width : "65%", boxShadow: "0px 4px 6px -1px #FF5151", "&:hover" : {
+              <Button sx={{backgroundColor: "#FF5151", fontSize : "0.8rem", fontFamily : "Poppins", color : "white" , borderRadius : "8px" , textTransform : "none" ,width : "65%",cursor : "pointer" , boxShadow: "0px 4px 6px -1px #FF5151", "&:hover" : {
                 backgroundColor: "#FF5151",
-              }}} onClick={() => handleExtensionClick(item.text)}>{item.text}</Button>
+              },
+              ...(showLogin && {
+                "&.MuiButtonBase-root.MuiButton-root.Mui-disabled": {
+                  backgroundColor: "#FF5151",
+                  color: "white",
+                },
+              }),
+              }} disabled = {item.text === "Messenger" && showLogin} onClick={() => handleExtensionClick(item.text)}>{showLogin && item.text === "Messenger" ? <>Loading...</> : <>{item.text}</>}</Button>
             </ListItemButton>
           </ListItem>
         ))}

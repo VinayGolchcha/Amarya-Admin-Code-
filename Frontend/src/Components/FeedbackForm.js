@@ -15,6 +15,7 @@ export default function FeedbackForm() {
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const apiUrl = process.env.REACT_APP_API_URL;
+  const currentDate = dayjs();
 
   const handleSubmit = async () => {
     const feedbackData = {
@@ -83,6 +84,7 @@ export default function FeedbackForm() {
             label="Date"
             value={date}
             format="DD-MM-YYYY"
+            minDate={currentDate}
             onChange={(newDate) => setDate(newDate)}
             sx={{ backgroundColor: "rgb(250, 250, 250)" }}
           />

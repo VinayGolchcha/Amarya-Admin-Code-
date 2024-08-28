@@ -427,6 +427,9 @@ const AssetsPage = () => {
                   backgroundColor: "rgb(250, 250, 250)",
                   width : {xs : "135px"}
                 }}
+                inputProps={{
+                  min: todayDate, // Setting the minDate to 01/09/2023
+                }}
               />
             </Grid>
           </Grid>

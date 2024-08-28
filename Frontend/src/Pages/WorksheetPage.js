@@ -78,6 +78,8 @@ const WorksheetPage = () => {
   // const rowsPerPage = 5;
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const [lastSeventhDate , setLastSeventhDate] = useState(null);
+
   const [newRow, setNewRow] = useState(null);
   const [textValue, setTextValue] = useState("");
 
@@ -276,9 +278,21 @@ const WorksheetPage = () => {
     }
   }, [teams, categories, skillsets, projects]); // Dependency on teams, categories, skills, and projects
 
+  useEffect(() => {
+    const preSeventhDate = () => {
+      const date = new Date();
+      date.setDate(date.getDate() - 6);
+      console.log(date);
+      const newDate = date.toISOString().split('T')[0]
+      setLastSeventhDate(newDate);
+    }
+    preSeventhDate();
+  },[])
+
   const fetchWorksheetDataForEmployee = async (empId) => {
     try {
       // Fetch worksheet data for the specified employee
+      setIsLoading(true);
       const response = await fetch(
         `${apiUrl}/worksheet/fetch-user-worksheet/${empId}`,
         {
@@ -296,6 +310,7 @@ const WorksheetPage = () => {
       const data = await response.json();
 
       if (data.success) {
+        setIsLoading(false);
         // Worksheet data fetched successfully
         const worksheetData = data?.data.map((rowData) => ({
           empid: rowData.emp_id, // Use emp_id from fetched data
@@ -309,9 +324,11 @@ const WorksheetPage = () => {
         // Set the fetched data to your state variable (e.g., setRows)
         setRows(worksheetData);
       } else {
+        setIsLoading(false);
         console.error("Failed to fetch worksheet data:", data.message);
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("Error fetching worksheet data:", error);
     }
   };
@@ -625,6 +642,9 @@ const WorksheetPage = () => {
                         handleNewRowChange("date", e.target.value)
                       }
                       sx={{ width: "120px", marginTop: "15px" }}
+                      inputProps={{
+                        min: lastSeventhDate // Setting the minDate to 01/09/2023
+                      }}
                     />
                   </TableCell>
                   <TableCell>
