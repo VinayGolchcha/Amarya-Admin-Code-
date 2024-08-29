@@ -112,9 +112,10 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
       !menu.some((item) => item.link === currentPath) &&
       !other.some((item) => item.link === currentPath)
     ) {
-      setActiveItem("dashboard");
+      setActiveItem(currPathVar);
     }
-  }, []);
+  }, [location]);
+
 
   const handleItemClick = (text) => {
     setActiveItem(text);
