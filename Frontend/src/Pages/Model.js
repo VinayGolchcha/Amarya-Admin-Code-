@@ -2,7 +2,7 @@ import { TextField, Button } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import CloseIcon from "@mui/icons-material/Close";
@@ -11,14 +11,21 @@ import { useAuth } from "../Components/AuthContext";
 function Model({ closeModel, closeOtpP, email }) {
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirm_password] = useState("");
+  const [otp , setOtp] = useState("");
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const handleUpdate = async () => {
     try {
+      if(otp.length < 4 || otp.length > 4){
+        toast.error("Otp must contain 4 digit only");
+        console.log(true);
+        return;
+      }
       const response = await axios.post(`${apiUrl}/user/update-password`, {
         password,
         confirm_password,
         email,
+        otp
       });
       if (response.data.success) {
         toast.success("Password updated successfully");
@@ -48,6 +55,29 @@ function Model({ closeModel, closeOtpP, email }) {
   ///
   return (
     <>
+    <div
+        style={{
+          backgroundColor: "white",
+          borderRadius: "10px",
+        }}
+        className="modelbackgroundd"
+      >
+        <div
+          style={{
+            position: "fixed",
+            zIndex: "1000",
+            width: "77%",
+            height: "300px",
+            borderRadius: "10px",
+
+            top: "50%",
+            left: "50%",
+
+            transform: "translate(-50%,-50%)",
+            // backgroundColor: "rgb(50, 50, 116)",
+          }}
+          className="modelcontainer"
+        >
       <div
         style={{
           backgroundColor: "white",
@@ -60,7 +90,7 @@ function Model({ closeModel, closeOtpP, email }) {
             position: "fixed",
             zIndex: "1000",
             width: "118%",
-            height: "400px",
+            height: "500px",
             borderRadius: "10px",
             top: "50%",
             left: "50%",
@@ -114,7 +144,7 @@ function Model({ closeModel, closeOtpP, email }) {
           <div>
             <h1>Set Password</h1>
             <p>
-              Please create a new password and ensure you <br></br> remember it
+              Please enter otp and create a new password and ensure you <br></br> remember it
               for future use
             </p>
             {/* <TextField
@@ -134,6 +164,24 @@ function Model({ closeModel, closeOtpP, email }) {
             />
             <br></br>
             <br></br> */}
+            <TextField
+              id="filled-basic"
+              label="otp"
+              variant="filled"
+              type="number"
+              required
+              onChange={(e) => setOtp(e.target.value)}
+              inputProps={{ maxLength: 4 }}
+              sx={{
+                marginY: 1,
+                width: "75%",
+                borderRadius: "5px",
+
+                border: "1px solid #FF5151",
+                backgroundColor: "white",
+              }}
+            />
+            <br/>
             <TextField
               id="filled-basic"
               label="New Password"
@@ -192,6 +240,8 @@ function Model({ closeModel, closeOtpP, email }) {
             <br></br>
           </div>
         </div>
+      </div>
+      </div>
       </div>
     </>
   );
