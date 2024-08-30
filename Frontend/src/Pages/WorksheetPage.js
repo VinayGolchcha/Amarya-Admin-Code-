@@ -31,7 +31,7 @@ import Loading from "../sharable/Loading";
 const WorksheetPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [teams, setTeams] = useState([]);
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
   const renderTableCells = (rowData) => {
@@ -156,7 +156,7 @@ const WorksheetPage = () => {
     }
 
     try {
-      setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
+      // setRows((prevRows) => [...prevRows, { ...newRow, checkbox: false }]);
       setNewRow(null);
 
       const selectedTeam = teams.find((team) => team.label === newRow.team);
@@ -191,9 +191,10 @@ const WorksheetPage = () => {
       // Send the data to the API endpoint
       const response = await fetch(`${apiUrl}/worksheet/create-worksheet`, {
         method: "POST",
+        credentials: 'include', // Include cookies in the request
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token, // Add your custom headers here
+          "x-encryption-key" : encryptionKey // Add your custom headers here
         },
         body: JSON.stringify(postData),
       });
@@ -201,7 +202,7 @@ const WorksheetPage = () => {
       const responseData = await response.json();
       if (responseData.success) {
         toast.success("Data submitted successfully!");
-        fetchWorksheetDataForEmployee();
+        fetchWorksheetDataForEmployee(user.user_id);
 
       } else {
         fetchWorksheetDataForEmployee();
@@ -282,9 +283,10 @@ const WorksheetPage = () => {
         `${apiUrl}/worksheet/fetch-user-worksheet/${empId}`,
         {
           method: "GET",
+          credentials: 'include', // Include cookies in the request
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token, // Add your custom headers here
+            "x-encryption-key" : encryptionKey // Add your custom headers here
           },
         }
       );
@@ -352,9 +354,10 @@ const WorksheetPage = () => {
     try {
       const response = await fetch(`${apiUrl}/project/fetch-all-projects`, {
         method: "GET",
+        credentials: 'include', // Include cookies in the request
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token, // Add your custom headers here
+          "x-encryption-key" : encryptionKey // Add your custom headers here
         },
       });
       const data = await response.json();
@@ -379,9 +382,10 @@ const WorksheetPage = () => {
     try {
       const response = await fetch(`${apiUrl}/team/fetch-all-teams`, {
         method: "GET",
+        credentials: 'include', // Include cookies in the request
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token, // Add your custom headers here
+          "x-encryption-key" : encryptionKey // Add your custom headers here
         },
       });
       const data = await response.json();
@@ -405,9 +409,10 @@ const WorksheetPage = () => {
     try {
       const response = await fetch(`${apiUrl}/category/fetch-all-categories`, {
         method: "GET",
+        credentials: 'include', // Include cookies in the request
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token, // Add your custom headers here
+          "x-encryption-key" : encryptionKey // Add your custom headers here
         },
       });
       const data = await response.json();
@@ -431,9 +436,10 @@ const WorksheetPage = () => {
     try {
       const response = await fetch(`${apiUrl}/skillset/fetch-skills`, {
         method: "GET",
+        credentials: 'include', // Include cookies in the request
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token, // Add your custom headers here
+          "x-encryption-key" : encryptionKey // Add your custom headers here
         },
       });
       const data = await response.json();

@@ -52,7 +52,7 @@ const cls = "";
 export default function LeaveMangementPage() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [fromDate, setFromDate] = React.useState(null);
+  const [fromDate, setFromDate] = React.useState(Date.now());
   const [date , setDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
   const [leaveType, setLeaveType] = React.useState("Casual Leave");
@@ -61,6 +61,7 @@ export default function LeaveMangementPage() {
   const [rows, setRows] = React.useState([]);
   const [leaveOverviewData, setLeaveOverviewData] = React.useState([]);
   const [leaveTypes, setLeaveTypes] = React.useState([]); // State for le
+  const [validateDuration , setValidateDuration] = React.useState(false);
   const apiUrl = process.env.REACT_APP_API_URI;
 
   ////
@@ -72,7 +73,7 @@ export default function LeaveMangementPage() {
   const [loading, setLoading] = React.useState(true);
 
   const [errorr, setErrorr] = React.useState(null);
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
   const today = new Date();
 
@@ -91,7 +92,7 @@ export default function LeaveMangementPage() {
         {
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       )
@@ -121,7 +122,7 @@ export default function LeaveMangementPage() {
         {
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -143,7 +144,7 @@ export default function LeaveMangementPage() {
         {
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -170,7 +171,7 @@ export default function LeaveMangementPage() {
         {
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -197,7 +198,7 @@ export default function LeaveMangementPage() {
           {
             headers: {
               "Content-Type": "application/json",
-              "x-access-token": token,
+              "x-encryption-key" : encryptionKey
             },
           }
         );
@@ -226,6 +227,12 @@ export default function LeaveMangementPage() {
 
   const handleUpdate = async () => {
     try {
+      const validateFromDate = new Date(fromDate);
+      const validateToDate = new Date(toDate);
+      if(validateFromDate > validateToDate){
+        toast.warn("From date should be less than the to date");
+        return;
+      }
       const response = await axios.post(
         `${apiUrl}/leave/leave-request`,
         {
@@ -500,6 +507,7 @@ export default function LeaveMangementPage() {
                         value={fromDate}
                         minDate={currentDate}
                         onChange={handleFromDateChange}
+                        format="dd/MM/yyyy"
                         renderInput={(params) => (
                           <TextField {...params} size="small" />
                         )}
@@ -518,6 +526,7 @@ export default function LeaveMangementPage() {
                         minDate={fromDate} // Set the minDate based on fromDate
                         // onChange={(newDate) => setToDate(newDate)}
                         onChange={handleToDateChange}
+                        format="dd/MM/yyyy"
                         renderInput={(params) => (
                           <TextField {...params} size="small" />
                         )}

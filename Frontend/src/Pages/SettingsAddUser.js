@@ -35,7 +35,7 @@ export default function SettingsAddUser() {
   if (isLg) spacing = 4;
   if (isXl) spacing = 5;
   const apiUrl = process.env.REACT_APP_API_URL;
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || "");
 
   const designationOptions = ["Web Developer", "Sap Developer", "ML Developer"];
@@ -122,9 +122,10 @@ export default function SettingsAddUser() {
     try {
       const response = await fetch(`${apiUrl}/team/fetch-all-teams`, {
         method: "GET",
+        credentials: 'include', // Include cookies in the request
         headers: {
           "Content-Type": "application/json",
-          "x-access-token": token, // Add your custom headers here
+          "x-encryption-key" : encryptionKey // Add your custom headers here
         },
       });
       const data = await response.json();
@@ -167,7 +168,7 @@ export default function SettingsAddUser() {
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            "x-access-token": token, // Add your custom headers here
+            "x-encryption-key" : encryptionKey // Add your custom headers here
           },
         }
       );

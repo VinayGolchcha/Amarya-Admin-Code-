@@ -9,7 +9,7 @@ export default function RecentActivity({ activities }) {
   // Get the most recent activity
   const recentActivity = sortedActivities.length > 0 ? sortedActivities[0] : null;
   return (
-    <Box sx={{ p: 0, border: "1px solid #E0E0E0", borderRadius: "12px" }}>
+    <Box sx={{ p: 0, border: "1px solid #E0E0E0", borderRadius: "12px" , height : "100%"}}>
       <Box
         sx={{
           backgroundColor: "#1B204A",

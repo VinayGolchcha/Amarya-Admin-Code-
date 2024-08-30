@@ -44,8 +44,9 @@ const UserProfilePage = () => {
   //     ecpna: "None",
   //     ecn: "0",
   //   });a
-  const { user, setProfilePhoto , profilePhoto } = useAuth();
+  const { user, setProfilePhoto , profilePhoto , encryptionKey } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+  const [processingReq , setProcessingReq] = useState(false);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -69,6 +70,7 @@ const UserProfilePage = () => {
     completed_projects: 0,
     teams: 0,
     gender: "",
+    team_id : null
   });
   const inputFields = [
     { type: "text", label: "First Name", field: "first_name" },
@@ -284,7 +286,7 @@ const UserProfilePage = () => {
         `${process.env.REACT_APP_API_URL}/project/fetch-user-project-timeline/${empId}`,
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -310,7 +312,7 @@ const UserProfilePage = () => {
         // Request configuration object
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
@@ -337,6 +339,7 @@ const UserProfilePage = () => {
         experience: userData.experience,
         completed_projects: userData.completed_projects,
         teams: userData.teams,
+        team_id : userData.team_id,
         gender: userData.gender,
         public_id: userData.public_id === null ? "" : userData.public_id,
       });
@@ -423,22 +426,24 @@ const UserProfilePage = () => {
 
     try {
       const id = user?.user_id;
-
+      setProcessingReq(true);
       const response = await axios.put(
         `${process.env.REACT_APP_API_URL}/user/update-user-profile/${id}`,
         formDataToSend,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
       toast.success("User profile updated successfully.");
       fetchUserData();
+      setProcessingReq(false);
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating user profile:", error.message);
+      setProcessingReq(false);
     }
   };
 
@@ -587,9 +592,17 @@ const UserProfilePage = () => {
                     onClick={handleUserUpdate}
                     variant="contained"
                     color="primary"
-                    sx={{ marginTop: "1rem" }}
+                    sx={{ marginTop: "1rem" ,  
+                      ...(processingReq && {
+                        "&.MuiButtonBase-root.MuiButton-root.Mui-disabled": {
+                          backgroundColor: "#1976d2",
+                          color: "white",
+                        },
+                      }),
+                    }}
+                    disabled={processingReq}  // Disable the button if processingReq is true
                   >
-                    Save Changes
+                    {processingReq ? <>Loading...</> : <>Save Changes</>}
                   </Button>
                 )}
               </form>
@@ -761,7 +774,7 @@ const UserProfilePage = () => {
           <Box
             sx={{ display: "flex", flexDirection: "column", margin: "2% 2.3%" }}
           >
-            <ProjectDetails />
+            <ProjectDetails joiningDate = {formData.joining_date} teamId = {formData.team_id} fetchProjectTimeline = {fetchProjectTimeline}/>
             <Box
               sx={{
                 display: "flex",

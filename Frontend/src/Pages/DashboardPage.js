@@ -16,7 +16,7 @@ import Loading from "../sharable/Loading";
 
 export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
-  const { user } = useAuth();
+  const { user, encryptionKey} = useAuth();
   const [announcements, setAnnouncements] = useState([]);
   const [activities, setActivities] = useState([]);
   const [profileData, setProfileData] = useState(null);
@@ -36,7 +36,7 @@ export default function DashboardPage() {
           `${apiUrl}/userDashboard/user-dashboard/${emp_id}`,
           {
             headers: {
-              "x-access-token": encodeURIComponent(user?.token || ""),
+              "x-encryption-key" : encryptionKey
             },
           }
         );
@@ -60,6 +60,7 @@ export default function DashboardPage() {
           setProfileData(data.emp_data || null);
           setCurrentProject(data.current_project || null);
           setProjectsThisYear(data.projects_this_year || []);
+          localStorage.setItem('email' , data.emp_data.email);
         }
 
         setPointsData(pointsData.data || { month_data: [], year_data: [] });
@@ -78,7 +79,7 @@ export default function DashboardPage() {
           `${apiUrl}/userDashboard/get-user-points-data-for-graph/${emp_id}`,
           {
             headers: {
-              "x-access-token": encodeURIComponent(user?.token || ""),
+              "x-encryption-key" : encryptionKey
             },
           }
         );

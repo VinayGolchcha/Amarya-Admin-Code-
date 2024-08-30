@@ -35,7 +35,7 @@ export default function SettingsTeams() {
   const [originalFormData, setOriginalFormData] = useState([]);
   const midPoint = Math.floor(formData.length / 2);
   const apiUrl = process.env.REACT_APP_API_URL;
-  const { user } = useAuth();
+  const { user , encryptionKey } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
@@ -44,9 +44,10 @@ export default function SettingsTeams() {
 
   const fetchTeams = () => {
     fetch(`${apiUrl}/team/fetch-all-teams`, {
+      credentials: 'include', // Include cookies in the request
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": user?.token,
+        "x-encryption-key" : encryptionKey
       },
     })
       .then((response) => {
@@ -92,10 +93,11 @@ export default function SettingsTeams() {
       if (selectedInputIndex !== null) {
         const teamId = formData[selectedInputIndex]._id;
         fetch(`${apiUrl}/team/admin/delete-team/${teamId}`, {
+          credentials: 'include', // Include cookies in the request
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": user?.token,
+            "x-encryption-key" : encryptionKey
           },
         })
           .then((response) => {
@@ -139,10 +141,11 @@ export default function SettingsTeams() {
       // Update existing team
       editedteam.forEach((editedteam) => {
         fetch(`${apiUrl}/team/admin/update-team/${editedteam._id}`, {
+          credentials: 'include', // Include cookies in the request
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": user?.token,
+            "x-encryption-key" : encryptionKey
           },
           body: JSON.stringify({ team: editedteam.team }),
         })
@@ -166,10 +169,11 @@ export default function SettingsTeams() {
       // Create new team
       newteam.forEach((newteam) => {
         fetch(`${apiUrl}/team/admin/create-team`, {
+          credentials: 'include', // Include cookies in the request
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": user?.token,
+            "x-encryption-key" : encryptionKey
           },
           body: JSON.stringify({ team: newteam.team }),
         })

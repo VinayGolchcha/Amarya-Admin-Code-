@@ -21,6 +21,8 @@ import "react-toastify/dist/ReactToastify.css";
 import OtpP from "./OtpPop";
 import { toast } from "react-toastify";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import CircularProgress from '@mui/joy/CircularProgress';
+
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -29,6 +31,7 @@ const LoginPage = () => {
   const [openOtpP, setOpenOtpP] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
   const [email, setEmail] = useState("");
+  const [isLoading , setIsLoading] =useState(false)
   //new
   // const[openModel,setOpenModel]=useState(false)
   const [openEmailP, setOpenEmailP] = useState(false);
@@ -37,6 +40,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/user/login`,
         {
@@ -48,13 +52,20 @@ const LoginPage = () => {
       // Check response status
       if (response.status === 200) {
         // Redirect or handle successful login
-        login(response.data.data[0]); // Pass user data to login function
+        const encryptionKey = response.headers['x-encryption-key'];
+        localStorage.setItem('encryptionKey' , encryptionKey);
+        login(response.data.data[0] , encryptionKey); // Pass user data to login function
+        localStorage.setItem("password" , password);
         navigate("/");
+        setIsLoading(false);
       } else {
         console.error("Login failed");
+        setIsLoading(false);
         toast.error("Login failed");
+        
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("Error:", error);
       if (error.response) {
         // Server responded with a non 2xx status code
@@ -233,9 +244,10 @@ const LoginPage = () => {
             }}
             variant="contained"
             color="primary"
+            disabled={isLoading}
             onClick={handleLogin}
           >
-            Login
+           {isLoading ? <CircularProgress color="neutral"/> : <>Login</>}
           </Button>
         </Paper>
       </Box>

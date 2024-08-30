@@ -108,7 +108,7 @@ export default function TrainingsPageAdmin( ) {
   const [edit , setEdit] = React.useState(false);
   const [editOpen , setEditOpen] = React.useState(false);
   const [deleteItem , setDelete] = React.useState(false);
-  const {user} = useAuth();
+  const {user , encryptionKey} = useAuth();
   let [data , setData] = React.useState([]);
   const [selectedTr , setSelectedTr] = React.useState({});
   const handleEditTr = () => {
@@ -152,7 +152,7 @@ export default function TrainingsPageAdmin( ) {
     try {
       const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/admin/add-new-training` , body , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       })
       setOpen(false);
@@ -180,7 +180,7 @@ export default function TrainingsPageAdmin( ) {
     try {
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/training/training-cards` , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       });
       const size = 
@@ -213,7 +213,7 @@ export default function TrainingsPageAdmin( ) {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/training/admin/display-all-users-training-data` , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       });
       setFilteredData(res?.data?.data?.map((item) => ({
@@ -261,7 +261,7 @@ export default function TrainingsPageAdmin( ) {
     // Axios PUT request
     axios.put(`${process.env.REACT_APP_API_URI}/training/admin/update-training/${id}`, body , {
       headers : {
-        "x-access-token" : user?.token
+        "x-encryption-key" : encryptionKey
       }
     })
       .then(response => {
@@ -301,7 +301,7 @@ export default function TrainingsPageAdmin( ) {
     try {
       const response = await axios.delete(`${process.env.REACT_APP_API_URI}/training/admin/delete-training/${val}`, {
               headers : {
-                "x-access-token" : user?.token
+                "x-encryption-key" : encryptionKey
               } // Include training ID in the request body
             });
 

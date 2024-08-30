@@ -124,12 +124,12 @@ const CustomBarChart = ({ data }) => {
 
 const AdminPerformance = () => {
   const [teamperformance , setTeamPerformance] = useState([]);
-  const {user} = useAuth();
+  const {user , encryptionKey} = useAuth();
   const fetchPerformance = async () => {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URL}/worksheet/admin/calculate-team-performance` , {
         headers : {
-          "x-access-token" : user?.token
+          "x-encryption-key" : encryptionKey
         }
       });
       setTeamPerformance(res?.data?.data);

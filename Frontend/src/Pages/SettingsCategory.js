@@ -35,7 +35,7 @@ export default function SettingsCategory() {
   const len = formData.length;
   const midPoint = Math.floor(formData.length / 2);
   const apiUrl = process.env.REACT_APP_API_URL;
-  const { user } = useAuth();
+  const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
   const [isLoading, setLoading] = useState(true);
 
@@ -46,9 +46,10 @@ export default function SettingsCategory() {
   const fetchCategories = () => {
     fetch(`${apiUrl}/category/fetch-all-categories`, {
       method: "GET",
+      credentials: 'include', // Include cookies in the request
       headers: {
         "Content-Type": "application/json",
-        "x-access-token": token,
+        "x-encryption-key" : encryptionKey
       },
     })
       .then((response) => {
@@ -99,9 +100,10 @@ export default function SettingsCategory() {
         const categoryId = formData[selectedInputIndex]._id;
         fetch(`${apiUrl}/category/admin/delete-category/${categoryId}`, {
           method: "DELETE",
+          credentials: 'include', // Include cookies in the request
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         })
           .then((response) => {
@@ -149,9 +151,10 @@ export default function SettingsCategory() {
           `${apiUrl}/category/admin/update-category/${editedCategory._id}`,
           {
             method: "PUT",
+            credentials: 'include', // Include cookies in the request
             headers: {
               "Content-Type": "application/json",
-              "x-access-token": token,
+              "x-encryption-key" : encryptionKey
             },
             body: JSON.stringify({ category: editedCategory.category  , points : editedCategory.points}),
           }
@@ -176,9 +179,10 @@ export default function SettingsCategory() {
       newCategories.forEach((newCategory) => {
         fetch(`${apiUrl}/category/admin/create-category`, {
           method: "POST",
+          credentials: 'include', // Include cookies in the request
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
           body: JSON.stringify({ category: newCategory.category, points: newCategory.points }),
         })

@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function FeedbackForm() {
-  const { user } = useAuth();
+  const { user , encryptionKey } = useAuth();
   const token = encodeURIComponent(user?.token || "");
   const [date, setDate] = useState(dayjs());
   const [subject, setSubject] = useState("");
@@ -23,15 +23,19 @@ export default function FeedbackForm() {
       subject,
       description,
     };
-
+    if(description.length > 100){
+      toast.error("Description must not be more than 100 characters");
+      return
+    }
     try {
       const response = await fetch(
         `${apiUrl}/userDashboard/user-dashboard-feedback`,
         {
           method: "POST",
+          credentials: 'include', // Include cookies in the request
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token, // Add your custom headers here
+            "x-encryption-key" : encryptionKey
           },
           body: JSON.stringify(feedbackData),
         }
@@ -78,6 +82,7 @@ export default function FeedbackForm() {
           <DatePicker
             label="Date"
             value={date}
+            format="DD-MM-YYYY"
             onChange={(newDate) => setDate(newDate)}
             sx={{ backgroundColor: "rgb(250, 250, 250)" }}
           />
