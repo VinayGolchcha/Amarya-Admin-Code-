@@ -47,6 +47,7 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
     { text: "Leave Planner", link: "leaves", icon: <InsertInvitationIcon /> },
     { text: "Trainings", link: "trainings", icon: <GroupsIcon /> },
     { text: "Worksheet", link: "worksheet", icon: <GroupWorkIcon /> },
+    { text: "Attendence", link: "Attendence", icon: <GroupWorkIcon /> },
   ].filter(Boolean); //
 
   const other = [

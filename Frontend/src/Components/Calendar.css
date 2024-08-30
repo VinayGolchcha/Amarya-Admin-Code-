@@ -1,0 +1,129 @@
+.display-flex{
+  display: flex;
+  align-items: center;
+}
+
+.calender-box {
+  border: 1px solid rgb(211, 207, 207);
+  border-radius: 10px;
+  min-width: 700px;
+}
+
+.calendar-controls {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  justify-content: space-between;
+  border-bottom: 1px solid rgb(211, 207, 207);
+}
+
+select {
+  margin: 0 10px;
+  /* padding: 5px; */
+  font-size: 16px;
+  border: none;
+}
+
+button {
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 20px;
+  place-items: center;
+  padding: 10px 0;
+}
+
+.day-names {
+  display: contents;
+}
+
+.day-name {
+  text-align: center;
+  font-weight: bold;
+}
+
+.calendar-days {
+  display: contents;
+}
+
+.day {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+}
+
+.weekend {
+  background-color: rgb(140, 140, 140);
+  color: white;
+}
+
+.holiday {
+  background-color: rgb(4, 169, 0);
+  color: white;
+}
+
+.present {
+  background-color: rgb(0, 98, 169);
+  color: white;
+}
+
+.abscent {
+  background-color: rgb(206, 11, 11);
+  color: white;
+}
+
+.wfh {
+  background-color: rgb(205, 138, 0);
+  color: white;
+}
+
+.leaves {
+  background-color: rgb(255, 88, 6);
+  color: white;
+}
+
+.empty {
+  background-color: transparent;
+  border: none;
+}
+
+.setDivHieght {
+  width: 50%;
+}
+
+.flex-to-display{
+  display: flex;
+  gap: 20px; /* Optional: Adds spacing between the charts */
+  justify-content: space-between; /* Distributes the charts evenly */
+  align-items: center; /* Aligns charts vertically centered */
+}
+
+.color-indicator {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+}
+
+.flex-center{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.ml-15{
+  margin-left: 15px;
+}
