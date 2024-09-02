@@ -68,10 +68,12 @@ const Attendence = () => {
             >
                 Employees Attendance
             </Typography>
-            <Box sx={{ borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" sx={{"&.MuiTabs-indicator" : {
-                    backgroundColor : "red"
-                }}}>
+            <Box >
+                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example"sx={{
+            '& .MuiTabs-indicator': {
+                backgroundColor: 'transparent', // Disables the indicator color
+            },
+        }}>
                     <Tab icon={<HomeIcon/>} label="Home" {...a11yProps(0)} sx={{
                         display : "flex",
                         flexDirection : "row",

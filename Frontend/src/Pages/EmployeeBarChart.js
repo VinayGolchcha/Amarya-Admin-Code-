@@ -79,7 +79,9 @@ const EmployeeBarChart = () => {
             borderRadius: "20px",
             boxShadow: "none",
             width: "50%",
-            border: "1px solid #8f9995"
+            border: "1px solid #8f9995",
+            width: "100%",
+            height : "100%",
         }}>
             <Typography
                 variant="h4"
