@@ -52,11 +52,11 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
       try{
         setShowLogin(true);
         const response = await axios.post(`${process.env.REACT_APP_API_MESSENGER_URI}/user/ghost-login` ,{
-          email : email,
-          password : password
+          email :  "rashi@yahoo.com",
+          password : "Abcd$321"
         } );
         setShowLogin(false);
-        window.open("https://messenger-app-amarya-fe.vercel.app/chats", '_blank');
+        window.open(`https://messenger-app-amarya-fe.vercel.app/chats/${response.data.data.user_id}`, '_blank');
       }catch(err){
         setShowLogin(false);
         toast.error("Could not login");
