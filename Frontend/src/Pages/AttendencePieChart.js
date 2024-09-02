@@ -7,11 +7,11 @@ export default function AttendencePieChart() {
         <Box sx={{
             borderRadius: "20px",
             boxShadow: "none",
-            width: "50%",
+            width: "100%",
+            height : "100%",
             border: "1px solid #8f9995",
             padding: "10px"
         }}>
-            <Grid xs={12} md={9} lg={7}>
                 <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                     <Typography
                         variant="h4"
@@ -60,7 +60,7 @@ export default function AttendencePieChart() {
                     sx={{ textAlign: "center", paddingTop: "5px" }}>
                     Total Employees Present - 24/40
                 </Typography>
-            </Grid>
+            
         </Box>
     );
 }

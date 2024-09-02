@@ -1,25 +1,35 @@
 import '../Components/Calendar.css'
 import EmployeeAttendencePieChart from './EmployeeAttendencePieChart';
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import Calendar from '../Components/Calendar';
 
 export default function EmployeeAttendenceHomePage() {
     return (
-        <Box style={{ margin: "20px 20px 20px 20px", width: "100%" }}>
-            <Typography
-                variant="h4"
-                sx={{
-                    font: {
-                        lg: "normal normal 300 22px/35px Poppins",
-                        md: "normal normal 300 22px/35px Poppins",
-                        sm: "normal normal 300 20px/30px Poppins",
-                        xs: "normal normal 300 22px/30px Poppins",
-                    },
-                }}
-            >
-                Employees Attendance
-            </Typography>
-            <Box sx={{ display: 'flex', gap:"2rem", alignItems: 'stretch'  }}>
+        <Box style={{ margin: "30px 20px 20px 20px", width: "100%" }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography
+                    variant="h5"
+                    sx={{
+                        font: {
+                            lg: "normal normal bold 20px/35px Poppins",
+                            md: "normal normal bold 20px/35px Poppins",
+                            sm: "normal normal bold 18px/30px Poppins",
+                            xs: "normal normal bold 18px/30px Poppins",
+                        },
+                    }}
+                >
+                    Employees Attendance
+                </Typography>
+                <Button sx={{
+                    marginLeft: '5px', cursor: 'pointer', backgroundColor: '#b9b9b9', color: "#181d60", borderRadius: '10px', fontWeight: 'bold'
+                }} >
+                    Download Report
+                    <FileDownloadOutlinedIcon sx={{ marginLeft: '5px', backgroundColor: '#181d60', color: 'white', borderRadius: '50%' }} />
+                </Button>
+            </Box>
+            <hr />
+            <Box sx={{ display: 'flex', gap: "2rem", alignItems: 'stretch' }}>
                 <EmployeeAttendencePieChart />
                 <Grid xs={12} md={9} lg={7} sx={{ width: "100%" }}>
                     <Box sx={{
@@ -33,32 +43,318 @@ export default function EmployeeAttendenceHomePage() {
                     }}
                     >
                         <Box className='flex-to-display'>
-                            <div>Employee Name :</div>
-                            <div>Ankit</div>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '50%', textAlign: 'left'
+                                }}
+                            >
+                                Employees Attendance
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '10%', textAlign: 'left'
+                                }}
+                            >
+                                :
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '40%', textAlign: 'left'
+                                }}
+                            >
+                                Ankit
+                            </Typography>
                         </Box>
                         <Box className='flex-to-display'>
-                            <div>Employee Id :</div>
-                            <div>345674</div>
+
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '50%', textAlign: 'left'
+                                }}
+                            >
+                                Employees Id
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '10%', textAlign: 'left'
+                                }}
+                            >
+                                :
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '40%', textAlign: 'left'
+                                }}
+                            >
+                                345677
+                            </Typography>
                         </Box>
                         <Box className='flex-to-display'>
-                            <div>Number of Working Days :</div>
-                            <div>24</div>
+
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '50%', textAlign: 'left'
+                                }}
+                            >
+                                Number of Working Days
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '10%', textAlign: 'left'
+                                }}
+                            >
+                                :
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '40%', textAlign: 'left'
+                                }}
+                            >
+                                24
+                            </Typography>
                         </Box>
                         <Box className='flex-to-display'>
-                            <div>Number of Present Days :</div>
-                            <div>22</div>
+
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '50%', textAlign: 'left'
+                                }}
+                            >
+                                Number of Present Days
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '10%', textAlign: 'left'
+                                }}
+                            >
+                                :
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '40%', textAlign: 'left'
+                                }}
+                            >
+                                24
+                            </Typography>
                         </Box>
                         <Box className='flex-to-display'>
-                            <div>Number of Leaves :</div>
-                            <div>8</div>
+
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '50%', textAlign: 'left'
+                                }}
+                            >
+                                Number of Leaves
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '10%', textAlign: 'left'
+                                }}
+                            >
+                                :
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '40%', textAlign: 'left'
+                                }}
+                            >
+                                24
+                            </Typography>
                         </Box>
                         <Box className='flex-to-display'>
-                            <div>Number of WFH :</div>
-                            <div>6</div>
+
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '50%', textAlign: 'left'
+                                }}
+                            >
+                                Number of WFH
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '10%', textAlign: 'left'
+                                }}
+                            >
+                                :
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '40%', textAlign: 'left'
+                                }}
+                            >
+                                24
+                            </Typography>
                         </Box>
                         <Box className='flex-to-display'>
-                            <div>Number of Absent :</div>
-                            <div>2</div>
+
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '50%', textAlign: 'left'
+                                }}
+                            >
+                                Number of Absent
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '10%', textAlign: 'left'
+                                }}
+                            >
+                                :
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    font: {
+                                        lg: "normal normal bold 12px/35px Poppins",
+                                        md: "normal normal bold 12px/35px Poppins",
+                                        sm: "normal normal bold 12px/30px Poppins",
+                                        xs: "normal normal bold 12px/30px Poppins",
+                                    },
+                                    width: '40%', textAlign: 'left'
+                                }}
+                            >
+                                24
+                            </Typography>
                         </Box>
                     </Box>
                 </Grid>

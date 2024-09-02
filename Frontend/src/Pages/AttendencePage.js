@@ -4,8 +4,20 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import AttendenceHomePage from './AttendenceHomePage';
-import { Typography } from '@mui/material';
 import AttendanceReports from './AttendanceReports';
+import { Badge, Typography } from '@mui/material';
+import HomeIcon from '@mui/icons-material/Home';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import InsertChartIcon from '@mui/icons-material/InsertChart';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+
+const UndetectedIcon = ({value}) => {
+    return(
+        <Badge badgeContent={4} color="error">
+            <SupervisedUserCircleIcon color={value === 3 ? "red" :"action"} />
+        </Badge>
+    )
+}
 
 const Attendence = () => {
 
@@ -57,12 +69,52 @@ const Attendence = () => {
             >
                 Employees Attendance
             </Typography>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                    <Tab label="Home" {...a11yProps(0)} />
-                    <Tab label="Camera Feeds" {...a11yProps(1)} />
-                    <Tab label="Reports" {...a11yProps(2)} />
-                    <Tab label="Unindentified People" {...a11yProps(3)} />
+            <Box >
+                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example"sx={{
+            '& .MuiTabs-indicator': {
+                backgroundColor: 'transparent', // Disables the indicator color
+            },
+        }}>
+                    <Tab icon={<HomeIcon/>} label="Home" {...a11yProps(0)} sx={{
+                        display : "flex",
+                        flexDirection : "row",
+                        justifyContent : "center",
+                        alignItems : "center",
+                        "&.Mui-selected" : {
+                        color : "red"
+                    },
+                        "& .MuiTab-iconWrapper": { mr: 1 }
+                    }}/>
+                    <Tab icon={<VideocamIcon/>} label="Camera Feeds" {...a11yProps(1)} sx={{
+                        display : "flex",
+                        flexDirection : "row",
+                        justifyContent : "center",
+                        alignItems : "center",
+                        "&.Mui-selected" : {
+                        color : "red"
+                    },
+                    "& .MuiTab-iconWrapper": { mr: 1 }
+                    }}/>
+                    <Tab icon={<InsertChartIcon/>} label="Reports" {...a11yProps(2)} sx={{
+                        display : "flex",
+                        flexDirection : "row",
+                        justifyContent : "center",
+                        alignItems : "center",
+                        "&.Mui-selected" : {
+                        color : "red"
+                    },
+                    "& .MuiTab-iconWrapper": { mr: 1 }
+                    }}/>
+                    <Tab icon={<UndetectedIcon value = {value}/>} label="Undetected People" {...a11yProps(3)} sx={{
+                        display : "flex",
+                        flexDirection : "row",
+                        justifyContent : "center",
+                        alignItems : "center",
+                        "&.Mui-selected" : {
+                        color : "red"
+                    },
+                    
+                    }}/>
                 </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
@@ -75,7 +127,7 @@ const Attendence = () => {
                 <AttendanceReports/>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
-                Unindentified People
+                 Undetected People
             </CustomTabPanel>
         </Box>
     </div>
