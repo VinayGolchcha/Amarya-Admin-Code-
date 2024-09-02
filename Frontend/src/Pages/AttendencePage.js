@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import AttendenceHomePage from './AttendenceHomePage';
 import { Typography } from '@mui/material';
+import AttendanceReports from './AttendanceReports';
 
 const Attendence = () => {
 
@@ -71,7 +72,7 @@ const Attendence = () => {
                 Camera Feeds
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-                Reports
+                <AttendanceReports/>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
                 Unindentified People
