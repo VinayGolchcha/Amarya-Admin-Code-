@@ -35,6 +35,7 @@ import { useAuth } from "./AuthContext";
 import { Button } from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
+import WorkHistoryRoundedIcon from '@mui/icons-material/WorkHistoryRounded';
 
 const drawerWidth = 240;
 
@@ -43,18 +44,18 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const responsiveTheme = responsiveFontSizes(theme);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, activeItem, setActiveItem , email , password } = useAuth();
+  const { user, activeItem, setActiveItem, email, password } = useAuth();
 
-   const handleExtensionClick = async (item) => {
-    if(item === "Messenger"){
-      try{
-        const response = await axios.post(`${process.env.REACT_APP_API_MESSENGER_URI}/user/ghost-login` ,{
-          email : email,
-          password : password
-        } );
+  const handleExtensionClick = async (item) => {
+    if (item === "Messenger") {
+      try {
+        const response = await axios.post(`${process.env.REACT_APP_API_MESSENGER_URI}/user/ghost-login`, {
+          email: email,
+          password: password
+        });
         window.open("http://gfg.com", '_blank');
-      }catch(err){
-          toast.error("Could not login");
+      } catch (err) {
+        toast.error("Could not login");
       }
     }
   }
@@ -66,7 +67,9 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
     { text: "Leave Planner", link: "leaves", icon: <InsertInvitationIcon /> },
     { text: "Trainings", link: "trainings", icon: <GroupsIcon /> },
     { text: "Worksheet", link: "worksheet", icon: <GroupWorkIcon /> },
-    { text: "Attendence", link: "Attendence", icon: <GroupWorkIcon /> },
+    {
+      text: "Attendence", link: "Attendence", icon: <WorkHistoryRoundedIcon />
+    },
   ].filter(Boolean); //
 
   const other = [
@@ -82,20 +85,20 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
     user?.role === "user" && {
       text: "Messenger",
       icon: <Box
-              component="img"
-              src={`${process.env.PUBLIC_URL}/messenger.png`}
-              alt="icon"
-              sx={{height:"20px" , width : "20px"}}
-            />,
+        component="img"
+        src={`${process.env.PUBLIC_URL}/messenger.png`}
+        alt="icon"
+        sx={{ height: "20px", width: "20px" }}
+      />,
     },
     user?.role === "user" && {
       text: "Attendance",
       icon: <Box
-              component="img"
-              src={`${process.env.PUBLIC_URL}/Object-detection.png`}
-              alt="icon"
-              sx={{height:"20px" , width : "20px"}}
-            />,
+        component="img"
+        src={`${process.env.PUBLIC_URL}/Object-detection.png`}
+        alt="icon"
+        sx={{ height: "20px", width: "20px" }}
+      />,
     },
   ];
 
@@ -196,11 +199,11 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
       </List>
       <Typography
         variant="caption"
-        sx={{ fontWeight: "700", color: "#b1b1b1", padding: "0px 16px" ,  display: user?.role === "admin" && "none"   }}
+        sx={{ fontWeight: "700", color: "#b1b1b1", padding: "0px 16px", display: user?.role === "admin" && "none" }}
       >
         EXTENSIONS
       </Typography>
-      <List sx={{ display: user?.role === "admin" && "none"}}>
+      <List sx={{ display: user?.role === "admin" && "none" }}>
         {extensions.map((item) => (
           <ListItem
             key={item.text}
@@ -212,9 +215,11 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
               >
                 {item.icon}
               </ListItemIcon>
-              <Button sx={{backgroundColor: "#FF5151", fontSize : "0.8rem", fontFamily : "Poppins", color : "white" , borderRadius : "8px" , textTransform : "none" ,width : "65%", boxShadow: "0px 4px 6px -1px #FF5151", "&:hover" : {
-                backgroundColor: "#FF5151",
-              }}} onClick={() => handleExtensionClick(item.text)}>{item.text}</Button>
+              <Button sx={{
+                backgroundColor: "#FF5151", fontSize: "0.8rem", fontFamily: "Poppins", color: "white", borderRadius: "8px", textTransform: "none", width: "65%", boxShadow: "0px 4px 6px -1px #FF5151", "&:hover": {
+                  backgroundColor: "#FF5151",
+                }
+              }} onClick={() => handleExtensionClick(item.text)}>{item.text}</Button>
             </ListItemButton>
           </ListItem>
         ))}

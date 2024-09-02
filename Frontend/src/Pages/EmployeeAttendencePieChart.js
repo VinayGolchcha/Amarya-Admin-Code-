@@ -1,30 +1,42 @@
 import * as React from 'react';
-import { PieChart } from '@mui/x-charts/PieChart';
+import { Box, Grid } from "@mui/material";
+import { PieChart, pieArcLabelClasses } from '@mui/x-charts/PieChart';
 
 export default function EmployeeAttendencePieChart() {
     return (
-        <div style={{ width: '50%', border: '1px solid black', borderRadius: '10px', display: 'flex', justifyContent: 'flex-start' }}>
-            <PieChart
-                container={{
-                    style: {
-                        display: 'flex',
-                        justifyContent: 'flex-start',
-                        width: '100%',
-                    },
-                }}
-                colors={['rgb(110, 167, 208)', 'rgb(0, 120, 206)', 'rgb(0, 98, 169)', 'rgb(184, 208, 236)']}
-                series={[
-                    {
-                        data: [
-                            { id: 0, value: 10, label: 'Present' },
-                            { id: 1, value: 15, label: 'Abscent' },
-                            { id: 2, value: 15, label: 'Work From Home' },
-                            { id: 3, value: 15, label: 'Leaves' },
-                        ],
-                    },
-                ]}
-                width={500}
-                height={200}
-            /></div>
+        <Box sx={{
+            borderRadius: "20px",
+            boxShadow: "none",
+            width: "50%",
+            border: "1px solid #8f9995",
+            padding: "10px"
+        }}>
+            <Grid xs={12} md={9} lg={7}>
+                <PieChart
+                    colors={['rgb(110, 167, 208)', 'rgb(0, 120, 206)', 'rgb(0, 98, 169)', 'rgb(184, 208, 236)']}
+                    series={[
+                        {
+                            arcLabel: (item) => `${item.value}%`,
+                            arcLabelMinAngle: 45,
+                            data: [
+                                { id: 0, value: 10, label: 'Present' },
+                                { id: 1, value: 15, label: 'Absent' },
+                                { id: 2, value: 15, label: 'Work From Home' },
+                                { id: 3, value: 15, label: 'Leaves' },
+                            ],
+                            cx: 130,
+                        },
+                    ]}
+                    sx={{
+                        [`& .${pieArcLabelClasses.root}`]: {
+                            fill: 'white',
+                            fontWeight: 'bold',
+                        },
+                    }}
+                    width={500}
+                    height={240}
+                />
+            </Grid>
+        </Box>
     );
 }

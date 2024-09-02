@@ -7,8 +7,11 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import { Box, Typography } from '@mui/material';
+import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 
 const columns = [
+    { id: 'S', label: 'S. No.', minWidth: 80 },
     { id: 'EmployeeId', label: 'Employee Id', minWidth: 170 },
     {
         id: 'EmployeeName',
@@ -54,22 +57,22 @@ const columns = [
     }
 ];
 
-function createData(EmployeeId, EmployeeName, Date, InTime, InDetection, OutTime, OutDetection) {
-    return { EmployeeId, EmployeeName, Date, InTime, InDetection, OutTime, OutDetection };
+function createData(S, EmployeeId, EmployeeName, Date, InTime, InDetection, OutTime, OutDetection) {
+    return { S, EmployeeId, EmployeeName, Date, InTime, InDetection, OutTime, OutDetection };
 }
 
 const rows = [
-    createData('India', 'IN', 1324171354, 3287263,1324171354, 3287263,23456789),
-    createData('China', 'CN', 1324171354, 3287263,1324171354, 3287263,23456789),
-    createData('Italy', 'IT', 1324171354, 3287263,1324171354, 3287263,23456789),
-    createData('United States', 'US', 1324171354, 3287263,1324171354, 3287263,23456789),
-    createData('Canada', 'CA', 1324171354, 3287263,1324171354, 3287263,23456789),
-    createData('Australia', 'AU', 1324171354, 3287263,1324171354, 3287263,23456789),
-    createData('Germany', 'DE', 1324171354, 3287263,1324171354, 3287263,23456789),
-    createData('Ireland', 'IE', 1324171354, 3287263,1324171354, 3287263,23456789),
-    createData('Mexico', 'MX', 1324171354, 3287263,1324171354, 3287263,23456789),
-    createData('Japan', 'JP', 1324171354, 3287263,1324171354, 3287263,23456789),
-    createData('France', 'FR', 1324171354, 3287263,1324171354, 3287263,23456789)
+    createData('1', 'India', 'IN', 1324171354, 3287263, 1324171354, 3287263, 23456789),
+    createData(2, 'China', 'CN', 1324171354, 3287263, 1324171354, 3287263, 23456789),
+    createData(3, 'Italy', 'IT', 1324171354, 3287263, 1324171354, 3287263, 23456789),
+    createData(4, 'United States', 'US', 1324171354, 3287263, 1324171354, 3287263, 23456789),
+    createData(5, 'Canada', 'CA', 1324171354, 3287263, 1324171354, 3287263, 23456789),
+    createData(6, 'Australia', 'AU', 1324171354, 3287263, 1324171354, 3287263, 23456789),
+    createData(7, 'Germany', 'DE', 1324171354, 3287263, 1324171354, 3287263, 23456789),
+    createData(8, 'Ireland', 'IE', 1324171354, 3287263, 1324171354, 3287263, 23456789),
+    createData(9, 'Mexico', 'MX', 1324171354, 3287263, 1324171354, 3287263, 23456789),
+    createData(10, 'Japan', 'JP', 1324171354, 3287263, 1324171354, 3287263, 23456789),
+    createData(11, 'France', 'FR', 1324171354, 3287263, 1324171354, 3287263, 23456789)
 ];
 
 export default function AttendenceTable() {
@@ -86,7 +89,38 @@ export default function AttendenceTable() {
     };
 
     return (
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+        <Paper sx={{
+            border: "1px solid rgba(0, 0, 0, 0.30)",
+            width: "auto",
+        }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography
+                    variant="h5"
+                    sx={{
+                        margin: '10px',
+                        font: {
+                            lg: "normal normal 400 22px/35px Poppins",
+                            md: "normal normal 400 22px/35px Poppins",
+                            sm: "normal normal 400 20px/30px Poppins",
+                            xs: "normal normal 400 22px/30px Poppins",
+                        },
+                        color: "#161E54",
+                    }}
+                >
+                    Employees List
+                </Typography>
+                <Typography
+                    variant="h5"
+                    sx={{
+                        margin: '10px',
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}
+                >
+                    <input type='text' placeholder='search here...' style={{ padding: '5px', borderRadius: '5px', border: '1px solid black' }} />
+                    <RefreshOutlinedIcon sx={{ marginLeft: '5px', cursor: 'pointer', backgroundColor: '#181d60', color: 'white', borderRadius: '50%' }} />
+                </Typography>
+            </Box>
             <TableContainer sx={{ maxHeight: 440 }}>
                 <Table stickyHeader aria-label="sticky table">
                     <TableHead>

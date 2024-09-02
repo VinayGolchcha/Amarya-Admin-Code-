@@ -19,7 +19,6 @@ import ActivitiesPage from "./Pages/ActivitiesPage";
 import UserProfilePage from "./Pages/UserProfilePage";
 import Attendence from "./Pages/AttendencePage";
 import EmployeeAttendenceHomePage from "./Pages/EmployeeAttendenceHome";
-import Calendar from './Components/Calendar'
 import AdminDashboard from "./AdminPages/AdminDashboard";
 import AdminAnnouncement from "./Pages/AdminAnnouncement";
 import LoginPage from "./Pages/LoginPage";
@@ -97,8 +96,6 @@ const MainPage = (props) => {
             <Route path="/trainings" element={<TrainingsPageAdmin />} />
           )} */}
           <Route path="/profile" element={<UserProfilePage />}></Route>
-          <Route path="/Attendence" element={<Attendence/>}></Route>
-          {/* <Route path="/Attendence" element={<Attendence/>}></Route> */}
           <Route path="/announcements" element={<AnnouncementPage />}></Route>
           <Route path="/activities" element={<ActivitiesPage />} />
           {/* {role === "admin" && (
@@ -180,6 +177,14 @@ const MainPage = (props) => {
             element={
               <PrivateRoute
                 element={role === "user" ? WorksheetPage : AdminWorkSheet}
+              />
+            }
+          />
+          <Route
+            path="/Attendence"
+            element={
+              <PrivateRoute
+                element={role === "user" ? EmployeeAttendenceHomePage : Attendence}
               />
             }
           />

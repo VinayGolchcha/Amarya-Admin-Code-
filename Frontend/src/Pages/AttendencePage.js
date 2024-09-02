@@ -4,6 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import AttendenceHomePage from './AttendenceHomePage';
+import { Typography } from '@mui/material';
 
 const Attendence = () => {
 
@@ -41,7 +42,20 @@ const Attendence = () => {
         };
     }
     return <div>
-        <Box sx={{ width: '100%' }}>
+        <Box style={{ margin: "20px 20px 20px 20px" , width:"100%" }}>
+            <Typography
+                variant="h4"
+                sx={{
+                    font: {
+                        lg: "normal normal 300 22px/35px Poppins",
+                        md: "normal normal 300 22px/35px Poppins",
+                        sm: "normal normal 300 20px/30px Poppins",
+                        xs: "normal normal 300 22px/30px Poppins",
+                    },
+                }}
+            >
+                Employees Attendance
+            </Typography>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab label="Home" {...a11yProps(0)} />

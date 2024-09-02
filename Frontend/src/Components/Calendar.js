@@ -141,7 +141,7 @@ const Calendar = ({ attendance, holidays }) => {
   };
 
   return (
-    <div style={{ margin: "20px 0" }} className="flex-to-display">
+    <Box sx={{ margin: "20px 0", gap: "2rem", alignItems: 'stretch' }} className="flex-to-display">
       <div className="calender-box">
         <div className="calendar-controls">
           <div>
@@ -181,7 +181,14 @@ const Calendar = ({ attendance, holidays }) => {
           </Box>
         </Modal>
       </div>
-      <div style={{width:"100%"}}>
+      <Box style={{
+        width: "100%",
+        padding: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: '100%',
+      }}>
         <div className="flex-center">
           <div className="color-indicator present"></div>
           <div className="ml-15">Present</div>
@@ -206,8 +213,8 @@ const Calendar = ({ attendance, holidays }) => {
           <div className="color-indicator holiday"></div>
           <div className="ml-15">Holiday</div>
         </div>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
 
