@@ -88,10 +88,10 @@ const EmployeeBarChart = () => {
                 sx={{
                     margin: "10px",
                     font: {
-                        lg: "normal normal 400 22px/35px Poppins",
-                        md: "normal normal 400 22px/35px Poppins",
-                        sm: "normal normal 400 20px/30px Poppins",
-                        xs: "normal normal 400 22px/30px Poppins",
+                        lg: "normal normal 600 22px/35px Poppins",
+                        md: "normal normal 600 22px/35px Poppins",
+                        sm: "normal normal 600 20px/30px Poppins",
+                        xs: "normal normal 600 22px/30px Poppins",
                     },
                     color: "#161E54",
                 }}
@@ -103,10 +103,10 @@ const EmployeeBarChart = () => {
                 variant="h5"
                 sx={{
                     font: {
-                        lg: "normal normal 400 22px/35px Poppins",
-                        md: "normal normal 400 22px/35px Poppins",
-                        sm: "normal normal 400 20px/30px Poppins",
-                        xs: "normal normal 400 22px/30px Poppins",
+                        lg: "normal normal 400 18px/24px Poppins",
+                        md: "normal normal 400 18px/24px Poppins",
+                        sm: "normal normal 400 14px/16px Poppins",
+                        xs: "normal normal 400 14px/16px Poppins",
                     },
                     color: "#161E54",
                     textAlign: 'center'

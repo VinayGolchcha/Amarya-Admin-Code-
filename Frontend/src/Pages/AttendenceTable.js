@@ -99,27 +99,27 @@ export default function AttendenceTable() {
                     sx={{
                         margin: '10px',
                         font: {
-                            lg: "normal normal 400 22px/35px Poppins",
-                            md: "normal normal 400 22px/35px Poppins",
-                            sm: "normal normal 400 20px/30px Poppins",
-                            xs: "normal normal 400 22px/30px Poppins",
+                            lg: "normal normal 400 22px/28px Poppins",
+                            md: "normal normal 400 22px/28px Poppins",
+                            sm: "normal normal 400 16px/22px Poppins",
+                            xs: "normal normal 400 16px/22px Poppins",
                         },
                         color: "#161E54",
                     }}
                 >
                     Employees List
                 </Typography>
-                <Typography
-                    variant="h5"
+                <Box
                     sx={{
                         margin: '10px',
                         display: 'flex',
-                        alignItems: 'center'
+                        width : {sm:"50%"},
+                        justifyContent : "end"
                     }}
                 >
-                    <input type='text' placeholder='search here...' style={{ padding: '5px', borderRadius: '5px', border: '1px solid black' }} />
+                    <input type='text' placeholder='search here...' style={{ padding: '5px', borderRadius: '5px', border: '1px solid black' , width : {lg : "50%" , md : "60%",sm :"100%"} }} />
                     <RefreshOutlinedIcon sx={{ marginLeft: '5px', cursor: 'pointer', backgroundColor: '#181d60', color: 'white', borderRadius: '50%' }} />
-                </Typography>
+                </Box>
             </Box>
             <TableContainer sx={{ maxHeight: 440 }}>
                 <Table stickyHeader aria-label="sticky table">

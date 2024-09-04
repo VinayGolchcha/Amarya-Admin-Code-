@@ -1,19 +1,22 @@
-import * as React from 'react';
+import React, { useState } from "react";
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import AttendenceHomePage from './AttendenceHomePage';
 import AttendanceReports from './AttendanceReports';
-import { Badge, Typography } from '@mui/material';
+import { Badge, IconButton, Menu, MenuItem, Typography } from '@mui/material';
 import HomeIcon from '@mui/icons-material/Home';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import InsertChartIcon from '@mui/icons-material/InsertChart';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import MoreIcon from '@mui/icons-material/More';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 
 const UndetectedIcon = ({value}) => {
     return(
-        <Badge badgeContent={4} color="error">
+        <Badge badgeContent={4} color="error" sx={{mr : 1.1}}>
             <SupervisedUserCircleIcon color={value === 3 ? "red" :"action"} />
         </Badge>
     )
@@ -21,11 +24,29 @@ const UndetectedIcon = ({value}) => {
 
 const Attendence = () => {
 
+    const theme = useTheme();
+    const [anchorEl, setAnchorEl] = useState(null);
+
+    // Define breakpoints
+    const isMdUp = useMediaQuery(theme.breakpoints.up("md")); 
+    const array = ["Home" ,"Camera Feeds" , "Reports" ,"Undetected" ];
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
+    const handleListChange = (value) => {
+        setValue(value);
+    }
+
+    const handleMenuOpen = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+    
+      const handleMenuClose = () => {
+        setAnchorEl(null);
+      };
     function CustomTabPanel(props) {
         const { children, value, index, ...other } = props;
 
@@ -70,18 +91,19 @@ const Attendence = () => {
                 Employees Attendance
             </Typography>
             <Box >
-                <Tabs value={value} onChange={handleChange} aria-label="basic tabs example"sx={{
-            '& .MuiTabs-indicator': {
-                backgroundColor: 'transparent', // Disables the indicator color
-            },
-        }}>
+                {isMdUp && <Tabs value={value} onChange={handleChange} aria-label="basic tabs example"sx={{
+                        '& .MuiTabs-indicator': {
+                            backgroundColor: 'transparent', // Disables the indicator color
+                        },
+                    }}>
                     <Tab icon={<HomeIcon/>} label="Home" {...a11yProps(0)} sx={{
                         display : "flex",
                         flexDirection : "row",
                         justifyContent : "center",
                         alignItems : "center",
                         "&.Mui-selected" : {
-                        color : "red"
+                        color : "red",
+                        fontWeight : "600"
                     },
                         "& .MuiTab-iconWrapper": { mr: 1 }
                     }}/>
@@ -91,7 +113,8 @@ const Attendence = () => {
                         justifyContent : "center",
                         alignItems : "center",
                         "&.Mui-selected" : {
-                        color : "red"
+                        color : "red",
+                        fontWeight : "600"
                     },
                     "& .MuiTab-iconWrapper": { mr: 1 }
                     }}/>
@@ -101,21 +124,44 @@ const Attendence = () => {
                         justifyContent : "center",
                         alignItems : "center",
                         "&.Mui-selected" : {
-                        color : "red"
+                        color : "red",
+                        fontWeight : "600"
                     },
                     "& .MuiTab-iconWrapper": { mr: 1 }
                     }}/>
-                    <Tab icon={<UndetectedIcon value = {value}/>} label="Undetected People" {...a11yProps(3)} sx={{
+                    <Tab icon={<UndetectedIcon value = {value}/>} label="Undetected" {...a11yProps(3)} sx={{
                         display : "flex",
                         flexDirection : "row",
                         justifyContent : "center",
                         alignItems : "center",
                         "&.Mui-selected" : {
-                        color : "red"
+                        color : "red",
+                        fontWeight : "600"
                     },
-                    
                     }}/>
-                </Tabs>
+                </Tabs>}
+                {!isMdUp &&  <>
+            <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={handleMenuOpen}
+                sx={{marginLeft: "25px"}}
+            >
+                <MoreIcon />
+            </IconButton>
+            <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleMenuClose}
+            >
+                {array.map((tab ,i) => (
+                <MenuItem key={tab} onClick={() => handleListChange(i)}>
+                    {tab}
+                </MenuItem>
+                ))}
+            </Menu>
+        </>}
             </Box>
             <CustomTabPanel value={value} index={0}>
                 <AttendenceHomePage />
@@ -127,7 +173,7 @@ const Attendence = () => {
                 <AttendanceReports/>
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
-                 Undetected People
+                 Undetected
             </CustomTabPanel>
         </Box>
     </div>
