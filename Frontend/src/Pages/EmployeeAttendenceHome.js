@@ -55,7 +55,7 @@ export default function EmployeeAttendenceHomePage() {
                                     width: '50%', textAlign: 'left'
                                 }}
                             >
-                                Employees Attendance
+                                Employees Name
                             </Typography>
                             <Typography
                                 variant="h6"
