@@ -24,9 +24,17 @@ export default function FeedbackForm() {
       subject,
       description,
     };
+    if(!subject){
+      toast.warn("Subject cannot be empty");
+      return;
+    }
+    if(!description){
+      toast.warn("Description cannot be empty");
+      return;
+    }
     if(description.length > 100){
       toast.error("Description must not be more than 100 characters");
-      return
+      return;
     }
     try {
       const response = await fetch(
@@ -41,7 +49,6 @@ export default function FeedbackForm() {
           body: JSON.stringify(feedbackData),
         }
       );
-
       if (response.ok) {
         // Handle successful submission (e.g., display a success message, clear form, etc.)
         toast.success("Feedback submitted successfully!");

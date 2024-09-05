@@ -176,9 +176,7 @@ export default function SettingsAddUser() {
     } catch (error) {
       console.error("Error saving user data:", error.message);
       if (error.response && error.response.data && error.response.data.errors) {
-        error.response.data.errors.forEach((error) => {
-          toast.error(error.msg);
-        });
+        toast.error(error.response.data.errors[0].msg);
       } else {
         toast.error("An error occurred. Please try again later.");
       }

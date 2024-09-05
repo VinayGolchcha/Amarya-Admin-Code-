@@ -169,9 +169,9 @@ export default function TrainingsPageAdmin( ) {
         toast.error(item);
       }
       const errors = error?.response?.data?.errors;
-        errors?.forEach((item) => {
-          toast.error(item?.msg);
-        });
+      if(errors){
+        toast.error(errors[0].msg);
+      }
     }
   }
   
@@ -274,9 +274,9 @@ export default function TrainingsPageAdmin( ) {
       .catch(error => {
         console.error('Error updating training:', error);
         const errors = error?.response?.data?.errors;
-        errors.forEach((item) => {
-          toast.error(item?.msg);
-        });
+        if(errors){
+          toast.error(errors[0].msg);
+        }
         if(error?.response?.message){
           toast.error(error?.response?.message);
         }
