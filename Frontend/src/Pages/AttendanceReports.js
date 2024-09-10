@@ -10,7 +10,11 @@ import TableRow from '@mui/material/TableRow';
 import { Box, Button, Grid, Typography } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import PreviewIcon from '@mui/icons-material/Preview';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import EmployeeAttendanceModal from './EmployeeAttendanceModal';
+import Modal from '@mui/material/Modal';
+import EmployeeAttendenceHomePage from './EmployeeAttendenceHome';
 
 export default function AttendanceReports() {
 
@@ -22,35 +26,30 @@ export default function AttendanceReports() {
             label: 'Employee Name',
             minWidth: 170,
             align: 'right',
-            format: (value) => value.toLocaleString('en-US'),
         },
         {
             id: 'WorkingDays',
             label: 'Working Days',
             minWidth: 170,
             align: 'right',
-            format: (value) => value.toLocaleString('en-US'),
         },
         {
             id: 'PresentDays',
             label: 'Present Days',
             minWidth: 170,
             align: 'right',
-            format: (value) => value.toFixed(2),
-        }, ,
+        },
         {
             id: 'AbsentDays',
             label: 'Absent Days',
             minWidth: 170,
             align: 'right',
-            format: (value) => value.toFixed(2),
-        }, ,
+        },
         {
             id: 'Preview',
             label: 'Preview',
             minWidth: 170,
             align: 'right',
-            format: (value) => value.toFixed(2),
         },
     ];
 
@@ -59,19 +58,11 @@ export default function AttendanceReports() {
     }
 
     const rows = [
-        createData('1', 'India', 'IN', 1324171354, 3287263, 1324171354, 3287263, 23456789),
-        createData(2, 'China', 'CN', 1324171354, 3287263, 1324171354, 3287263, 23456789),
-        createData(3, 'Italy', 'IT', 1324171354, 3287263, 1324171354, 3287263, 23456789),
-        createData(4, 'United States', 'US', 1324171354, 3287263, 1324171354, 3287263, 23456789),
-        createData(5, 'Canada', 'CA', 1324171354, 3287263, 1324171354, 3287263, 23456789),
-        createData(6, 'Australia', 'AU', 1324171354, 3287263, 1324171354, 3287263, 23456789),
-        createData(7, 'Germany', 'DE', 1324171354, 3287263, 1324171354, 3287263, 23456789),
-        createData(8, 'Ireland', 'IE', 1324171354, 3287263, 1324171354, 3287263, 23456789),
-        createData(9, 'Mexico', 'MX', 1324171354, 3287263, 1324171354, 3287263, 23456789),
-        createData(10, 'Japan', 'JP', 1324171354, 3287263, 1324171354, 3287263, 23456789),
-        createData(11, 'France', 'FR', 1324171354, 3287263, 1324171354, 3287263, 23456789)
+        createData(1, 'EMP001', 'John Doe', 20, 18, 2, <PreviewIcon sx={{ cursor: 'pointer' }} onClick={() => handleOpen()} />),
+        createData(2, 'EMP002', 'Jane Smith', 22, 20, 2, <PreviewIcon sx={{ cursor: 'pointer' }} />),
+        createData(3, 'EMP003', 'Mark Taylor', 18, 16, 2, <PreviewIcon sx={{ cursor: 'pointer' }} />),
+        createData(4, 'EMP004', 'Emily Johnson', 20, 19, 1, <PreviewIcon sx={{ cursor: 'pointer' }} />),
     ];
-
 
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -104,8 +95,23 @@ export default function AttendanceReports() {
         { value: '11', name: 'November' },
         { value: '12', name: 'December' },
     ];
+
+    // for attendance modal
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
     return (
         <Grid>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <EmployeeAttendenceHomePage />
+            </Modal>
             <Box sx={{ textAlign: 'end' }}>
                 <Select
                     labelId="demo-simple-select-label"
@@ -130,12 +136,6 @@ export default function AttendanceReports() {
                         variant="h5"
                         sx={{
                             margin: '10px',
-                            font: {
-                                lg: "normal normal 400 22px/35px Poppins",
-                                md: "normal normal 400 22px/35px Poppins",
-                                sm: "normal normal 400 20px/30px Poppins",
-                                xs: "normal normal 400 22px/30px Poppins",
-                            },
                             color: "#161E54",
                         }}
                     >
@@ -178,14 +178,12 @@ export default function AttendanceReports() {
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                 .map((row) => {
                                     return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.S}>
                                             {columns.map((column) => {
                                                 const value = row[column.id];
                                                 return (
                                                     <TableCell key={column.id} align={column.align}>
-                                                        {column.format && typeof value === 'number'
-                                                            ? column.format(value)
-                                                            : value}
+                                                        {typeof value === 'number' || typeof value === 'string' ? value : value}
                                                     </TableCell>
                                                 );
                                             })}

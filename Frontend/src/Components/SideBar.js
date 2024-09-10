@@ -35,7 +35,7 @@ import { useAuth } from "./AuthContext";
 import { Button } from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
-import WorkHistoryRoundedIcon from '@mui/icons-material/WorkHistoryRounded';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const drawerWidth = 240;
 
@@ -68,7 +68,7 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
     { text: "Trainings", link: "trainings", icon: <GroupsIcon /> },
     { text: "Worksheet", link: "worksheet", icon: <GroupWorkIcon /> },
     {
-      text: "Attendence", link: "Attendence", icon: <WorkHistoryRoundedIcon />
+      text: "Attendence", link: "Attendence", icon: <CalendarMonthIcon />
     },
   ].filter(Boolean); //
 

@@ -13,11 +13,13 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import MoreIcon from '@mui/icons-material/More';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import CameraFeeds from "./CameraFeeds";
+import UndetectedPeople from "./UndetectedPeople";
 
-const UndetectedIcon = ({value}) => {
-    return(
-        <Badge badgeContent={4} color="error" sx={{mr : 1.1}}>
-            <SupervisedUserCircleIcon color={value === 3 ? "red" :"action"} />
+const UndetectedIcon = ({ value }) => {
+    return (
+        <Badge badgeContent={4} color="error" sx={{ mr: 1.1 }}>
+            <SupervisedUserCircleIcon color={value === 3 ? "red" : "action"} />
         </Badge>
     )
 }
@@ -28,8 +30,8 @@ const Attendence = () => {
     const [anchorEl, setAnchorEl] = useState(null);
 
     // Define breakpoints
-    const isMdUp = useMediaQuery(theme.breakpoints.up("md")); 
-    const array = ["Home" ,"Camera Feeds" , "Reports" ,"Undetected" ];
+    const isMdUp = useMediaQuery(theme.breakpoints.up("md"));
+    const array = ["Home", "Camera Feeds", "Reports", "Undetected"];
     const [value, setValue] = React.useState(0);
 
     const handleChange = (event, newValue) => {
@@ -42,11 +44,11 @@ const Attendence = () => {
 
     const handleMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
-      };
-    
-      const handleMenuClose = () => {
+    };
+
+    const handleMenuClose = () => {
         setAnchorEl(null);
-      };
+    };
     function CustomTabPanel(props) {
         const { children, value, index, ...other } = props;
 
@@ -76,7 +78,7 @@ const Attendence = () => {
         };
     }
     return <div>
-        <Box style={{ margin: "20px 20px 20px 20px" , width:"100%" }}>
+        <Box style={{ margin: "20px 20px 20px 20px", width: "100%" }}>
             <Typography
                 variant="h4"
                 sx={{
@@ -91,89 +93,89 @@ const Attendence = () => {
                 Employees Attendance
             </Typography>
             <Box >
-                {isMdUp && <Tabs value={value} onChange={handleChange} aria-label="basic tabs example"sx={{
-                        '& .MuiTabs-indicator': {
-                            backgroundColor: 'transparent', // Disables the indicator color
+                {isMdUp && <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" sx={{
+                    '& .MuiTabs-indicator': {
+                        backgroundColor: 'transparent', // Disables the indicator color
+                    },
+                }}>
+                    <Tab icon={<HomeIcon />} label="Home" {...a11yProps(0)} sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&.Mui-selected": {
+                            color: "red",
+                            fontWeight: "600"
                         },
-                    }}>
-                    <Tab icon={<HomeIcon/>} label="Home" {...a11yProps(0)} sx={{
-                        display : "flex",
-                        flexDirection : "row",
-                        justifyContent : "center",
-                        alignItems : "center",
-                        "&.Mui-selected" : {
-                        color : "red",
-                        fontWeight : "600"
-                    },
                         "& .MuiTab-iconWrapper": { mr: 1 }
-                    }}/>
-                    <Tab icon={<VideocamIcon/>} label="Camera Feeds" {...a11yProps(1)} sx={{
-                        display : "flex",
-                        flexDirection : "row",
-                        justifyContent : "center",
-                        alignItems : "center",
-                        "&.Mui-selected" : {
-                        color : "red",
-                        fontWeight : "600"
-                    },
-                    "& .MuiTab-iconWrapper": { mr: 1 }
-                    }}/>
-                    <Tab icon={<InsertChartIcon/>} label="Reports" {...a11yProps(2)} sx={{
-                        display : "flex",
-                        flexDirection : "row",
-                        justifyContent : "center",
-                        alignItems : "center",
-                        "&.Mui-selected" : {
-                        color : "red",
-                        fontWeight : "600"
-                    },
-                    "& .MuiTab-iconWrapper": { mr: 1 }
-                    }}/>
-                    <Tab icon={<UndetectedIcon value = {value}/>} label="Undetected" {...a11yProps(3)} sx={{
-                        display : "flex",
-                        flexDirection : "row",
-                        justifyContent : "center",
-                        alignItems : "center",
-                        "&.Mui-selected" : {
-                        color : "red",
-                        fontWeight : "600"
-                    },
-                    }}/>
+                    }} />
+                    <Tab icon={<VideocamIcon />} label="Camera Feeds" {...a11yProps(1)} sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&.Mui-selected": {
+                            color: "red",
+                            fontWeight: "600"
+                        },
+                        "& .MuiTab-iconWrapper": { mr: 1 }
+                    }} />
+                    <Tab icon={<InsertChartIcon />} label="Reports" {...a11yProps(2)} sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&.Mui-selected": {
+                            color: "red",
+                            fontWeight: "600"
+                        },
+                        "& .MuiTab-iconWrapper": { mr: 1 }
+                    }} />
+                    <Tab icon={<UndetectedIcon value={value} />} label="Undetected" {...a11yProps(3)} sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        "&.Mui-selected": {
+                            color: "red",
+                            fontWeight: "600"
+                        },
+                    }} />
                 </Tabs>}
-                {!isMdUp &&  <>
-            <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                onClick={handleMenuOpen}
-                sx={{marginLeft: "25px"}}
-            >
-                <MoreIcon />
-            </IconButton>
-            <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-            >
-                {array.map((tab ,i) => (
-                <MenuItem key={tab} onClick={() => handleListChange(i)}>
-                    {tab}
-                </MenuItem>
-                ))}
-            </Menu>
-        </>}
+                {!isMdUp && <>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={handleMenuOpen}
+                        sx={{ marginLeft: "25px" }}
+                    >
+                        <MoreIcon />
+                    </IconButton>
+                    <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleMenuClose}
+                    >
+                        {array.map((tab, i) => (
+                            <MenuItem key={tab} onClick={() => handleListChange(i)}>
+                                {tab}
+                            </MenuItem>
+                        ))}
+                    </Menu>
+                </>}
             </Box>
             <CustomTabPanel value={value} index={0}>
                 <AttendenceHomePage />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-                Camera Feeds
+                <CameraFeeds />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-                <AttendanceReports/>
+                <AttendanceReports />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
-                 Undetected
+                <UndetectedPeople/>
             </CustomTabPanel>
         </Box>
     </div>
