@@ -188,7 +188,6 @@ export default function LeaveMangementPage() {
           }
         );
         setData(response?.data?.data);
-
         setLoading(false);
       } catch (error) {
         setErrorr(error);

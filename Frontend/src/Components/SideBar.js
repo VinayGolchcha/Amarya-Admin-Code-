@@ -28,6 +28,7 @@ import {
   GroupWork as GroupWorkIcon,
   HeadsetMic as HeadsetMicIcon,
   Settings as SettingsIcon,
+  CloseFullscreen,
 
 } from "@mui/icons-material";
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
@@ -47,16 +48,21 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const [showLogin , setShowLogin] = useState(false);
 
 
+
    const handleExtensionClick = async (item) => {
     if(item === "Messenger"){
       try{
         setShowLogin(true);
         const response = await axios.post(`${process.env.REACT_APP_API_MESSENGER_URI}/user/ghost-login` ,{
-          email :  email,
-          password : password
+          email :  localStorage.getItem('email'),
+          password : localStorage.getItem('password')
         } );
         setShowLogin(false);
-        window.open(`https://messenger-app-amarya-fe.vercel.app/chats/${response.data.data.user_id}`, '_blank');
+        const dataToSend = [{ key: 'email', value: email }, { key: 'user_id', value: response.data.data.user_id } , { key: 'socket_id', value: response.data.data.socket_id } , { key: 'user_name', value: response.data.data.user_name }];
+        const targetOrigin = `https://messenger-app-amarya-fe.vercel.app/chats/${response.data.data.user_id}`
+        const otherWindow = window.open(targetOrigin , '_blank');
+        otherWindow.postMessage(dataToSend, targetOrigin);
+        console.log("sent data to the messenger" , dataToSend);
       }catch(err){
         setShowLogin(false);
         toast.error("Could not login");

@@ -1,4 +1,4 @@
-import { TextField, Button } from "@mui/material";
+import { TextField, Button, InputAdornment, IconButton } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -8,8 +8,11 @@ import "react-toastify/dist/ReactToastify.css";
 import CloseIcon from "@mui/icons-material/Close";
 import "./../App.css";
 import { useAuth } from "../Components/AuthContext";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 function Model({ closeModel, closeOtpP, email }) {
   const [password, setPassword] = useState("");
+  const [showPassword , setShowPassword] = useState(false);
+  const [showConfirmPassword , setShowConfirmPassword] = useState(false);
   const [confirm_password, setConfirm_password] = useState("");
   const [otp , setOtp] = useState("");
   const apiUrl = process.env.REACT_APP_API_URL;
@@ -186,9 +189,23 @@ function Model({ closeModel, closeOtpP, email }) {
               id="filled-basic"
               label="New Password"
               variant="filled"
-              type="password"
+              type={showPassword ? "text" :"password"}
               required
               onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                style: { color: "black" },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                      sx={{ color: "black" }}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               sx={{
                 marginY: 1,
                 width: "75%",
@@ -205,9 +222,23 @@ function Model({ closeModel, closeOtpP, email }) {
               id="filled-basic"
               label="Confirm Password"
               variant="filled"
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               required
               onChange={(e) => setConfirm_password(e.target.value)}
+              InputProps={{
+                style: { color: "black" },
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      edge="end"
+                      sx={{ color: "black" }}
+                    >
+                      {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
               sx={{
                 marginY: 1,
                 width: "75%",
