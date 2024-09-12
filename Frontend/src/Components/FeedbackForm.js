@@ -4,6 +4,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { useAuth } from "./AuthContext";
+import CircularProgress from '@mui/material/CircularProgress'
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -16,6 +17,8 @@ export default function FeedbackForm() {
   const [description, setDescription] = useState("");
   const apiUrl = process.env.REACT_APP_API_URL;
   const currentDate = dayjs();
+  const [isApiHit , setIsApiHit] = useState(false);
+  
 
   const handleSubmit = async () => {
     const feedbackData = {
@@ -37,6 +40,7 @@ export default function FeedbackForm() {
       return;
     }
     try {
+      setIsApiHit(true);
       const response = await fetch(
         `${apiUrl}/userDashboard/user-dashboard-feedback`,
         {
@@ -54,12 +58,15 @@ export default function FeedbackForm() {
         toast.success("Feedback submitted successfully!");
         setSubject("");
         setDescription("");
+        setIsApiHit(false);
       } else {
         // Handle error response
         console.error("Failed to submit feedback");
+        setIsApiHit(false);
       }
     } catch (error) {
       console.error("An error occurred while submitting feedback:", error);
+      setIsApiHit(false);
     }
   };
 
@@ -160,10 +167,16 @@ export default function FeedbackForm() {
             "&:hover": {
               backgroundColor: "#FF5151",
             },
+            ...(isApiHit && {"&.MuiButtonBase-root.MuiButton-root.Mui-disabled": {
+                  backgroundColor: "transparent",
+                  color: "black",
+                },})
           }}
+          
           onClick={handleSubmit}
+          disabled={isApiHit}
         >
-          Send to admin
+          {isApiHit ? <CircularProgress color="inherit" size={20} sx={{width : "100%" , height : "100%"}}/> : <>Send to admin</>}
         </Button>
       </Box>
     </Box>
