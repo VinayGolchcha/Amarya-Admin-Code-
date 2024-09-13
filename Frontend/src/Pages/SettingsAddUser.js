@@ -9,6 +9,7 @@ import {
   Select,
   InputLabel,
   FormControl,
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -46,6 +47,7 @@ export default function SettingsAddUser() {
   ];
   const cityOptions = ["Jabalpur", "Satna", "Delhi"];
   const [team, setTeams] = useState([]);
+  const [isApiHit , setIsApiHit] = useState(false);
 
   const [formData, setFormData] = useState({
     username: "",
@@ -162,6 +164,7 @@ export default function SettingsAddUser() {
     }
 
     try {
+      setIsApiHit(true)
       const response = await axios.post(
         `${apiUrl}/user/admin/register`,
         formDataToSend,
@@ -173,6 +176,7 @@ export default function SettingsAddUser() {
         }
       );
       toast.success(response.data.message);
+      setIsApiHit(false)
     } catch (error) {
       console.error("Error saving user data:", error.message);
       if (error.response && error.response.data && error.response.data.errors) {
@@ -180,6 +184,7 @@ export default function SettingsAddUser() {
       } else {
         toast.error("An error occurred. Please try again later.");
       }
+      setIsApiHit(false);
     }
   };
 
@@ -525,11 +530,17 @@ export default function SettingsAddUser() {
             <Button
               type="submit"
               variant="contained"
+              disabled={isApiHit}
               sx={{ background: "#FF5151", color: "#FFFFFF" , "&:hover" : {
                 backgroundColor : "#FF5151"
-              }}}
+              },
+              ...(isApiHit && {"&.MuiButtonBase-root.MuiButton-root.Mui-disabled": {
+                backgroundColor: "transparent",
+                color: "black",
+              },})
+            }}
             >
-              Click to Save
+              {isApiHit ? <CircularProgress color="inherit" size={20} sx={{width : "100%" , height : "100%"}}/> :<>Click to Save</>}
             </Button>
           </Grid>
         </Grid>

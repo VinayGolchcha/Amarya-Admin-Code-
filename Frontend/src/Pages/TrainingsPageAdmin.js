@@ -111,6 +111,7 @@ export default function TrainingsPageAdmin( ) {
   const {user , encryptionKey} = useAuth();
   let [data , setData] = React.useState([]);
   const [selectedTr , setSelectedTr] = React.useState({});
+  const [isApiHit , setIsApiHit] = React.useState(false);
   const handleEditTr = () => {
     setEdit(!edit);
   }
@@ -150,6 +151,7 @@ export default function TrainingsPageAdmin( ) {
   
   const addTraining = async (body) => {
     try {
+      setIsApiHit(true);
       const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/admin/add-new-training` , body , {
         headers : {
           "x-encryption-key" : encryptionKey
@@ -158,6 +160,7 @@ export default function TrainingsPageAdmin( ) {
       setOpen(false);
       fecthTrainings();
       toast.success("Training added successfully");
+      setIsApiHit(false)
     }catch(error){
       console.log(error);
       if(error?.response?.message){
@@ -172,6 +175,7 @@ export default function TrainingsPageAdmin( ) {
       if(errors){
         toast.error(errors[0].msg);
       }
+      setIsApiHit(false);
     }
   }
   
@@ -259,6 +263,7 @@ export default function TrainingsPageAdmin( ) {
     // console.log('Updated Training Data:', updatedTraining);
     
     // Axios PUT request
+    setIsApiHit(true)
     axios.put(`${process.env.REACT_APP_API_URI}/training/admin/update-training/${id}`, body , {
       headers : {
         "x-encryption-key" : encryptionKey
@@ -270,6 +275,7 @@ export default function TrainingsPageAdmin( ) {
         // Optionally, you can perform any additional actions after successful update
         handleEditClose();
         fecthTrainings();
+        setIsApiHit(false)
       })
       .catch(error => {
         console.error('Error updating training:', error);
@@ -286,6 +292,7 @@ export default function TrainingsPageAdmin( ) {
           toast.error(item);
         }
         // Handle error as needed
+        setIsApiHit(false)
       });
   };
 
@@ -475,7 +482,8 @@ export default function TrainingsPageAdmin( ) {
                   Add Training
                 </Button>
                 <>
-                <AddTraining handleClose={handleClose} open={open} addTraining = {addTraining}/>
+                <AddTraining handleClose={handleClose} open={open} addTraining = {addTraining} isApiHit = {isApiHit} setIsApiHit = {setIsApiHit}
+              />
                 </>
               </Grid>
               <Grid item lg={4} md={6} sm={12} xs={12}>
@@ -495,7 +503,7 @@ export default function TrainingsPageAdmin( ) {
                   Update Training
                 </Button>
                 <>
-                <EditTraining handleClose={handleEditClose} open={editOpen} selectedTr = {selectedTr} handleUpdate={handleUpdate}/>
+                <EditTraining handleClose={handleEditClose} open={editOpen} selectedTr = {selectedTr} handleUpdate={handleUpdate} isApiHit = {isApiHit} setIsApiHit = {setIsApiHit}/>
                 </>
               </Grid>
               <Grid item lg={4} md={6} sm={12} xs={12}>

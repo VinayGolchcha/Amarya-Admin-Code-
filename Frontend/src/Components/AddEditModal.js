@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { styled } from "@mui/material/styles";
@@ -55,7 +55,7 @@ const labelStyle = {
   color: "rgb(120, 120, 122)",
 };
 
-export default function AddEditModal({ rows,fetchAssets }) {
+export default function AddEditModal({ rows,fetchAssets , isApiHit ,setIsApiHit }) {
   const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
 
@@ -103,7 +103,7 @@ export default function AddEditModal({ rows,fetchAssets }) {
       formData.append("file", rows.photo);
       formData.append("public_id", "");
     }
-
+    setIsApiHit(true);
     axios
       .put(`${apiUrl}/asset/admin/update-asset/${rows[0]?.inId}`, formData, {
         headers: {
@@ -115,10 +115,12 @@ export default function AddEditModal({ rows,fetchAssets }) {
         toast.success("Asset updated successfully");
         fetchAssets();
         setOpen(false);
+        setIsApiHit(false);
       })
       .catch((error) => {
         toast.error("Error updating asset");
         console.error("Error updating asset:", error);
+        setIsApiHit(false)
       });
   }
 
@@ -308,8 +310,16 @@ export default function AddEditModal({ rows,fetchAssets }) {
                     variant="contained"
                     color="error"
                     onClick={handleUpdate}
+                    disabled={isApiHit
+                    }
+                    sx={{
+                      ...(isApiHit && {"&.MuiButtonBase-root.MuiButton-root.Mui-disabled": {
+                        backgroundColor: "transparent",
+                        color: "black",
+                      },})
+                    }}
                   >
-                    Submit
+                    {isApiHit ? <CircularProgress color="inherit" size={20} sx={{width : "100%" , height : "100%"}}/> :<>Submit</>}
                   </Button>
                 </div>
               </Grid>
