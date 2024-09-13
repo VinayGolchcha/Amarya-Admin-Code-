@@ -59,7 +59,7 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
         } );
         setShowLogin(false);
         const dataToSend = [{ key: 'email', value: email }, { key: 'user_id', value: response.data.data.user_id } , { key: 'socket_id', value: response.data.data.socket_id } , { key: 'user_name', value: response.data.data.user_name }];
-        const targetOrigin = `https://messenger-app-amarya-fe.vercel.app/chats`
+        const targetOrigin = `https://messenger-app-amarya-fe.vercel.app/login`
         const otherWindow = window.open(targetOrigin , '_blank');
         otherWindow.postMessage(dataToSend, targetOrigin);
         console.log("sent data to the messenger" , dataToSend);
