@@ -49,26 +49,11 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
 
 
 
-   const handleExtensionClick = async (item) => {
-    if(item === "Messenger"){
-      try{
-        setShowLogin(true);
-        const response = await axios.post(`${process.env.REACT_APP_API_MESSENGER_URI}/user/ghost-login` ,{
-          email :  localStorage.getItem('email'),
-          password : localStorage.getItem('password')
-        } );
-        setShowLogin(false);
-        const dataToSend = [{ key: 'email', value: email }, { key: 'user_id', value: response.data.data.user_id } , { key: 'socket_id', value: response.data.data.socket_id } , { key: 'user_name', value: response.data.data.user_name }];
-        const targetOrigin = `https://messenger-app-amarya-fe.vercel.app/chats`
-        const otherWindow = window.open(targetOrigin , '_blank');
-        otherWindow.postMessage(dataToSend, targetOrigin);
-        console.log("sent data to the messenger" , dataToSend);
-      }catch(err){
-        setShowLogin(false);
-        toast.error("Could not login");
-      }
-    }
+   const handleExtensionClick = async (item) => { 
+    const targetOrigin = `https://messenger-app-amarya-fe.vercel.app/login`
+    const otherWindow = window.open(targetOrigin , '_blank');
   }
+  
 
   const menu = [
     { text: "Dashboard", link: "dashboard", icon: <DashboardIcon /> },
