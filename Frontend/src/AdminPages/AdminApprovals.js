@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Box,
   Typography,
@@ -13,6 +13,7 @@ import {
   TableFooter,
   TablePagination,
   IconButton,
+  TextField,
 } from "@mui/material";
 import FileDownloadDoneIcon from "@mui/icons-material/FileDownloadDone";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
@@ -26,6 +27,8 @@ import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import LastPageIcon from "@mui/icons-material/LastPage";
 import PropTypes from "prop-types";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -164,9 +167,11 @@ const rows = [
   },
 ];
 
-export default function AdminApprovals() {
+export default function AdminApprovals({approvalData , approvalReq}) {
+
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const[foreignId , setForeignId] = useState("");
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -177,8 +182,33 @@ export default function AdminApprovals() {
     setPage(0);
   };
 
+  const formattedDate = (date) => {
+    const newDate = new Date(date);
+    const dateStr = newDate.toString().split(" ");
+    return dateStr[2] + " " + dateStr[1] + " "+ dateStr[3];
+  }
+
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const handleClick = (val , status) => {
+    if(val?.request_type==="Inventory" || foreignId.length !== 0){
+      var regEx = /^[a-z0-9]+$/i;
+      const isValid = regEx.test(foreignId);
+      console.log(isValid)
+      if(!isValid){
+        toast.error("Foreign id should be alphanumeric");
+        return;
+      }
+    }   
+    const body = {
+        emp_id: val?.emp_id,
+        item: val?.item, // In case of leave
+        foreign_id: (val.foreign_id ? val.foreign_id : foreignId),
+        status: status,
+        request_type: val?.request_type
+    };
+    approvalReq(body)
+  }
   return (
     <div>
       <Box
@@ -232,6 +262,24 @@ export default function AdminApprovals() {
                     align="left"
                     sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                   >
+                    Item
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                  >
+                    User
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                  >
+                    Req. id
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                  >
                     Date
                   </TableCell>
                   <TableCell
@@ -239,6 +287,12 @@ export default function AdminApprovals() {
                     sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                   >
                     Subject
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                  >
+                    Body
                   </TableCell>
                   <TableCell
                     align="left"
@@ -256,12 +310,12 @@ export default function AdminApprovals() {
               </TableHead>
               <TableBody>
                 {(rowsPerPage > 0
-                  ? rows.slice(
+                  ? approvalData?.slice(
                       page * rowsPerPage,
                       page * rowsPerPage + rowsPerPage
                     )
                   : rows
-                ).map((row) => (
+                )?.map((row , i) => (
                   <TableRow
                     key={row.sNo}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -271,27 +325,39 @@ export default function AdminApprovals() {
                       scope="row"
                       sx={{ fontFamily: "Open Sans" }}
                     >
-                      {row.sNo}
+                      {i+1}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
-                      {row.clientName}
+                      {row?.request_type}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
-                      {row.projectLead}
+                      {row?.item}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
-                      {row.project}
+                      {row?.full_name}
+                    </TableCell>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
+                      {row?.foreign_id ? (row?.foreign_id) : (<TextField variant="standard" onChange={(e) => setForeignId(e.target.value)} />)}
+                    </TableCell>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
+                      {formattedDate(row.request_date)}
+                    </TableCell>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
+                      {row.subject}
+                    </TableCell>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
+                      {row.body}
                     </TableCell>
                     <TableCell
                       align="left"
-                      sx={{ fontFamily: "Open Sans", minwidth: "119px" }}
+                      sx={{ fontFamily: "Open Sans", minWidth: "130px" }}
                     >
-                      {row?.stats === "Approved" && (
+                      {row?.status === "approved" && (
                         <>
-                          <img src="Images/circle(1).svg" /> {row.stats}
+                          <img src="Images/circle(1).svg" /> {row.status}
                         </>
                       )}
-                      {row?.stats === "Pending" && (
+                      {row?.status === "pending" && (
                         <>
                           <span
                             style={{
@@ -303,19 +369,19 @@ export default function AdminApprovals() {
                               backgroundColor: "rgb(255, 180, 94)",
                             }}
                           ></span>{" "}
-                          {row.stats}
+                          {row.status}
                         </>
                       )}
-                      {row?.stats === "Rejected" && (
+                      {row?.status === "rejected" && (
                         <>
-                          <img src="Images/circle.svg" /> {row.stats}
+                          <img src="Images/circle.svg" /> {row.status}
                         </>
                       )}
                     </TableCell>
                     <TableCell align="left" sx={{ minWidth: "104px" }}>
-                      <FileDownloadDoneIcon sx={{ color: "#b1bacb" }} />
-                      <NotInterestedIcon sx={{ color: "#b1bacb" }} />
-                      <DeleteOutlineIcon sx={{ color: "#b1bacb" }} />
+                      <FileDownloadDoneIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "approved")} />
+                      <NotInterestedIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "rejected")}/>
+                      <DeleteOutlineIcon sx={{ color: "#b1bacb", cursor:"pointer" }} onClick={() => handleClick(row , "deleted")}/>
                     </TableCell>
                   </TableRow>
                 ))}

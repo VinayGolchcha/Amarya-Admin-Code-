@@ -2,7 +2,8 @@ import React from "react";
 import { Box, Button, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
-export default function DashboardProfile() {
+export default function DashboardProfile({ profileData }) {
+  console.log(profileData);
   return (
     <Box
       sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
@@ -16,7 +17,7 @@ export default function DashboardProfile() {
           }}
         >
           <img
-            src="Images/avatar.jpg"
+            src={profileData?.profile_picture}
             width={"150px"}
             height={"150px"}
             style={{ borderRadius: "50%" }}
@@ -31,7 +32,7 @@ export default function DashboardProfile() {
             }}
             variant="h4"
           >
-            Sanjana Jain
+            {profileData?.full_name}
           </Typography>
           <Typography
             sx={{
@@ -43,7 +44,7 @@ export default function DashboardProfile() {
             }}
             variant="h5"
           >
-            Node JS Developer (TL)
+            {profileData?.designation}
           </Typography>
         </Box>
         <Box>
@@ -133,7 +134,7 @@ export default function DashboardProfile() {
                 }}
                 variant="h6"
               >
-                AMEMP00021
+                {profileData?.emp_id}
               </Typography>
               <Typography
                 sx={{
@@ -147,7 +148,7 @@ export default function DashboardProfile() {
                 }}
                 variant="h6"
               >
-                8431xxxxxxx
+                {profileData?.mobile_number}
               </Typography>
               <Typography
                 sx={{
@@ -161,7 +162,7 @@ export default function DashboardProfile() {
                 }}
                 variant="h6"
               >
-                22/02/1999
+                {profileData?.dob}
               </Typography>
               <Typography
                 sx={{
@@ -176,7 +177,7 @@ export default function DashboardProfile() {
                 variant="h6"
               >
                 {" "}
-                ujjwal.upadhyay
+                {profileData?.email}
               </Typography>
               <Typography
                 sx={{

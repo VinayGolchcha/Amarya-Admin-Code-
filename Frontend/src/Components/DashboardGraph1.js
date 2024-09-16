@@ -5,16 +5,10 @@ import { useDrawingArea } from "@mui/x-charts/hooks";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 
-export default function DashboardGraph1() {
-  const data = [
-    { value: 60, label: "Shephertz", color: "#0A166C" },
-    { value: 15, label: "Saathi", color: "#1B59F875" },
-    { value: 25, label: "Amarya Admin\nPanel", color: "#0A166C38" },
-  ];
-  const [divWidth, setdivWidth] = useState(0);
+export default function DashboardGraph1({ projectsThisYear }) {
+  const [divWidth, setDivWidth] = useState(0);
 
   const size = {
-    // width: 750,
     height: 330,
   };
 
@@ -34,16 +28,17 @@ export default function DashboardGraph1() {
       </StyledText>
     );
   }
+
   useEffect(() => {
-    setdivWidth(document.getElementById("pie-chart")?.offsetWidth || 0);
-    window.addEventListener(
-      "resize",
-      () => {
-        setdivWidth(document.getElementById("pie-chart")?.offsetWidth || 0);
-      },
-      true
-    );
-  });
+    setDivWidth(document.getElementById("pie-chart")?.offsetWidth || 0);
+    const handleResize = () => {
+      setDivWidth(document.getElementById("pie-chart")?.offsetWidth || 0);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
     <Box
@@ -73,17 +68,19 @@ export default function DashboardGraph1() {
           }}
           variant="p"
         >
-          3
+          {projectsThisYear ? projectsThisYear.length : '--'}
         </Typography>
       </Box>
       <Box sx={{ mt: -3 }}>
         <PieChart
           series={[
             {
-              data,
+              data: projectsThisYear?.map(project => ({
+                value: project.value || 0,
+                label: project.label || '--',
+                color: project.color || '#CCCCCC'
+              })) || [],
               paddingAngle: 5,
-              // innerRadius: 95,
-              // outerRadius: 165,
               innerRadius: Math.max(Math.max(divWidth * 0.14, 95), 35),
               outerRadius: Math.max(Math.min(divWidth * 0.24, 165), 55),
               cornerRadius: 8,
@@ -101,12 +98,10 @@ export default function DashboardGraph1() {
               itemMarkHeight: 21,
               itemGap: 10,
               labelStyle: {
-                // fontSize: 28,
                 fontSize: divWidth > 700 ? 28 : 18,
                 fill: "#000000B2",
                 fontWeight: 700,
               },
-              // hidden: true
             },
           }}
           margin={{

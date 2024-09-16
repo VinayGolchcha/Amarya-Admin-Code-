@@ -1,40 +1,46 @@
-import React from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useContext, useEffect } from "react";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import CardComponenet from "../Components/AnnouncementCard";
+import NotificationContext from "../ContextProvider/NotificationContext";
+import axios from "axios";
 
-
-const data = [
-    {
-        heading: "We're Hiring! Node js developer Position Available Now - 1",
-        content: "1 - This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like",
-        fullContent: "1 - Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook, stirring often until thickened and fragrant, about 10 minutes. Add saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.",
-    },
-    {
-        heading: "We're Hiring! Node js developer Position Available Now - 2",
-        content: "2 - This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like",
-        fullContent: "2 - Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook, stirring often until thickened and fragrant, about 10 minutes. Add saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.",
-    },
-    {
-        heading: "We're Hiring! Node js developer Position Available Now - 3",
-        content: "3 - This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like",
-        fullContent: "3 - Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken and chorizo in the pan. Add pimentón, bay leaves, garlic, tomatoes, onion, salt and pepper, and cook, stirring often until thickened and fragrant, about 10 minutes. Add saffron broth and remaining 4 1/2 cups chicken broth; bring to a boil.",
-    },
-];
 const AnnouncementPage = () => {
+    const { notifications, setNotifications } = useContext(NotificationContext);
+    const apiUrl = process.env.REACT_APP_API_URL;
+    
+
+    useEffect(() => {
+        if (notifications?.length === 0) {
+            axios
+                .get(`${apiUrl}/announcement
+                    /fetch-announcement`)
+                .then((response) => {
+                    const data = response.data;
+                    if (data.success) {
+                        setNotifications(data.data);
+                    } else {
+                        console.error("Error fetching notifications:", data.message);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching notifications:", error);
+                });
+        }
+    }, []);
 
     return (
-        <Box
-            sx={{ display: "flex", flexDirection: "column", margin: '1% 2.3%' }}>
-            <Typography variant="h5" sx={{ fontWeight: '700', color: '#121843' }} gutterBottom>
+        <Box sx={{ display: "flex", flexDirection: "column", margin: "1% 2.3%" }}>
+            <Typography variant="h5" sx={{ fontWeight: "700", color: "#121843" }} gutterBottom>
                 Announcement Tab
             </Typography>
-            {data.map((item, index) => (
-                <CardComponenet data={item} key={index}/>
+            {notifications?.length === 0 ? (
+                <CircularProgress /> // Show loading indicator if notifications are being fetched
+            ) : notifications?.map((notification) => (
+                <CardComponenet key={notification.id} data={notification} />
             ))}
-
-            
+            {notifications?.length === 0 && <Typography>No notifications available</Typography>} 
         </Box>
-    )
-}
+    );
+};
 
 export default AnnouncementPage;

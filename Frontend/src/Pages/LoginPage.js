@@ -1,8 +1,54 @@
+//
+
 // LoginPage.js
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Typography, TextField, Button, Paper } from "@mui/material";
+import axios from "axios";
+import "./EmailPop";
+// import { EmailP } from "@mui/icons-material";
+import EmailP from "./EmailPop";
+import { useAuth } from "../Components/AuthContext";
+import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+import OtpP from "./OtpPop";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
+  const { login } = useAuth();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [openOtpP, setOpenOtpP] = useState(false);
+  const [email, setEmail] = useState("");
+  //new
+  // const[openModel,setOpenModel]=useState(false)
+  const [openEmailP, setOpenEmailP] = useState(false);
+  const apiUrl = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post(
+        "https://amarya-admin-backend-code.onrender.com/api/v1/user/login",
+        {
+          username,
+          password,
+        }
+      );
+
+      // Check response status
+      if (response.status === 200) {
+        console.log("Login successful");
+        // Redirect or handle successful login
+        login(response.data.data[0]); // Pass user data to login function
+        navigate("/");
+      } else {
+        console.error("Login failed");
+        // Handle login error
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
   // useEffect(() => {
   //   // Disable scrolling when the component mounts
   //   document.body.style.overflow = "hidden";
@@ -17,12 +63,13 @@ const LoginPage = () => {
       sx={{
         display: "flex",
         flexDirection: { xs: "column-reverse", lg: "row" },
-        // height: "100vh",
+        // height: "10vh",
         background: "#161E54",
         alignItems: "center",
         justifyContent: "center",
         borderRadius: "50px",
-        minHeight: "95vh",
+        // minHeight: "95vh",
+        margin: "20px",
       }}
     >
       {/* Left Side */}
@@ -38,7 +85,7 @@ const LoginPage = () => {
         <Paper
           elevation={3}
           sx={{
-            padding: 4, 
+            padding: 4,
             textAlign: "center",
             background: "#161E54",
             boxShadow: "none",
@@ -79,6 +126,7 @@ const LoginPage = () => {
             label="Username"
             variant="standard"
             fullWidth
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             sx={{
@@ -104,6 +152,7 @@ const LoginPage = () => {
             label="Password"
             variant="standard"
             type="password"
+            onChange={(e) => setPassword(e.target.value)}
             fullWidth
           />
           <Typography
@@ -114,7 +163,27 @@ const LoginPage = () => {
               marginLeft: { xs: "30%", md: "45%" },
             }}
           >
-            Forgot/Reset Password?
+            <a
+              href="#"
+              onClick={() => {
+                setOpenEmailP(true);
+              }}
+            >
+              Forgot/Reset Password?
+            </a>
+            {openEmailP && (
+              <EmailP
+                closeEmailP={setOpenEmailP}
+                openOtpP={() => {
+                  setOpenEmailP(false);
+                  setOpenOtpP(true);
+                }}
+                setEmail={setEmail}
+              />
+            )}
+            {openOtpP && (
+              <OtpP closeOtpP={() => setOpenOtpP(false)} email={email} />
+            )}
           </Typography>
           <Button
             sx={{
@@ -124,9 +193,13 @@ const LoginPage = () => {
               padding: "10px",
               color: "#010101",
               fontWeight: 600,
+              "&:hover" : {
+                backgroundColor : "#FF5151"
+              }
             }}
             variant="contained"
             color="primary"
+            onClick={handleLogin}
           >
             Login
           </Button>

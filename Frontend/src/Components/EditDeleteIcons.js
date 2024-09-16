@@ -3,12 +3,13 @@ import Box from "@mui/material/Box";
 import AddEditModal from "./AddEditModal";
 import RemoveIcon from "@mui/icons-material/Remove";
 
-export default function EditDeleteIcons({ deleteAction, rows }) {
+export default function EditDeleteIcons({ deleteAction, rows, fetchAssets }) {
   return (
     <>
-      <AddEditModal rows={rows} />
+      <AddEditModal rows={rows} fetchAssets={fetchAssets} />
 
       <RemoveIcon
+        fetchAssets={fetchAssets}
         onClick={deleteAction}
         color="action"
         sx={{
