@@ -326,6 +326,7 @@ import {
   FormControl,
   Input,
   Box,
+  CircularProgress,
 } from "@mui/material";
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -345,7 +346,9 @@ function MyForm({
   setParentFiles ,
   setParentPublicIds,
   handleAddActivity,
-  handleEditActivity
+  handleEditActivity,
+  isApiHit,
+  setIsApiHit
 }) {
   const [files, setFiles] = useState([]); // State for uploaded files
   const [eventType, setEventType] = useState("");
@@ -591,9 +594,15 @@ function MyForm({
             variant="contained"
             sx={{ background: "#FF5151", color: "#FFFFFF"  , "&:hover" : {
               backgroundColor : "#FF5151"
-            }}}
+            },
+            ...(isApiHit && {"&.MuiButtonBase-root.MuiButton-root.Mui-disabled": {
+              backgroundColor: "transparent",
+              color: "black",
+            },})
+          }}
+            disabled = {isApiHit}
           >
-            Click to Save
+            {isApiHit ? <CircularProgress color="inherit" size={20} sx={{width : "100%" , height : "100%"}}/> :<>Click to Save</>}
           </Button>
         </Grid>
       </Grid>

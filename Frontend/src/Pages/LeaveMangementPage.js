@@ -19,6 +19,7 @@ import {
   Select,
   InputLabel,
   MenuItem,
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -52,7 +53,7 @@ const cls = "";
 export default function LeaveMangementPage() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [fromDate, setFromDate] = React.useState(Date.now());
+  const [fromDate, setFromDate] = React.useState(new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]);
   const [date , setDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
   const [leaveType, setLeaveType] = React.useState("Casual Leave");
@@ -62,7 +63,9 @@ export default function LeaveMangementPage() {
   const [leaveOverviewData, setLeaveOverviewData] = React.useState([]);
   const [leaveTypes, setLeaveTypes] = React.useState([]); // State for le
   const [validateDuration , setValidateDuration] = React.useState(false);
+  const [isApiHit , setIsApiHit] = React.useState(false);
   const apiUrl = process.env.REACT_APP_API_URI;
+
 
   ////
 
@@ -102,10 +105,6 @@ export default function LeaveMangementPage() {
       if(error?.response?.message) {
         toast.error(error?.response?.message);
       }
-      if(error?.response?.data?.message){
-        const item = error?.response?.data?.message
-        toast.error(item);
-      }
       
     }
   };
@@ -131,10 +130,6 @@ export default function LeaveMangementPage() {
       if(error?.response?.message){
         toast.error(error?.response?.message);
       }
-      if(error?.response?.data?.message){
-        const item = error?.response?.data?.message
-        toast.error(item);
-      }
     }
   };
   const fetchLeaveData = async () => {
@@ -152,10 +147,6 @@ export default function LeaveMangementPage() {
     } catch (error) {
       if(error?.response?.message){
         toast.error(error?.response?.message);
-      }
-      if(error?.response?.data?.message){
-        const item = error?.response?.data?.message
-        toast.error(item);
       }
       console.error("Error fetching leave types:", error);
     }
@@ -180,10 +171,6 @@ export default function LeaveMangementPage() {
       if(error?.response?.message){
         toast.error(error?.response?.message);
       }
-      if(error?.response?.data?.message){
-        const item = error?.response?.data?.message
-        toast.error(item);
-      }
       console.log(error);
     }
   };
@@ -203,16 +190,11 @@ export default function LeaveMangementPage() {
           }
         );
         setData(response?.data?.data);
-
         setLoading(false);
       } catch (error) {
         setErrorr(error);
         if(error?.response?.message){
           toast.error(error?.response?.message);
-        }
-        if(error?.response?.data?.message){
-          const item = error?.response?.data?.message
-          toast.error(item);
         }
         setLoading(false);
       }
@@ -233,6 +215,7 @@ export default function LeaveMangementPage() {
         toast.warn("From date should be less than the to date");
         return;
       }
+      setIsApiHit(true);
       const response = await axios.post(
         `${apiUrl}/leave/leave-request`,
         {
@@ -246,38 +229,39 @@ export default function LeaveMangementPage() {
         {
           headers: {
             "Content-Type": "application/json",
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );
 
       toast.success(response?.data?.message);
+      setIsApiHit(false);
       getUserLeaves();
     } catch (error) {
-      if(error?.response?.data?.message){
-        const item = error?.response?.data?.message
-        toast.error(item);
-      }
+      setIsApiHit(false);
       const errors = error?.response?.data?.errors;
-      errors?.forEach((item) => {
-        toast.error(item?.msg);
-      });
+      if(errors){
+        toast.error(errors[0].msg);
+      }
       console.error("Error:", error);
       if(error?.response?.message){
         toast.error(error?.response?.message);
       }
-      if(error?.message){
-        toast.error(error?.message);
+      if(error?.response.data.message){
+        toast.error(error?.response.data.message);
       }
     }
   };
 
   function handleToDateChange(newDate) {
-    const datee = new Date(newDate);
-    const strDatee = datee.toISOString();
-    const formatttedDate = strDatee.split("T")[0];
+    const dateObj = new Date(newDate);
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(dateObj.getDate()).padStart(2, '0');
 
-    setToDate(formatttedDate);
+    // Format the date manually as YYYY-MM-DD.
+    const formattedDate = `${year}-${month}-${day}`;
+    setToDate(formattedDate);
   }
 
   const formattedDate = (date) => {
@@ -588,10 +572,15 @@ export default function LeaveMangementPage() {
                   "&:hover": {
                     borderColor: "#E0E0E0E0",
                   },
+                  ...(isApiHit && {"&.MuiButtonBase-root.MuiButton-root.Mui-disabled": {
+                    backgroundColor: "transparent",
+                    color: "black",
+                  },})
                 }}
                 onClick={handleUpdate}
+                disabled = {isApiHit}
               >
-                Send to admin
+                {isApiHit ? <CircularProgress color="inherit" size={20} sx={{width : "100%" , height : "100%"}}/> :<>Send to admin</>}
               </Button>
             </Grid>
             <Grid item lg={6} md={6} sm={12} xs={12}>

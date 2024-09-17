@@ -240,10 +240,10 @@ export default function AdminLeaveManagement() {
         if(error?.response?.message){
           toast.error(error?.response?.message);
         }
-        if(error?.response?.data?.message){
-          const item = error?.response?.data?.message
-          toast.error(item);
-        }
+        // if(error?.response?.data?.message){
+        //   const item = error?.response?.data?.message
+        //   toast.error(item);
+        // }
         console.log(error);
         setRows([]);
       }
@@ -275,9 +275,9 @@ export default function AdminLeaveManagement() {
       toast.success(response?.data?.message);
     } catch (error) {
       const errors = error?.response?.data?.errors;
-      errors.forEach((item) => {
-        toast.error(item?.msg);
-      });
+      if(errors){
+        toast.error(errors[0].msg);
+      }
       console.error("Error:", error);
     }
   };
