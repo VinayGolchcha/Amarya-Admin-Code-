@@ -28,10 +28,7 @@ import {
   GroupWork as GroupWorkIcon,
   HeadsetMic as HeadsetMicIcon,
   Settings as SettingsIcon,
-<<<<<<< HEAD
-=======
   CloseFullscreen,
->>>>>>> development-main
 
 } from "@mui/icons-material";
 import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
@@ -48,22 +45,6 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, activeItem, setActiveItem , email , password } = useAuth();
-<<<<<<< HEAD
-
-   const handleExtensionClick = async (item) => {
-    if(item === "Messenger"){
-      try{
-        const response = await axios.post(`${process.env.REACT_APP_API_MESSENGER_URI}/user/ghost-login` ,{
-          email : email,
-          password : password
-        } );
-        window.open("http://gfg.com", '_blank');
-      }catch(err){
-          toast.error("Could not login");
-      }
-    }
-  }
-=======
   const [showLogin , setShowLogin] = useState(false);
 
 
@@ -73,12 +54,10 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
     const otherWindow = window.open(targetOrigin , '_blank');
   }
   
->>>>>>> development-main
 
   const menu = [
     { text: "Dashboard", link: "dashboard", icon: <DashboardIcon /> },
     { text: "Assets", link: "assets", icon: <PersonAddAlt1Icon /> },
-    // Only include "Leave Planner" if user's role is not "admin"
     { text: "Leave Planner", link: "leaves", icon: <InsertInvitationIcon /> },
     { text: "Trainings", link: "trainings", icon: <GroupsIcon /> },
     { text: "Worksheet", link: "worksheet", icon: <GroupWorkIcon /> },
@@ -103,17 +82,6 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
               sx={{height:"20px" , width : "20px"}}
             />,
     },
-<<<<<<< HEAD
-    user?.role === "user" && {
-      text: "Attendance",
-      icon: <Box
-              component="img"
-              src={`${process.env.PUBLIC_URL}/Object-detection.png`}
-              alt="icon"
-              sx={{height:"20px" , width : "20px"}}
-            />,
-    },
-=======
     // user?.role === "user" && {
     //   text: "Attendance",
     //   icon: <Box
@@ -123,7 +91,6 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
     //           sx={{height:"20px" , width : "20px"}}
     //         />,
     // },
->>>>>>> development-main
   ];
 
   useEffect(() => {
@@ -234,23 +201,14 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
             key={item.text}
             disablePadding
           >
-<<<<<<< HEAD
-            <ListItemButton>
-=======
             <ListItemButton sx={{"&:hover" : {
               backgroundColor : "white"
             } , cursor : "default"}}>
->>>>>>> development-main
               <ListItemIcon
                 sx={{ color: activeItem === item.link ? "#ff5151" : "rgba(0, 0, 0, 0.3)" }}
               >
                 {item.icon}
               </ListItemIcon>
-<<<<<<< HEAD
-              <Button sx={{backgroundColor: "#FF5151", fontSize : "0.8rem", fontFamily : "Poppins", color : "white" , borderRadius : "8px" , textTransform : "none" ,width : "65%", boxShadow: "0px 4px 6px -1px #FF5151", "&:hover" : {
-                backgroundColor: "#FF5151",
-              }}} onClick={() => handleExtensionClick(item.text)}>{item.text}</Button>
-=======
               <Button sx={{backgroundColor: "#FF5151", fontSize : "0.8rem", fontFamily : "Poppins", color : "white" , borderRadius : "8px" , textTransform : "none" ,width : "65%",cursor : "pointer" , boxShadow: "0px 4px 6px -1px #FF5151", "&:hover" : {
                 backgroundColor: "#FF5151",
               },
@@ -261,7 +219,6 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
                 },
               }),
               }} disabled = {item.text === "Messenger" && showLogin} onClick={() => handleExtensionClick(item.text)}>{showLogin && item.text === "Messenger" ? <>Loading...</> : <>{item.text}</>}</Button>
->>>>>>> development-main
             </ListItemButton>
           </ListItem>
         ))}
