@@ -59,7 +59,7 @@ export default function AttendencePieChart() {
                         arcLabel: (item) => `${item.value}%`,
                         arcLabelMinAngle: 30,
                         data: [
-                            { id: 0, value: 10, label: 'Employees Present' },
+                            { id: 0, value: 85, label: 'Employees Present' },
                             { id: 1, value: 15, label: 'Employees Absent' },
                         ],
                         cx: chartSize.cx,

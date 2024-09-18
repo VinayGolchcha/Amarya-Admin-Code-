@@ -126,7 +126,7 @@ const Calendar = ({ attendance, holidays }) => {
   };
 
   const onDaySelect = (day) => {
-    console.log("day?>>>>>>>>>>>>>>>>>", day);
+    console.log("day?>>>>>>>>>>>>>>>>>", new Date().getDay());
     handleOpen()
 
   }

@@ -19,13 +19,12 @@ import SaveIcon from '@mui/icons-material/Save';
 const rows = [
     {
         sNo: 1,
-        employeeId: "er45656",
+        employeeId: "AM45656",
         employeeName: "Ankit koshta",
         identifiedOn: "17-09-2020",
         identifiedAt: "11:34:54 AM",
         tag: "Outside",
         identification: "Approved",
-        action: "Approved",
     },
 ];
 

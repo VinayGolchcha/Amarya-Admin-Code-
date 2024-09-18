@@ -13,16 +13,14 @@ export default function EmployeeAttendencePieChart() {
         }}>
             <Grid xs={12} md={9} lg={7}>
                 <PieChart
-                    colors={['rgb(110, 167, 208)', 'rgb(0, 120, 206)', 'rgb(0, 98, 169)', 'rgb(184, 208, 236)']}
+                    colors={['rgb(110, 167, 208)', 'rgb(0, 120, 206)']}
                     series={[
                         {
                             arcLabel: (item) => `${item.value}%`,
                             arcLabelMinAngle: 45,
                             data: [
-                                { id: 0, value: 10, label: 'Present' },
+                                { id: 0, value: 110, label: 'Present' },
                                 { id: 1, value: 15, label: 'Absent' },
-                                { id: 2, value: 15, label: 'Work From Home' },
-                                { id: 3, value: 15, label: 'Leaves' },
                             ],
                             cx: 130,
                         },

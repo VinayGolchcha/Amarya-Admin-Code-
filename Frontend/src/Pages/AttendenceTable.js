@@ -11,21 +11,29 @@ import { Box, Typography } from '@mui/material';
 import RefreshOutlinedIcon from '@mui/icons-material/RefreshOutlined';
 
 const columns = [
-    { id: 'S', label: 'S. No.', minWidth: 80 },
-    { id: 'EmployeeId', label: 'Employee Id', minWidth: 170 },
+    {
+        id: 'S',
+        label: 'S. No.',
+        minWidth: 80,
+        align: 'center'
+    },
+    {
+        id: 'EmployeeId',
+        label: 'Employee Id',
+        minWidth: 120,
+        align: 'center'
+    },
     {
         id: 'EmployeeName',
         label: 'Employee Name',
-        minWidth: 170,
-        align: 'right',
-        format: (value) => value.toLocaleString('en-US'),
+        minWidth: 140,
+        align: 'center',
     },
     {
         id: 'Date',
         label: 'Date',
-        minWidth: 170,
-        align: 'right',
-        format: (value) => value.toLocaleString('en-US'),
+        minWidth: 110,
+        align: 'center',
     },
     {
         id: 'InTime',
@@ -113,11 +121,11 @@ export default function AttendenceTable() {
                     sx={{
                         margin: '10px',
                         display: 'flex',
-                        width : {sm:"50%"},
-                        justifyContent : "end"
+                        width: { sm: "50%" },
+                        justifyContent: "end"
                     }}
                 >
-                    <input type='text' placeholder='search here...' style={{ padding: '5px', borderRadius: '5px', border: '1px solid black' , width : {lg : "50%" , md : "60%",sm :"100%"} }} />
+                    <input type='text' placeholder='search here...' style={{ padding: '5px', borderRadius: '5px', border: '1px solid black', width: { lg: "50%", md: "60%", sm: "100%" } }} />
                     <RefreshOutlinedIcon sx={{ marginLeft: '5px', cursor: 'pointer', backgroundColor: '#181d60', color: 'white', borderRadius: '50%' }} />
                 </Box>
             </Box>

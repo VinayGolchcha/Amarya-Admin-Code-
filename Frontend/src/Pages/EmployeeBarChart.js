@@ -18,11 +18,27 @@ ChartJS.register(
     BarElement,
     Title,
     Tooltip,
-    Legend, 
+    Legend,
     ChartDataLabels
 );
 
 const EmployeeBarChart = () => {
+
+    const getWeakRange = () => {
+        const today = new Date()
+        const dayOfWeek = today.getDay()
+        const startOfWeek = new Date(today)
+        const endOfWeek = new Date(today)
+        startOfWeek.setDate(today.getDate() - dayOfWeek + 1)
+        endOfWeek.setDate(today.getDate() + (6 - dayOfWeek - 1))
+
+        const optionss = { day: 'numeric', month: 'short' }
+        const startOfWeekFormatted = startOfWeek.toLocaleDateString('en-GB', optionss)
+        const endOfWeekFormatted = endOfWeek.toLocaleDateString('en-GB', optionss)
+
+        return `${startOfWeekFormatted} - ${endOfWeekFormatted}`;
+    }
+
     const data = {
         labels: ['Mon', 'Tue', 'Wed', 'Thurs', 'Fri'],
         datasets: [
@@ -48,7 +64,7 @@ const EmployeeBarChart = () => {
             },
             datalabels: {
                 anchor: 'center',  // Position the label in the middle of the bar
-                align: 'center', 
+                align: 'center',
                 rotation: -90,       // Rotate the label 90 degrees
                 color: 'black',
                 font: {
@@ -78,26 +94,41 @@ const EmployeeBarChart = () => {
         <Box sx={{
             borderRadius: "20px",
             boxShadow: "none",
-            width: "50%",
-            border: "1px solid #8f9995",
             width: "100%",
-            height : "100%",
+            height: "100%",
+            border: "1px solid #8f9995",
+            padding: "10px",
+            overflow: "hidden"
         }}>
-            <Typography
-                variant="h4"
-                sx={{
-                    margin: "10px",
-                    font: {
-                        lg: "normal normal 600 22px/35px Poppins",
-                        md: "normal normal 600 22px/35px Poppins",
-                        sm: "normal normal 600 20px/30px Poppins",
-                        xs: "normal normal 600 22px/30px Poppins",
-                    },
-                    color: "#161E54",
-                }}
-            >
-                Weekly Employee Count
-            </Typography>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography
+                    // variant={isSmallScreen ? "h5" : "h4"}
+                    sx={{
+                        font: {
+                            lg: "normal normal 600 22px/28px Poppins",
+                            md: "normal normal 600 22px/28px Poppins",
+                            sm: "normal normal 600 16px/22px Poppins",
+                            xs: "normal normal 600 16px/22px Poppins",
+                        },
+                        color: "#161E54",
+                    }}
+                >
+                    Weekly Employee Count
+                </Typography>
+                <Typography
+                    // variant={isSmallScreen ? "body1" : "h6"}
+                    sx={{
+                        font: {
+                            lg: "normal normal 400 18px/24px Poppins",
+                            md: "normal normal 400 18px/24px Poppins",
+                            sm: "normal normal 400 14px/16px Poppins",
+                            xs: "normal normal 400 14px/16px Poppins",
+                        },
+                    }}
+                >
+                    {getWeakRange()}
+                </Typography>
+            </Box>
             <Bar data={data} options={options} />
             <Typography
                 variant="h5"
@@ -112,7 +143,7 @@ const EmployeeBarChart = () => {
                     textAlign: 'center'
                 }}
             >
-                2024
+                {new Date().getFullYear()}
             </Typography>
         </Box>
     )
