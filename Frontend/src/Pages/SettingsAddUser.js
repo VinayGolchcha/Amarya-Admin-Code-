@@ -176,7 +176,30 @@ export default function SettingsAddUser() {
         }
       );
       toast.success(response.data.message);
-      setIsApiHit(false)
+      setIsApiHit(false);
+      setFormData({
+        username: "",
+        first_name: "",
+        last_name: "",
+        email: "",
+        password: "",
+        state_name: "Madhya Pradesh",
+        city_name: "",
+        blood_group: "",
+        mobile_number: "",
+        emergency_contact_number: "",
+        emergency_contact_person_info: "",
+        address: "",
+        dob: "",
+        designation: "",
+        designation_type: "",
+        joining_date: "",
+        experience: 0,
+        completed_projects: 0,
+        team_id: null,
+        gender: "",
+        file: "",
+      });
     } catch (error) {
       console.error("Error saving user data:", error.message);
       if (error.response && error.response.data && error.response.data.errors) {

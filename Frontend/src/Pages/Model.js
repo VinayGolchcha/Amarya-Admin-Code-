@@ -39,9 +39,9 @@ function Model({ closeModel, closeOtpP, email }) {
       }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.errors) {
-        error.response.data.errors.forEach((err) => {
-          toast.error(err.msg);
-        });
+        // error.response.data.errors.forEach((err) => {
+          toast.error(error.response.data.errors[0].msg);
+        // });
       } else if (
         error.response &&
         error.response.data &&
