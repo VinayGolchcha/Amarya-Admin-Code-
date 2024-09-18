@@ -145,6 +145,7 @@ export default function AssetsAdminPage() {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { user , encryptionKey } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+  const [isApiHit , setIsApiHit] = React.useState(false);
 
   const handleOpenConDel = () => {
     if(selectedRows.length=== 0){
@@ -574,12 +575,16 @@ export default function AssetsAdminPage() {
                         handleClose={handleClose}
                         open={open}
                         fetchAssets={fetchAssets}
+                        isApiHit={isApiHit}
+                        setIsApiHit={setIsApiHit}
                       />
                       <EditDeleteIcons
                         deleteAction={handleDelete}
                         rows={selectedRows}
                         fetchAssets={fetchAssets}
                         handleOpenConDel = {handleOpenConDel}
+                        isApiHit={isApiHit}
+                        setIsApiHit={setIsApiHit}
                       />
                     </Box>
                   </TableCell>

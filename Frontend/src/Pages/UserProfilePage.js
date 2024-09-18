@@ -77,7 +77,7 @@ const UserProfilePage = () => {
     { type: "text", label: "Last name", field: "last_name" },
     { type: "email", label: "Email", field: "email" },
     { type: "text", label: "Blood Group", field: "blood_group" },
-    { type: "text", label: "Contact Number", field: "mobile_number" },
+    { type: "number", label: "Contact Number", field: "mobile_number" },
     { type: "date", label: "DOB", field: "dob" },
     { type: "text", label: "Address", field: "address" },
     { type: "text", label: "Gender", field: "gender" },
@@ -88,7 +88,7 @@ const UserProfilePage = () => {
       field: "emergency_contact_person_info",
     },
     {
-      type: "text",
+      type: "number",
       label: "Emergency Contact Number",
       field: "emergency_contact_number",
     },

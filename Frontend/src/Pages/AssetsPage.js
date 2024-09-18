@@ -14,6 +14,7 @@ import {
   Alert,
 } from "@mui/material";
 import axios from "axios";
+import CircularProgress from '@mui/material/CircularProgress'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
@@ -46,6 +47,7 @@ const AssetsPage = () => {
   const [primary_purpose, setPrimaryPurposeChange] = useState("");
   const [assetData, setAssetData] = useState([]);
   const { user , encryptionKey} = useAuth();
+  const [isApiHit , setIsApiHit] = useState(false);
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -161,7 +163,7 @@ const AssetsPage = () => {
       details: details,
     };
 
-
+    setIsApiHit(true);
     axios
       .post(`${apiUrl}/asset/asset-request`, requestData, {
         headers: {
@@ -170,6 +172,7 @@ const AssetsPage = () => {
       })
       .then((response) => {
         // Handle successful response
+        setIsApiHit(false)
         toast.success("Asset request sent successfully!", {
           position: "top-right",
           autoClose: 3000, // Duration of the toast
@@ -184,7 +187,7 @@ const AssetsPage = () => {
       .catch((error) => {
         // Handle error
         console.error("Error sending data:", error);
-
+        setIsApiHit(false)
         let errorMessage =
           "Failed to send asset request. Please try again later.";
 
@@ -427,6 +430,9 @@ const AssetsPage = () => {
                   backgroundColor: "rgb(250, 250, 250)",
                   width : {xs : "135px"}
                 }}
+                inputProps={{
+                  min: todayDate, // Setting the minDate to 01/09/2023
+                }}
               />
             </Grid>
           </Grid>
@@ -643,13 +649,14 @@ const AssetsPage = () => {
             <Button
               variant="contained"
               style={{
-                backgroundColor: "#FF5151",
-                color: "white",
+                backgroundColor: isApiHit ? "transparent":"#FF5151",
+                color: isApiHit ? "black" : "white",
                 border: "4px",
               }}
+              disabled = {isApiHit}
               onClick={handleSendAsset}
             >
-              Send Request
+              {isApiHit ? <CircularProgress color="inherit" size={20} sx={{width : "100%" , height : "100%"}}/> :<>Send Request</>}
             </Button>
           </Grid>
 

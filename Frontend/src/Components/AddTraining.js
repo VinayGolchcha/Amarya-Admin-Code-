@@ -1,5 +1,5 @@
 import Modal from "@mui/material/Modal";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -48,7 +48,9 @@ const labelStyle = {
 export default function AddTraining({
   handleClose,
   open,
-  addTraining
+  addTraining,
+  isApiHit, 
+  setIsApiHit
 }) {
 
 
@@ -163,8 +165,13 @@ export default function AddTraining({
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <div style={{ textAlign: "center", padding: "15px" }}>
-                  <Button variant="contained" color="error" onClick={handleSubmit}>
-                    Save
+                  <Button variant="contained" color="error" onClick={handleSubmit} disabled={isApiHit} sx={{
+                     ...(isApiHit && {"&.MuiButtonBase-root.MuiButton-root.Mui-disabled": {
+                      backgroundColor: "transparent",
+                      color: "black",
+                    },})
+                  }}>
+                    {isApiHit ? <CircularProgress color="inherit" size={20} sx={{width : "100%" , height : "100%"}}/> :<>Save</>}
                   </Button>
                 </div>
               </Grid>

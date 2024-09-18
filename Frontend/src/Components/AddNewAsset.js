@@ -1,5 +1,5 @@
 import Modal from "@mui/material/Modal";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import React, { useRef } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -53,7 +53,9 @@ export default function AddNewAssets({
   handleAdd,
   handleClose,
   open,
-  fetchAssets
+  fetchAssets,
+  isApiHit,
+  setIsApiHit
 }) {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { user , encryptionKey} = useAuth();
@@ -91,6 +93,7 @@ export default function AddNewAssets({
     }
 
     try {
+      setIsApiHit(true);
       const response = await fetch(`${apiUrl}/asset/admin/create-asset`, {
         method: "POST",
         credentials: 'include', // Include cookies in the request
@@ -103,14 +106,17 @@ export default function AddNewAssets({
       if (!response.ok) {
         toast.error("Please Fill all the fields");
         throw new Error("Network response was not ok");
+        setIsApiHit(false);
       }
 
       const newItem = await response.json();
       handleAdd((prevData) => [...prevData, newItem]);
       fetchAssets();
-      handleClose();  
+      handleClose();
+      setIsApiHit(false);  
     } catch (error) {
       console.error("There was a problem with the fetch operation:", error);
+      setIsApiHit(false);
     }
   }
 
@@ -236,8 +242,11 @@ export default function AddNewAssets({
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <div style={{ textAlign: "center", padding: "15px" }}>
-                  <Button variant="contained" color="error" type="submit">
-                    Save
+                  <Button variant="contained" color="error" type="submit" disabled={isApiHit} sx={{...(isApiHit && {"&.MuiButtonBase-root.MuiButton-root.Mui-disabled": {
+                      backgroundColor: "transparent",
+                      color: "black",
+                    },})}}>
+                    {isApiHit ? <CircularProgress color="inherit" size={20} sx={{width : "100%" , height : "100%"}}/> :<>Save</>}
                   </Button>
                 </div>
               </Grid>

@@ -212,6 +212,7 @@ const ActivityPage = () => {
               left: "10px",
               cursor: "pointer",
               color: "white",
+              display : images.length === 1 && "none"
             }}
           />
           <ArrowForwardIosIcon
@@ -222,6 +223,7 @@ const ActivityPage = () => {
               right: "10px",
               cursor: "pointer",
               color: "white",
+              display : images.length === 1 && "none"
             }}
           />
         </Card>

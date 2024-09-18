@@ -29,6 +29,7 @@ import ActivityPage from "./Pages/ActivityPage";
 import { useAuth } from "./Components/AuthContext";
 import AdminLeaveManagement from "./Pages/AdminLeaveManagement";
 import PrivateRoute from "./Pages/PrivateComponent";
+import EmailVerification from "./Pages/EmailVerification";
 
 
 const drawerWidth = 240;
@@ -36,6 +37,7 @@ const drawerWidth = 240;
 const MainPage = (props) => {
   const [mobileOpen, setMobileOpen] = React.useState(true);
   const { user } = useAuth(); // Using useAuth hook to access user data
+  console.log(user);
   const role = user?.role;
   if (!user) {
     return <LoginPage />;
@@ -166,6 +168,13 @@ const MainPage = (props) => {
                   role === "admin" ? AdminAnnouncement : AnnouncementPage
                 }
               />
+            }
+          />
+
+          <Route
+            path="/email-verificaion"
+            element={
+              <PrivateRoute element={EmailVerification}/>
             }
           />
           <Route
