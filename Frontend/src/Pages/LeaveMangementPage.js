@@ -703,9 +703,23 @@ export default function LeaveMangementPage() {
             color="error"
             variant="h6"
             my={2}
-            sx={{ fontFamily: "Preahvihear" }}
+            sx={{ fontFamily: "Preahvihear" , display : "flex" , justifyContent : "space-between"}}
           >
             Leave Description
+            <Box variant="span">
+              <Box
+                component="img"
+                src={`${process.env.PUBLIC_URL}/Images/worksheet/edit.png`}
+                alt="Check"
+                sx={{ cursor: "pointer" }}
+              />
+              <Box
+                component="img"
+                src={`${process.env.PUBLIC_URL}/Images/worksheet/delete.png`}
+                alt="Check"
+                sx={{ cursor: "pointer" }}
+              />
+            </Box>
           </Typography>
           <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
             <Table>

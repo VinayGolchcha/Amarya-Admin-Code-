@@ -574,7 +574,7 @@ const WorksheetPage = () => {
                       />
                     </TableCell>
                     {renderTableCells(row)}
-                    <TableCell>
+                    <TableCell sx={{minWidth : "104px"}}>
                       {/* <IconButton onClick={() => handleEditClick()}>
                         <EditIcon />
                       </IconButton> */}
@@ -585,6 +585,18 @@ const WorksheetPage = () => {
                         // onClick={handleSaveRow}
                         sx={{ cursor: "pointer" }}
                       />
+                    <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/worksheet/edit.png`}
+                      alt="Check"
+                      sx={{ cursor: "pointer" }}
+                    />
+                    <Box
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/worksheet/delete.png`}
+                      alt="Check"
+                      sx={{ cursor: "pointer" }}
+                    />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -732,6 +744,7 @@ const WorksheetPage = () => {
                       onClick={handleSaveRow}
                       sx={{ cursor: "pointer" }}
                     />
+                   
                   </TableCell>
                 </TableRow>
               )}
@@ -744,6 +757,7 @@ const WorksheetPage = () => {
               alt="Check"
               onClick={handleAddRow}
             />
+            
           </TableCell>
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
