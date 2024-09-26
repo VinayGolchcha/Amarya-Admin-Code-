@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
@@ -7,32 +7,56 @@ import { List, ListItem } from "@mui/material";
 import { Typography } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Badge from "@mui/material/Badge";
+import NotificationContext from "../ContextProvider/NotificationContext";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "./AuthContext";
 
 export default function NotificationPopUp() {
-  const [notifications, setNotifications] = useState([
-    {
-      notificationTitle: "Renewal of Work From Home Policy!!!",
-      notificationDescription:
-        "Hi all. As of 27th Nov 2023, new work from home policy will be made effective due to...........",
-      date: "10th Nov 2023",
-    },
-    {
-      notificationTitle: "Get Ready For the Fun Friday Activity!!!!",
-      notificationDescription:
-        "This friday, at 4pm we will be having a new , more engaing fun friday....Be on time.",
-      date: "15th Nov 2023",
-    },
-  ]);
+  const navigate = useNavigate();
+  const { notifications, setNotifications } = useContext(NotificationContext);
+  const apiUrl = process.env.REACT_APP_API_URI;
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (notifications.length === 0) {
+      axios
+        .get(`${apiUrl}/announcement/fetch-announcement`, {
+          headers: { "x-access-token": user?.token },
+        })
+        .then((response) => {
+          const data = response.data;
+          if (data.success) {
+            setNotifications(data.data);
+          } else {
+            console.error("Error fetching notifications:", data.message);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching notifications:", error);
+        });
+    }
+  }, []);
+
+  const handleNotificationClick = (index) => {
+    // Update the notifications array to remove the red dot
+    const updatedNotifications = [...notifications];
+    updatedNotifications[index].read = true;
+    setNotifications(updatedNotifications);
+
+    // Navigate the user to the announcement page
+    navigate("/announcements");
+  };
+
   return (
     <PopupState variant="popover" popupId="demo-popup-popover">
       {(popupState) => (
         <div>
           <Box variant="text" {...bindTrigger(popupState)}>
-            <Badge badgeContent={1} color="error">
+            <Badge badgeContent={notifications?.filter(notification => !notification.read).length} color="error">
               <NotificationsIcon sx={{ color: "#b4b4b4" }} />
             </Badge>
           </Box>
-
           <Popover
             {...bindPopover(popupState)}
             anchorOrigin={{
@@ -86,7 +110,7 @@ export default function NotificationPopUp() {
               }}
             >
               <List sx={{ width: "100%", padding: "4px 0px", height: "270px" }}>
-                {notifications.map((item) => {
+                {notifications?.map((item, index) => {
                   return (
                     <ListItem
                       sx={{
@@ -97,7 +121,8 @@ export default function NotificationPopUp() {
                         paddingLeft: "0px",
                         paddingRight: "0px",
                       }}
-                    >
+                      onClick={() => handleNotificationClick(index)} // Add onClick handler
+                      >
                       <Box
                         sx={{
                           height: "100%",
@@ -124,7 +149,13 @@ export default function NotificationPopUp() {
                           }}
                         />
                       </Box>
-                      <Box sx={{ marginLeft: "20px", width: "100%" }}>
+                      <Box
+                        sx={{
+                          marginLeft: "20px",
+                          width: "100%",
+                          cursor: "pointer",
+                        }}
+                      >
                         <Typography
                           variant="subtitle1"
                           sx={{
@@ -134,7 +165,7 @@ export default function NotificationPopUp() {
                             margin: "9px 0px",
                           }}
                         >
-                          {item.notificationTitle}
+                          {item.title}
                         </Typography>
                         <Box
                           sx={{
@@ -152,11 +183,13 @@ export default function NotificationPopUp() {
                               margin: "9px 0px",
                             }}
                           >
-                            {item.notificationDescription}
+                            {item.description.length > 90
+                              ? `${item.description.slice(0, 90)}...`
+                              : item.description}
                           </Typography>
                         </Box>
                         <Typography sx={{ color: "gray", fontSize: "10px" }}>
-                          {item.date}
+                          {item.from_date}
                         </Typography>
                       </Box>
                     </ListItem>

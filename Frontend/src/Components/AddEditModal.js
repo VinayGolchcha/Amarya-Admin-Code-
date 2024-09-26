@@ -1,12 +1,14 @@
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { Box, Button } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import { useAuth } from "./AuthContext";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -31,45 +33,98 @@ const style = {
   fontFamily: "Poppins",
   border: "1px solid #FFFFFF",
   borderRadius: "16px",
-  width: { lg: "32%", md: "40%", sm: "50%", xs: "80%" },
+  backgroundColor: "rgb(233, 235, 247)",
+  width: { lg: "55%", md: "45%", sm: "50%", xs: "80%" },
+  padding: { lg: "55px", md: "45px", sm: "30px", xs: "25px" },
 };
+
 const inputControl = {
-  border: "1px solid black",
+  border: "none",
   borderRadius: "4px",
   height: "31px",
   width: "100%",
   padding: "5px",
+  fontWeight: "500",
   margin: "2px 0px",
 };
+
+const labelStyle = {
+  fontWeight: "600",
+  fontSize: { lg: "1rem", md: "1rem", sm: "1rem", xs: "0.9 rem" },
+  color: "rgb(120, 120, 122)",
+};
+
 export default function AddEditModal({ rows }) {
+  const { user } = useAuth();
+  const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+
   const [open, setOpen] = useState(false);
-  const itemNewInId = useRef("");
-  const itemNewDop = useRef("");
-  const itemNewAssignee = useRef("");
-  const itemNewItem = useRef("");
-  const itemNewDescription = useRef("");
-  const itemNewIssuedFrom = useRef("");
-  const itemNewIssuedTill = useRef("");
-  const itemNewRepairs = useRef("");
-  const itemNewInWarranty = useRef("");
-  const itemNewEndWarranty = useRef("");
-  function handleSubmit(event) {
-    event.preventDefault();
-    const newItem = [
-      itemNewInId.current.value,
-      itemNewDop.current.value,
-      itemNewAssignee.current.value,
-      itemNewItem.current.value,
-      itemNewDescription.current.value,
-      itemNewIssuedFrom.current.value,
-      itemNewIssuedTill.current.value,
-      itemNewRepairs.current.value,
-      itemNewInWarranty.current.value,
-      itemNewEndWarranty.current.value,
-    ];
+  const [editedData, setEditedData] = useState({
+    asset_type: "",
+    item: "",
+    purchase_date: "",
+    warranty_period: "",
+    price: "",
+    model_number: "",
+    item_description: "",
+    image_url: "",
+    file: null,
+    public_id: "",
+  });
+
+  const apiUrl = process.env.REACT_APP_API_URL;
+  console.log(rows);
+
+  useEffect(() => {
+    if (rows.length === 1) {
+      const rowData = rows[0];
+      setEditedData({
+        asset_type: rowData.asset_type || "",
+        item: rowData.item || "",
+        purchase_date: rowData.dop || "",
+        warranty_period: rowData.warranty_period || "",
+        price: rowData.price || "",
+        model_number: rowData.model_number || "",
+        item_description: rowData.description || "",
+        image_url: rowData.photo || "",
+        public_id: rowData.public_id || "", // Store the public_id
+      });
+    }
+  }, [rows]);
+
+  function handleUpdate() {
+    const formData = new FormData();
+    formData.append("asset_type", editedData.asset_type);
+    formData.append("item", editedData.item); 
+    formData.append("purchase_date", editedData.purchase_date);
+    formData.append("warranty_period", editedData.warranty_period);
+    formData.append("price", editedData.price);
+    formData.append("model_number", editedData.model_number);
+    formData.append("item_description", editedData.item_description);
+    if (editedData.file) {
+      formData.append("file", editedData.file);
+      formData.append("public_id",editedData?.public_id);
+    }
+
+
+    axios
+      .put(`${apiUrl}/asset/admin/update-asset/${rows[0]?.inId}`, formData, {
+        headers: {
+          "x-access-token": token,
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((response) => {
+        toast.success("Asset updated successfully");
+        setOpen(false);
+      })
+      .catch((error) => {
+        toast.error("Error updating asset");
+        console.error("Error updating asset:", error);
+      });
   }
+
   function handleOpen() {
-    console.log(rows);
     if (rows.length === 0) {
       toast.warning("Please select the row to edit the record", {
         position: "top-right",
@@ -77,15 +132,30 @@ export default function AddEditModal({ rows }) {
     } else if (rows.length === 1) {
       setOpen(true);
     } else if (rows.length > 1) {
-      toast.warning("Cannot edit the multiple records", {
+      toast.warning("Cannot edit multiple records", {
         position: "top-right",
       });
     }
   }
 
-  function handleClose() {
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (files) {
+      setEditedData((prevState) => ({
+        ...prevState,
+        file: files[0],
+      }));
+    } else {
+      setEditedData((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleClose = () => {
     setOpen(false);
-  }
+  };
 
   return (
     <>
@@ -115,7 +185,7 @@ export default function AddEditModal({ rows }) {
                 textAlign: "center",
                 margin: "10px",
                 color: "#121843",
-                fontFamily: "Poppins",
+                fontFamily: "Prosto One",
                 fontWeight: "600",
               }}
               variant="h6"
@@ -124,111 +194,122 @@ export default function AddEditModal({ rows }) {
             </Typography>
             <Grid container spacing={2}>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="inId">Inv.Id</label>
+                <label style={labelStyle} htmlFor="asset_type">
+                  Asset Type
+                </label>
                 <br />
                 <input
                   type="text"
-                  id="inId"
+                  id="asset_type"
+                  name="asset_type"
                   style={inputControl}
-                  value={rows[0]?.inId}
+                  value={editedData.asset_type}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="dop">D.O.P</label>
-                <br />
-                <input
-                  type="text"
-                  id="dop"
-                  style={inputControl}
-                  value={rows[0]?.dop}
-                />
-              </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="assignee">Assignee</label>
-                <br />
-                <input
-                  type="text"
-                  id="assignee"
-                  style={inputControl}
-                  value={rows[0]?.assingnee}
-                />
-              </Grid>
-              <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="item">Item</label>
+                <label style={labelStyle} htmlFor="item">
+                  Item
+                </label>
                 <br />
                 <input
                   type="text"
                   id="item"
+                  name="item"
                   style={inputControl}
-                  value={rows[0]?.item}
+                  value={editedData.item}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="description">Description</label>
+                <label style={labelStyle} htmlFor="item_description">
+                  Item Description
+                </label>
                 <br />
                 <input
                   type="text"
-                  id="description"
+                  id="item_description"
+                  name="item_description"
                   style={inputControl}
-                  value={rows[0]?.description}
+                  value={editedData.item_description}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="isuedfrom">Issued From</label>
+                <label style={labelStyle} htmlFor="model_number">
+                  Model Number
+                </label>
                 <br />
                 <input
                   type="text"
-                  id="isuedfrom"
+                  id="model_number"
+                  name="model_number"
                   style={inputControl}
-                  value={rows[0]?.issued_From}
+                  value={editedData.model_number}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="issuedtill">Issued Till</label>
+                <label style={labelStyle} htmlFor="purchase_date">
+                  Purchase Date
+                </label>
                 <br />
                 <input
-                  type="text"
-                  id="issuedtill"
+                  type="date"
+                  id="purchase_date"
+                  name="purchase_date"
                   style={inputControl}
-                  value={rows[0]?.issued_Till}
+                  value={editedData.purchase_date}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="repairs">Repairs</label>
+                <label style={labelStyle} htmlFor="price">
+                  Price
+                </label>
                 <br />
                 <input
-                  type="text"
-                  id="repairs"
+                  type="number"
+                  id="price"
+                  name="price"
                   style={inputControl}
-                  value={rows[0]?.repairs}
+                  value={editedData.price}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="inwarranty">In Warranty</label>
+                <label style={labelStyle} htmlFor="image_url">
+                  Image
+                </label>
                 <br />
                 <input
-                  type="text"
-                  id="inwarranty"
+                  type="file"
+                  id="image_url"
+                  name="file"
                   style={inputControl}
-                  value={rows[0]?.in_Warranty}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={6} md={6} sm={6} xs={6}>
-                <label for="endwarranty">End Warranty</label>
+                <label style={labelStyle} htmlFor="warranty_period">
+                  Warranty Period
+                </label>
                 <br />
                 <input
-                  type="text"
-                  id="endwarranty"
+                  type="number"
+                  id="warranty_period"
+                  name="warranty_period"
                   style={inputControl}
-                  value={rows[0]?.warranty_End}
+                  value={editedData.warranty_period}
+                  onChange={handleChange}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <div style={{ textAlign: "center", padding: "15px" }}>
                   <Button
                     variant="contained"
-                    color="success"
-                    onClick={handleClose}
+                    color="error"
+                    onClick={handleUpdate}
                   >
                     Submit
                   </Button>

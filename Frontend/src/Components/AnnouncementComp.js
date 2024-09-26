@@ -14,7 +14,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Link } from "react-router-dom";
 
-export default function AnnouncementComp() {
+export default function AnnouncementComp({ announcements }) {
   const currentDate = new Date().toDateString();
   return (
     <Box sx={{ p: 0, border: "1px solid #E0E0E0", borderRadius: "12px" }}>
@@ -60,91 +60,50 @@ export default function AnnouncementComp() {
         {/* date code ends here */}
       </Box>
       <Box sx={{ pt: 2, pb: 1 }}>
-        <Box
-          sx={{
-            backgroundColor: "rgb(250, 250, 250)",
-            borderRadius: "6px",
-            padding: "12px 16px 12px 16px",
-            color: "#303030",
-            margin: "15px auto",
-            width: "90%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          <Box sx={{ mr: 1, backgroundColor: "rgb(250, 250, 250)" }}>
-            <Typography
-              sx={{
-                fontFamily: "Poppins",
-                fontSize: "16px",
-              }}
-              variant="p"
-            >
-              Outing schedule for every departement
-            </Typography>
-            <br></br>
-            <Typography
-              sx={{
-                fontFamily: "Roboto",
-                fontSize: "10px",
-              }}
-              variant="p"
-            >
-              5 Minutes ago
-            </Typography>
-          </Box>
-          <Box sx={{ width: "50%", display: "contents" }}>
-            <Box sx={{ marginRight: "5px" }}>
-              <img src="icons/pin.svg"></img>
+        {announcements.map((announcement, index) => index <2 && (
+          <Box
+            key={index}
+            sx={{
+              backgroundColor: "rgb(250, 250, 250)",
+              borderRadius: "6px",
+              padding: "12px 16px",
+              color: "#303030",
+              margin: "15px auto",
+              width: "90%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Box sx={{ mr: 1, backgroundColor: "rgb(250, 250, 250)" }}>
+              <Typography
+                sx={{
+                  fontFamily: "Poppins",
+                  fontSize: "16px",
+                }}
+              >
+                {announcement.title}
+              </Typography>
+              <br />
+              <Typography
+                sx={{
+                  fontFamily: "Roboto",
+                  fontSize: "10px",
+                }}
+              >
+                {new Date(announcement.created_at).toLocaleString()}
+              </Typography>
             </Box>
-            <Box>
-              <img src="icons/3dots.svg"></img>
-            </Box>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            backgroundColor: "rgb(250, 250, 250)",
-            borderRadius: "6px",
-            padding: "12px 16px 12px 16px",
-            color: "#303030",
-            margin: "15px auto",
-            width: "90%",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Box sx={{ mr: 1, backgroundColor: "rgb(250, 250, 250)" }}>
-            <Typography
-              sx={{
-                fontFamily: "Poppins",
-                fontSize: "16px",
-              }}
-              variant="p"
-            >
-              IT Department need two more talents for UX/UI Designer position
-            </Typography>
-            <br></br>
-            <Typography
-              sx={{
-                fontFamily: "Roboto",
-                fontSize: "10px",
-              }}
-              variant="p"
-            >
-              Yesterday, 09:15 AM
-            </Typography>
-          </Box>
-          <Box sx={{ width: "50%", display: "contents" }}>
-            <Box sx={{ marginRight: "5px" }}>
-              <img src="icons/pin.svg"></img>
-            </Box>
-            <Box>
-              <img src="icons/3dots.svg"></img>
+            <Box sx={{ width: "50%", display: "contents" }}>
+              <Box sx={{ marginRight: "5px" }}>
+                <img src="icons/pin.svg" alt="pin" />
+              </Box>
+              <Box>
+                <img src="icons/3dots.svg" alt="options" />
+              </Box>
             </Box>
           </Box>
-        </Box>
+        ))}
         <Link to="/announcements">
           <Button
             variant="text"
@@ -155,12 +114,13 @@ export default function AnnouncementComp() {
               border: "1px solid #E0E0E0",
               padding: "10px",
               color: "#FF5151",
-              font: "Poppins 500",
+              fontFamily: "Poppins",
+              fontWeight: 500,
               borderRadius: "0px 0px 10px 10px",
               mt: 2,
             }}
           >
-            See All Announcement
+            See All Announcements
           </Button>
         </Link>
       </Box>

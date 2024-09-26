@@ -13,9 +13,14 @@ import {
   TableContainer,
   Paper,
   Checkbox,
+  Alert,
 } from "@mui/material";
+import axios from "axios";
+import { useAuth } from "../Components/AuthContext";
+import Loading from "../sharable/Loading";
+import { toast } from "react-toastify";
 
-const fields = [
+const field = [
   {
     courseName: "Full Stack",
     courseDescription:
@@ -66,8 +71,11 @@ const fields = [
 ];
 
 export default function TrainingsPage(props) {
+  const[isLoading , setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [courses, setfields] = React.useState(fields);
+  const [rows , setRows] = React.useState([])
+  const [courses, setfields] = React.useState([]);
+  const [trainingId , setTrainingId] = React.useState(null);
   const handleCheckboxChange = (rowId) => {
     const isSelected = selectedRows.includes(rowId);
     setSelectedRows((prevSelected) =>
@@ -75,200 +83,347 @@ export default function TrainingsPage(props) {
         ? prevSelected.filter((id) => id !== rowId)
         : [...prevSelected, rowId]
     );
-  };
+  }; 
+  const {user} = useAuth();
 
-  const rows = [
-    {
-      id: 1,
-      empid: "AMEMP00012",
-      courses: "Full Stack",
-      coursedescription: "HTML, CSS, React, Node JS, Express JS, MongoDB",
-      completedinprogress: "Completed",
+ ///chetan code
+ const [trainingCards, setTrainingCards] = React.useState("");
+
+ const getUserTraining = async () => {
+  try {
+    const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/get-user-training` , {
+      emp_id : user?.user_id
+    }, {
+      headers : {
+        "x-access-token" : user?.token
+      }
+    });
+    setRows(res?.data?.data?.map((item) => ({
+      id: item?.training_id[8],
+      empid: user?.user_id,
+      courses: item?.course_name,
+      coursedescription: item?.course_description,
+      completedinprogress: item?.progress_status,
       approvedon: "Nov 1, 22",
       approvedrejected: "Approved",
       manager: "HR",
-    },
-    // Add more rows as needed
-  ];
-  let row;
+    })));
 
-  return (
-    <Box sx={{ display: "flex" }}>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: 100,
-        }}
-      >
-        <Typography
-          sx={{
-            margin: "12px 0px",
-            width: "630px",
-            height: "42px",
-            fontFamily: "Poppins",
-            fontSize: "24px",
-            fontWeight: "500",
-            lineHeight: "42px",
-            color: "#121843",
-          }}
-        >
-          Training
-        </Typography>
-        <Typography
-          sx={{
-            margin: "12px 0px",
-            width: "542px",
-            height: "28px",
-            fontFamily: "Racing Sans One",
-            fontSize: "18px",
-            fontWeight: "600",
-            lineHeight: "28px",
-            color: "#121843",
-          }}
-        >
-          AMEMP00012 - Sanjana Jain
-        </Typography>
-        <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
-          <Table>
-            <TableHead>
-              <TableRow style={{ fontFamily: "Poppins" }}>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                    minWidth: "104px",
-                    height: "40px",
-                  }}
-                >
-                  <img
-                    src="Check.svg"
-                    style={{ margin: "-4px 2px", marginRight: "4px" }}
-                  />
-                  Tr.Id
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Employee ID
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Courses
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Course Description
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Status
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Approved On
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Approval Status
-                </TableCell>
-                <TableCell
-                  style={{
-                    backgroundColor: "#161e54",
-                    color: "#ffffff",
-                    fontFamily: "Poppins",
-                  }}
-                >
-                  Manager
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    <Box
-                      component="img"
-                      src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
-                      alt="Check"
-                      style={{ filter: "invert(1)" }}
-                      sx={{ paddingRight: "9px" }}
-                    />
-                    {row.id}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.empid}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.courses}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.coursedescription}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.completedinprogress}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.approvedon}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.approvedrejected}
-                  </TableCell>
-                  <TableCell style={{ fontFamily: "Poppins" }}>
-                    {row.manager}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <Box
-          sx={{
-            flexGrow: 1,
-            display: "flex",
-            flexWrap: "wrap",
-            p: 1,
-            alignItems: "center",
-          }}
-        >
-          <Grid container spacing={2}>
-            {courses.map((course, i) => {
-              return <TrainingCard field={course} i={i} />;
-            })}
-          </Grid>
+  }catch(err){
+    console.log(err);
+  }
+ }
+
+ const fecthTrainings = async () => {
+  try {
+    const res = await axios.get(`${process.env.REACT_APP_API_URI}/training/training-cards` , {
+      headers : {
+        "x-access-token" : user?.token
+      }
+    });
+    setfields(res?.data?.data?.map((item , i) => (
+      {
+        courseName : item?.course_name ,
+        trainindId : item?.training_id,
+        roadmapurl : item?.roadmap_url,
+        courseDescription : item?.course_description,
+        color : field[i].color
+      }
+    )));
+  }catch(err){
+    console.log(err);
+  }
+ }
+
+ const requestTraining = async (requestData) => {
+  try{
+    const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/request-new-training`, requestData , {
+      headers : {
+        "x-access-token" : user?.token
+      }
+    });
+    setIsLoading(false);
+    toast.success(res?.data?.message);
+    console.log(res);
+  }catch(err){
+    setIsLoading(false);
+    console.log(err);
+    toast.error(err?.response?.data?.message)
+  }
+ }
+ const handleRequest = (val) => {
+  const requestData = {
+    emp_id: user?.user_id,
+    training_id: val,
+    request_type: "training",
+    progress_status: "in progress"
+  };
+  setIsLoading(true);
+  requestTraining(requestData);
+ }
+  React.useEffect(() => {
+    // Axios GET request
+    // axios.get(`${process.env.REACT_APP_API_URI}/training/training-cards` , {
+    //   headers : {
+    //     "x-access-token" : user?.token
+    //   }
+    // })
+    //   .then(response => {
+    //     console.log('Training Cards:', response.data.message);
+    //     // Update state with the fetched data
+    //     setTrainingCards(response?.data?.data);
+    //     setfields(trainingCards?.map((item , i) => (
+    //       {
+    //         courseName : item?.course_name ,
+    //         trainindId : item?.training_id,
+    //         roadmapurl : item?.roadmap_url,
+    //         courseDescription : item?.course_description,
+    //         color : field[i].color
+    //       }
+    //     )));
+
+    //   })
+    //   .catch(error => {
+    //     console.error('Error fetching training cards:', error);
+    //     // Handle error as needed
+    //   });
+    const fetchData = async () => {
+      await Promise.all(
+        [
+          fecthTrainings(),
+          getUserTraining()
+        ]
+      );
+      setIsLoading(false);
+    }
+    fetchData();
+  }, []);
+
+
+  // React.useEffect(() => {
+  //   // Data to be sent in the request
+  //   const requestData = {
+  //     emp_id: user?.user_id,
+  //     training_id: "AMTRAN005",
+  //     request_type: "training",
+  //     progress_status: "in progress"
+  //   };
+
+  //   // Axios POST request
+  //   axios.post(`${process.env.REACT_APP_API_URI}/training/request-new-training`, requestData , {
+  //     headers : {
+  //       "x-access-token" : user?.token
+  //     }
+  //   })
+  //     .then(response => {
+  //       console.log('Response:', response);
+  //       // Handle response as needed
+  //     })  
+  //     .catch(error => {
+  //       console.error('Error:', error);
+  //       // Handle error as needed
+  //     });
+  // }, []); // Empty dependency array means this effect runs only once after initial render
+
+// 
+
+
+
+  let row;
+  console.log(courses);
+  if(isLoading){
+    return(
+      <Loading/>
+    );
+  }else{
+      return (
+        <Box sx={{ display: "flex" }}>
+          <Box
+            component="main"
+            sx={{
+              flexGrow: 1,
+              p: 3,
+              width: 100,
+            }}
+          >
+            <Typography
+              sx={{
+                margin: "12px 0px",
+                width: "630px",
+                height: "42px",
+                fontFamily: "Poppins",
+                fontSize: "24px",
+                fontWeight: "500",
+                lineHeight: "42px",
+                color: "#121843",
+              }}
+            >
+              Training
+            </Typography>
+            <Typography
+              sx={{
+                margin: "12px 0px",
+                width: "542px",
+                height: "28px",
+                fontFamily: "Racing Sans One",
+                fontSize: "18px",
+                fontWeight: "600",
+                lineHeight: "28px",
+                color: "#121843",
+              }}
+            >
+              {user?.user_id} - {user?.user_name}
+            </Typography>
+            <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
+              <Table>
+                <TableHead>
+                  <TableRow style={{ fontFamily: "Poppins" }}>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                        minWidth: "104px",
+                        height: "40px",
+                      }}
+                    >
+                      <img
+                        src="Check.svg"
+                        style={{ margin: "-4px 2px", marginRight: "4px" }}
+                      />
+                      Tr.Id
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Employee ID
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Courses
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Course Description
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Status
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Approved On
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Approval Status
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        backgroundColor: "#161e54",
+                        color: "#ffffff",
+                        fontFamily: "Poppins",
+                      }}
+                    >
+                      Manager
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                {rows?.length === 0 ?
+                  (<TableRow >
+                    <TableCell colSpan={8}>
+                      <Alert severity="warning">Data not found.</Alert>
+                    </TableCell>
+                    
+                  </TableRow>) : 
+                  (rows?.map((row) => (
+                    <TableRow key={row.id}>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        <Box
+                          component="img"
+                          src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
+                          alt="Check"
+                          style={{ filter: "invert(1)" }}
+                          sx={{ paddingRight: "9px" }}
+                        />
+                        {row.id}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.empid}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.courses}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.coursedescription}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.completedinprogress}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.approvedon}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.approvedrejected}
+                      </TableCell>
+                      <TableCell style={{ fontFamily: "Poppins" }}>
+                        {row.manager}
+                      </TableCell>
+                    </TableRow>
+                  )))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: "flex",
+                flexWrap: "wrap",
+                p: 1,
+                alignItems: "center",
+              }}
+            >
+              <Grid container spacing={2}>
+                {courses?.map((course, i) => {
+                  return <TrainingCard field={course} i={i} setTrainingId = {setTrainingId}  handleRequest = {handleRequest} />;
+                })}
+              </Grid>
+              
+            </Box>
+          </Box>
+          {/* <div style={{position:"absolute", top:"0", zIndex:"200"}}>{trainingCards}</div> */}
         </Box>
-      </Box>
-    </Box>
-  );
+      );
+
+  }
 }

@@ -29,6 +29,7 @@ import {
   HeadsetMic as HeadsetMicIcon,
   Settings as SettingsIcon,
 } from "@mui/icons-material";
+import { useAuth } from "./AuthContext";
 
 const drawerWidth = 240;
 
@@ -37,9 +38,10 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const responsiveTheme = responsiveFontSizes(theme);
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const menu = [
-    { text: "Dashboard", link: "dashboard", icon: <DashboardIcon /> },
+    { text: "Dashboard", link: "", icon: <DashboardIcon /> },
     { text: "Assets", link: "assets", icon: <PersonAddAlt1Icon /> },
     { text: "Leave Planner", link: "leaves", icon: <InsertInvitationIcon /> },
     { text: "Trainings", link: "trainings", icon: <GroupsIcon /> },
@@ -48,7 +50,11 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
 
   const other = [
     { text: "Policies", link: "policies", icon: <HeadsetMicIcon /> },
-    { text: "Settings", link: "settings", icon: <SettingsIcon /> },
+    user?.role === "admin" && {
+      text: "Settings",
+      link: "settings",
+      icon: <SettingsIcon />,
+    },
   ];
 
   const [activeItem, setActiveItem] = useState("");

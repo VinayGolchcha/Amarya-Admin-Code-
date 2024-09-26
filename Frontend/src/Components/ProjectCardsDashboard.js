@@ -1,7 +1,14 @@
 import React from 'react'
 import { Box, Typography } from "@mui/material";
 
-export default function ProjectCardsDashboard() {
+export default function ProjectCardsDashboard({ currentProject }) {
+    // Fallback values if currentProject is null or fields are missing
+    const completedProjects = currentProject?.completed_projects ?? '--';
+    const projectDuration = currentProject?.project_duration ?? '--';
+    const technologies = currentProject?.tech ?? '--';
+    const currentProjectName = currentProject?.project ?? '--';
+    const projectManager = currentProject?.project_manager ?? '--';
+
     return (
         <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
             <Box sx={{ gap: 4, display: "flex", flexDirection: "column", width: "50%", maxWidth: "200px" }}>
@@ -12,7 +19,7 @@ export default function ProjectCardsDashboard() {
                     </Typography>
                     <br></br>
                     <Typography sx={{ fontFamily: "Poppins", fontWeight: "500", fontSize: "36px", lineHeight: '38px', color: '#161E54' }} variant='p'>
-                        5
+                        {completedProjects}
                     </Typography>
                 </Box>
                 {/* card2 */}
@@ -22,11 +29,11 @@ export default function ProjectCardsDashboard() {
                     </Typography>
                     <br></br>
                     <Typography sx={{ fontFamily: "Poppins", fontWeight: "500", fontSize: "36px", lineHeight: '38px', color: '#161E54' }} variant='p'>
-                        9
+                        {projectDuration}
                     </Typography>
-                    <Typography sx={{ fontFamily: "Poppins", fontWeight: "500", fontSize: "18px", lineHeight: '38px', color: '#161E54' }} variant='p'>
+                   {currentProject!==null && <Typography sx={{ fontFamily: "Poppins", fontWeight: "500", fontSize: "18px", lineHeight: '38px', color: '#161E54' }} variant='p'>
                         months
-                    </Typography>
+                    </Typography>}
                 </Box>
                 {/* card3 */}
                 <Box sx={{ p: "12px 12px 12px 20px", borderRadius: "10px", backgroundColor: "#FFEFE7" }}>
@@ -35,7 +42,7 @@ export default function ProjectCardsDashboard() {
                     </Typography>
                     <br></br>
                     <Typography sx={{ fontFamily: "Poppins", fontWeight: "500", fontSize: "18px", lineHeight: '25px', color: '#161E54' }} variant='p'>
-                        Node js, Express js, MongoDB
+                        {technologies}
                     </Typography>
                 </Box>
             </Box>
@@ -47,7 +54,7 @@ export default function ProjectCardsDashboard() {
                     </Typography>
                     <br></br>
                     <Typography sx={{ fontFamily: "Poppins", fontWeight: "500", fontSize: "34px", lineHeight: '36px', color: '#161E54' }} variant='p'>
-                        Shephertz
+                        {currentProjectName}
                     </Typography>
                 </Box>
                 {/* card5 */}
@@ -57,7 +64,7 @@ export default function ProjectCardsDashboard() {
                     </Typography>
                     <br></br>
                     <Typography sx={{ fontFamily: "Poppins", fontWeight: "500", fontSize: "28px", lineHeight: '28px', color: '#161E54' }} variant='p'>
-                        Sumit Kumar
+                        {projectManager}
                     </Typography>
                 </Box>
             </Box>
