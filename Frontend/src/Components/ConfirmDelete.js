@@ -11,6 +11,9 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   backgroundColor : "white",
+  "&.MuiModal-backdrop" : {
+    backgroundColor : "white"
+  },
   width: {lg : 400 , md : 400 , sm : 400 , xs : 350},
   border: '2px solid #000',
   boxShadow: 24,

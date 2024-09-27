@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
   Typography,
@@ -24,15 +24,79 @@ import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
+import { cleanDigitSectionValue } from "@mui/x-date-pickers/internals/hooks/useField/useField.utils";
+import axios from "axios";
 
 const WorksheetPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [teams, setTeams] = useState([]);
   const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
+  
+  const editWorksheetData = async () => {
+    if (
+      !editedRow.team ||
+      !editedRow.category ||
+      !editedRow.project ||
+      !editedRow.skillset.length||
+      !editedRow.hours
+    ) {
+      console.log("error in data called")
+      toast.error("Please fill all the required fields.");
+      return;
+    }
+    try{
+      const selectedTeam = teams.find((team) => team.label === editedRow.team);
+      const teamId = selectedTeam ? selectedTeam._id : null;
+      const selectedCategory = categories.find(
+        (category) => category.label === editedRow.category
+      );
+      const categoryId = selectedCategory ? selectedCategory._id : null;
+
+      const skillSetIds = editedRow.skillset
+        ? editedRow.skillset.map((skill) => skill._id).join(", ")
+        : null;
+
+      const selectedProject = projects.find(
+        (project) => project.label === editedRow.project
+      );
+
+      const projectId = selectedProject ? selectedProject.project_id : null;
+
+
+      // Prepare the data object
+      const postData = {
+        emp_id: user?.user_id,
+        team_id: teamId,
+        category_id: categoryId,
+        skill_set_id: skillSetIds,
+        project_id: projectId,
+        description: editedRow.description,
+        date: editedRow.date,
+        hours: parseInt(editedRow.hours)
+      };
+
+      setIsLoading(true);
+      const res = await axios.put(`${process.env.REACT_APP_API_URL}/worksheet/update-worksheet/${editedRow.id}/${user?.user_id}` ,postData , {
+        headers : {
+          "x-encryption-key" : encryptionKey
+        }
+      });
+    }catch(err){
+      console.log(err);
+    }finally{
+      setEditedRow(null);
+      const newRows = rows.map((row) => {
+          return {...row, isEdit: false};
+      });  
+      setRows(newRows);
+      fetchWorksheetDataForEmployee(user.user_id);
+      setIsEdited(false);
+    }
+  }
 
   const renderTableCells = (rowData) => {
     const cellData = [
@@ -41,31 +105,172 @@ const WorksheetPage = () => {
       { key: "date", label: "Date" },
       { key: "category", label: "Category" },
       { key: "project", label: "Project" },
+      { key: "hours", label: "hours" },
       { key: "description", label: "Description" },
       { key: "skillset", label: "Skillset" },
     ];
-
-    return cellData?.map((cell, index) => (
-      <TableCell key={index}>
-        <Typography
-          sx={{
-            color: "#4C4C4C",
-            font: {
-              lg: "normal normal 600 16px/25px Poppins",
-              md: "normal normal 600 16px/25px Poppins",
-              sm: "normal normal 600 16px/25px Poppins",
-              xs: "normal normal 600 10px/16px Poppins",
-            },
-          }}
-        >
-          {
-            cell.key === "skillset" && Array.isArray(rowData[cell.key])
-              ? rowData[cell.key].map((skill) => skill.label).join(", ")
-              : rowData[cell.key]?.label || rowData[cell.key] // Display label if available, otherwise display the value directly
+    if(rowData.isEdit === true){
+      return(        
+      <>
+      <TableCell>
+        <TextField
+          variant="standard"
+          value={user.user_id}
+          onChange={(e) =>
+            handleEditRowChange("empid", e.target.value)
           }
-        </Typography>
+          sx={{ width: "80px", marginTop: "15px" }}
+          inputProps={{
+            readOnly: true
+          }}
+        />
       </TableCell>
-    ));
+      <TableCell>
+        <FormControl>
+          <InputLabel htmlFor="team-select">Team</InputLabel>
+          <Select
+            value={editedRow?.team}
+            onChange={(e) =>
+              handleEditRowChange("team", e.target.value)
+            }
+            label="team-select"
+            sx={{ width: "100px" }}
+            variant="standard"
+          >
+            {teams?.map((team) => (
+              <MenuItem key={team.value} value={team.value}>
+                {team.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </TableCell>
+      <TableCell>
+        <TextField
+          variant="standard"
+          type="date"
+          value={editedRow?.date}
+          onChange={(e) =>
+            handleEditRowChange("date", e.target.value)
+          }
+          sx={{ width: "120px", marginTop: "15px" }}
+          inputProps={{
+            min: lastSeventhDate // Setting the minDate to 01/09/2023
+          }}
+        />
+      </TableCell>
+      <TableCell>
+        <FormControl>
+          <InputLabel htmlFor="category-select">
+            Category
+          </InputLabel>
+          <Select
+            id="category"
+            value={editedRow?.category}
+            onChange={(e) =>
+              handleEditRowChange("category", e.target.value)
+            }
+            label="category-select"
+            variant="standard"
+            sx={{ width: "120px" }}
+          >
+            {categories?.map((category) => (
+              <MenuItem key={category.value} value={category.value}>
+                {category.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </TableCell>
+      <TableCell>
+        <FormControl>
+          <InputLabel htmlFor="project-select">Project</InputLabel>
+          <Select
+            value={editedRow?.project}
+            id="project"
+            onChange={(e) =>
+              handleEditRowChange("project", e.target.value)
+            }
+            label="project-select"
+            sx={{ width: "100px" }}
+            variant="standard"
+          >
+            {projects?.map((project) => (
+              <MenuItem key={project.value} value={project.value}>
+                {project.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </TableCell>
+      <TableCell>
+        <TextField
+          type="number"
+          variant="standard"
+          value={editedRow?.hours}
+          onChange={(e) =>
+            handleEditRowChange("hours", e.target.value)
+          }
+          sx={{ marginTop: "15px" }}
+        />
+      </TableCell>
+      <TableCell>
+        <TextField
+          variant="standard"
+          value={editedRow?.description}
+          onChange={(e) =>
+            handleEditRowChange("description", e.target.value)
+          }
+          sx={{ marginTop: "15px" }}
+        />
+      </TableCell>
+      <TableCell>
+        <FormControl>
+          <InputLabel htmlFor="skillset-select">
+            Skillset
+          </InputLabel>
+          <Select
+            multiple
+            id="skillset"
+            value={editedRow?.skillset}
+            onChange={(e) => handleEditSkillsetChange(e.target.value)}
+            label="skillset-select"
+            sx={{ width: "100px" }}
+            variant="standard"
+          >
+            {skillsets?.map((skill) => (
+              <MenuItem key={skill} value={skill}>
+                {skill.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </TableCell>
+      </>)
+    }else{
+      return cellData?.map((cell, index) => (
+        <TableCell key={index}>
+          <Typography
+            sx={{
+              color: "#4C4C4C",
+              font: {
+                lg: "normal normal 600 16px/20px Poppins",
+                md: "normal normal 600 16px/20px Poppins",
+                sm: "normal normal 600 16px/20px Poppins",
+                xs: "normal normal 600 10px/16px Poppins",
+              },
+            }}
+          >
+            {
+              cell.key === "skillset" && Array.isArray(rowData[cell.key])
+                ? rowData[cell.key].map((skill) => skill.label).join(", ")
+                : rowData[cell.key]?.label || rowData[cell.key] // Display label if available, otherwise display the value directly
+            }
+          </Typography>
+        </TableCell>
+      ));
+    }
+
   };
   const [projects, setProjects] = useState([]);
 
@@ -82,16 +287,50 @@ const WorksheetPage = () => {
 
   const [newRow, setNewRow] = useState(null);
   const [textValue, setTextValue] = useState("");
+  const [selectedId , setSelectedId] = useState(null);
+  const [isEdited , setIsEdited] = useState(false);
+  const [editedRow , setEditedRow] = useState([]);
+  const [isReadyData , setIsReadyData] = useState(false);
 
   const handleChangePage = (event, newPage) => {
     setCurrentPage(newPage);
   };
   const [selectedOption, setSelectedOption] = useState("");
 
-  const handleCheckboxChange = (field) => {
-    setSelectedOption(field);
-  };
+  const handleEditChange = useCallback((toBeEditedRow) => {
+    setIsEdited(true);
+    
+    const newRows = rows.map((row) => {
+      if(row.id === toBeEditedRow.id){
+        return {...row, isEdit: !row.isEdit};
+      } else {
+        return row;
+      }
+    });
+  
+    setRows(newRows);
+    const skillsetValues = toBeEditedRow.skillset.split(',').map(skill => skill.trim());
 
+    // Filter skillsets based on whether their value matches any value in skillsetValues array
+    const comingSkillList = skillsets.filter(skill => skillsetValues.includes(skill.value));
+
+    if (comingSkillList && comingSkillList.length > 0) {
+      const flattenedSkills = comingSkillList.flat();
+      setEditedRow({
+        id: toBeEditedRow.id,
+        empid: user?.user_id,
+        team: toBeEditedRow.team,
+        date: toBeEditedRow.date,
+        category: toBeEditedRow.category,
+        project: toBeEditedRow.project,
+        hours: toBeEditedRow.hours,
+        description: toBeEditedRow.description,
+        skillset: comingSkillList,
+      });
+    } else {
+      console.log("comingSkillList is not initialized or empty");
+    }
+  }, [rows]);
   const handleTextFieldChange = (field) => {
 
     setTextValue(field);
@@ -141,17 +380,21 @@ const WorksheetPage = () => {
       date: today,
       category: "",
       project: "",
+      hours : "",
       description: "",
       skillset: [],
     });
   };
+
+
 
   const handleSaveRow = async () => {
     if (
       !newRow.team ||
       !newRow.category ||
       !newRow.project ||
-      !newRow.skillset.length
+      !newRow.skillset.length||
+      !newRow.hours
     ) {
       toast.error("Please fill all the required fields.");
       return;
@@ -188,6 +431,7 @@ const WorksheetPage = () => {
         project_id: projectId,
         description: newRow.description,
         date: newRow.date,
+        hours: parseInt(newRow.hours)
       };
 
       // Send the data to the API endpoint
@@ -221,9 +465,19 @@ const WorksheetPage = () => {
     setNewRow((prevNewRow) => ({ ...prevNewRow, [field]: value }));
   };
 
+const handleEditRowChange = (field, value) => {
+  setEditedRow((prevNewRow) => ({ ...prevNewRow, [field]: value }));
+};
+
   const handleSkillsetChange = (selectedSkills) => {
     handleNewRowChange("skillset", selectedSkills);
   };
+
+  const handleEditSkillsetChange = (selectedSkills) => {
+    handleEditRowChange("skillset", selectedSkills);
+  };
+
+
   const apiUrl = process.env.REACT_APP_API_URL;
 
   const tableHeaders = [
@@ -232,14 +486,16 @@ const WorksheetPage = () => {
     "Date",
     "Category",
     "Project",
+    "Hours",
     "Description",
     "Skillset",
-    "",
+    "Action",
   ];
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch teams, categories, skills, and projects concurrently
+        setIsLoading(true);
         const [teamsData, categoriesData, skillsData, projectsData] =
           await Promise.all([
             fetchTeams(),
@@ -255,7 +511,6 @@ const WorksheetPage = () => {
         setProjects(projectsData);
         setIsLoading(false);
       } catch (error) {
-        setIsLoading(false);
         console.error("Error fetching data:", error);
       }
     };
@@ -271,23 +526,30 @@ const WorksheetPage = () => {
       skillsets?.length > 0 &&
       projects?.length > 0
     ) {
-      const empId = user?.user_id; // Replace this with the actual emp_id
-      fetchWorksheetDataForEmployee(empId);
+      setIsReadyData(true);
     } else {
       console.error("Failed to fetch all required data.");
     }
-  }, [teams, categories, skillsets, projects]); // Dependency on teams, categories, skills, and projects
+  }, [teams , projects , categories , skillsets]); // Dependency on teams, categories, skills, and projects
+
+  useEffect(() => {
+    if(isReadyData){
+      const empId = user?.user_id; // Replace this with the actual emp_id
+      setIsLoading(true);
+      fetchWorksheetDataForEmployee(empId);
+    }
+  },[isReadyData])
 
   useEffect(() => {
     const preSeventhDate = () => {
       const date = new Date();
       date.setDate(date.getDate() - 6);
-      console.log(date);
       const newDate = date.toISOString().split('T')[0]
       setLastSeventhDate(newDate);
     }
     preSeventhDate();
-  },[])
+  },[]);
+
 
   const fetchWorksheetDataForEmployee = async (empId) => {
     try {
@@ -320,6 +582,9 @@ const WorksheetPage = () => {
           project: getProjectNameById(rowData.project_id), // Get project name by id (if available)
           description: rowData.description,
           skillset: getSkillsetNameByIds(rowData.skill_set_id), // Get skillset names by ids
+          hours : rowData.hours,
+          id : rowData._id,
+          isEdit : false
         }));
         // Set the fetched data to your state variable (e.g., setRows)
         setRows(worksheetData);
@@ -467,7 +732,6 @@ const WorksheetPage = () => {
           label: skill,
         }));
         setSkillsets(skillOptions);
-        
         return skillOptions;
       } else {
         console.error("Failed to fetch skills:", data.message);
@@ -566,7 +830,9 @@ const WorksheetPage = () => {
                 )
                 .map((row, index) => (
                   <TableRow key={index}>
-                    <TableCell style={{ filter: "invert(1)" }}>
+                    <TableCell
+                      style={{ filter: "invert(1)", alignItems: "center" }}
+                    >
                       <Box
                         component="img"
                         src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
@@ -574,29 +840,26 @@ const WorksheetPage = () => {
                       />
                     </TableCell>
                     {renderTableCells(row)}
-                    <TableCell sx={{minWidth : "104px"}}>
+                    <TableCell sx={{minWidth : isEdited && "104px" , textAlign: "center"}}>
                       {/* <IconButton onClick={() => handleEditClick()}>
                         <EditIcon />
                       </IconButton> */}
-                      <Box
+                      {isEdited && <Box
                         component="img"
                         src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
                         alt="Check"
-                        // onClick={handleSaveRow}
+                        onClick={editWorksheetData }
                         sx={{ cursor: "pointer" }}
-                      />
-                    <Box
+                        
+                      />}
+                    {!isEdited && <Box
                       component="img"
                       src={`${process.env.PUBLIC_URL}/Images/worksheet/edit.png`}
                       alt="Check"
                       sx={{ cursor: "pointer" }}
-                    />
-                    <Box
-                      component="img"
-                      src={`${process.env.PUBLIC_URL}/Images/worksheet/delete.png`}
-                      alt="Check"
-                      sx={{ cursor: "pointer" }}
-                    />
+                      onClick={() => handleEditChange(row)}
+                    />}
+                    
                     </TableCell>
                   </TableRow>
                 ))}
@@ -705,6 +968,17 @@ const WorksheetPage = () => {
                   </TableCell>
                   <TableCell>
                     <TextField
+                      type="number"
+                      variant="standard"
+                      value={newRow.hours}
+                      onChange={(e) =>
+                        handleNewRowChange("hours", e.target.value)
+                      }
+                      sx={{ marginTop: "15px" }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <TextField
                       variant="standard"
                       value={newRow.description}
                       onChange={(e) =>
@@ -736,7 +1010,7 @@ const WorksheetPage = () => {
                     </FormControl>
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell sx={{textAlign : "center"}}>
                     <Box
                       component="img"
                       src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
@@ -769,114 +1043,6 @@ const WorksheetPage = () => {
             onPageChange={handleChangePage}
           />
         </Box>
-        {/* <Typography
-          variant="h4"
-          sx={{
-            margin: "25px 0px 20px 10px",
-            font: {
-              lg: "normal normal 300 22px/35px Poppins",
-              md: "normal normal 300 22px/35px Poppins",
-              sm: "normal normal 300 20px/30px Poppins",
-              xs: "normal normal 300 22px/30px Poppins",
-            },
-          }}
-        >
-          Add new Property
-        </Typography>
-        <Box sx={{ borderRadius: "12px", border: "1px solid #BCBCBC" }}>
-          <Typography
-            variant="h4"
-            sx={{
-              margin: "25px 0px 20px 10px",
-              font: {
-                lg: "normal normal 600 18/25px Poppins",
-                md: "normal normal 600 18/25px Poppins",
-                sm: "normal normal 600 18px/25px Poppins",
-                xs: "normal normal 600 16px/25px Poppins",
-              },
-              color: "#4C4C4C",
-            }}
-          >
-            Select One from below:
-          </Typography>
-          <FormGroup
-            sx={{
-              paddingLeft: "20px",
-              color: "#4C4C4C",
-              font: {
-                lg: "normal normal 600 18/25px Poppins",
-                md: "normal normal 600 18/25px Poppins",
-                sm: "normal normal 600 18px/25px Poppins",
-                xs: "normal normal 600 16px/25px Poppins",
-              },
-            }}
-          >
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={selectedOption === "Project"}
-                  onChange={() => handleCheckboxChange("Project")}
-                />
-              }
-              label="Project"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={selectedOption === "Category"}
-                  onChange={() => handleCheckboxChange("Category")}
-                />
-              }
-              label="Category"
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={selectedOption === "Skillset"}
-                  onChange={() => handleCheckboxChange("Skillset")}
-                />
-              }
-              label="Skill Set"
-            />
-          </FormGroup>
-          <Typography
-            variant="h4"
-            sx={{
-              margin: "25px 0px 20px 20px",
-              font: {
-                lg: "normal normal 600 18/25px Poppins",
-                md: "normal normal 600 18/25px Poppins",
-                sm: "normal normal 600 18px/25px Poppins",
-                xs: "normal normal 600 16px/25px Poppins",
-              },
-              color: "#4C4C4C",
-            }}
-          >
-            Fill your property below
-          </Typography>
-          <TextField
-            id="filled-basic"
-            variant="filled"
-            sx={{ margin: "0px 20px 20px 20px" }}
-            onChange={(e) => handleTextFieldChange(e.target.value)}
-          />
-          <br />
-          <box sx={{ textAlign: "center" }}>
-            <Button
-              variant="contained"
-              style={{
-                backgroundColor: "#FF5151",
-                color: "white",
-                border: "4px",
-                margin: "10px 0px 20px 40%",
-              }}
-              onClick={addOptionToDropdown}
-            >
-              Click to Save
-            </Button>
-          </box>
-          <ToastContainer />
-        </Box> */}
         <ToastContainer /> {/* Add the ToastContainer here */}
       </Box>
     );
