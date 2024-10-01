@@ -75,14 +75,12 @@ const rows = [
     mode: "Out",
   },
 ];
-const EmployeeList = ["None", "Ankit Soni", "Ankit koshta", "Prashant Panday", "Sanjana", "Kishan Chourasiya", "Ankit Soni", "Ankit koshta", "Prashant Panday", "Sanjana", , "Ankit Soni", "Ankit koshta", "Prashant Panday", "Sanjana", , "Ankit Soni", "Ankit koshta", "Prashant Panday", "Sanjana", , "Ankit Soni", "Ankit koshta", "Prashant Panday", "Sanjana",]
 
 export default function UndetectedPeople({ approvalData, approvalReq }) {
   const [list, setList] = useState(rows);
   const [selectedImage, setSelectedImage] = useState(null); // For preview
   const [open, setOpen] = useState(false); // For modal control
   const [page, setPage] = React.useState(0);
-  const [openSaveModal, setOpenSaveModal] = useState(false); // For modal control
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleChangePage = (event, newPage) => {
@@ -94,12 +92,6 @@ export default function UndetectedPeople({ approvalData, approvalReq }) {
     setPage(0);
   };
 
-  const handleClick = (val, status) => {
-    console.log("sdcfghjk");
-
-    setOpenSaveModal(true);
-  };
-
   const handleImageClick = (image) => {
     setSelectedImage(image); // Set the selected image for preview
     setOpen(true); // Open the modal
@@ -107,7 +99,6 @@ export default function UndetectedPeople({ approvalData, approvalReq }) {
 
   const handleClose = () => {
     setOpen(false); // Close the modal
-    setOpenSaveModal(false); // Close the modal
   };
 
   return (
@@ -252,9 +243,6 @@ export default function UndetectedPeople({ approvalData, approvalReq }) {
                     />
                   </TableCell>
                   <TableCell align="center" sx={{ padding: 0 }}>
-                    <Tooltip title="Save" placement="top" arrow>
-                      <SaveIcon onClick={() => handleClick(row, "rejected")} />
-                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))}
@@ -297,72 +285,6 @@ export default function UndetectedPeople({ approvalData, approvalReq }) {
         </Box>
       </Modal>
 
-      {/* Modal for Image Save Employee details */}
-      <Modal open={openSaveModal} onClose={handleClose}>
-        <Box
-          sx={{
-            position: "absolute",
-            margin: "auto",
-            top: "50%",
-            left: "50%",
-            height: "80%",
-            transform: "translate(-50%, -50%)",
-            bgcolor: "background.paper",
-            boxShadow: 24,
-            p: 0,
-            borderRadius: 2,
-            padding: 1,
-          }}
-        >
-          <Typography
-            component="span"
-            sx={{
-              fontFamily: "Poppins",
-              fontWeight: "600",
-              color: "#00000099",
-              fontSize: "1.1rem",
-              display: "flex",
-              borderBottom: "1px solid black",
-            }}
-          >
-            <SaveIcon sx={{ marginRight: 1 }} />
-            Save As
-          </Typography>
-          <input type="text" style={{width:'100%'}}/>
-          <Box
-            sx={{
-              overflowY: "scroll",
-              height: "345px",
-              padding: "0 40px 0 0",
-              marginTop: 1,
-            }}
-          >
-            {EmployeeList.map((el) => {
-              return (
-                <Box sx={{ marginBottom: "5px" }}>
-                  <input type="radio" id={el} name="fav_language" value={el} />
-                  <label for={el}>{el}</label>
-                  <br />
-                </Box>
-              );
-            })}
-          </Box>
-          <Box
-            sx={{
-              fontFamily: "Poppins",
-              fontWeight: "600",
-              color: "#00000099",
-              padding: 2,
-              textAlign: "center",
-              fontSize: "1.1rem",
-            }}
-          >
-            <Button variant="contained" color="error">
-              Save
-            </Button>
-          </Box>
-        </Box>
-      </Modal>
     </Box>
   );
 }

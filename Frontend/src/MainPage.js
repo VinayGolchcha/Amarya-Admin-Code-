@@ -30,6 +30,7 @@ import { useAuth } from "./Components/AuthContext";
 import AdminLeaveManagement from "./Pages/AdminLeaveManagement";
 import PrivateRoute from "./Pages/PrivateComponent";
 import EmailVerification from "./Pages/EmailVerification";
+import PreviousLogs from "./Pages/PreviousLogs";
 
 
 const drawerWidth = 240;
@@ -194,6 +195,14 @@ const MainPage = (props) => {
             element={
               <PrivateRoute
                 element={role === "user" ? EmployeeAttendenceHomePage : Attendence}
+              />
+            }
+          />
+          <Route
+            path="/Attendence/camera/:date"
+            element={
+              <PrivateRoute
+                element={role === "user" ? EmployeeAttendenceHomePage : PreviousLogs}
               />
             }
           />

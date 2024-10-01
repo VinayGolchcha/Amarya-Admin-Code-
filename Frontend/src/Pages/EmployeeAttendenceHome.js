@@ -6,7 +6,7 @@ import Calendar from '../Components/Calendar';
 
 export default function EmployeeAttendenceHomePage() {
     return (
-        <Box style={{ margin: "30px 20px 20px 20px" ,backgroundColor:'white',overflow:'scroll'}}>
+        <Box style={{ margin: "30px 20px 20px 20px" ,backgroundColor:'white'}}>
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Typography
                     variant="h5"
