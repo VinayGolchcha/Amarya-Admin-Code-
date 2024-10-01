@@ -28,6 +28,8 @@ import { format } from "date-fns";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
+import axios from "axios";
+import ConfirmDelete from "../Components/ConfirmDelete";
 
 const teams = [
   { value: "", label: "Select Team" },
@@ -138,6 +140,9 @@ const WorkSheet = () => {
 
   const [filterEmpId, setFilterEmpId] = useState(""); // State to store the selected employee ID for filtering
   const [filterEmpName, setFilterEmpName] = useState("");
+  const [openConDel, setOpenConDel] = React.useState(false);
+  const [ id , setId] = React.useState(null);
+  const handleCloseConDel = () => setOpenConDel(false);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -145,6 +150,21 @@ const WorkSheet = () => {
       .toString()
       .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
   };
+
+  const handleDeleteRow = (row) => {
+    try{
+      const res = axios.delete(`${process.env.REACT_APP_API_URL}/worksheet/delete-worksheet/${row.id}/${row.empid}` , {
+        headers : {
+          "x-encryption-key" : encryptionKey
+        }
+      });
+      console.log(res);
+    }catch(err){
+      console.log(err);
+    }finally{
+
+    }
+  }
   const fetchWorksheetDataForEmployee = async (empId) => {
     try {
       const response = await fetch(
@@ -164,6 +184,7 @@ const WorkSheet = () => {
       const data = await response.json();
       if (data.success) {
         const worksheetData = data?.data.map((rowData) => ({
+          id : rowData._id,
           empid: rowData.emp_id,
           team: rowData.team,
           date: formatDate(rowData.created_at),
@@ -313,6 +334,12 @@ const WorkSheet = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const { user , encryptionKey } = useAuth();
   const token = encodeURIComponent(user?.token || ""); //
+  const [selectedRow , setSelectedRow] = useState(null);
+
+  const handleDeleteConfirmation = (row) => {
+    setOpenConDel(true);
+    setSelectedRow(row);
+  }
 
   useEffect(() => {
     // Fetch the list of all employees when the component mounts
@@ -430,6 +457,7 @@ const WorkSheet = () => {
           overflowX: "auto",
         }}
       >
+        <ConfirmDelete open={openConDel} handleClose={handleCloseConDel} handleIncomeDelete ={handleDeleteRow} id ={selectedRow}/>
         <Table>
           <TableHead>
             <TableRow>
@@ -481,15 +509,15 @@ const WorkSheet = () => {
                     />
                   </TableCell>
                   {renderTableCells(row)}
-                  {/* <TableCell>
+                  <TableCell>
                     <Box
                       component="img"
-                      src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
+                      src={`${process.env.PUBLIC_URL}/Images/worksheet/delete.png`}
                       alt="Check"
-                      onClick={handleSaveRow}
                       sx={{ cursor: "pointer" }}
-                    />
-                  </TableCell> */}
+                      onClick={() => handleDeleteConfirmation(row)}
+                      />
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>

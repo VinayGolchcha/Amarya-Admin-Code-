@@ -150,10 +150,10 @@ export default function AdminLeaveManagement() {
       if(error?.response?.message){
         toast.error(error?.response?.message);
       }
-      if(error?.response?.data?.message){
-        const item = error?.response?.data?.message
-        toast.error(item);
-      }
+      // if(error?.response?.data?.message){
+      //   const item = error?.response?.data?.message
+      //   toast.error(item);
+      // }
       console.log(error);
       setRows([]);
     }

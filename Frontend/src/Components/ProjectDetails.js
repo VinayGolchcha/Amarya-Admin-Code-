@@ -229,7 +229,7 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
         formattedProject,
         {
           headers: {
-            "x-access-token": token,
+            "x-encryption-key" : encryptionKey
           },
         }
       );

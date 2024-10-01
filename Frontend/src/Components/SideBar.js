@@ -76,8 +76,7 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
     },
   ];
 
-  const extensions = [
-    user?.role === "user" && {
+  const extensions = [{
       text: "Messenger",
       icon: <Box
         component="img"
@@ -199,7 +198,7 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
       >
         EXTENSIONS
       </Typography>
-      <List sx={{ display: user?.role === "admin" && "none" }}>
+      <List >
         {extensions.map((item) => (
           <ListItem
             key={item.text}
