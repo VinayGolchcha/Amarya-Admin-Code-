@@ -8,14 +8,15 @@ import { useAuth } from "../Components/AuthContext";
 const AnnouncementPage = () => {
     const { notifications, setNotifications } = useContext(NotificationContext);
     const apiUrl = process.env.REACT_APP_API_URL;
-    const {encryptionKey} = useAuth()
+    const {encryptionKey , user} = useAuth()
     
 
     useEffect(() => {
         if (notifications?.length === 0) {
+            const empId = user.user_id;
             axios
                 .get(`${apiUrl}/announcement
-                    /fetch-announcement` , {
+                    /fetch-announcement/${empId}` , {
                         headers : {
                             "x-encryption-key" : encryptionKey
                         }

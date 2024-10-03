@@ -88,7 +88,8 @@ const AdminNotificationTab = () => {
   const fetchNotification = async () => {
     setIsLoading(true);
     try {
-      const resData = await axios.get(`${process.env.REACT_APP_API_URL}/${selectedTab}/fetch-${selectedTab}`, {
+      const empId = user.user_id
+      const resData = await axios.get(`${process.env.REACT_APP_API_URL}/${selectedTab}/fetch-${selectedTab}/${empId}`, {
         headers: { "x-encryption-key" : encryptionKey },
       });
       setNotifications(resData.data.data);

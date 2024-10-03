@@ -48,10 +48,11 @@ const WorkSheet = () => {
       { key: "date", label: "Date" },
       { key: "category", label: "Category" },
       { key: "project", label: "Project" },
+      { key: "hours", label: "hours" },
       { key: "description", label: "Description" },
       { key: "skillset", label: "Skillset" },
     ];
-
+    console.log("row Data" , rowData);
     return cellData.map((cell, index) => (
       <TableCell key={index}>
         <Typography
@@ -191,6 +192,7 @@ const WorkSheet = () => {
           category: rowData.category,
           project: rowData.project,
           description: rowData.description,
+          hours : rowData.hours,
           // skillset: getSkillsetNameByIds(rowData.skill_set_id),
           skillset: rowData.skills || [], // Map skills to skillset
         }));
@@ -326,9 +328,10 @@ const WorkSheet = () => {
     "Date",
     "Category",
     "Project",
+    "Hours",
     "Description",
     "Skillset",
-    "",
+    "Action",
   ];
   const [employees, setEmployees] = useState([]);
   const apiUrl = process.env.REACT_APP_API_URL;

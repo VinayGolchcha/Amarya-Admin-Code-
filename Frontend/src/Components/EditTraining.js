@@ -1,5 +1,5 @@
 import Modal from "@mui/material/Modal";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, IconButton, TextField, Typography } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -57,16 +57,16 @@ export default function EditTraining({
 
   const [courseName , setCouseName] = useState("");
   const [courseDescription , setCourseDescription] = useState("");
-  const [roadmapUrl , setRoadmapUrl] = useState("");
+  const [file , setFile] = useState();
   const [details , setDetails] = useState("");
   const [trId , setTrId] = useState(""); 
 
   useEffect(() => {
     setCouseName(selectedTr?.courseName);
     setCourseDescription(selectedTr?.courseDescription);
-    setRoadmapUrl(selectedTr?.roadmapurl);
     setDetails("");
     setTrId(selectedTr?.trainindId);
+    // setDetails(selectedTr.details);
 
   } , [selectedTr])
 
@@ -78,7 +78,7 @@ export default function EditTraining({
     const newItem = {
       course_name : courseName,
       course_description : courseDescription,
-      roadmap_url : roadmapUrl,
+      file: file,
       details : details,
 
   };
@@ -139,12 +139,47 @@ export default function EditTraining({
                   Roadmap Url
                 </label>
                 <br />
-                <input
+                {/* <input
                   type="text"
                   id="assignee"
                   style={inputControl}
                   value={roadmapUrl}
                   onChange={(e) => setRoadmapUrl(e.target.value)}
+                /> */}
+                <TextField
+                  id="upload-text"
+                  variant="outlined"
+                  size="small"
+                  sx={{width : "100%" , backgroundColor : "white"}}
+                  value={file && file.name}
+                  InputProps={{
+                    style: {
+                      fontSize: { xs: "18px", md: "20px" },
+                    },
+                    endAdornment: (
+                      <IconButton
+                        edge="end"
+                        component="label"
+                        htmlFor="upload-file"
+                        sx={{ color: "rgb(188, 189, 163)" }}
+                      >
+                        <img src="Images/file-uplaod.png" alt="upload-icon" height="20px" width="20px" />
+                        <input
+                          type="file"
+                          id="upload-file"
+                          style={{ display: "none" }}
+                          accept="application/pdf"
+                          onChange={(e) => setFile(e.target.files[0])}
+                        />
+                      </IconButton>
+                    ),
+                  }}
+                  InputLabelProps={{
+                    style: {
+                      color: "white",
+                      fontSize: { xs: "18px", md: "20px" },
+                    },
+                  }}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>

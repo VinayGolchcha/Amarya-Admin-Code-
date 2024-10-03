@@ -84,6 +84,15 @@ export default function LeaveMangementPage() {
 
   // const handleClick = async() => {
 
+  const handelCheckboxChange = (rowId) => {
+    const newUserLeaveList = rows.map((item) => {
+      if(item._id === rowId){
+          return {...item , isSelected : !item.isSelected}
+      }
+      return item;
+    });
+    setRows(newUserLeaveList);
+  }
   const leaveOverViewByDate = async (date) => {
     try {
       const res = await axios.post(
@@ -166,7 +175,11 @@ export default function LeaveMangementPage() {
           },
         }
       );
-      setRows(res?.data?.data || []); // Ensure to handle empty response data gracefully
+      const userLeavesList = res?.data?.data.map((item) => {
+        return {...item , isSelected : false}
+      });
+      console.log("userLeaves Data" , userLeavesList)
+      setRows(userLeavesList || []); // Ensure to handle empty response data gracefully
     } catch (error) {
       if(error?.response?.message){
         toast.error(error?.response?.message);
@@ -812,13 +825,14 @@ export default function LeaveMangementPage() {
                       <TableCell
                         style={{ fontFamily: "Poppins", minWidth: "110px" }}
                       >
-                        <Box
+                        {/* <Box
                           component="img"
                           src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
                           alt="Check"
                           style={{ filter: "invert(1)" }}
                           sx={{ paddingRight: "29px" }}
-                        />
+                        /> */}
+                        <Checkbox {...{ inputProps: { 'aria-label': 'Checkbox' } }} sx={{paddingRight: "9px"}} checked={row.isSelected} color="default" onChange={() => handelCheckboxChange(row._id)} />
                         {index + 1}
                       </TableCell>
                       <TableCell
