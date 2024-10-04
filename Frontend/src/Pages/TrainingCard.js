@@ -35,6 +35,23 @@ export default function TrainingCard({
     setEditOpen(true);
 
   };
+
+  const  downloadPDF = (base64Data) =>  {
+    // Create a hidden anchor element
+    const link = document.createElement('a');
+    link.href = base64Data;
+    link.download = `${field?.courseName}.pdf`;  // This sets the filename for the downloaded file
+    
+    // Append the link to the document
+    document.body.appendChild(link);
+    
+    // Trigger the download
+    link.click();
+    
+    // Remove the link after the download
+    document.body.removeChild(link);
+}
+
   return (
     // <Box sx={{ flexGrow: 1 , flexWrap : 'wrap', p : 1}}>
     <Grid
@@ -155,7 +172,15 @@ export default function TrainingCard({
                   cursor: "pointer",
                 }}
               >
-                <a href={`${field?.roadmapurl}`} target="_blank" style={{textDecoration : "none"}}>Click here to download the roadmap....</a>
+                
+                <button onClick={() => downloadPDF(field?.roadmapurl)} style={{border : "none" , 
+                  backgroundColor : "transparent",
+                  fontFamily: "Sedan SC",
+                  fontSize: "25px",
+                  color: "#3E4EB6",
+                  textAlign: "center",
+                  marginTop: "25px",
+                  cursor: "pointer",}}>Click here to download the roadmap....</button>
                 <br />
               </Typography>
             </CardContent>

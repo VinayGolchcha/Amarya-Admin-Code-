@@ -230,7 +230,7 @@ const ProjectOverview = ({ apiData }) => {
                 },
               }}
             >
-              {apiData?.employee_count_with_team[0] ?apiData?.employee_count_with_team[0][1]?.project_count || 0:0}
+              {apiData?.employee_count_with_team && apiData?.employee_count_with_team[0] ?apiData?.employee_count_with_team[0][1]?.project_count || 0:0}
               <br />
               SAP Projects
             </Typography>
@@ -257,7 +257,7 @@ const ProjectOverview = ({ apiData }) => {
                 },
               }}
             >
-              {apiData?.employee_count_with_team[0][0] ? apiData?.employee_count_with_team[0][0]?.project_count || 0:0}
+              {apiData?.employee_count_with_team && apiData?.employee_count_with_team[0][0] ? apiData?.employee_count_with_team[0][0]?.project_count || 0:0}
               <br />
               Full Stack and Data Science Projects
             </Typography>

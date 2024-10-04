@@ -31,6 +31,7 @@ import AdminLeaveManagement from "./Pages/AdminLeaveManagement";
 import PrivateRoute from "./Pages/PrivateComponent";
 import EmailVerification from "./Pages/EmailVerification";
 import PreviousLogs from "./Pages/PreviousLogs";
+import UserProfileAdmin from "./AdminPages/UserProfileAdmin";
 
 
 const drawerWidth = 240;
@@ -98,7 +99,6 @@ const MainPage = (props) => {
           {role === "admin" && (
             <Route path="/trainings" element={<TrainingsPageAdmin />} />
           )} */}
-          <Route path="/profile" element={<UserProfilePage />}></Route>
           <Route path="/announcements" element={<AnnouncementPage />}></Route>
           <Route path="/activities" element={<ActivitiesPage />} />
           {/* {role === "admin" && (
@@ -159,7 +159,11 @@ const MainPage = (props) => {
           />
           <Route
             path="/profile"
-            element={<PrivateRoute element={UserProfilePage} />}
+            element={
+              <PrivateRoute
+                element={role === "user" ? UserProfilePage : UserProfileAdmin}
+              />
+            }
           />
           <Route
             path="/anouncement"
@@ -209,6 +213,10 @@ const MainPage = (props) => {
           <Route
             path="/activities/:activityId"
             element={<PrivateRoute element={ActivityPage} />}
+          />
+          <Route
+            path="/anouncement/:annoucementId"
+            element={<PrivateRoute element={AnnouncementPage} />}
           />
           {/* <Route
             path="*"

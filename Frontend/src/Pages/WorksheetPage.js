@@ -323,7 +323,7 @@ const WorksheetPage = () => {
         date: toBeEditedRow.date,
         category: toBeEditedRow.category,
         project: toBeEditedRow.project,
-        hours: toBeEditedRow.hours,
+        hours: toBeEditedRow.hours || 0,
         description: toBeEditedRow.description,
         skillset: comingSkillList,
       });

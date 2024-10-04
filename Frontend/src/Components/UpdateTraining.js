@@ -1,5 +1,5 @@
 import Modal from "@mui/material/Modal";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, IconButton, TextField, Typography } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Paper from "@mui/material/Paper";
@@ -137,6 +137,42 @@ export default function UpdateTraining({
                   style={inputControl}
                   ref={itemNewAssignee}
                   value={selectedObj?.roadmapUrl}
+                />
+                <TextField
+                  id="upload-text"
+                  variant="outlined"
+                  size="small"
+                  sx={{width : "100%" , backgroundColor : "white"}}
+                  value={file && file.name}
+                  InputProps={{
+                    style: {
+                      color: "rgb(255, 255, 255)",
+                      fontSize: { xs: "18px", md: "20px" },
+                    },
+                    endAdornment: (
+                      <IconButton
+                        edge="end"
+                        component="label"
+                        htmlFor="upload-file"
+                        sx={{ color: "rgb(188, 189, 163)" }}
+                      >
+                        <img src="Images/file-uplaod.png" alt="upload-icon" height="20px" width="20px" />
+                        <input
+                          type="file"
+                          id="upload-file"
+                          style={{ display: "none" }}
+                          accept="application/pdf"
+                          onChange={handleFileChange}
+                        />
+                      </IconButton>
+                    ),
+                  }}
+                  InputLabelProps={{
+                    style: {
+                      color: "white",
+                      fontSize: { xs: "18px", md: "20px" },
+                    },
+                  }}
                 />
               </Grid>
               <Grid item lg={12} md={12} sm={12} xs={12}>

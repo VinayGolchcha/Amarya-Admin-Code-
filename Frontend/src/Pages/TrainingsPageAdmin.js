@@ -152,9 +152,13 @@ export default function TrainingsPageAdmin( ) {
   const addTraining = async (body) => {
     try {
       setIsApiHit(true);
-      const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/admin/add-new-training` , body , {
+      const formData = new FormData();
+      Object.keys(body).forEach((key) => {
+        formData.append(key, body[key]);
+      });
+      const res = await axios.post(`${process.env.REACT_APP_API_URI}/training/admin/add-new-training` , formData , {
         headers : {
-          "x-encryption-key" : encryptionKey
+          "x-encryption-key" : encryptionKey,
         }
       })
       setOpen(false);
@@ -263,8 +267,12 @@ export default function TrainingsPageAdmin( ) {
     // console.log('Updated Training Data:', updatedTraining);
     
     // Axios PUT request
+    const formData = new FormData();
+    Object.keys(body).forEach((key) => {
+      formData.append(key , body[key]);
+    })
     setIsApiHit(true)
-    axios.put(`${process.env.REACT_APP_API_URI}/training/admin/update-training/${id}`, body , {
+    axios.put(`${process.env.REACT_APP_API_URI}/training/admin/update-training/${id}`, formData , {
       headers : {
         "x-encryption-key" : encryptionKey
       }
