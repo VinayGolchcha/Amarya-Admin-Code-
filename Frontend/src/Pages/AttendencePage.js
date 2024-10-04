@@ -98,7 +98,7 @@ const Attendence = () => {
                         backgroundColor: 'transparent', // Disables the indicator color
                     },
                 }}>
-                    <Tab icon={<HomeIcon />} label="Home" {...a11yProps(0)} sx={{
+                    <Tab icon={<HomeIcon />} label="Yolo Trackboard" {...a11yProps(0)} sx={{
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "center",
