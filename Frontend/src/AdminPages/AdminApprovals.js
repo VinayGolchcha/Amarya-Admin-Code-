@@ -324,6 +324,12 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                     align="left"
                     sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                   >
+                    To Date
+                  </TableCell>
+                  <TableCell
+                    align="left"
+                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                  >
                     Subject
                   </TableCell>
                   <TableCell
@@ -382,6 +388,9 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {formattedDate(row.request_date)}
+                    </TableCell>
+                    <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
+                      {row.to_date ? formattedDate(row.to_date) : "-"}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {row.subject}
