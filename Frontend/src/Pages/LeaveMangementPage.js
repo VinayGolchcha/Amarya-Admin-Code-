@@ -178,7 +178,6 @@ export default function LeaveMangementPage() {
       const userLeavesList = res?.data?.data.map((item) => {
         return {...item , isSelected : false}
       });
-      console.log("userLeaves Data" , userLeavesList)
       setRows(userLeavesList || []); // Ensure to handle empty response data gracefully
     } catch (error) {
       if(error?.response?.message){

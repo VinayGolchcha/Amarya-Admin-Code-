@@ -52,7 +52,6 @@ const WorkSheet = () => {
       { key: "description", label: "Description" },
       { key: "skillset", label: "Skillset" },
     ];
-    console.log("row Data" , rowData);
     return cellData.map((cell, index) => (
       <TableCell key={index}>
         <Typography
@@ -159,9 +158,14 @@ const WorkSheet = () => {
           "x-encryption-key" : encryptionKey
         }
       });
-      console.log(res);
+      toast.success(`Row of ${row.date} deleted Successfully`);
+      fetchWorksheetDataForEmployee(filterEmpId);
     }catch(err){
+      if(err?.response?.message){
+        toast.error(err?.response?.message);
+      }
       console.log(err);
+      fetchWorksheetDataForEmployee(filterEmpId);
     }finally{
 
     }

@@ -36,7 +36,6 @@ const drawerWidth = 240;
 const MainPage = (props) => {
   const [mobileOpen, setMobileOpen] = React.useState(true);
   const { user } = useAuth(); // Using useAuth hook to access user data
-  console.log(user);
   const role = user?.role;
   if (!user) {
     return <LoginPage />;

@@ -21,7 +21,6 @@ function Model({ closeModel, closeOtpP, email }) {
     try {
       if(otp.length < 4 || otp.length > 4){
         toast.error("Otp must contain 4 digit only");
-        console.log(true);
         return;
       }
       const response = await axios.post(`${apiUrl}/user/update-password`, {
