@@ -110,7 +110,7 @@ const UserProfileAdmin = () => {
   //     ecpna: "None",
   //     ecn: "0",
   //   });a
-  const { user, setProfilePhoto , profilePhoto , encryptionKey } = useAuth();
+  const { user, profilePhoto , encryptionKey } = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
   const [processingReq , setProcessingReq] = useState(false);
 
@@ -410,7 +410,7 @@ const UserProfileAdmin = () => {
         public_id: userData.public_id === null ? "" : userData.public_id,
       });
       const profilePicture = userData.profile_picture
-      setProfilePhoto(profilePicture);// Set the profile photo in context
+      // setProfilePhoto(profilePicture);// Set the profile photo in context
       setLoading(false);
     } catch (error) {
       console.error("Error fetching user data:", error.message);
@@ -485,7 +485,7 @@ const UserProfileAdmin = () => {
 
     if (formData.file) {
       formDataToSend.append("file", formData.file);
-      setProfilePhoto(formData.profile_picture); // Set the profile photo in context
+      // setProfilePhoto(formData.profile_picture); // Set the profile photo in context
 
     }
 
@@ -658,7 +658,7 @@ const UserProfileAdmin = () => {
                       />
                     </Grid>
                   ))}
-                  <Grid item xs={12} md={6}>
+                  {/* <Grid item xs={12} md={6}>
                     <Typography
                       variant="subtitle1"
                       gutterBottom
@@ -684,7 +684,7 @@ const UserProfileAdmin = () => {
                         },
                       }}
                     />
-                  </Grid>
+                  </Grid> */}
                 </Grid>
                 {isEditing && (
                   <Box sx={{width : "100%" , display : "flex" , justifyContent : "end"}}>
