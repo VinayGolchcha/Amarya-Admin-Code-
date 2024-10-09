@@ -53,7 +53,7 @@ const cls = "";
 export default function LeaveMangementPage() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [fromDate, setFromDate] = React.useState(new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]);
+  const [fromDate, setFromDate] = React.useState(new Date().toISOString().split('T')[0]);
   const [date , setDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
   const [leaveType, setLeaveType] = React.useState("Casual Leave");
