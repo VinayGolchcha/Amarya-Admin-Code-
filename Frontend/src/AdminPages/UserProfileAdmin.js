@@ -1,4 +1,5 @@
 import { useState, useEffect, React, useContext, useCallback } from "react";
+import CloseIcon from '@mui/icons-material/Close';
 import axios from "axios";
 import {
   Box,
@@ -615,7 +616,7 @@ const UserProfileAdmin = () => {
               User profile
               <Tooltip title="Enable Edit">
                 <IconButton onClick={() => handleEditClick("UP")}>
-                  <EditIcon />
+                  {!isEditing ? <EditIcon /> : <CloseIcon/>}
                 </IconButton>
               </Tooltip>
             </Typography>

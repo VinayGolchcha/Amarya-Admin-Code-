@@ -1,4 +1,5 @@
 import { useState, useEffect, React, useContext } from "react";
+import CloseIcon from '@mui/icons-material/Close';
 import axios from "axios";
 import {
   Box,
@@ -173,7 +174,7 @@ const UserProfilePage = () => {
 
   const handleEditClick = (flag) => {
     if (flag === "UP") {
-      setIsEditing(true);
+      setIsEditing(!isEditing);
     } else if (flag === "PD") {
       setIsEditing2(true);
     }
@@ -518,7 +519,7 @@ const UserProfilePage = () => {
             >
               User profile
               <IconButton onClick={() => handleEditClick("UP")}>
-                <EditIcon />
+                {!isEditing ? <EditIcon /> : <CloseIcon/>}
               </IconButton>
             </Typography>
 

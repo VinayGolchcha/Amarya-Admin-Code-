@@ -20,6 +20,7 @@ import {
   InputLabel,
   MenuItem,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import axios from "axios";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -53,7 +54,7 @@ const cls = "";
 export default function LeaveMangementPage() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [selectedRows, setSelectedRows] = React.useState([]);
-  const [fromDate, setFromDate] = React.useState(new Date().toISOString().split('T')[0]);
+  const [fromDate, setFromDate] = React.useState(new Date(new Date()).toISOString().split('T')[0]);
   const [date , setDate] = React.useState(null);
   const [toDate, setToDate] = React.useState(null);
   const [leaveType, setLeaveType] = React.useState("Casual Leave");
@@ -64,6 +65,7 @@ export default function LeaveMangementPage() {
   const [leaveTypes, setLeaveTypes] = React.useState([]); // State for le
   const [validateDuration , setValidateDuration] = React.useState(false);
   const [isApiHit , setIsApiHit] = React.useState(false);
+  const [leaveId , setLeaveId] = React.useState(null)
   const apiUrl = process.env.REACT_APP_API_URI;
 
 
@@ -79,19 +81,74 @@ export default function LeaveMangementPage() {
   const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || ""); // Ensure the token is encoded properly
   const today = new Date();
+  const[toBeEditedLeave , setToBeEditedLeave] = React.useState({
+    
+  });
+  const [file , setFile] = React.useState();
+  const [isEdit , setIsEdit] = React.useState(false);
 
   // const [error, setError]  = React.useState(null);
 
   // const handleClick = async() => {
 
+  const handleEditChange = () => {
+    if(rows.filter((item) => item.isSelected === true).length === 0){
+      toast.warn("Please select the leave to edit");
+      return
+    }
+    if(isEdit){
+      setIsEdit(false);
+      setLeaveId(null)
+      setFromDate(new Date(new Date()).toISOString().split('T')[0]);
+      setToDate(null);
+      setFile();
+      setSubject("");
+      setBody("");
+      setLeaveType("Casual Leave");
+      const newUserLeaveList = rows.map((item) => {
+        return {...item, isSelected : false}
+      });
+      setRows(newUserLeaveList)
+    }else{
+      setIsEdit(true);
+      const newUserLeaveList = rows.map((item) => {
+        if(item.isSelected){
+          setLeaveId(item._id)
+          setFromDate(new Date(item.from_date));
+          setToDate(new Date(item.to_date));
+          setFile(item.document_url);
+          setSubject(item.subject);
+          setBody(item.body);
+          setLeaveType(item.leave_type.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
+        }
+  });
+    }
+  console.log("subject" , subject);
+  }
   const handelCheckboxChange = (rowId) => {
     const newUserLeaveList = rows.map((item) => {
+      if(item.isSelected){
+        if(isEdit){
+          setIsEdit(false);
+          setLeaveId(null)
+          setFromDate(new Date(new Date()).toISOString().split('T')[0]);
+          setToDate(null);
+          setFile();
+          setSubject("");
+          setBody("");
+          setLeaveType("Casual Leave");
+        }
+        
+        return {...item , isSelected : !item.isSelected}
+      }
       if(item._id === rowId){
+
           return {...item , isSelected : !item.isSelected}
       }
       return item;
     });
     setRows(newUserLeaveList);
+    console.log("rows" , newUserLeaveList);
   }
   const leaveOverViewByDate = async (date) => {
     try {
@@ -141,6 +198,8 @@ export default function LeaveMangementPage() {
       }
     }
   };
+
+
   const fetchLeaveData = async () => {
     try {
       const response = await axios.get(
@@ -178,6 +237,7 @@ export default function LeaveMangementPage() {
       const userLeavesList = res?.data?.data.map((item) => {
         return {...item , isSelected : false}
       });
+      console.log("userLeaves Data" , userLeavesList)
       setRows(userLeavesList || []); // Ensure to handle empty response data gracefully
     } catch (error) {
       if(error?.response?.message){
@@ -219,6 +279,66 @@ export default function LeaveMangementPage() {
     fetchData();
   }, []);
 
+  const handleEditLeave = async () => {
+    try {
+      const validateFromDate = new Date(fromDate);
+      const validateToDate = new Date(toDate);
+      if(validateFromDate > validateToDate){
+        toast.warn("From date should be less than the to date");
+        return;
+      }
+      setIsApiHit(true);
+      const dataToBeSend = {
+        emp_id: user?.user_id,
+        leave_type: leaveType,
+        from_date: fromDate.toISOString().split("T")[0],
+        to_date: toDate.toISOString().split("T")[0],
+        subject: subject,
+        body: body,
+      }
+      console.log(dataToBeSend);
+      const formData = new FormData();
+      Object.keys(dataToBeSend).forEach((item) => {
+        formData.append(item , dataToBeSend[item]);
+        console.log("formdata" , formData)
+      })
+      const response = await axios.put(
+        `${apiUrl}/leave/update-leave-request/${leaveId}/${user?.user_id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type" : "application/json",
+            "x-encryption-key" : encryptionKey
+          },
+        }
+      );
+      toast.success(response?.data?.message);
+      setIsEdit(false);
+      setLeaveId(null)
+      setFromDate(new Date(new Date()).toISOString().split('T')[0]);
+      setToDate(null);
+      setFile();
+      setSubject("");
+      setBody("");
+      setLeaveType("Casual Leave");
+      setIsApiHit(false);
+      getUserLeaves();
+    } catch (error) {
+      setIsApiHit(false);
+      const errors = error?.response?.data?.errors;
+      if(errors){
+        toast.error(errors[0].msg);
+      }
+      console.error("Error:", error);
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response.data.message){
+        toast.error(error?.response.data.message);
+      }
+    }
+  };
+
   const handleUpdate = async () => {
     try {
       const validateFromDate = new Date(fromDate);
@@ -228,25 +348,38 @@ export default function LeaveMangementPage() {
         return;
       }
       setIsApiHit(true);
+      const dataToBeSend = {
+        emp_id: user?.user_id,
+        leave_type: leaveType,
+        from_date: fromDate,
+        to_date: toDate,
+        subject: subject,
+        body: body,
+        file : file,
+      }
+      console.log(dataToBeSend);
+      const formData = new FormData();
+      Object.keys(dataToBeSend).forEach((item) => {
+        formData.append(item , dataToBeSend[item]);
+        console.log("formdata" , formData)
+      })
       const response = await axios.post(
         `${apiUrl}/leave/leave-request`,
-        {
-          emp_id: user?.user_id,
-          leave_type: leaveType,
-          from_date: fromDate,
-          to_date: toDate,
-          subject: subject,
-          body: body,
-        },
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
             "x-encryption-key" : encryptionKey
           },
         }
       );
-
       toast.success(response?.data?.message);
+      setLeaveId(null)
+      setFromDate(new Date(new Date()).toISOString().split('T')[0]);
+      setToDate(null);
+      setFile();
+      setSubject("");
+      setBody("");
+      setLeaveType("Casual Leave");
       setIsApiHit(false);
       getUserLeaves();
     } catch (error) {
@@ -303,6 +436,8 @@ export default function LeaveMangementPage() {
     setDate(isoDate);
     
   }
+
+
 
   const formattedLeaveDate = (date) => {
     const newdate = new Date(date);
@@ -556,6 +691,8 @@ export default function LeaveMangementPage() {
                 <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
                 <TextField
                   variant="outlined"
+                  value={subject}
+                  disabled={isEdit}
                   onChange={(e) => setSubject(e.target.value)}
                   sx={{ width: "100%", backgroundColor: "#fafafa" }}
                 />
@@ -566,9 +703,53 @@ export default function LeaveMangementPage() {
                   multiline
                   rows={3}
                   variant="outlined"
+                  disabled={isEdit}
                   onChange={(e) => setBody(e.target.value)}
+                  value={body}
                   sx={{ width: "100%", backgroundColor: "#fafafa" }}
                 />
+                {!isEdit && <>
+                 <FormLabel sx={{ margin: "2px 0px", fontSize: "12px" }}>
+                  Upload File
+                </FormLabel>
+                 <TextField
+                  id="upload-text"
+                  variant="outlined"
+                  size="small"
+                  sx={{width : "100%" , backgroundColor : "white"}}
+                  value={file && file.name}
+                  disabled
+                  InputProps={{
+                    style: {
+                      fontSize: { xs: "18px", md: "20px" },
+                    },
+                    endAdornment: (
+                      <IconButton
+                        edge="end"
+                        component="label"
+                        htmlFor="upload-file"
+                        sx={{ color: "rgb(188, 189, 163)" }}
+                      >
+                        <img src="Images/file-uplaod.png" alt="upload-icon" height="20px" width="20px" />
+                        <input
+                          type="file"
+                          id="upload-file"
+                          style={{ display: "none" }}
+                          accept="application/pdf"
+                          onChange={(e) => setFile(e.target.files[0])}
+                        />
+                      </IconButton>
+                    ),
+                  }}
+                  InputLabelProps={{
+                    style: {
+                      color: "white",
+                      fontSize: { xs: "18px", md: "20px" },
+                    },
+                  }}
+                />
+                </>
+                }
               </Box>
               <Button
                 variant="outlined"
@@ -589,7 +770,7 @@ export default function LeaveMangementPage() {
                     color: "black",
                   },})
                 }}
-                onClick={handleUpdate}
+                onClick={isEdit ? handleEditLeave :handleUpdate}
                 disabled = {isApiHit}
               >
                 {isApiHit ? <CircularProgress color="inherit" size={20} sx={{width : "100%" , height : "100%"}}/> :<>Send to admin</>}
@@ -600,7 +781,7 @@ export default function LeaveMangementPage() {
                 p={1}
                 sx={{
                   backgroundColor: "#FFFFFF",
-                  height: "auto",
+                  height: "100%",
                   width: "auto",
                   border: "1px solid #E0E0E0E0",
                   borderRadius: "12px",
@@ -724,12 +905,7 @@ export default function LeaveMangementPage() {
                 src={`${process.env.PUBLIC_URL}/Images/worksheet/edit.png`}
                 alt="Check"
                 sx={{ cursor: "pointer" }}
-              />
-              <Box
-                component="img"
-                src={`${process.env.PUBLIC_URL}/Images/worksheet/delete.png`}
-                alt="Check"
-                sx={{ cursor: "pointer" }}
+                onClick={handleEditChange}
               />
             </Box>
           </Typography>
@@ -751,7 +927,6 @@ export default function LeaveMangementPage() {
                       src={`${process.env.PUBLIC_URL}/Images/Check (1).svg`}
                       alt="Check"
                       sx={{ paddingRight: "20px" }}
-                      // onClick= {handleClick}
                     />
                     S.no
                   </TableCell>
