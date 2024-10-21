@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -15,9 +15,12 @@ import {
   Modal,
   Button,
 } from "@mui/material";
+import { useParams } from "react-router-dom";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import SaveIcon from "@mui/icons-material/Save";
 import TablePagination from "@mui/material/TablePagination";
+import axios from "axios";
+import { useAuth } from "../Components/AuthContext";
 
 const rows = [
   {
@@ -76,12 +79,36 @@ const rows = [
   },
 ];
 
-export default function UndetectedPeople({ approvalData, approvalReq }) {
+export default function PreviousLogs() {
+  const { date } = useParams();
   const [list, setList] = useState(rows);
   const [selectedImage, setSelectedImage] = useState(null); // For preview
   const [open, setOpen] = useState(false); // For modal control
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const { encryptionKey } = useAuth();
+  const apiUrl = process.env.REACT_APP_API_MESSENGER_URI;
+
+  useEffect(() => {
+    async function getData() {
+      try {
+        const response = await axios.get(
+          `${apiUrl}/attendance/get-user-attendance-date?date=${date}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              "x-encryption-key": encryptionKey,
+            },
+          }
+        );
+        setList(response?.data?.data);
+      } catch (error) {
+        if (error?.response?.message) {
+        }
+      }
+    }
+    getData();
+  }, []);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -185,19 +212,25 @@ export default function UndetectedPeople({ approvalData, approvalReq }) {
                   align="center"
                   sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                 >
-                  Mode
+                  In Time
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                 >
-                  Time
+                  In Detection
                 </TableCell>
                 <TableCell
                   align="center"
                   sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
                 >
-                  Detection
+                  Out Time
+                </TableCell>
+                <TableCell
+                  align="center"
+                  sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
+                >
+                  Out Detection
                 </TableCell>
                 <TableCell
                   align="center"
@@ -208,7 +241,7 @@ export default function UndetectedPeople({ approvalData, approvalReq }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {list?.map((row) => (
+              {list?.map((row, i) => (
                 <TableRow key={row.sNo}>
                   <TableCell
                     component="th"
@@ -216,34 +249,62 @@ export default function UndetectedPeople({ approvalData, approvalReq }) {
                     align="center"
                     sx={{ padding: 0 }}
                   >
-                    {row.sNo}
+                    {i + 1}
                   </TableCell>
                   <TableCell align="center" sx={{ padding: 0 }}>
-                    {row.employeeId}
+                    {row.emp_id}
                   </TableCell>
                   <TableCell align="center" sx={{ padding: 0 }}>
-                    {row.employeeName}
+                    {row.emp_name}
                   </TableCell>
                   <TableCell align="center" sx={{ padding: 0 }}>
-                    {row.date}
+                    {`${new Date(row.date).getDate()}/${
+                      new Date(row.date).getMonth() + 1
+                    }/${new Date(row.date).getFullYear()}`}
                   </TableCell>
                   <TableCell align="center" sx={{ padding: 0 }}>
-                    {row.mode}
-                  </TableCell>
-                  <TableCell align="center" sx={{ padding: 0 }}>
-                    {row.time}
+                    {new Date(row.in_time).toLocaleTimeString("en-GB", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                      hour12: true, // This enables 12-hour format with AM/PM
+                    })}
                   </TableCell>
                   {/* Image Column */}
                   <TableCell align="center" sx={{ padding: 0 }}>
                     <img
-                      src={row.image}
+                      src={`data:image/jpeg;base64,${row.in_snapshot}`}
                       alt="Employee"
                       style={{ width: "50px", cursor: "pointer" }}
-                      onClick={() => handleImageClick(row.image)} // Open image in modal
+                      onClick={() =>
+                        handleImageClick(
+                          `data:image/jpeg;base64,${row.in_snapshot}`
+                        )
+                      }
                     />
                   </TableCell>
                   <TableCell align="center" sx={{ padding: 0 }}>
+                    {new Date(row.out_time).toLocaleTimeString("en-GB", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      second: "2-digit",
+                      hour12: true, // This enables 12-hour format with AM/PM
+                    })}
                   </TableCell>
+                  {/* Image Column */}
+                  <TableCell align="center" sx={{ padding: 0 }}>
+                    <img
+                      src={`data:image/jpeg;base64,${row.out_snapshot}`}
+                      alt="Employee"
+                      style={{ width: "50px", cursor: "pointer" }}
+                      onClick={() =>
+                        handleImageClick(
+                          `data:image/jpeg;base64,${row.out_snapshot}`
+                        )
+                      }
+                    />
+                  </TableCell>
+                  <TableCell align="center" sx={{ padding: 0 }}></TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -284,7 +345,6 @@ export default function UndetectedPeople({ approvalData, approvalReq }) {
           )}
         </Box>
       </Modal>
-
     </Box>
   );
 }

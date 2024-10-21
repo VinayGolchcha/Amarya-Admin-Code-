@@ -29,21 +29,21 @@ const Calendar = ({ attendance, holidays }) => {
     return new Date(year, month + 1, 0).getDate();
   };
 
-  const generateYearOptions = () => {
-    const startYear = 2020; // Adjust this range as needed
-    const endYear = new Date().getFullYear() + 5;
-    const years = [];
+  // const generateYearOptions = () => {
+  //   const startYear = new Date().getFullYear() - 5; // Adjust this range as needed
+  //   const endYear = new Date().getFullYear() + 5;
+  //   const years = [];
 
-    for (let year = startYear; year <= endYear; year++) {
-      years.push(year);
-    }
+  //   for (let year = startYear; year <= endYear; year++) {
+  //     years.push(year);
+  //   }
 
-    return years.map((year) => (
-      <option key={year} value={year}>
-        {year}
-      </option>
-    ));
-  };
+  //   return years.map((year) => (
+  //     <option key={year} value={year}>
+  //       {year}
+  //     </option>
+  //   ));
+  // };
 
   const handleYearChange = (event) => {
     setSelectedYear(parseInt(event.target.value));
@@ -143,7 +143,7 @@ const Calendar = ({ attendance, holidays }) => {
   return (
     <Box sx={{ margin: "20px 0", gap: "2rem", alignItems: 'stretch' }} className="flex-to-display">
       <div className="calender-box">
-        <div className="calendar-controls">
+        {/* <div className="calendar-controls">
           <div>
             <select value={selectedMonth} onChange={handleMonthChange}>
               {Array.from({ length: 12 }, (v, k) => (
@@ -160,7 +160,7 @@ const Calendar = ({ attendance, holidays }) => {
             <ArrowBackIosIcon onClick={handlePreviousMonth} />
             <ArrowForwardIosIcon onClick={handleNextMonth} />
           </div>
-        </div>
+        </div> */}
         <div className="calendar">
           <div className="day-names">{getDayNames()}</div>
           <div className="calendar-days">{generateCalendar()}</div>

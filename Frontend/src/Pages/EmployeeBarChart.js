@@ -1,5 +1,5 @@
-import React from "react";
-import { Box, Grid, Paper, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Box, Typography } from "@mui/material";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -22,59 +22,61 @@ ChartJS.register(
   ChartDataLabels
 );
 
-const EmployeeBarChart = () => {
-  const getWeakRange = () => {
-    const today = new Date();
-    const dayOfWeek = today.getDay();
-    const startOfWeek = new Date(today);
-    const endOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - dayOfWeek + 1);
-    endOfWeek.setDate(today.getDate() + (6 - dayOfWeek - 1));
-
-    const optionss = { day: "numeric", month: "short" };
-    const startOfWeekFormatted = startOfWeek.toLocaleDateString(
-      "en-GB",
-      optionss
-    );
-    const endOfWeekFormatted = endOfWeek.toLocaleDateString("en-GB", optionss);
-
-    return `${startOfWeekFormatted} - ${endOfWeekFormatted}`;
-  };
-
-  const getWeekDaysWithDates = () => {
-    const today = new Date();
-    const dayOfWeek = today.getDay(); // Get the current day of the week (0 = Sunday, 1 = Monday, etc.)
-    const startOfWeek = new Date(today); // Start of the week (Monday)
-    startOfWeek.setDate(
-      today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1)
-    ); // Adjust if it's Sunday
-
-    const options = { day: "numeric", month: "short" };
-
-    // Create an array for each day of the week, starting from Monday
-    const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-    const datesWithDays = weekDays.map((day, index) => {
-      const date = new Date(startOfWeek); // Copy the start date
-      date.setDate(startOfWeek.getDate() + index); // Add index to get the corresponding day in the week
-      return [day, date.toLocaleDateString("en-GB", options)]; // Return an array with day and date as separate lines
-    });
-
-    return datesWithDays;
-  };
-
-  const data = {
-    labels: getWeekDaysWithDates(),
+const EmployeeBarChart = ({ barData }) => {
+  const [firstDayWeek, setFirstDayWeek] = useState();
+  const [lastDayWeek, setLastDayWeek] = useState();
+  const [chartData, setChartData] = useState({
+    labels: [], // Store the day names with dates here
     datasets: [
       {
-        label: "# of Votes",
-        data: [12, 19, 3, 5, 2],
+        label: "Present Count",
+        data: [], // Store the present counts here
         backgroundColor: "#dce0e3",
         borderWidth: 1,
-        borderRadius: 5, // Add border radius here
-        Visibility: "hidden",
+        borderRadius: 5,
       },
     ],
-  };
+  });
+
+  useEffect(() => {
+    // Extract day names and counts with formatted date strings
+    const labels = barData?.map((item, index) => {
+      if (index === 0) {
+        setLastDayWeek(
+          new Date(item?.attendance_date)?.toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+          })
+        );
+      }
+      if (index === barData?.length - 1) {
+        setFirstDayWeek(
+          new Date(item?.attendance_date)?.toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "short",
+          })
+        );
+      }
+      return [
+        item?.day_name,
+        new Date(item?.attendance_date)?.toLocaleDateString("en-GB"),
+      ];
+    });
+    const data = barData?.map((item) => item?.present_count);
+    // Update the chart data state
+    setChartData({
+      labels,
+      datasets: [
+        {
+          label: "Present Count",
+          data,
+          backgroundColor: "#dce0e3",
+          borderWidth: 1,
+          borderRadius: 5,
+        },
+      ],
+    });
+  }, [barData]);
 
   const options = {
     responsive: true,
@@ -88,12 +90,12 @@ const EmployeeBarChart = () => {
       datalabels: {
         anchor: "center", // Position the label in the middle of the bar
         align: "center",
-        rotation: -90, // Rotate the label 90 degrees
+        // rotation: -90, // Rotate the label 90 degrees
         color: "black",
         font: {
           weight: "bold",
         },
-        formatter: function (value, context) {
+        formatter: function (value) {
           return value; // Show the value inside the bar
         },
       },
@@ -125,9 +127,8 @@ const EmployeeBarChart = () => {
         overflow: "hidden",
       }}
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", marginBottom:1 }}>
         <Typography
-          // variant={isSmallScreen ? "h5" : "h4"}
           sx={{
             font: {
               lg: "normal normal 600 22px/28px Poppins",
@@ -141,7 +142,6 @@ const EmployeeBarChart = () => {
           Weekly Employee Count
         </Typography>
         <Typography
-          // variant={isSmallScreen ? "body1" : "h6"}
           sx={{
             font: {
               lg: "normal normal 400 18px/24px Poppins",
@@ -151,11 +151,11 @@ const EmployeeBarChart = () => {
             },
           }}
         >
-          {getWeakRange()}
+          {`${firstDayWeek}-${lastDayWeek}`}
         </Typography>
       </Box>
-      <Bar data={data} options={options} />
-      <Typography
+      <Bar data={chartData} options={options} />
+      {/* <Typography
         variant="h5"
         sx={{
           font: {
@@ -169,7 +169,7 @@ const EmployeeBarChart = () => {
         }}
       >
         {new Date().getFullYear()}
-      </Typography>
+      </Typography> */}
     </Box>
   );
 };

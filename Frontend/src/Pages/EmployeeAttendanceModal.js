@@ -5,6 +5,22 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import Calendar from "../Components/Calendar";
 
 export default function EmployeeAttendenceModal() {
+  const generateYearOptions = () => {
+    const startYear = new Date().getFullYear() - 5; // Adjust this range as needed
+    const endYear = new Date().getFullYear() + 5;
+    const years = [];
+
+    for (let year = startYear; year <= endYear; year++) {
+      years.push(year);
+    }
+
+    return years.map((year) => (
+      <option key={year} value={year}>
+        {year}
+      </option>
+    ));
+  };
+
   return (
     <Box
       sx={{
@@ -32,26 +48,36 @@ export default function EmployeeAttendenceModal() {
         >
           Employees Attendance
         </Typography>
-        <Button
-          sx={{
-            marginLeft: "5px",
-            cursor: "pointer",
-            backgroundColor: "#b9b9b9",
-            color: "#181d60",
-            borderRadius: "10px",
-            fontWeight: "bold",
-          }}
-        >
-          Download Report
-          <FileDownloadOutlinedIcon
+        <Box>
+            <select>
+              {Array.from({ length: 12 }, (v, k) => (
+                <option key={k} value={k}>
+                  {new Date(0, k).toLocaleString("default", { month: "long" })}
+                </option>
+              ))}
+            </select>
+            <select>{generateYearOptions()}</select>
+          <Button
             sx={{
               marginLeft: "5px",
-              backgroundColor: "#181d60",
-              color: "white",
-              borderRadius: "50%",
+              cursor: "pointer",
+              backgroundColor: "#b9b9b9",
+              color: "#181d60",
+              borderRadius: "10px",
+              fontWeight: "bold",
             }}
-          />
-        </Button>
+          >
+            Download Report
+            <FileDownloadOutlinedIcon
+              sx={{
+                marginLeft: "5px",
+                backgroundColor: "#181d60",
+                color: "white",
+                borderRadius: "50%",
+              }}
+            />
+          </Button>
+        </Box>
       </Box>
       <hr />
       <Box sx={{ display: "flex", gap: "2rem", alignItems: "stretch" }}>
