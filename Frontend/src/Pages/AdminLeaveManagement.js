@@ -120,7 +120,7 @@ export default function AdminLeaveManagement() {
         setFilterDropdown(data.data.map((emp) => emp.emp_id)); // Assuming emp_id is the identifier
         setFilterEmpName(data.data[0].name);
         const firstEmplyeeId = data.data[0].emp_id;
-        setFilterEmpId(data.data[0].emp_id);
+        setFilterEmpId(firstEmplyeeId);
         getData(firstEmplyeeId);
       } else {
         console.error("Failed to fetch employees:", data.message);
@@ -211,10 +211,6 @@ export default function AdminLeaveManagement() {
         setLoading(false);
         if(error?.response?.message){
           toast.error(error?.response?.message);
-        }
-        if(error?.response?.data?.message){
-          const item = error?.response?.data?.message
-          toast.error(item);
         }
         console.log(error);
       }

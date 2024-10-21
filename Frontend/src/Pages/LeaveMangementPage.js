@@ -65,7 +65,6 @@ export default function LeaveMangementPage() {
   const [leaveTypes, setLeaveTypes] = React.useState([]); // State for le
   const [validateDuration , setValidateDuration] = React.useState(false);
   const [isApiHit , setIsApiHit] = React.useState(false);
-  const [leaveId , setLeaveId] = React.useState(null)
   const apiUrl = process.env.REACT_APP_API_URI;
 
 
@@ -86,59 +85,26 @@ export default function LeaveMangementPage() {
   });
   const [file , setFile] = React.useState();
   const [isEdit , setIsEdit] = React.useState(false);
-
-  // const [error, setError]  = React.useState(null);
-
-  // const handleClick = async() => {
+  console.log("user Id" , user.user_id)
 
   const handleEditChange = () => {
-    if(rows.filter((item) => item.isSelected === true).length === 0){
-      toast.warn("Please select the leave to edit");
-      return
-    }
-    if(isEdit){
-      setIsEdit(false);
-      setLeaveId(null)
-      setFromDate(new Date(new Date()).toISOString().split('T')[0]);
-      setToDate(null);
-      setFile();
-      setSubject("");
-      setBody("");
-      setLeaveType("Casual Leave");
-      const newUserLeaveList = rows.map((item) => {
-        return {...item, isSelected : false}
-      });
-      setRows(newUserLeaveList)
-    }else{
-      setIsEdit(true);
-      const newUserLeaveList = rows.map((item) => {
-        if(item.isSelected){
-          setLeaveId(item._id)
-          setFromDate(new Date(item.from_date));
-          setToDate(new Date(item.to_date));
-          setFile(item.document_url);
-          setSubject(item.subject);
-          setBody(item.body);
-          setLeaveType(item.leave_type.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
-        }
+    setIsEdit(true);
+    const newUserLeaveList = rows.map((item) => {
+      if(item.isSelected){
+        setFromDate(new Date(item.from_date));
+        setToDate(new Date(item.to_date));
+        setSubject(item.subject);
+        setBody(item.body);
+        setFile(item.document_url);
+        setLeaveType(item.leave_type.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '));
+        
+      }
   });
-    }
   console.log("subject" , subject);
   }
   const handelCheckboxChange = (rowId) => {
     const newUserLeaveList = rows.map((item) => {
       if(item.isSelected){
-        if(isEdit){
-          setIsEdit(false);
-          setLeaveId(null)
-          setFromDate(new Date(new Date()).toISOString().split('T')[0]);
-          setToDate(null);
-          setFile();
-          setSubject("");
-          setBody("");
-          setLeaveType("Casual Leave");
-        }
-        
         return {...item , isSelected : !item.isSelected}
       }
       if(item._id === rowId){
@@ -165,7 +131,7 @@ export default function LeaveMangementPage() {
           },
         }
       )
-      setLeaveOverviewData(res?.data?.data)
+      setLeaveOverviewData(res?.data?.data || [])
     }catch(error){
       setLeaveOverviewData([]);
       if(error?.response?.message) {
@@ -191,7 +157,7 @@ export default function LeaveMangementPage() {
           },
         }
       );
-      setLeaveOverviewData(res?.data?.data);
+      setLeaveOverviewData(res?.data?.data || []);
     } catch (error) {
       if(error?.response?.message){
         toast.error(error?.response?.message);
@@ -211,7 +177,7 @@ export default function LeaveMangementPage() {
           },
         }
       );
-      setLeaveTypes(response.data.data); // Update the leave types state
+      setLeaveTypes(response.data.data || []); // Update the leave types state
     } catch (error) {
       if(error?.response?.message){
         toast.error(error?.response?.message);
@@ -261,7 +227,7 @@ export default function LeaveMangementPage() {
             },
           }
         );
-        setData(response?.data?.data);
+        setData(response?.data?.data || []);
         setLoading(false);
       } catch (error) {
         setErrorr(error);
@@ -278,66 +244,6 @@ export default function LeaveMangementPage() {
     };
     fetchData();
   }, []);
-
-  const handleEditLeave = async () => {
-    try {
-      const validateFromDate = new Date(fromDate);
-      const validateToDate = new Date(toDate);
-      if(validateFromDate > validateToDate){
-        toast.warn("From date should be less than the to date");
-        return;
-      }
-      setIsApiHit(true);
-      const dataToBeSend = {
-        emp_id: user?.user_id,
-        leave_type: leaveType,
-        from_date: fromDate.toISOString().split("T")[0],
-        to_date: toDate.toISOString().split("T")[0],
-        subject: subject,
-        body: body,
-      }
-      console.log(dataToBeSend);
-      const formData = new FormData();
-      Object.keys(dataToBeSend).forEach((item) => {
-        formData.append(item , dataToBeSend[item]);
-        console.log("formdata" , formData)
-      })
-      const response = await axios.put(
-        `${apiUrl}/leave/update-leave-request/${leaveId}/${user?.user_id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type" : "application/json",
-            "x-encryption-key" : encryptionKey
-          },
-        }
-      );
-      toast.success(response?.data?.message);
-      setIsEdit(false);
-      setLeaveId(null)
-      setFromDate(new Date(new Date()).toISOString().split('T')[0]);
-      setToDate(null);
-      setFile();
-      setSubject("");
-      setBody("");
-      setLeaveType("Casual Leave");
-      setIsApiHit(false);
-      getUserLeaves();
-    } catch (error) {
-      setIsApiHit(false);
-      const errors = error?.response?.data?.errors;
-      if(errors){
-        toast.error(errors[0].msg);
-      }
-      console.error("Error:", error);
-      if(error?.response?.message){
-        toast.error(error?.response?.message);
-      }
-      if(error?.response.data.message){
-        toast.error(error?.response.data.message);
-      }
-    }
-  };
 
   const handleUpdate = async () => {
     try {
@@ -372,14 +278,8 @@ export default function LeaveMangementPage() {
           },
         }
       );
+
       toast.success(response?.data?.message);
-      setLeaveId(null)
-      setFromDate(new Date(new Date()).toISOString().split('T')[0]);
-      setToDate(null);
-      setFile();
-      setSubject("");
-      setBody("");
-      setLeaveType("Casual Leave");
       setIsApiHit(false);
       getUserLeaves();
     } catch (error) {
@@ -691,8 +591,6 @@ export default function LeaveMangementPage() {
                 <FormLabel sx={{ fontSize: "12px" }}>Subject</FormLabel>
                 <TextField
                   variant="outlined"
-                  value={subject}
-                  disabled={isEdit}
                   onChange={(e) => setSubject(e.target.value)}
                   sx={{ width: "100%", backgroundColor: "#fafafa" }}
                 />
@@ -703,12 +601,9 @@ export default function LeaveMangementPage() {
                   multiline
                   rows={3}
                   variant="outlined"
-                  disabled={isEdit}
                   onChange={(e) => setBody(e.target.value)}
-                  value={body}
                   sx={{ width: "100%", backgroundColor: "#fafafa" }}
                 />
-                {!isEdit && <>
                  <FormLabel sx={{ margin: "2px 0px", fontSize: "12px" }}>
                   Upload File
                 </FormLabel>
@@ -748,8 +643,6 @@ export default function LeaveMangementPage() {
                     },
                   }}
                 />
-                </>
-                }
               </Box>
               <Button
                 variant="outlined"
@@ -770,7 +663,7 @@ export default function LeaveMangementPage() {
                     color: "black",
                   },})
                 }}
-                onClick={isEdit ? handleEditLeave :handleUpdate}
+                onClick={handleUpdate}
                 disabled = {isApiHit}
               >
                 {isApiHit ? <CircularProgress color="inherit" size={20} sx={{width : "100%" , height : "100%"}}/> :<>Send to admin</>}
