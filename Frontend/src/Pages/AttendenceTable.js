@@ -258,8 +258,13 @@ export default function UndetectedPeople({ listData }) {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {list?.map((row, i) => (
-                  // number++
+                {(rowsPerPage > 0
+                  ? list?.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : list
+                )?.map((row, i) => (
                   <TableRow key={i}>
                     <TableCell
                       component="th"
