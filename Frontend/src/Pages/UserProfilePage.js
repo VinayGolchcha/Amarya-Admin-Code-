@@ -379,6 +379,12 @@ const UserProfilePage = () => {
     }
     return false;
   }
+
+  const covertToRespectiveYearAndMonth = (decimalValue) => {
+    const years = Math.floor(decimalValue);
+    const months = Math.round((decimalValue - years) * 12);
+    return `${years}.${months}`
+  }
   function formatDate2(inputDate) {
     // Split the input date by the appropriate delimiter
     const parts = inputDate.split(/[\/\-]/);
@@ -689,7 +695,7 @@ const UserProfilePage = () => {
                       </div>
                       <div>
                         <Typography color="#79838b">
-                          {formData.experience} years
+                          {covertToRespectiveYearAndMonth(formData.experience)} years  
                         </Typography>
                       </div>
                     </CardContent>

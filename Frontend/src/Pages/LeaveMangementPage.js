@@ -85,7 +85,6 @@ export default function LeaveMangementPage() {
   });
   const [file , setFile] = React.useState();
   const [isEdit , setIsEdit] = React.useState(false);
-  console.log("user Id" , user.user_id)
 
   const handleEditChange = () => {
     setIsEdit(true);
