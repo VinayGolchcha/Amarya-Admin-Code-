@@ -13,6 +13,7 @@ import { useAuth } from '../Components/AuthContext';
 import { ToastContainer, toast } from "react-toastify";
 import Loading from "../sharable/Loading";
 import { useNavigate } from "react-router-dom";
+import AdminEmployeeDetails from "./AdminEmployeeDetails";
 
 const suggSum = [
   {
@@ -66,6 +67,7 @@ const AdminDashboard = () => {
   const [annDes , setAnnDes] = useState(null);
   const [isLoading , setIsLoading] = useState(true);
   const [activityData , setActivityData] = useState([]);
+  const [allEmployeeList , setAllEmployeeList] = useState([]);
 
   const {user , setActiveItem , encryptionKey} = useAuth();
 
@@ -155,6 +157,26 @@ const AdminDashboard = () => {
     }
   }
 
+  const fecthAllEmployees = async () => {
+    try{
+      const res = await axios.get(`${process.env.REACT_APP_API_URI}/user/admin/fetch-all-employee-list` , {
+        headers : {
+          "x-encryption-key" : encryptionKey
+        }
+      });
+      console.log("All Employee List:",res)
+      setAllEmployeeList(res?.data?.data);
+    }catch(error){
+      if(error?.response?.message){
+        toast.error(error?.response?.message);
+      }
+      if(error?.response?.data?.message){
+        const item = error?.response?.data?.message
+        toast.error(item);
+      }
+    }
+  }
+
   const fecthActAnn = async() => {
     try{
       const res = await axios.get(`${process.env.REACT_APP_API_URI}/dashboard/admin/fetch-activity-announcement` , {
@@ -237,7 +259,8 @@ const AdminDashboard = () => {
         fetchProjects(),
         fetchApprovalData(),
         fecthActAnn(),
-        adminDashboardApi()
+        adminDashboardApi(),
+        fecthAllEmployees()
       ]);
       setIsLoading(false);
     }
@@ -274,6 +297,7 @@ const AdminDashboard = () => {
           justifyContent : "center"
         }}>
           {/* <Box sx={{ display: "flex" }}> */}
+          
           <Grid item xs={12} md={9} lg={7}>
               <Box
                 sx={{
@@ -328,6 +352,9 @@ const AdminDashboard = () => {
             </Box>
           </Grid>
         </Grid>
+
+        <AdminEmployeeDetails projects= {allEmployeeList}/>
+              
         <AdminProjectSummy projects = {apiData?.project_details}/>
   
         <DashboardPosComp/>

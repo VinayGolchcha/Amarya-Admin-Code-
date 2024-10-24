@@ -1,4 +1,5 @@
 import { useState, useEffect, React, useContext } from "react";
+import CloseIcon from '@mui/icons-material/Close';
 import axios from "axios";
 import {
   Box,
@@ -173,7 +174,7 @@ const UserProfilePage = () => {
 
   const handleEditClick = (flag) => {
     if (flag === "UP") {
-      setIsEditing(true);
+      setIsEditing(!isEditing);
     } else if (flag === "PD") {
       setIsEditing2(true);
     }
@@ -378,6 +379,12 @@ const UserProfilePage = () => {
     }
     return false;
   }
+
+  const covertToRespectiveYearAndMonth = (decimalValue) => {
+    const years = Math.floor(decimalValue);
+    const months = Math.round((decimalValue - years) * 12);
+    return `${years}.${months}`
+  }
   function formatDate2(inputDate) {
     // Split the input date by the appropriate delimiter
     const parts = inputDate.split(/[\/\-]/);
@@ -518,7 +525,7 @@ const UserProfilePage = () => {
             >
               User profile
               <IconButton onClick={() => handleEditClick("UP")}>
-                <EditIcon />
+                {!isEditing ? <EditIcon /> : <CloseIcon/>}
               </IconButton>
             </Typography>
 
@@ -688,7 +695,7 @@ const UserProfilePage = () => {
                       </div>
                       <div>
                         <Typography color="#79838b">
-                          {formData.experience} years
+                          {covertToRespectiveYearAndMonth(formData.experience)} years  
                         </Typography>
                       </div>
                     </CardContent>

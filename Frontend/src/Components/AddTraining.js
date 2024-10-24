@@ -86,7 +86,6 @@ export default function AddTraining({
   }
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
-    console.log("file name",file);
   }
   return (
     <>

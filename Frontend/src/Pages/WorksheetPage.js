@@ -844,7 +844,7 @@ const handleEditRowChange = (field, value) => {
                       {/* <IconButton onClick={() => handleEditClick()}>
                         <EditIcon />
                       </IconButton> */}
-                      {isEdited && <Box
+                      {row.isEdit && <Box
                         component="img"
                         src={`${process.env.PUBLIC_URL}/Images/Save_duotone.png`}
                         alt="Check"
@@ -852,13 +852,20 @@ const handleEditRowChange = (field, value) => {
                         sx={{ cursor: "pointer" }}
                         
                       />}
-                    {!isEdited && <Box
+                        {!row.isEdit &&<Box
+                        component="img"
+                        src={`${process.env.PUBLIC_URL}/Images/worksheet/edit.png`}
+                        alt="Check"
+                        sx={{ cursor: "pointer" }}
+                        onClick={() => handleEditChange(row)}
+                      />}
+                    {/* {!isEdited && <Box
                       component="img"
                       src={`${process.env.PUBLIC_URL}/Images/worksheet/edit.png`}
                       alt="Check"
                       sx={{ cursor: "pointer" }}
                       onClick={() => handleEditChange(row)}
-                    />}
+                    />} */}
                     
                     </TableCell>
                   </TableRow>

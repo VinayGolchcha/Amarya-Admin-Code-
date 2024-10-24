@@ -79,7 +79,6 @@ export default function SettingsProject() {
           const endMonth = item.end_month
             ? `${capitalizeFirstLetter(item.end_month.split(" ")[0])} 20${item.end_month.split(" ")[1]}`
             : null;
-          console.log("start month" , startMonth);
           return {
             "Project Name": item.project,
             "Client Name": item.client_name,
