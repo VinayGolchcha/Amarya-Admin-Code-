@@ -17,6 +17,8 @@ import TrainingsPage from "./Pages/TrainingsPage";
 import AnnouncementPage from "./Pages/AnnouncementsPage";
 import ActivitiesPage from "./Pages/ActivitiesPage";
 import UserProfilePage from "./Pages/UserProfilePage";
+import Attendence from "./Pages/AttendencePage";
+import EmployeeAttendenceHomePage from "./Pages/EmployeeAttendenceHome";
 import AdminDashboard from "./AdminPages/AdminDashboard";
 import AdminAnnouncement from "./Pages/AdminAnnouncement";
 import LoginPage from "./Pages/LoginPage";
@@ -28,6 +30,7 @@ import { useAuth } from "./Components/AuthContext";
 import AdminLeaveManagement from "./Pages/AdminLeaveManagement";
 import PrivateRoute from "./Pages/PrivateComponent";
 import EmailVerification from "./Pages/EmailVerification";
+import PreviousLogs from "./Pages/PreviousLogs";
 import UserProfileAdmin from "./AdminPages/UserProfileAdmin";
 
 
@@ -187,6 +190,22 @@ const MainPage = (props) => {
             element={
               <PrivateRoute
                 element={role === "user" ? WorksheetPage : AdminWorkSheet}
+              />
+            }
+          />
+          <Route
+            path="/Attendence"
+            element={
+              <PrivateRoute
+                element={role === "user" ? EmployeeAttendenceHomePage : Attendence}
+              />
+            }
+          />
+          <Route
+            path="/Attendence/camera/:date"
+            element={
+              <PrivateRoute
+                element={role === "user" ? EmployeeAttendenceHomePage : PreviousLogs}
               />
             }
           />

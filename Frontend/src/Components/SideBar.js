@@ -36,6 +36,7 @@ import { useAuth } from "./AuthContext";
 import { Button } from "@mui/material";
 import axios from "axios";
 import { toast } from "react-toastify";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const drawerWidth = 240;
 
@@ -61,6 +62,9 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
     { text: "Leave Planner", link: "leaves", icon: <InsertInvitationIcon /> },
     { text: "Trainings", link: "trainings", icon: <GroupsIcon /> },
     { text: "Worksheet", link: "worksheet", icon: <GroupWorkIcon /> },
+    {
+      text: "Attendence", link: "Attendence", icon: <CalendarMonthIcon />
+    },
   ].filter(Boolean); //
 
   const other = [
@@ -75,11 +79,11 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
   const extensions = [{
       text: "Messenger",
       icon: <Box
-              component="img"
-              src={`${process.env.PUBLIC_URL}/messenger.png`}
-              alt="icon"
-              sx={{height:"20px" , width : "20px"}}
-            />,
+        component="img"
+        src={`${process.env.PUBLIC_URL}/messenger.png`}
+        alt="icon"
+        sx={{ height: "20px", width: "20px" }}
+      />,
     },
     // user?.role === "user" && {
     //   text: "Attendance",
@@ -190,7 +194,7 @@ const SideBar = ({ mobileOpen, handleDrawerToggle }) => {
       </List>
       <Typography
         variant="caption"
-        sx={{ fontWeight: "700", color: "#b1b1b1", padding: "0px 16px" ,  display: user?.role === "admin" && "none"   }}
+        sx={{ fontWeight: "700", color: "#b1b1b1", padding: "0px 16px", display: user?.role === "admin" && "none" }}
       >
         EXTENSIONS
       </Typography>
