@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import WifiOffIcon from "@mui/icons-material/WifiOff";
 
 export default function CameraFeeds() {
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked, setIsChecked] = useState(true);
   const today = new Date();
   const [date, setDate] = useState(formatDate(today));
 
@@ -46,12 +46,8 @@ export default function CameraFeeds() {
   return (
     <Box>
       <Box sx={{ display: "flex", alignItems: "stretch" }}>
-        <VideoStream />
-        <VideoStream />
-      </Box>
-      <Box sx={{ display: "flex" }}>
-        <VideoStream />
-        <VideoStream />
+        <VideoStream isCameraActive={isChecked} />
+        {/* <VideoStream /> */}
       </Box>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography
