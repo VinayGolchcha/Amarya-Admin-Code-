@@ -383,7 +383,7 @@ const UserProfilePage = () => {
   const covertToRespectiveYearAndMonth = (decimalValue) => {
     const years = Math.floor(decimalValue);
     const months = Math.round((decimalValue - years) * 12);
-    return `${years}.${months}`
+    return `${years} yr ${months} mon`
   }
   function formatDate2(inputDate) {
     // Split the input date by the appropriate delimiter
@@ -414,7 +414,6 @@ const UserProfilePage = () => {
     formDataToSend.append("public_id", formData.public_id);
     formDataToSend.append("first_name", formData.first_name);
     formDataToSend.append("last_name", formData.last_name);
-    formDataToSend.append("password", formData.password);
     formDataToSend.append("mobile_number", formData.mobile_number);
     formDataToSend.append(
       "emergency_contact_number",
@@ -695,7 +694,7 @@ const UserProfilePage = () => {
                       </div>
                       <div>
                         <Typography color="#79838b">
-                          {covertToRespectiveYearAndMonth(formData.experience)} years  
+                          {covertToRespectiveYearAndMonth(formData.experience)}   
                         </Typography>
                       </div>
                     </CardContent>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
@@ -13,7 +13,13 @@ import {
   TableFooter,
   TablePagination,
   IconButton,
+  FormControlLabel,
+  Checkbox,
+  TextField,
+  Select,
+  MenuItem,
 } from "@mui/material";
+import { pink } from "@mui/material/colors";
 import { useTheme } from "@mui/material/styles";
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
@@ -80,54 +86,47 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-const rows = [
-  {
-    sNo: 1,
-    clientName: "ISUZU",
-    projectLead: "Vinay Sir",
-    project: "SAP - Admin",
-    stats: "Delivered",
-  },
-  {
-    sNo: 2,
-    clientName: "Infrabeat",
-    projectLead: "Vinay Sir",
-    project: "SAP - HANA",
-    stats: "In Progress",
-  },
-  {
-    sNo: 3,
-    clientName: "Shephertz",
-    projectLead: "Vinay Sir",
-    project: "React And Node JS",
-    stats: "Delivered",
-  },
-  {
-    sNo: 4,
-    clientName: "SAP-Germany",
-    projectLead: "Vinay Sir",
-    project: "SAP - HR",
-    stats: "In Progress",
-  },
-  {
-    sNo: 5,
-    clientName: "Kunal Sir",
-    projectLead: "Vinay Sir",
-    project: "Flutter and PHP",
-    stats: "In Progress",
-  },
-];
-
-const AdminEmployeeDetails = ({projects}) => {
+const AdminEmployeeDetails = ({ projects }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [filterEnabled, setFilterEnabled] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("All");
+  const [selectedDesignation, setSelectedDesignation] = useState("All");
+  const [filteredData, setFilteredData] = useState([]);
 
-  const covertToRespectiveYearAndMonth = (decimalValue) => {
-    const years = Math.floor(decimalValue);
-    const months = Math.round((decimalValue - years) * 12);
-    return `${years}.${months}`
-  }
-  
+  useEffect(() => {
+    let data = projects;
+
+    // Filter by name
+    if (searchText) {
+      data = data.filter((item) =>
+        item.full_name.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+
+    // Filter by status
+    if (selectedStatus !== "All") {
+      data = data.filter(
+        (item) =>
+          item.project_status?.toLowerCase() === selectedStatus.toLowerCase()
+      );
+    }
+
+    // Filter by designation
+    if (selectedDesignation !== "All") {
+      data = data.filter(
+        (item) =>
+          item.designation?.toLowerCase() ===
+          selectedDesignation.toLowerCase()
+      );
+      console.log("selected data" , selectedDesignation)
+      console.log("filtered based on the designation",data)
+    }
+
+    setFilteredData(data);
+  }, [projects, searchText, selectedStatus, selectedDesignation]);
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -137,11 +136,14 @@ const AdminEmployeeDetails = ({projects}) => {
     setPage(0);
   };
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const covertToRespectiveYearAndMonth = (decimalValue) => {
+    const years = Math.floor(decimalValue);
+    const months = Math.round((decimalValue - years) * 12);
+    return `${years} yr ${months} mon`
+  }
 
   return (
-    <div>
+    <div style={{margin : "35px 0px"}}>
       <Box
         sx={{
           borderRadius: "15px",
@@ -150,149 +152,145 @@ const AdminEmployeeDetails = ({projects}) => {
           margin: "10px 0px",
         }}
       >
-        <Box sx={{display : "flex" , justifyContent : "space-between"}}>
-            <Typography
+        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography
+            sx={{
+              fontFamily: "Poppins",
+              fontWeight: "600",
+              color: "#00000099",
+              margin: "12px 2px",
+            }}
+            variant="span"
+          >
+            Employee Details
+          </Typography>
+          <Typography
+            sx={{
+              fontFamily: "Poppins",
+              fontWeight: "600",
+              color: "#00000099",
+              margin: "12px 2px",
+            }}
+            variant="span"
+          >
+            Total Employee Count - {filteredData.length}
+          </Typography>
+          <FormControlLabel
+            value="start"
+            control={
+              <Checkbox
                 sx={{
-                    fontFamily: "Poppins",
-                    fontWeight: "600",
-                    color: "#00000099",
-                    margin: "12px 2px",
+                  color: pink[800],
+                  "&.Mui-checked": {
+                    color: pink[600],
+                  },
                 }}
-                variant="span"
-                >
-            {   " "}
-                Employee Details
-            </Typography>
-            <Typography
-                sx={{
-                    fontFamily: "Poppins",
-                    fontWeight: "600",
-                    color: "#00000099",
-                    margin: "12px 2px",
-                }}
-                variant="span"
-                >
-            {   " "}
-                Total Employee Count - {projects.length}
-            </Typography>
+                onChange={() => setFilterEnabled(!filterEnabled)}
+              />
+            }
+            label="Enable Filter"
+            labelPlacement="start"
+            sx={{ fontFamily: "Poppins", color: "#FF5151" }}
+          />
         </Box>
-        <Box>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow sx={{ backgroundColor: "#1B204A" }}>
-                  <TableCell sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}>
-                    S.No.{" "}
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
-                  >
-                    Emp. Id
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
-                  >
-                    Emp. Name
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
-                  >
-                    Designation
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
-                  >
-                    Joining date
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
-                  >
-                    Experience
-                  </TableCell>
-                  <TableCell
-                    align="left"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}
-                  >
-                    Status
-                  </TableCell>
+
+        {/* Filter Inputs */}
+        {filterEnabled && (
+          <Box sx={{ display: "flex", gap: 2, my: 2 }}>
+            <TextField
+              label="Search by Name"
+              variant="outlined"
+              size="small"
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+            <Select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              displayEmpty
+              size="small"
+            >
+              <MenuItem value="All">All Statuses</MenuItem>
+              <MenuItem value="Allocated">Allocated</MenuItem>
+              <MenuItem value="Not Yet Allocated">Not Yet Allocated</MenuItem>
+            </Select>
+            <Select
+              value={selectedDesignation}
+              onChange={(e) => {
+                console.log(e.target.value)
+                setSelectedDesignation(e.target.value)}}
+              displayEmpty
+              size="small"
+            >
+              <MenuItem value="All">All Designations</MenuItem>
+              {
+                [...new Set(projects.map(item => item.designation))].map((item) => <MenuItem value={item}>{item}</MenuItem>)
+              }
+            </Select>
+          </Box>
+        )}
+
+        {/* Table */}
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="employee details table">
+            <TableHead>
+              <TableRow sx={{ backgroundColor: "#1B204A" }}>
+                <TableCell sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}>
+                  S.No.
+                </TableCell>
+                <TableCell sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}>
+                  Emp. Id
+                </TableCell>
+                <TableCell sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}>
+                  Emp. Name
+                </TableCell>
+                <TableCell sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}>
+                  Designation
+                </TableCell>
+                <TableCell sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}>
+                  Joining Date
+                </TableCell>
+                <TableCell sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}>
+                  Experience
+                </TableCell>
+                <TableCell sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}>
+                  Status
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {(rowsPerPage > 0
+                ? filteredData.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : filteredData
+              ).map((row, i) => (
+                <TableRow key={i}>
+                  <TableCell>{page * rowsPerPage + i + 1}</TableCell>
+                  <TableCell>{row.emp_id}</TableCell>
+                  <TableCell>{row.full_name}</TableCell>
+                  <TableCell>{row.designation}</TableCell>
+                  <TableCell>{row.joining_date?.split("T")[0]}</TableCell>
+                  <TableCell>{covertToRespectiveYearAndMonth(row.experience)}</TableCell>
+                  <TableCell>{row.project_status}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {(rowsPerPage > 0
-                  ? projects?.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                  : projects
-                )?.map((row , i) => (
-                  <TableRow
-                    key={i}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                  >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      sx={{ fontFamily: "Poppins" }}
-                    >
-                      {page * rowsPerPage+i+1}
-                    </TableCell>
-                    <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
-                      {row.emp_id}
-                    </TableCell>
-                    <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
-                      {row.full_name}
-                    </TableCell>
-                    <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
-                      {row.designation}
-                    </TableCell>
-                    <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
-                      {row?.joining_date?.split("T")[0]}
-                    </TableCell>
-                    <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
-                      {covertToRespectiveYearAndMonth(row.experience)}
-                    </TableCell>
-                    <TableCell align="left" sx={{ fontFamily: "Poppins" }}>
-                        {row.project_status}
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {emptyRows > 0 && (
-                  <TableRow style={{ height: 53 * emptyRows }}>
-                    <TableCell colSpan={6} />
-                  </TableRow>
-                )}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TablePagination
-                    rowsPerPageOptions={[
-                      5,
-                      10,
-                      25,
-                      { label: "All", value: projects?.length },
-                    ]}
-                    colSpan={6}
-                    count={projects?.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    SelectProps={{
-                      inputProps: { "aria-label": "rows per page" },
-                      native: true,
-                    }}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                    ActionsComponent={TablePaginationActions}
-                  />
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
-        </Box>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  count={filteredData.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
       </Box>
     </div>
   );
