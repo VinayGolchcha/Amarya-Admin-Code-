@@ -143,13 +143,16 @@ export default function SettingsLeave() {
 
   const handleSave = () => {
     if (editMode) {
+      console.log("form data" , formData);
+      console.log("original form data",originalFormData)
       const editedleaves = formData.filter(
         (data, index) =>
           data &&
           originalFormData[index] &&
-          data.leave_count !== originalFormData[index].leave_count
+          data.leave_count !== originalFormData[index].leave_count || 
+          data.description != originalFormData[index].description
       );
-
+      console.log("edited Leaves" , editedleaves);
 
       editedleaves.forEach((item) => {
         const leaveId = item._id;
@@ -167,6 +170,7 @@ export default function SettingsLeave() {
               leave_type: item.leave_type,
               gender: item.gender,
               leave_count: item.leave_count,
+              description : item.description
             }),
           }
         )
