@@ -11,32 +11,32 @@ import "react-toastify/dist/ReactToastify.css";
 
 function OtpP({ closeOtpP, email }) {
   const [otp, setOtp] = useState("");
-  const [openModel, setOpenModel] = useState(false);
+  const [openModel, setOpenModel] = useState(true);
   // Retrieve saved email from local storage
 
-  const handleUpdate = async () => {
-    try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URI}/user/verify-email-for-password-update`,
-        {
-          otp,
-          email,
-        }
-      );
-      if (response.data.success) {
-        toast.success(response.data.message);
-        setOpenModel(true);
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.log(
-        "Error data:",
-        error.response?.data?.message || error.message
-      );
-      toast.error(error.response?.data?.message || "An error occurred");
-    }
-  };
+  // const handleUpdate = async () => {
+  //   try {
+  //     const response = await axios.post(
+  //       `${process.env.REACT_APP_API_URI}/user/verify-email-for-password-update`,
+  //       {
+  //         otp,
+  //         email,
+  //       }
+  //     );
+  //     if (response.data.success) {
+  //       toast.success(response.data.message);
+  //       setOpenModel(true);
+  //     } else {
+  //       toast.error(response.data.message);
+  //     }
+  //   } catch (error) {
+  //     console.log(
+  //       "Error data:",
+  //       error.response?.data?.message || error.message
+  //     );
+  //     toast.error(error.response?.data?.message || "An error occurred");
+  //   }
+  // };
 
   return (
     <>
@@ -60,11 +60,10 @@ function OtpP({ closeOtpP, email }) {
 
             transform: "translate(-50%,-50%)",
             // backgroundColor: "rgb(50, 50, 116)",
-            background: "#161E54",
           }}
           className="modelcontainer"
         >
-          <Button
+          {/* <Button
             sx={{
               zIndex: "1",
               position: "absolute",
@@ -112,71 +111,7 @@ function OtpP({ closeOtpP, email }) {
               Complete The Verification process
             </p>
             <OtpInput numInputs={4} onOtpChange={setOtp} />
-            {/* <TextField
-              id="filled-basic"
-              variant="filled"
-              inputProps={{ maxLength: 1 }} 
-              
-              
             
-              onChange={(e) => setOtp(e.target.value)}
-              sx={{
-                marginY: 1,
-                width: "8%",
-                borderRadius: "5px",
-                border: "1px solid #FF5151",
-                backgroundColor: "white",
-                
-              }}
-            />
-            <TextField
-              id="filled-basic"
-              variant="filled"
-              inputProps={{ maxLength: 1 }} 
-              
-            
-              onChange={(e) => setOtp(e.target.value)}
-              sx={{
-                marginY: 1,
-                width: "8%",
-                marginLeft:"15px",
-                borderRadius: "5px",
-                border: "1px solid #FF5151",
-                backgroundColor: "white",
-              }}
-            />
-            <TextField
-              id="filled-basic"
-              variant="filled"
-              inputProps={{ maxLength: 1 }} 
-              
-            
-              onChange={(e) => setOtp(e.target.value)}
-              sx={{
-                marginY: 1,
-                width: "8%",
-                marginLeft:"15px",
-                borderRadius: "5px",
-                border: "1px solid #FF5151",
-                backgroundColor: "white",
-              }}
-            />
-            <TextField
-              id="filled-basic"
-              variant="filled"
-              inputProps={{ maxLength: 1 }} 
-              
-            
-              onChange={(e) => setOtp(e.target.value)}
-              sx={{
-                marginY: 1,
-                width: "8%",
-                marginLeft:"15PX",
-                borderRadius: "5px",
-                border: "1px solid #FF5151",
-                backgroundColor: "white",
-              }} */}
-            {/* /> */}
             <br></br>
             <br></br>
 
@@ -201,7 +136,7 @@ function OtpP({ closeOtpP, email }) {
               // onClick={()=>setOpenModel(true)}
             >
               Verify OTP
-            </Button>
+            </Button> */}
             {openModel && (
               <Model
                 closeModel={setOpenModel}
@@ -209,9 +144,6 @@ function OtpP({ closeOtpP, email }) {
                 email={email}
               />
             )}
-
-            <br></br>
-          </div>
         </div>
       </div>
     </>

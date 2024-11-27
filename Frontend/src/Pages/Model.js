@@ -57,7 +57,7 @@ function Model({ closeModel, closeOtpP, email }) {
   ///
   return (
     <>
-          <div
+    <div
         style={{
           backgroundColor: "white",
           borderRadius: "10px",
@@ -166,7 +166,7 @@ function Model({ closeModel, closeOtpP, email }) {
             />
             <br></br>
             <br></br> */}
-              <TextField
+            <TextField
               id="filled-basic"
               label="otp"
               variant="filled"
