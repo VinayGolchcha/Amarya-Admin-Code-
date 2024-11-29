@@ -35,6 +35,15 @@ const UserProfileAdmin = () => {
   const [employees, setEmployees] = useState([]);
   const [filterEmpId, setFilterEmpId] = useState("");
   const [filterDropdown, setFilterDropdown] = useState([]);
+  const currentDate = (new Date()).toISOString().split('T')[0];
+  const requiredFormat = currentDate.substring(0,7);
+
+  console.log(requiredFormat)
+  const covertToRespectiveYearAndMonth = (decimalValue) => {
+    const years = Math.floor(decimalValue);
+    const months = Math.round((decimalValue - years) * 12);
+    return `${years} yr ${months} mon`
+  }
 
   const handleFilterChange = (event, newValue) => {
     if (newValue === null) {
@@ -88,10 +97,30 @@ const UserProfileAdmin = () => {
       }
   },[]);
   
+  const fetchWeightedAvg = async () => {
+    try{
+      const empId = user.user_id;
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/worksheet/admin/get-all-employee-weighted-average/${requiredFormat}/AMEMP010` , {
+        headers : {
+          "x-encryption-key" : encryptionKey
+        }
+      });
+      if(response.data.data.length > 1){
+        console.log("Calculted weighted avg:",response.data.data[0].weighted_average_percentage);
+        setWeightedAvg(response.data.data[0].weighted_average_percentage);
+      }
+      console.log(response);
+    }catch(err){
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
     fetchAllEmployees();
+    fetchWeightedAvg();
   },[]
   );
+
 
   // const [file,setFile] = useState("");
 
@@ -177,6 +206,10 @@ const UserProfileAdmin = () => {
       value: 243,
       info: "Client reports",
     },
+    {
+      value: 243,
+      info: "Weighted Avg",
+    },
   ];
 
   const [projectsData, setProjectsData] = useState({
@@ -211,6 +244,7 @@ const UserProfileAdmin = () => {
   const [projectTimeline, setProjectTimeline] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const apiUrl = process.env.REACT_APP_API_URL;
+  const [weightedAvg , setWeightedAvg] = useState("");
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -420,6 +454,7 @@ const UserProfileAdmin = () => {
 
   useEffect(() => {
     fetchUserData();
+    fetchWeightedAvg()
   }, [filterEmpId]);
 
   const disabledList = (field) => {
@@ -528,6 +563,11 @@ const UserProfileAdmin = () => {
         item.value = formData.teams;
         break;
       // Add more cases if needed for other info fields
+      case "Weighted Avg":
+        // If formData value is a string representing a percentage
+        // then remove '%' and convert to a number
+        item.value = weightedAvg || 0;
+        break;
       default:
         break;
     }
@@ -790,7 +830,7 @@ const UserProfileAdmin = () => {
                       </div>
                       <div>
                         <Typography color="#79838b">
-                          {formData.experience} years
+                          {covertToRespectiveYearAndMonth(formData.experience)} 
                         </Typography>
                       </div>
                     </CardContent>
