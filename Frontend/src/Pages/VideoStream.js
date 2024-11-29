@@ -4,7 +4,7 @@ import ReactPlayer from "react-player";
 import VideocamOffIcon from "@mui/icons-material/VideocamOff";
 
 const VideoStream = ({isCameraActive}) => {
-  const videoSrc = "http://localhost:3001/hls/stream.m3u8"; // HLS playlist URL
+  const videoSrc = `${process.env.REACT_APP_STREAM_URI}/hls/stream.m3u8`; // HLS playlist URL
   const [isPlaying, setIsPlaying] = useState(true);
 
   const handlePlay = () => setIsPlaying(true);
