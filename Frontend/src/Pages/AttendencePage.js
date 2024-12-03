@@ -106,7 +106,7 @@ const Attendence = () => {
             >
               <Tab
                 icon={<HomeIcon />}
-                label="Yolo Trackboard"
+                label="AI Trackboard"
                 {...a11yProps(0)}
                 sx={{
                   display: "flex",
