@@ -76,9 +76,13 @@ const WorksheetPage = () => {
         project_id: projectId,
         description: editedRow.description,
         date: editedRow.date,
-        hours: parseInt(editedRow.hours)
+        hours: editedRow.hours
       };
-
+      if(editedRow.hours<0.5 || editedRow.hours > 8){
+        toast.warn("Working hours should be in range of 0.5 to 8");
+        return;
+      }
+      console.log("Data to be posted on the editing" , postData);
       setIsLoading(true);
       const res = await axios.put(`${process.env.REACT_APP_API_URL}/worksheet/update-worksheet/${editedRow.id}/${user?.user_id}` ,postData , {
         headers : {
@@ -323,7 +327,7 @@ const WorksheetPage = () => {
         date: toBeEditedRow.date,
         category: toBeEditedRow.category,
         project: toBeEditedRow.project,
-        hours: toBeEditedRow.hours || 0,
+        hours: toBeEditedRow.hours || 0.5,
         description: toBeEditedRow.description,
         skillset: comingSkillList,
       });
@@ -380,7 +384,7 @@ const WorksheetPage = () => {
       date: today,
       category: "",
       project: "",
-      hours : "",
+      hours : 0.5,
       description: "",
       skillset: [],
     });
@@ -431,8 +435,13 @@ const WorksheetPage = () => {
         project_id: projectId,
         description: newRow.description,
         date: newRow.date,
-        hours: parseInt(newRow.hours)
+        hours: newRow.hours
       };
+      if(newRow.hours<0.5 || newRow.hours > 8){
+        toast.warn("Working hours should be in range of 0.5 to 8");
+        return;
+      }
+      console.log("Data posting for adding the rows" , postData);
 
       // Send the data to the API endpoint
       const response = await fetch(`${apiUrl}/worksheet/create-worksheet`, {

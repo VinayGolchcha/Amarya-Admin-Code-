@@ -442,6 +442,7 @@ const UserProfileAdmin = () => {
         team_id : userData.team_id,
         gender: userData.gender,
         public_id: userData.public_id === null ? "" : userData.public_id,
+        weighted_avg : weightedAvg
       });
       const profilePicture = userData.profile_picture
       // setProfilePhoto(profilePicture);// Set the profile photo in context
@@ -453,8 +454,8 @@ const UserProfileAdmin = () => {
   };
 
   useEffect(() => {
+    fetchWeightedAvg();
     fetchUserData();
-    fetchWeightedAvg()
   }, [filterEmpId]);
 
   const disabledList = (field) => {
@@ -566,7 +567,7 @@ const UserProfileAdmin = () => {
       case "Weighted Avg":
         // If formData value is a string representing a percentage
         // then remove '%' and convert to a number
-        item.value = weightedAvg || 0;
+        item.value = formData.weighted_avg
         break;
       default:
         break;

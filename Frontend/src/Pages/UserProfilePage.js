@@ -353,20 +353,6 @@ const UserProfilePage = () => {
     }
   };
 
-  const fetchWeightedAvg = async () => {
-    try{
-      const empId = user.user_id;
-      const response = axios.get(`${process.env.REACT_APP_API_URL}/worksheet/admin/get-all-employee-weighted-average/:date/${empId}` , {
-        headers : {
-          "x-encryption-key" : encryptionKey
-        }
-      });
-      console.log(response);
-    }catch(err){
-      console.log(err);
-    }
-  }
-
   useEffect(() => {
     fetchUserData();
     fetchProjectTimeline();

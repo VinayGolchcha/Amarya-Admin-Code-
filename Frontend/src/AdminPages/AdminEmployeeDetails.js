@@ -86,7 +86,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-const AdminEmployeeDetails = ({ projects }) => {
+const AdminEmployeeDetails = ({ projects , handleClose , setIsOpen}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filterEnabled, setFilterEnabled] = useState(false);
@@ -253,6 +253,9 @@ const AdminEmployeeDetails = ({ projects }) => {
                   Experience
                 </TableCell>
                 <TableCell sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}>
+                  Performance
+                </TableCell>
+                <TableCell sx={{ color: "#FFFFFF", fontFamily: "Prompt" }}>
                   Status
                 </TableCell>
               </TableRow>
@@ -272,6 +275,19 @@ const AdminEmployeeDetails = ({ projects }) => {
                   <TableCell>{row.designation}</TableCell>
                   <TableCell>{row.joining_date?.split("T")[0]}</TableCell>
                   <TableCell>{covertToRespectiveYearAndMonth(row.experience)}</TableCell>
+                  <TableCell style={{
+                    textAlign : "center"
+                  }}>
+                    <Box 
+                      component="img"
+                      src={`${process.env.PUBLIC_URL}/Images/graph.png`}
+                      alt="Check"
+                      sx={{ cursor: "pointer" }}
+                      onClick={() => {
+                        setIsOpen(true)
+                      }}
+                      />
+                  </TableCell>
                   <TableCell>{row.project_status}</TableCell>
                 </TableRow>
               ))}

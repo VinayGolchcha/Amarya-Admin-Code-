@@ -12,8 +12,9 @@ import axios from "axios";
 import { useAuth } from '../Components/AuthContext';
 import { ToastContainer, toast } from "react-toastify";
 import Loading from "../sharable/Loading";
-import { useNavigate } from "react-router-dom";
+import { useAsyncError, useNavigate } from "react-router-dom";
 import AdminEmployeeDetails from "./AdminEmployeeDetails";
+import PerformanceModal from "./PerformanceModal";
 
 const suggSum = [
   {
@@ -54,6 +55,8 @@ const announceNoti = [
   },
 ];
 const AdminDashboard = () => {
+  const [open , setOpen] = useState(false);
+  const handleClose = () => setOpen(false);
   const navigate = useNavigate();
   const [projectOverview , setProjectOverview] = useState([]);
   const [feedback , setFeedback] = useState([]);
@@ -275,7 +278,11 @@ const AdminDashboard = () => {
   }else{
 
     return (
-      <Box >
+      <Box>
+        <PerformanceModal
+          handleClose={handleClose}
+          open={open}
+        />
         <ToastContainer/>
         <Typography
           variant="h4"
@@ -353,7 +360,7 @@ const AdminDashboard = () => {
           </Grid>
         </Grid>
 
-        <AdminEmployeeDetails projects= {allEmployeeList}/>
+        <AdminEmployeeDetails projects= {allEmployeeList} handleClose = {handleClose} setIsOpen = {setOpen}/>
               
         <AdminProjectSummy projects = {apiData?.project_details}/>
   

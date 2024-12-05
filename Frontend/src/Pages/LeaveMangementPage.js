@@ -244,6 +244,8 @@ export default function LeaveMangementPage() {
     fetchData();
   }, []);
 
+  
+
   const handleUpdate = async () => {
     try {
       const validateFromDate = new Date(fromDate);

@@ -7,7 +7,7 @@ export default function DashboardGraph2({ pointsData }) {
   const barData = barMonths.map(month => pointsData[0]?.[month.toLowerCase()] ?? '--');
 
   return (
-    <Box sx={{ p: 0, border: '1px solid rgba(0, 0, 0, 0.1)' }}>
+    <Box sx={{ p: 0, border: '1px solid rgba(0, 0, 0, 0.8)' }}>
       <Box sx={{ padding: 3, borderBottom: "2px solid #BCBCBC" }}>
         <Typography sx={{ fontFamily: "Prompt", fontWeight: "600", fontSize: "24px", lineHeight: '36px', color: '#828282' }} variant='p'>
           Points earned per month
