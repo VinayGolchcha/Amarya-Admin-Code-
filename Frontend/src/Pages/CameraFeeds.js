@@ -3,19 +3,19 @@ import VideoStream from "./VideoStream";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import "../Components/Calendar.css";
 import WifiIcon from "@mui/icons-material/Wifi";
+import WifiOffIcon from "@mui/icons-material/WifiOff";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import WifiOffIcon from "@mui/icons-material/WifiOff";
 
 export default function CameraFeeds() {
-  const [isChecked, setIsChecked] = useState(true);
+  const [cameraStates, setCameraStates] = useState({
+    camera1: true,
+    camera2: true,
+  });
+
   const today = new Date();
   const [date, setDate] = useState(formatDate(today));
-
   const navigate = useNavigate();
-  const handleToggle = () => {
-    setIsChecked(!isChecked);
-  };
 
   function formatDate(date) {
     const dd = String(date.getDate()).padStart(2, "0");
@@ -26,28 +26,34 @@ export default function CameraFeeds() {
 
   function getDropdownDates() {
     const today = new Date();
-
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
-
     const tomorrow = new Date(today);
     tomorrow.setDate(today.getDate() - 2);
-
     return [formatDate(tomorrow), formatDate(yesterday), formatDate(today)];
   }
 
-  function SelectDate(e) {
+  const SelectDate = (e) => {
     setDate(e.target.value);
     navigate(`/Attendence/camera/${e.target.innerText}`);
-  }
+  };
+
+  const handleToggle = (camera) => {
+    setCameraStates((prevStates) => ({
+      ...prevStates,
+      [camera]: !prevStates[camera],
+    }));
+  };
 
   const dropdownDates = getDropdownDates();
 
   return (
     <Box>
-      <Box sx={{ display: "flex", alignItems: "stretch" }}>
-        <VideoStream isCameraActive={isChecked} />
-        {/* <VideoStream /> */}
+      <Box
+        sx={{ display: "flex", gap: 2, marginBottom: 2, minHeight: "200px" }}
+      >
+        <VideoStream isCameraActive={cameraStates.camera1} />
+        <VideoStream isCameraActive={cameraStates.camera2} />
       </Box>
       <Box sx={{ display: "flex", justifyContent: "space-between" }}>
         <Typography
@@ -106,57 +112,42 @@ export default function CameraFeeds() {
           </Select>
         </Box>
       </Box>
-      <Box
-        sx={{
-          borderRadius: "10px",
-          padding: "10px",
-          display: "flex",
-          gap: "20px",
-          flexDirection: "column",
-          border: "1px solid #b1adad",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            borderRadius: "10px",
-            border: "1px solid #b1adad",
-            padding: "10px",
-            alignItems: "center",
-            backgroundColor: "#F1F1F1",
-          }}
-        >
+      <Box>
+        {["camera1", "camera2"].map((camera, index) => (
           <Box
+            key={camera}
             sx={{
               display: "flex",
+              justifyContent: "space-between",
               alignItems: "center",
+              marginBottom: 2,
+              padding: 2,
+              border: "1px solid #b1adad",
+              borderRadius: "10px",
+              backgroundColor: "#F1F1F1",
             }}
           >
-            <VideocamIcon />
-            CPE351A
-          </Box>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            {isChecked ? <WifiIcon /> : <WifiOffIcon />}
-            <Box className="switch-container">
-              <input
-                type="checkbox"
-                id="toggle"
-                className="switch"
-                checked={isChecked}
-                onChange={handleToggle}
-              />
-              <label htmlFor="toggle" className="slider">
-                {isChecked ? "ACTIVE" : "INACTIVE"}
-              </label>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <VideocamIcon />
+              Camera {index + 1}
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              {cameraStates[camera] ? <WifiIcon /> : <WifiOffIcon />}
+              <Box className="switch-container">
+                <input
+                  type="checkbox"
+                  id={`toggle-${camera}`}
+                  className="switch"
+                  checked={cameraStates[camera]}
+                  onChange={() => handleToggle(camera)}
+                />
+                <label htmlFor={`toggle-${camera}`} className="slider">
+                  {cameraStates[camera] ? "ACTIVE" : "INACTIVE"}
+                </label>
+              </Box>
             </Box>
           </Box>
-        </Box>
+        ))}
       </Box>
     </Box>
   );

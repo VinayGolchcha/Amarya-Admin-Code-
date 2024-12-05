@@ -59,37 +59,51 @@ export default function AttendencePieChart({ pieData, date }) {
           {date}
         </Typography>
       </Box>
-      <PieChart
-        colors={["rgb(72, 83, 174)", "rgb(194, 200, 242)"]}
-        series={[
-          {
-            arcLabel: (item) => `${Number(item?.value)}%`,
-            arcLabelMinAngle: 30,
-            data: [
-              {
-                id: 0,
-                value: Number(data?.present_percentage),
-                label: "Employees Present",
-              },
-              {
-                id: 1,
-                value: Number(data?.absent_percentage),
-                label: "Employees Absent",
-              },
-            ],
-            cx: chartSize.cx,
-            cy: chartSize.cy,
-          },
-        ]}
+
+      <Box
         sx={{
-          [`& .${pieArcLabelClasses.root}`]: {
-            fill: "white",
-            fontWeight: "bold",
-          },
+          width: "100%",
+          overflowX: "auto",
         }}
-        width={chartSize.width}
-        height={chartSize.height}
-      />
+      >
+        <Box
+          sx={{
+            minWidth: chartSize.width, // Ensure the chart fits within the scrollable area
+          }}
+        >
+          <PieChart
+            colors={["rgb(72, 83, 174)", "rgb(194, 200, 242)"]}
+            series={[
+              {
+                arcLabel: (item) => `${Number(item?.value)}%`,
+                arcLabelMinAngle: 30,
+                data: [
+                  {
+                    id: 0,
+                    value: Number(data?.present_percentage),
+                    label: "Employees Present",
+                  },
+                  {
+                    id: 1,
+                    value: Number(data?.absent_percentage),
+                    label: "Employees Absent",
+                  },
+                ],
+                cx: chartSize.cx,
+                cy: chartSize.cy,
+              },
+            ]}
+            sx={{
+              [`& .${pieArcLabelClasses.root}`]: {
+                fill: "white",
+                fontWeight: "bold",
+              },
+            }}
+            width={chartSize.width}
+            height={chartSize.height}
+          />
+        </Box>
+      </Box>
       <Typography
         variant={isSmallScreen ? "body2" : "h6"}
         sx={{
