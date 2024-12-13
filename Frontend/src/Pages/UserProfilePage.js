@@ -112,6 +112,10 @@ const UserProfilePage = () => {
       value: 243,
       info: "Client reports",
     },
+    {
+      value: 0,
+      info: "Weighted avg",
+    },
   ];
 
   const [projectsData, setProjectsData] = useState({
@@ -304,10 +308,11 @@ const UserProfilePage = () => {
   const fetchUserData = async () => {
     try {
       const empId = user.user_id; // Example employee ID
-
-      // console.log(empId);
+      const currentDate = new Date();
+      const month = currentDate.getMonth() + 1;
+      const year = currentDate.getFullYear();
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/user/get-user-profile/${empId}`,
+        `${process.env.REACT_APP_API_URL}/user/get-user-profile/${empId}/${year}-${month}`,
         // Request body
         {},
         // Request configuration object
@@ -318,6 +323,7 @@ const UserProfilePage = () => {
         }
       );
       const userData = response.data.data[0][0]; // Extracting user data from the response
+      const weightedAvg = response.data.data[1];
       setFormData({
         ...formData,
         username: userData.username,
@@ -342,6 +348,7 @@ const UserProfilePage = () => {
         teams: userData.teams,
         team_id : userData.team_id,
         gender: userData.gender,
+        weighte_avg : weightedAvg.weighted_average_percentage,
         public_id: userData.public_id === null ? "" : userData.public_id,
       });
       const profilePicture = userData.profile_picture
@@ -468,6 +475,9 @@ const UserProfilePage = () => {
         break;
       case "Teams":
         item.value = formData.teams;
+        break;
+      case "Weighted avg":
+        item.value = formData.weighte_avg;
         break;
       // Add more cases if needed for other info fields
       default:
