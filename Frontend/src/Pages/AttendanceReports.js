@@ -13,6 +13,7 @@ import {
   TablePagination,
   Tooltip,
   Grid,
+  TextField,
 } from "@mui/material";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { toast } from "react-toastify";
@@ -28,10 +29,12 @@ import Loading from "../sharable/Loading";
 const AttendanceReports = React.memo(() => {
   const [page, setPage] = useState(0);
   const [filteredItems, setFilteredItems] = useState([]);
+  const [data, setData] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
   const [empId, setEmpId] = useState("");
-  const [month, setMonth] = useState(new Date().getMonth());
+  const [searchText, setSearchText] = useState("");
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
   const [isLoading, setIsLoading] = useState(true);
   const { encryptionKey } = useAuth();
@@ -42,6 +45,18 @@ const AttendanceReports = React.memo(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiUrl, encryptionKey, month, year]);
 
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let fullData = data;
+
+    if (searchText) {
+      fullData = filteredItems.filter((item) =>
+        item.emp_name.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+    setFilteredItems(fullData);
+  }, [searchText]);
+
   const getWeeklyPresentCount = async (start, end) => {
     try {
       setIsLoading(true);
@@ -50,6 +65,7 @@ const AttendanceReports = React.memo(() => {
         { headers: { "x-encryption-key": encryptionKey } }
       );
       setFilteredItems(response?.data?.data);
+      setData(response?.data?.data);
       setIsLoading(false);
     } catch (error) {
       if (error?.response?.message) {
@@ -60,7 +76,10 @@ const AttendanceReports = React.memo(() => {
 
   const downloadReport = async (selectMonth, selectYear) => {
     const selectedMonth = selectMonth >= 10 ? selectMonth : `0${selectMonth}`;
-    const endDate = `${selectYear}-${selectedMonth}-${getDaysInMonth(selectYear, selectMonth)}`;
+    const endDate = `${selectYear}-${selectedMonth}-${getDaysInMonth(
+      selectYear,
+      selectMonth
+    )}`;
     const startDate = `${selectYear}-${selectedMonth}-01`;
 
     try {
@@ -74,14 +93,18 @@ const AttendanceReports = React.memo(() => {
           "x-encryption-key": encryptionKey,
         },
       });
-      const blob = new Blob([response.data], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
       const link = document.createElement("a");
       link.href = window.URL.createObjectURL(blob);
       link.download = `report_${selectedMonth}_${selectYear}.xlsx`;
       link.click();
       setIsLoading(false);
     } catch (error) {
-      toast.error(error?.response?.message || "Error downloading the Excel file");
+      toast.error(
+        error?.response?.message || "Error downloading the Excel file"
+      );
     }
   };
 
@@ -96,11 +119,17 @@ const AttendanceReports = React.memo(() => {
     setPage(0);
   };
 
-  const months = Array.from({ length: 12 }, (_, i) => ({ value: i + 1, name: new Date(0, i).toLocaleString('default', { month: 'long' }) }));
+  const months = Array.from({ length: 12 }, (_, i) => ({
+    value: i + 1,
+    name: new Date(0, i).toLocaleString("default", { month: "long" }),
+  }));
 
   const refreshGrid = (selectMonth, selectYear) => {
     const selectedMonth = selectMonth >= 10 ? selectMonth : `0${selectMonth}`;
-    const endDate = `${selectYear}-${selectedMonth}-${getDaysInMonth(selectYear, selectMonth)}`;
+    const endDate = `${selectYear}-${selectedMonth}-${getDaysInMonth(
+      selectYear,
+      selectMonth
+    )}`;
     const startDate = `${selectYear}-${selectedMonth}-01`;
     getWeeklyPresentCount(startDate, endDate);
   };
@@ -108,7 +137,9 @@ const AttendanceReports = React.memo(() => {
   const getYearList = () => {
     const currentYear = new Date().getFullYear();
     return Array.from({ length: 5 }, (_, i) => currentYear - i).map((yr) => (
-      <MenuItem key={yr} value={yr}>{yr}</MenuItem>
+      <MenuItem key={yr} value={yr}>
+        {yr}
+      </MenuItem>
     ));
   };
 
@@ -119,6 +150,10 @@ const AttendanceReports = React.memo(() => {
 
   const handleClose = () => setOpen(false);
 
+  const onSearch = (value) => {
+    console.log(filteredItems);
+  };
+
   const handleMonthChange = (event) => setMonth(event.target.value);
 
   const handleYearChange = (event) => setYear(event.target.value);
@@ -128,9 +163,14 @@ const AttendanceReports = React.memo(() => {
   } else {
     return (
       <Grid>
-      <Modal open={open} onClose={handleClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
-        <EmployeeAttendenceModal month={month} year={year} empId={empId} />
-      </Modal>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          <EmployeeAttendenceModal month={month} year={year} empId={empId} />
+        </Modal>
         <Box sx={{ textAlign: "end" }}>
           <Select
             labelId="demo-simple-select-label"
@@ -177,7 +217,7 @@ const AttendanceReports = React.memo(() => {
                 alignItems: "center",
               }}
             >
-              <input
+              {/* <input
                 type="text"
                 placeholder="search here..."
                 style={{
@@ -185,6 +225,13 @@ const AttendanceReports = React.memo(() => {
                   borderRadius: "5px",
                   border: "1px solid black",
                 }}
+                onChange={(e) => onSearch(e.target.value)}
+              /> */}
+              <TextField
+                label="Search by Name"
+                variant="outlined"
+                size="small"
+                onChange={(e) => setSearchText(e.target.value)}
               />
               <Button
                 sx={{
@@ -316,6 +363,6 @@ const AttendanceReports = React.memo(() => {
       </Grid>
     );
   }
-})
+});
 
 export default AttendanceReports;

@@ -33,6 +33,7 @@ export default function UndetectedPeople() {
   const tags = ["VISITOR", "EMPLOYEE"];
 
   const handleChangePage = (event, newPage) => {
+    getData(newPage+1)
     setPage(newPage);
   };
 
@@ -50,11 +51,11 @@ export default function UndetectedPeople() {
     setOpen(false);
   };
 
-  async function getData() {
+  async function getData(page = 1) {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        `${apiUrl}/attendance/fetch-unknown-detections`,
+        `${apiUrl}/attendance/fetch-unknown-detections?page=${page}`,
         {
           headers: {
             "x-encryption-key": encryptionKey,
@@ -115,7 +116,7 @@ export default function UndetectedPeople() {
   }
 
   const onTagSelection = (e, row) => {
-    const updatedList = list.map((item) => {
+    const updatedList = list?.data.map((item) => {
       if (item.id === row.id) {
         saveUnknown({ ...item, tag: e.target.value });
         return { ...item, tag: e.target.value };
@@ -199,12 +200,7 @@ export default function UndetectedPeople() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {(rowsPerPage > 0
-                  ? list?.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                  : list
+                {(list?.data
                 )?.map((row, i) => (
                   <TableRow key={i + 1}>
                     <TableCell
@@ -282,9 +278,9 @@ export default function UndetectedPeople() {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[10]}
             component="div"
-            count={list?.length}
+            count={list?.total_count}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

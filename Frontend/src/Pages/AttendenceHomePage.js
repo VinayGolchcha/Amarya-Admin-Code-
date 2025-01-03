@@ -94,7 +94,7 @@ export default function AttendenceHomePage() {
       setIsLoading(false);
     };
     fetchData();
-  }, [encryptionKey, apiUrl]);
+  }, []);
   if (isLoading) {
     return <Loading />;
   } else {
