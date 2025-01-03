@@ -209,7 +209,7 @@ export default function EmployeeAttendenceModal({ empId, month, year }) {
         </Box>
         <hr />
         <Box sx={{ display: "flex", gap: "2rem", alignItems: "stretch" }}>
-          <EmployeeAttendencePieChart empData={empData} />
+          <EmployeeAttendencePieChart pieData={empData} />
           <Grid xs={12} md={9} lg={7} sx={{ width: "100%" }}>
             <Box
               sx={{

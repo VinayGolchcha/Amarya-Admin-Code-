@@ -10,6 +10,7 @@ import {
   TableRow,
   Paper,
   Modal,
+  TextField,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
@@ -20,6 +21,8 @@ import { useAuth } from "../Components/AuthContext";
 export default function PreviousLogs() {
   const { date } = useParams();
   const [list, setList] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [data, setData] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null); // For preview
   const [open, setOpen] = useState(false); // For modal control
   const [page, setPage] = React.useState(0);
@@ -40,13 +43,27 @@ export default function PreviousLogs() {
           }
         );
         setList(response?.data?.data);
+        setData(response?.data?.data);
       } catch (error) {
         if (error?.response?.message) {
+          console.log(error?.response?.message);
         }
       }
     }
     getData();
-  }, []);
+  });
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    let fullData = data;
+
+    if (searchText) {
+      fullData = list.filter((item) =>
+        item.emp_name.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+    setList(fullData);
+  }, [searchText]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -97,9 +114,10 @@ export default function PreviousLogs() {
             display: "flex",
             width: { sm: "50%" },
             justifyContent: "end",
+            alignItems:"center"
           }}
         >
-          <input
+          {/* <input
             type="text"
             placeholder="search here..."
             style={{
@@ -108,6 +126,12 @@ export default function PreviousLogs() {
               border: "1px solid black",
               width: { lg: "50%", md: "60%", sm: "100%" },
             }}
+          /> */}
+          <TextField
+            label="Search by Name"
+            variant="outlined"
+            size="small"
+            onChange={(e) => setSearchText(e.target.value)}
           />
           <RefreshOutlinedIcon
             sx={{

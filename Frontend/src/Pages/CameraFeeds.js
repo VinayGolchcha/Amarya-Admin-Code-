@@ -19,7 +19,7 @@ export default function CameraFeeds() {
 
   function formatDate(date) {
     const dd = String(date.getDate()).padStart(2, "0");
-    const mm = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based in JS
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
     const yyyy = date.getFullYear();
     return `${yyyy}-${mm}-${dd}`;
   }
@@ -91,13 +91,13 @@ export default function CameraFeeds() {
             value={date}
             sx={{
               "& .MuiOutlinedInput-notchedOutline": {
-                border: "none", // Remove the default border
+                border: "none",
               },
               "&:hover .MuiOutlinedInput-notchedOutline": {
-                border: "none", // Remove border on hover
+                border: "none",
               },
               "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                border: "none", // Remove border when focused
+                border: "none",
               },
             }}
             onClick={(e) => {

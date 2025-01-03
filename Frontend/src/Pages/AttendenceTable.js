@@ -12,6 +12,7 @@ import {
   Tooltip,
   Select,
   MenuItem,
+  TextField,
   Modal,
   Button,
 } from "@mui/material";
@@ -24,7 +25,13 @@ import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
 
 export default function UndetectedPeople({ listData }) {
+  // UndetectedPeople.propTypes={
+  //   listData:PropTypes.object,
+  // }
+
   const [list, setList] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  const [data, setData] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null); // For preview
   const [open, setOpen] = useState(false); // For modal control
   const [page, setPage] = useState(0);
@@ -40,7 +47,19 @@ export default function UndetectedPeople({ listData }) {
 
   useEffect(() => {
     setList(listData);
+    setData(listData);
   }, [listData]);
+
+  useEffect(() => {
+    let fullData = data;
+
+    if (searchText) {
+      fullData = list.filter((item) =>
+        item.employeeName.toLowerCase().includes(searchText.toLowerCase())
+      );
+    }
+    setList(fullData);
+  }, [data, list, searchText]);
 
   async function getData() {
     try {
@@ -54,6 +73,7 @@ export default function UndetectedPeople({ listData }) {
         }
       );
       setList(response?.data?.data);
+      setData(response?.data?.data);
       setIsLoading(false);
     } catch (error) {
       if (error?.response?.message) {
@@ -175,9 +195,10 @@ export default function UndetectedPeople({ listData }) {
               display: "flex",
               width: { sm: "50%" },
               justifyContent: "end",
+              alignItems: "center",
             }}
           >
-            <input
+            {/* <input
               type="text"
               placeholder="search here..."
               style={{
@@ -186,6 +207,13 @@ export default function UndetectedPeople({ listData }) {
                 border: "1px solid black",
                 width: { lg: "50%", md: "60%", sm: "100%" },
               }}
+            /> */}
+
+            <TextField
+              label="Search by Name"
+              variant="outlined"
+              size="small"
+              onChange={(e) => setSearchText(e.target.value)}
             />
             <RefreshOutlinedIcon
               sx={{
@@ -293,16 +321,19 @@ export default function UndetectedPeople({ listData }) {
                         hour12: true, // This enables 12-hour format with AM/PM
                       })}
                     </TableCell>
-                    <TableCell align="center" sx={{ padding: 0 }}>
+                    <TableCell
+                      align="center"
+                      sx={{ padding: 0 }}
+                      onClick={() =>
+                        handleImageClick(
+                          `data:image/jpeg;base64,${row.in_snapshot}`
+                        )
+                      }
+                    >
                       <img
                         src={`data:image/jpeg;base64,${row.in_snapshot}`}
                         alt="Employee"
                         style={{ width: "50px", cursor: "pointer" }}
-                        onClick={() =>
-                          handleImageClick(
-                            `data:image/jpeg;base64,${row.in_snapshot}`
-                          )
-                        }
                       />
                     </TableCell>
                     <TableCell align="center" sx={{ padding: 0 }}>
@@ -313,16 +344,19 @@ export default function UndetectedPeople({ listData }) {
                         hour12: true,
                       })}
                     </TableCell>
-                    <TableCell align="center" sx={{ padding: 0 }}>
+                    <TableCell
+                      align="center"
+                      sx={{ padding: 0 }}
+                      onClick={() =>
+                        handleImageClick(
+                          `data:image/jpeg;base64,${row.out_snapshot}`
+                        )
+                      }
+                    >
                       <img
                         src={`data:image/jpeg;base64,${row.out_snapshot}`}
                         alt="Employee"
                         style={{ width: "50px", cursor: "pointer" }}
-                        onClick={() =>
-                          handleImageClick(
-                            `data:image/jpeg;base64,${row.out_snapshot}`
-                          )
-                        }
                       />
                     </TableCell>
                     <TableCell align="center" sx={{ padding: 0 }}>
@@ -409,10 +443,12 @@ export default function UndetectedPeople({ listData }) {
                 sx={{ minWidth: 120 }}
               >
                 {[
-                  { name: "In Time", value: "in-time" },
-                  { name: "Out Time", value: "out-time" },
+                  { name: "In Time", value: "in-time", index: 1 },
+                  { name: "Out Time", value: "out-time", index: 2 },
                 ]?.map((time) => (
-                  <MenuItem value={time.value}>{time.name}</MenuItem>
+                  <MenuItem key={time.index} value={time.value}>
+                    {time.name}
+                  </MenuItem>
                 ))}
               </Select>
               <Select
@@ -423,7 +459,11 @@ export default function UndetectedPeople({ listData }) {
                 onChange={(e) => setEmployee(e.target.value)}
               >
                 {employeeList?.map((emp) => {
-                  return <MenuItem value={emp.id}>{emp.name}</MenuItem>;
+                  return (
+                    <MenuItem key={emp.id} value={emp.id}>
+                      {emp.name}
+                    </MenuItem>
+                  );
                 })}
               </Select>
             </Box>

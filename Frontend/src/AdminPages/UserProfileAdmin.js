@@ -97,27 +97,10 @@ const UserProfileAdmin = () => {
       }
   },[]);
   
-  const fetchWeightedAvg = async () => {
-    try{
-      const empId = user.user_id;
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/worksheet/admin/get-all-employee-weighted-average/${requiredFormat}/AMEMP010` , {
-        headers : {
-          "x-encryption-key" : encryptionKey
-        }
-      });
-      if(response.data.data.length > 1){
-        console.log("Calculted weighted avg:",response.data.data[0].weighted_average_percentage);
-        setWeightedAvg(response.data.data[0].weighted_average_percentage);
-      }
-      console.log(response);
-    }catch(err){
-      console.log(err);
-    }
-  }
+
 
   useEffect(() => {
     fetchAllEmployees();
-    fetchWeightedAvg();
   },[]
   );
 
@@ -207,8 +190,8 @@ const UserProfileAdmin = () => {
       info: "Client reports",
     },
     {
-      value: 243,
-      info: "Weighted Avg",
+      value: 0,
+      info: "Weighted avg",
     },
   ];
 
@@ -403,10 +386,12 @@ const UserProfileAdmin = () => {
   const fetchUserData = async () => {
     try {
       const empId = user.user_id; // Example employee ID
-
+      const currentDate = new Date();
+      const month = currentDate.getMonth()+1;
+      const year = currentDate.getFullYear();
       // console.log(empId);
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/user/get-user-profile/${filterEmpId ? filterEmpId : empId}`,
+        `${process.env.REACT_APP_API_URL}/user/get-user-profile/${filterEmpId ? filterEmpId : empId}/${year}-${month}`,
         // Request body
         {},
         // Request configuration object
@@ -417,6 +402,7 @@ const UserProfileAdmin = () => {
         }
       );
       const userData = response.data.data[0][0]; // Extracting user data from the response
+      const weightedAvg = response.data.data[1]
       setFormData({
         ...formData,
         username: userData.username,
@@ -442,7 +428,7 @@ const UserProfileAdmin = () => {
         team_id : userData.team_id,
         gender: userData.gender,
         public_id: userData.public_id === null ? "" : userData.public_id,
-        weighted_avg : weightedAvg
+        weighted_avg : weightedAvg.weighted_average_percentage
       });
       const profilePicture = userData.profile_picture
       // setProfilePhoto(profilePicture);// Set the profile photo in context
@@ -454,7 +440,6 @@ const UserProfileAdmin = () => {
   };
 
   useEffect(() => {
-    fetchWeightedAvg();
     fetchUserData();
   }, [filterEmpId]);
 
@@ -564,7 +549,7 @@ const UserProfileAdmin = () => {
         item.value = formData.teams;
         break;
       // Add more cases if needed for other info fields
-      case "Weighted Avg":
+      case "Weighted avg":
         // If formData value is a string representing a percentage
         // then remove '%' and convert to a number
         item.value = formData.weighted_avg
