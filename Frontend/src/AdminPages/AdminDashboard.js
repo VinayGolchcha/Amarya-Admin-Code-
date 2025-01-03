@@ -71,6 +71,7 @@ const AdminDashboard = () => {
   const [isLoading , setIsLoading] = useState(true);
   const [activityData , setActivityData] = useState([]);
   const [allEmployeeList , setAllEmployeeList] = useState([]);
+  const [selectedEmpId , setSelectedEmpId] = useState('');
 
   const {user , setActiveItem , encryptionKey} = useAuth();
 
@@ -282,6 +283,7 @@ const AdminDashboard = () => {
         <PerformanceModal
           handleClose={handleClose}
           open={open}
+          emp_id = {selectedEmpId}
         />
         <ToastContainer/>
         <Typography
@@ -360,7 +362,7 @@ const AdminDashboard = () => {
           </Grid>
         </Grid>
 
-        <AdminEmployeeDetails projects= {allEmployeeList} handleClose = {handleClose} setIsOpen = {setOpen}/>
+        <AdminEmployeeDetails projects= {allEmployeeList} handleClose = {handleClose} setIsOpen = {setOpen} setSelectedEmpId = {setSelectedEmpId}/>
               
         <AdminProjectSummy projects = {apiData?.project_details}/>
   

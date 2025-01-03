@@ -86,7 +86,7 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-const AdminEmployeeDetails = ({ projects , handleClose , setIsOpen}) => {
+const AdminEmployeeDetails = ({ projects , handleClose , setIsOpen, setSelectedEmpId}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filterEnabled, setFilterEnabled] = useState(false);
@@ -285,6 +285,7 @@ const AdminEmployeeDetails = ({ projects , handleClose , setIsOpen}) => {
                       sx={{ cursor: "pointer" }}
                       onClick={() => {
                         setIsOpen(true)
+                        setSelectedEmpId(row.emp_id)
                       }}
                       />
                   </TableCell>

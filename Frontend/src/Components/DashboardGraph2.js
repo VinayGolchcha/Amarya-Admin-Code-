@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Box, Typography } from "@mui/material";
 import { BarChart } from '@mui/x-charts/BarChart';
 
-export default function DashboardGraph2({ pointsData }) {
+const DashboardGraph2 = ({ pointsData }) => {
+
   const barMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const barData = barMonths.map(month => pointsData[0]?.[month.toLowerCase()] ?? '--');
+
+  // Map pointsData to barMonths
+  const barData = barMonths.map((month, index) => {
+    const monthKey = String(index + 1).padStart(2, '0'); // "01", "02", etc.
+    return pointsData[monthKey] || 0; // Use 0 if no data for the month
+  }); 
 
   return (
     <Box sx={{ p: 0, border: '1px solid rgba(0, 0, 0, 0.8)' }}>
@@ -27,3 +33,5 @@ export default function DashboardGraph2({ pointsData }) {
     </Box>
   );
 }
+
+export default memo(DashboardGraph2);
