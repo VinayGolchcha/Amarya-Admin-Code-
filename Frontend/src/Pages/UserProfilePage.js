@@ -311,8 +311,9 @@ const UserProfilePage = () => {
       const currentDate = new Date();
       const month = currentDate.getMonth() + 1;
       const year = currentDate.getFullYear();
+      const query_param = `${year}-${month}`
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/user/get-user-profile/${empId}/${year}-${month}`,
+        `${process.env.REACT_APP_API_URL}/user/get-user-profile/${empId}?date=${query_param}`,
         // Request body
         {},
         // Request configuration object

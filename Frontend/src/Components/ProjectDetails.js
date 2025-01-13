@@ -190,6 +190,8 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
   useEffect(() => {
     fetchUserProjects();
     fetchProjects();
+    console.log("joiningDate>>>>>>>",joiningDate);
+    
   }, []);
 
   const handleProjectChange = (e) => {
@@ -443,7 +445,7 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
                     newProject[item.field] !== "", // Add shrink prop
                 }}
                 inputProps={{
-                  min: joiningDate ? new Date(joiningDate).toISOString().split("T")[0] : "", // Setting the minDate to 01/09/2023
+                  min: joiningDate ? joiningDate : "", // Setting the minDate to 01/09/2023
                 }}
               />
               ) : (

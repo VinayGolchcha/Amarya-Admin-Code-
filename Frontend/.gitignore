@@ -1,6 +1,7 @@
 # Ignore the "node_modules" directory
 node_modules/
 .env
+.env.local
 # Ignore a specific module or file
 specific_module/
 specific_file.txt

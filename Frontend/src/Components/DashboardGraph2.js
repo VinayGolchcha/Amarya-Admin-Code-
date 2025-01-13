@@ -16,13 +16,13 @@ const DashboardGraph2 = ({ pointsData }) => {
     <Box sx={{ p: 0, border: '1px solid rgba(0, 0, 0, 0.8)' }}>
       <Box sx={{ padding: 3, borderBottom: "2px solid #BCBCBC" }}>
         <Typography sx={{ fontFamily: "Prompt", fontWeight: "600", fontSize: "24px", lineHeight: '36px', color: '#828282' }} variant='p'>
-          Points earned per month
+          Monthly weighted average(in %)
         </Typography>
       </Box>
       <Box sx={{ p: 2 }}>
         <BarChart
           series={[
-            { data: barData, label: "Awarded Points" }
+            { data: barData }
           ]}
           height={290}
           xAxis={[{ data: barMonths, scaleType: 'band' }]}

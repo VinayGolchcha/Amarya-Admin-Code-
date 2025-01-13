@@ -33,7 +33,7 @@ const DashboardGraph3 = ({ pointsData }) => {
           }}
           variant="p"
         >
-          Points earned along the years
+          Yearly weighted average(in %)
         </Typography>
       </Box>
       <Box sx={{ p: 2 }}>
@@ -46,7 +46,7 @@ const DashboardGraph3 = ({ pointsData }) => {
             },
           ]}
           series={[
-            { data: data, label: "years" }
+            { data: data }
           ]} // Series with X-Y data
           height={320}
         />
