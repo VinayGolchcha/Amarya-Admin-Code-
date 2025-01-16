@@ -24,7 +24,7 @@ const DashboardGraph2 = ({ pointsData }) => {
           series={[
             { data: barData }
           ]}
-          height={290}
+          height={320}
           xAxis={[{ data: barMonths, scaleType: 'band' }]}
           margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
           colors={['#3D4895']}

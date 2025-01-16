@@ -444,6 +444,7 @@ const WorksheetPage = () => {
       console.log("Data posting for adding the rows" , postData);
 
       // Send the data to the API endpoint
+      setIsLoading(true);
       const response = await fetch(`${apiUrl}/worksheet/create-worksheet`, {
         method: "POST",
         credentials: 'include', // Include cookies in the request

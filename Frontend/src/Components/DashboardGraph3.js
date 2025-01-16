@@ -21,7 +21,7 @@ const DashboardGraph3 = ({ pointsData }) => {
   console.log("Year Graph Data:", yearDataArray);
 
   return (
-    <Box sx={{ p: 0 }}>
+    <Box sx={{ p: 0 , border: '1px solid rgba(0, 0, 0, 0.8)'}}>
       <Box sx={{ padding: 3, borderBottom: "2px solid #BCBCBC" }}>
         <Typography
           sx={{

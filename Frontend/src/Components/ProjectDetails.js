@@ -35,6 +35,7 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
     },
     projects: [],
   });
+  const [allSkills, setSkills] = useState([]);
   const [allProjects, setAllProjects] = useState([]);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [open, setOpen] = useState(false);
@@ -159,6 +160,19 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
       .catch((error) => console.error("Error fetching projects:", error));
   };
 
+  const fecthSkills = async() => {
+    try{
+      const response = await axios.get("https://amarya-admin-backend-code-dev.onrender.com/api/v1/skillset/fetch-skills", {
+        headers : {
+          "x-encryption-key" : encryptionKey
+        }
+      });
+      setSkills(response.data.data)
+    }catch(error){
+      console.error("Error fetching user projects:", error.message);
+    }
+  } 
+
   const fetchUserProjects = async () => {
     try {
       const empId = user?.user_id; // Example employee ID
@@ -188,9 +202,9 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
   };
 
   useEffect(() => {
+    fecthSkills();
     fetchUserProjects();
     fetchProjects();
-    console.log("joiningDate>>>>>>>",joiningDate);
     
   }, []);
 
@@ -367,7 +381,7 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
                 />
               </Grid>
             ))}
-            <Button
+            {projectsData.currentProject.start_month && <Button
               sx={{ display: "flex", flexDirection: "column" }}
               onClick={handleUpdateProject}
             >
@@ -379,7 +393,7 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
               <Typography sx={{ color: "#B3B3B3", fontWeight: "600" }}>
                 Edit
               </Typography>
-            </Button>
+            </Button>}
             <Button sx={{ display: "flex", flexDirection: "column" }}>
               <img
                 src="/Images/icons8-save-100.png"
@@ -427,6 +441,24 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
           </Typography>
           <form>
             {projectDetailsFields2?.map((item, index) => (
+              item.field === "tech" ?
+              (
+                <FormControl fullWidth margin="normal">
+                  <InputLabel >Working Technology</InputLabel>
+                  <Select
+                    value={newProject.tech}
+                    onChange={handleNewProjectChange}
+                    name="tech"
+                  >
+                    {allSkills?.map((skill) => (
+                      <MenuItem key={skill._id} value={skill.skill}>
+                        {skill["skill"]}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              )
+              :
               item.field === "start_month" ? (
                 <TextField
                 key={index}
@@ -448,7 +480,8 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
                   min: joiningDate ? joiningDate : "", // Setting the minDate to 01/09/2023
                 }}
               />
-              ) : (
+              ) : 
+              (
                 <TextField
                 key={index}
                 fullWidth
@@ -469,7 +502,7 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
               )
             ))}
             <FormControl fullWidth margin="normal">
-              <InputLabel>Project</InputLabel>
+              <InputLabel >Project</InputLabel>
               <Select
                 value={newProject.project_id}
                 onChange={handleNewProjectChange}

@@ -121,9 +121,7 @@ const PerformanceModal = ({handleClose , open, emp_id}) => {
     },[emp_id]);
     
 
-    if(isLoading || !isDataReady) {
-      return <Loading/>
-    }else{
+
       return(
           <>
               <Modal open={open} onClose={handleClose} style={{
@@ -131,11 +129,12 @@ const PerformanceModal = ({handleClose , open, emp_id}) => {
               }}>
               <Box sx={{ p: 1 , backgroundColor : "White" , overflow : "auto" }}>
                   <Box style={{cursor : "pointer"}} onClick={() => handleClose()}><CloseIcon/></Box>
+                  {isLoading || !isDataReady ? <Loading/> :  
                   <Grid
                       container
                       spacing={2}
                       sx={{ margin: "6px 0px", justifyContent: "center" }}
-                      >
+                      > 
                           <Grid item lg={5} md={10} sm={10} xs={10}>
                               <DashboardGraph2 pointsData={monthData.month_data} />
                           </Grid>
@@ -143,12 +142,11 @@ const PerformanceModal = ({handleClose , open, emp_id}) => {
                               <DashboardGraph3 pointsData={yearData} />
                           </Grid>
   
-                  </Grid>
+                  </Grid>}
               </Box>
               </Modal>
           </>
       )
-    }
 }
 
 export default PerformanceModal;

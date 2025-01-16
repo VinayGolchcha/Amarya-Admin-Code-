@@ -22,9 +22,11 @@ export default function DashboardPage() {
   const [profileData, setProfileData] = useState(null);
   const [currentProject, setCurrentProject] = useState(null);
   const [projectsThisYear, setProjectsThisYear] = useState([]);
-  const [pointsData, setPointsData] = useState({
-    month_data: [],
-    year_data: [],
+  const [isDataReady, setIsDataReady] = useState(false);
+  const [monthData, setmonthData] = useState({
+    month_data : []
+  });
+  const [yearData, setYearData] = useState({
   });
   const apiUrl = process.env.REACT_APP_API_URI;
 
@@ -62,36 +64,56 @@ export default function DashboardPage() {
           setProjectsThisYear(data.projects_this_year || []);
           localStorage.setItem('email' , data.emp_data.email);
         }
-
-        setPointsData(pointsData.data || { month_data: [], year_data: [] });
-        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
-        setIsLoading(false);
       }
     };
 
-    const fetchPointsData = async () => {
+    const fetchMonthData = async () => {
       try {
         const emp_id = user?.user_id; // Replace with actual employee ID if dynamic
 
         const pointsResponse = await axios.get(
-          `${apiUrl}/userDashboard/get-user-points-data-for-graph/${emp_id}`,
+          `${apiUrl}/worksheet/all-month-weighted-average/${'2024'}/${emp_id}`,
           {
             headers: {
               "x-encryption-key" : encryptionKey
             },
           }
         );
-        setPointsData(pointsData.data || { month_data: [], year_data: [] });
-        // setIsLoading(false);
+        console.log("setsResponsemonth", pointsResponse.data.data)
+        // console.log("setsResponse",{month_data : pointsResponse.data.data , year_data : pointsResponse.data.data})
+        setmonthData({...monthData , month_data : pointsResponse.data.data});
+        // console.log('pointsResponse', monthData);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
-        // setIsLoading(false);
       }
     };
-    fetchDashboardData();
-    fetchPointsData();
+    const fetchYearData = async () => {
+      try {
+        const emp_id = user?.user_id; // Replace with actual employee ID if dynamic
+        const yearResponse = await axios.get(
+          `${apiUrl}/worksheet/get-all-year-weighted-average/${emp_id}`,
+          {
+            headers: {
+              "x-encryption-key" : encryptionKey
+            },
+          }
+        );
+        console.log("setsResponseyear", yearResponse.data.data)
+        // console.log("setsResponse",{month_data : yearResponse.data.data , year_data : yearResponse.data.data})
+        setYearData( yearResponse.data.data);
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      }
+    }
+
+    const fetchUserCompleteData = async () => {
+      await Promise.all([fetchDashboardData(),fetchMonthData(), fetchYearData()]);
+      setIsLoading(false);
+      setIsDataReady(true);
+    }
+    fetchUserCompleteData();
   }, []);
   if (isLoading) {
     return <Loading />;
@@ -126,10 +148,10 @@ export default function DashboardPage() {
             <DashboardGraph1 projectsThisYear={projectsThisYear} />
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
-            <DashboardGraph2 pointsData={pointsData.month_data} />
+            <DashboardGraph2 pointsData={monthData.month_data} />
           </Grid>
           <Grid item lg={6} md={6} sm={12} xs={12}>
-            <DashboardGraph3 pointsData={pointsData.year_data} />
+            <DashboardGraph3 pointsData={yearData} />
           </Grid>
           <Grid item lg={12} md={12} sm={12} xs={12}>
             <DashboardPosComp />

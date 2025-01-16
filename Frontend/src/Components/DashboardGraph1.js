@@ -6,6 +6,7 @@ import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 
 export default function DashboardGraph1({ projectsThisYear }) {
+  console.log("Project This Year" , projectsThisYear);
   const [divWidth, setDivWidth] = useState(0);
 
   const size = {
