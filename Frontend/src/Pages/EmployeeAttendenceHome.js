@@ -10,7 +10,7 @@ import axios from "axios";
 
 export default function EmployeeAttendenceHomePage() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth()+1);
   const [calenderData, setCalenderData] = useState([]);
   const [empData, setEmpData] = useState({});
   const [isLoading, setIsLoading] = useState(true);

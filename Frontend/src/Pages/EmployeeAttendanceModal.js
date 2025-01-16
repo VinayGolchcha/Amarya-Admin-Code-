@@ -143,8 +143,9 @@ export default function EmployeeAttendenceModal({ empId, month, year }) {
           backgroundColor: "white",
           overflowY: "scroll",
           overflowX: "scroll",
-          margin: "5%",
           height: "80%",
+          top:"10%",
+          left:"10%"
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>

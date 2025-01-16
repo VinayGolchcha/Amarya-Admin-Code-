@@ -161,16 +161,17 @@ const AttendanceReports = React.memo(() => {
   if (isLoading) {
     return <Loading />;
   } else {
-    return (
-      <Grid>
+    return (<div>
         <Modal
           open={open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
+          {/* <h1>kkkkkkkkkkkk</h1> */}
           <EmployeeAttendenceModal month={month} year={year} empId={empId} />
         </Modal>
+      <Grid>
         <Box sx={{ textAlign: "end" }}>
           <Select
             labelId="demo-simple-select-label"
@@ -361,6 +362,7 @@ const AttendanceReports = React.memo(() => {
           />
         </Box>
       </Grid>
+      </div>
     );
   }
 });
