@@ -8,13 +8,13 @@ import {
   IconButton,
   MenuItem,
   Container,
-  FormControl,
-  InputLabel,
-  Select,
   Modal,
+  OutlinedInput,
 } from "@mui/material";
+import Select from '@mui/material/Select';
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel';
 import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add";
 import axios from "axios";
 import { useAuth } from "./AuthContext";
 import { toast } from "react-toastify";
@@ -444,11 +444,13 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
               item.field === "tech" ?
               (
                 <FormControl fullWidth margin="normal">
-                  <InputLabel >Working Technology</InputLabel>
+                  <InputLabel id="tech-label">Working Technology</InputLabel>
                   <Select
+                    labelId="tech-label"
                     value={newProject.tech}
                     onChange={handleNewProjectChange}
                     name="tech"
+                    input={<OutlinedInput label="Working Technology" />} // Correctly associate the input
                   >
                     {allSkills?.map((skill) => (
                       <MenuItem key={skill._id} value={skill.skill}>
@@ -502,11 +504,15 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
               )
             ))}
             <FormControl fullWidth margin="normal">
-              <InputLabel >Project</InputLabel>
+              <InputLabel id="project-label">Project</InputLabel>
               <Select
+                labelId="project-label"
                 value={newProject.project_id}
                 onChange={handleNewProjectChange}
                 name="project_id"
+                key="Project"
+                label="Package Type"
+                input={<OutlinedInput label="Project" />} // Correctly associate the input
               >
                 {allProjects?.map((project) => (
                   <MenuItem key={project.project_id} value={project.project_id}>
