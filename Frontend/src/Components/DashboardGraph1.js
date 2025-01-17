@@ -6,7 +6,6 @@ import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 
 export default function DashboardGraph1({ projectsThisYear }) {
-  console.log("Project This Year" , projectsThisYear);
   const [divWidth, setDivWidth] = useState(0);
 
   const size = {
@@ -117,7 +116,7 @@ export default function DashboardGraph1({ projectsThisYear }) {
               itemMarkHeight: 21,
               itemGap: 10,
               labelStyle: {
-                fontSize: divWidth > 700 ? 28 : 18,
+                fontSize: divWidth > 700 ? 28 : 12,
                 fill: "#000000B2",
                 fontWeight: 700,
               },
