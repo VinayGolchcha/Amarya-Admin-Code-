@@ -254,6 +254,10 @@ export default function LeaveMangementPage() {
         toast.warn("From date should be less than the to date");
         return;
       }
+      if(!file?.type.includes("image/")){
+        toast.warn("file should be an image");
+        return;
+      }
       setIsApiHit(true);
       const dataToBeSend = {
         emp_id: user?.user_id,
@@ -631,7 +635,7 @@ export default function LeaveMangementPage() {
                           type="file"
                           id="upload-file"
                           style={{ display: "none" }}
-                          accept="application/pdf"
+                          accept="image/*"
                           onChange={(e) => setFile(e.target.files[0])}
                         />
                       </IconButton>
