@@ -38,7 +38,6 @@ const UserProfileAdmin = () => {
   const currentDate = (new Date()).toISOString().split('T')[0];
   const requiredFormat = currentDate.substring(0,7);
 
-  console.log(requiredFormat)
   const covertToRespectiveYearAndMonth = (decimalValue) => {
     const years = Math.floor(decimalValue);
     const months = Math.round((decimalValue - years) * 12);
@@ -389,9 +388,10 @@ const UserProfileAdmin = () => {
       const currentDate = new Date();
       const month = currentDate.getMonth()+1;
       const year = currentDate.getFullYear();
+      const query_param = `${year}-${month}`
       // console.log(empId);
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/user/get-user-profile/${filterEmpId ? filterEmpId : empId}/${year}-${month}`,
+        `${process.env.REACT_APP_API_URL}/user/get-user-profile/${filterEmpId ? filterEmpId : empId}?date=${query_param}`,
         // Request body
         {},
         // Request configuration object

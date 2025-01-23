@@ -78,6 +78,9 @@ export default function NotificationPopUp() {
   }
 
   const markAllAsRead = async () => {
+    if(notifications.length === 0) {
+      return;
+    }
     setIsLoading(true);
     try{
       const newNotifications = notifications.map((item) => {

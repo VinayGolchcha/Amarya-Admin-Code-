@@ -229,6 +229,7 @@ export default function StickyNotes(){
                       },
                     },
                   }}
+                  placeholder="Press Enter to save"
                   value={addTask}
                   onChange={handleAddTask}
                   onKeyDown={handleKeyDown}

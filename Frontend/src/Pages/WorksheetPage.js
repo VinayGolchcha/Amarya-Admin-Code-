@@ -519,7 +519,6 @@ const handleEditRowChange = (field, value) => {
         setCategories(categoriesData);
         setSkillsets(skillsData);
         setProjects(projectsData);
-        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
