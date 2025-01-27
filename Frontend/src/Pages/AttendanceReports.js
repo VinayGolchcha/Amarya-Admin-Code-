@@ -119,10 +119,16 @@ const AttendanceReports = React.memo(() => {
     setPage(0);
   };
 
-  const months = Array.from({ length: 12 }, (_, i) => ({
+  const allMonths = Array.from({ length: 12 }, (_, i) => ({
     value: i + 1,
     name: new Date(0, i).toLocaleString("default", { month: "long" }),
   }));
+
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+  const months = allMonths.filter((el) =>
+    currentYear === year ? el.value <= currentMonth : true
+  );
 
   const refreshGrid = (selectMonth, selectYear) => {
     const selectedMonth = selectMonth >= 10 ? selectMonth : `0${selectMonth}`;
@@ -135,7 +141,6 @@ const AttendanceReports = React.memo(() => {
   };
 
   const getYearList = () => {
-    const currentYear = new Date().getFullYear();
     return Array.from({ length: 5 }, (_, i) => currentYear - i).map((yr) => (
       <MenuItem key={yr} value={yr}>
         {yr}
@@ -161,64 +166,64 @@ const AttendanceReports = React.memo(() => {
   if (isLoading) {
     return <Loading />;
   } else {
-    return (<div>
+    return (
+      <div>
         <Modal
           open={open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          {/* <h1>kkkkkkkkkkkk</h1> */}
           <EmployeeAttendenceModal month={month} year={year} empId={empId} />
         </Modal>
-      <Grid>
-        <Box sx={{ textAlign: "end" }}>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={month}
-            onChange={handleMonthChange}
-            sx={{ minWidth: 120 }}
-          >
-            {months.map((month) => (
-              <MenuItem key={month.value} value={month.value}>
-                {month.name}
-              </MenuItem>
-            ))}
-          </Select>
-          <Select
-            value={year}
-            onChange={handleYearChange}
-            sx={{ minWidth: 120 }}
-          >
-            {getYearList()}
-          </Select>
-        </Box>
-        <Box
-          sx={{
-            border: "1px solid rgba(0, 0, 0, 0.30)",
-            width: "auto",
-          }}
-        >
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography
-              variant="h5"
-              sx={{
-                margin: "10px",
-                color: "#161E54",
-              }}
+        <Grid>
+          <Box sx={{ textAlign: "end" }}>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={month}
+              onChange={handleMonthChange}
+              sx={{ minWidth: 120 }}
             >
-              Employees List
-            </Typography>
-            <Typography
-              variant="h6"
-              sx={{
-                margin: "10px",
-                display: "flex",
-                alignItems: "center",
-              }}
+              {months.map((month) => (
+                <MenuItem key={month.value} value={month.value}>
+                  {month.name}
+                </MenuItem>
+              ))}
+            </Select>
+            <Select
+              value={year}
+              onChange={handleYearChange}
+              sx={{ minWidth: 120 }}
             >
-              {/* <input
+              {getYearList()}
+            </Select>
+          </Box>
+          <Box
+            sx={{
+              border: "1px solid rgba(0, 0, 0, 0.30)",
+              width: "auto",
+            }}
+          >
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Typography
+                variant="h5"
+                sx={{
+                  margin: "10px",
+                  color: "#161E54",
+                }}
+              >
+                Employees List
+              </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  margin: "10px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                {/* <input
                 type="text"
                 placeholder="search here..."
                 style={{
@@ -228,140 +233,168 @@ const AttendanceReports = React.memo(() => {
                 }}
                 onChange={(e) => onSearch(e.target.value)}
               /> */}
-              <TextField
-                label="Search by Name"
-                variant="outlined"
-                size="small"
-                onChange={(e) => setSearchText(e.target.value)}
-              />
-              <Button
-                sx={{
-                  marginLeft: "5px",
-                  cursor: "pointer",
-                  backgroundColor: "#b9b9b9",
-                  color: "#181d60",
-                  borderRadius: "10px",
-                  fontWeight: "bold",
-                  fontSize: "14px",
-                }}
-                onClick={() => downloadReport(month, year)}
-              >
-                Download Report
-                <FileDownloadOutlinedIcon
+                <TextField
+                  label="Search by Name"
+                  variant="outlined"
+                  size="small"
+                  onChange={(e) => setSearchText(e.target.value)}
+                />
+                <Button
                   sx={{
                     marginLeft: "5px",
-                    backgroundColor: "#181d60",
-                    color: "white",
-                    borderRadius: "50%",
+                    cursor: "pointer",
+                    backgroundColor: "#b9b9b9",
+                    color: "#181d60",
+                    borderRadius: "10px",
+                    fontWeight: "bold",
+                    fontSize: "14px",
                   }}
-                />
-              </Button>
-            </Typography>
-          </Box>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="sticky table">
-              <TableHead>
-                <TableRow sx={{ backgroundColor: "#1B204A" }}>
-                  <TableCell
-                    align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt", padding: 1 }}
-                  >
-                    S.No.
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt", padding: 1 }}
-                  >
-                    Employee Id
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt", padding: 1 }}
-                  >
-                    Employee Name
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt", padding: 1 }}
-                  >
-                    Working Days
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt", padding: 1 }}
-                  >
-                    Prasent Days
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt", padding: 1 }}
-                  >
-                    Absent Days
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    sx={{ color: "#FFFFFF", fontFamily: "Prompt", padding: 1 }}
-                  >
-                    Preview
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {(rowsPerPage > 0
-                  ? filteredItems?.slice(
-                      page * rowsPerPage,
-                      page * rowsPerPage + rowsPerPage
-                    )
-                  : filteredItems
-                )?.map((row, i) => (
-                  <TableRow key={i + 1}>
+                  onClick={() => downloadReport(month, year)}
+                >
+                  Download Report
+                  <FileDownloadOutlinedIcon
+                    sx={{
+                      marginLeft: "5px",
+                      backgroundColor: "#181d60",
+                      color: "white",
+                      borderRadius: "50%",
+                    }}
+                  />
+                </Button>
+              </Typography>
+            </Box>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="sticky table">
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: "#1B204A" }}>
                     <TableCell
-                      sx={{ padding: 0 }}
-                      component="th"
-                      scope="row"
                       align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Prompt",
+                        padding: 1,
+                      }}
                     >
-                      {i + 1}
+                      S.No.
                     </TableCell>
-                    <TableCell sx={{ padding: 0 }} align="center">
-                      {row.emp_id}
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Prompt",
+                        padding: 1,
+                      }}
+                    >
+                      Employee Id
                     </TableCell>
-                    <TableCell sx={{ padding: 0 }} align="center">
-                      {row.emp_name}
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Prompt",
+                        padding: 1,
+                      }}
+                    >
+                      Employee Name
                     </TableCell>
-                    <TableCell sx={{ padding: 0 }} align="center">
-                      {row.total_working_days}
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Prompt",
+                        padding: 1,
+                      }}
+                    >
+                      Working Days
                     </TableCell>
-                    <TableCell sx={{ padding: 0 }} align="center">
-                      {row.no_present_days}
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Prompt",
+                        padding: 1,
+                      }}
+                    >
+                      Prasent Days
                     </TableCell>
-                    <TableCell sx={{ padding: 0 }} align="center">
-                      {row.no_absent_days}
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Prompt",
+                        padding: 1,
+                      }}
+                    >
+                      Absent Days
                     </TableCell>
-                    <TableCell sx={{ padding: 0 }} align="center">
-                      <Tooltip title="Preview" placement="top" arrow>
-                        <AssignmentReturnedOutlinedIcon
-                          sx={{ cursor: "pointer", color: "#7E8BE4" }}
-                          onClick={() => handleOpen(row)}
-                        />
-                      </Tooltip>
+                    <TableCell
+                      align="center"
+                      sx={{
+                        color: "#FFFFFF",
+                        fontFamily: "Prompt",
+                        padding: 1,
+                      }}
+                    >
+                      Preview
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={filteredItems?.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Box>
-      </Grid>
+                </TableHead>
+                <TableBody>
+                  {(rowsPerPage > 0
+                    ? filteredItems?.slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                    : filteredItems
+                  )?.map((row, i) => (
+                    <TableRow key={i + 1}>
+                      <TableCell
+                        sx={{ padding: 0 }}
+                        component="th"
+                        scope="row"
+                        align="center"
+                      >
+                        {i + 1}
+                      </TableCell>
+                      <TableCell sx={{ padding: 0 }} align="center">
+                        {row.emp_id}
+                      </TableCell>
+                      <TableCell sx={{ padding: 0 }} align="center">
+                        {row.emp_name}
+                      </TableCell>
+                      <TableCell sx={{ padding: 0 }} align="center">
+                        {row.total_working_days}
+                      </TableCell>
+                      <TableCell sx={{ padding: 0 }} align="center">
+                        {row.no_present_days}
+                      </TableCell>
+                      <TableCell sx={{ padding: 0 }} align="center">
+                        {row.no_absent_days}
+                      </TableCell>
+                      <TableCell sx={{ padding: 0 }} align="center">
+                        <Tooltip title="Preview" placement="top" arrow>
+                          <AssignmentReturnedOutlinedIcon
+                            sx={{ cursor: "pointer", color: "#7E8BE4" }}
+                            onClick={() => handleOpen(row)}
+                          />
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={filteredItems?.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Box>
+        </Grid>
       </div>
     );
   }
