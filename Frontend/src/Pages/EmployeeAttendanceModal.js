@@ -1,6 +1,6 @@
 import "../Components/Calendar.css";
 import EmployeeAttendencePieChart from "./EmployeeAttendencePieChart";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, MenuItem, Select, Typography } from "@mui/material";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import Calendar from "../Components/Calendar";
 import { useEffect, useState } from "react";
@@ -30,15 +30,15 @@ export default function EmployeeAttendenceModal({ empId, month, year }) {
 
   const generateYearOptions = () => {
     const startYear = new Date().getFullYear() - 5; // Adjust this range as needed
-    const endYear = new Date().getFullYear()
+    const endYear = new Date().getFullYear();
     const years = [];
     for (let year = startYear; year <= endYear; year++) {
       years.push(year);
     }
     return years.map((year) => (
-      <option key={year} value={year}>
+      <MenuItem key={year} value={year}>
         {year}
-      </option>
+      </MenuItem>
     ));
   };
 
@@ -122,6 +122,17 @@ export default function EmployeeAttendenceModal({ empId, month, year }) {
     }
   }
 
+  const allMonths = Array.from({ length: 12 }, (_, i) => ({
+    value: i + 1,
+    name: new Date(0, i).toLocaleString("default", { month: "long" }),
+  }));
+
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+  const months = allMonths.filter((el) =>
+    currentYear === selectedYear ? el.value <= currentMonth : true
+  );
+
   const refreshData = async (month, year) => {
     setIsLoading(true);
     await Promise.all([
@@ -144,8 +155,8 @@ export default function EmployeeAttendenceModal({ empId, month, year }) {
           overflowY: "scroll",
           overflowX: "scroll",
           height: "80%",
-          top:"10%",
-          left:"10%"
+          top: "10%",
+          left: "10%",
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -162,29 +173,33 @@ export default function EmployeeAttendenceModal({ empId, month, year }) {
           >
             Employees Attendance
           </Typography>
-          <Box>
-            <select
+          <Box sx={{ textAlign: "end" }}>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
               value={selectedMonth}
               onChange={(e) => {
                 setSelectedMonth(e.target.value);
                 refreshData(e.target.value, selectedYear);
               }}
+              sx={{ minWidth: 120 }}
             >
-              {Array.from({ length: 12 }, (v, k) => (
-                <option key={k} value={k + 1}>
-                  {new Date(0, k).toLocaleString("default", { month: "long" })}
-                </option>
+              {months.map((month) => (
+                <MenuItem key={month.value} value={month.value}>
+                  {month.name}
+                </MenuItem>
               ))}
-            </select>
-            <select
+            </Select>
+            <Select
               value={selectedYear}
               onChange={(e) => {
                 setSelectedYear(e.target.value);
                 refreshData(selectedMonth, e.target.value);
               }}
+              sx={{ minWidth: 120 }}
             >
               {generateYearOptions()}
-            </select>
+            </Select>
             <Button
               sx={{
                 marginLeft: "5px",

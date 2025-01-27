@@ -1,6 +1,6 @@
 import "../Components/Calendar.css";
 import EmployeeAttendencePieChart from "./EmployeeAttendencePieChart";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, MenuItem, Select, Typography } from "@mui/material";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import Calendar from "../Components/Calendar";
 import { useEffect, useState } from "react";
@@ -10,7 +10,7 @@ import axios from "axios";
 
 export default function EmployeeAttendenceHomePage() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth()+1);
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);
   const [calenderData, setCalenderData] = useState([]);
   const [empData, setEmpData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -33,9 +33,9 @@ export default function EmployeeAttendenceHomePage() {
       years.push(year);
     }
     return years.map((year) => (
-      <option key={year} value={year}>
+      <MenuItem key={year} value={year}>
         {year}
-      </option>
+      </MenuItem>
     ));
   };
 
@@ -85,6 +85,51 @@ export default function EmployeeAttendenceHomePage() {
     }
   }
 
+  const downloadReport = async (selectMonth, selectYear) => {
+    const selectedMonth = selectMonth >= 10 ? selectMonth : `0${selectMonth}`;
+    const endDate = `${selectYear}-${selectedMonth}-${
+      selectMonth === new Date().getMonth() + 1
+        ? new Date().getDate()
+        : getDaysInMonth(selectYear, selectMonth)
+    }`;
+    const startDate = `${selectYear}-${selectedMonth}-01`;
+    try {
+      setIsLoading(true);
+      const response = await axios({
+        url: `${apiUrl}/attendance/get-user-daily-attendance-excel-user/${user?.user_id}?empId=${user?.user_id}&startDate=${startDate}&endDate=${endDate}`,
+        method: "GET",
+        responseType: "blob",
+        headers: {
+          "Content-Type": "application/json",
+          "x-encryption-key": encryptionKey,
+        },
+      });
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = `report_${selectedMonth}_${selectYear}.xlsx`;
+      link.click();
+      setIsLoading(false);
+    } catch (error) {
+      toast.error(
+        error?.response?.message || "Error downloading the Excel file"
+      );
+    }
+  };
+
+  const allMonths = Array.from({ length: 12 }, (_, i) => ({
+    value: i + 1,
+    name: new Date(0, i).toLocaleString("default", { month: "long" }),
+  }));
+
+  const currentMonth = new Date().getMonth() + 1;
+  const currentYear = new Date().getFullYear();
+  const months = allMonths.filter((el) =>
+    currentYear === selectedYear ? el.value <= currentMonth : true
+  );
+
   const refreshData = async (month, year) => {
     setIsLoading(true);
     await Promise.all([
@@ -119,6 +164,7 @@ export default function EmployeeAttendenceHomePage() {
             borderRadius: "10px",
             fontWeight: "bold",
           }}
+          onClick={() => downloadReport(selectedMonth, selectedYear)}
         >
           Download Report
           <FileDownloadOutlinedIcon
@@ -133,20 +179,23 @@ export default function EmployeeAttendenceHomePage() {
       </Box>
       <hr />
       <Box sx={{ textAlign: "end" }}>
-        <select
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
           value={selectedMonth}
           onChange={(e) => {
             setSelectedMonth(e.target.value);
             refreshData(e.target.value, selectedYear);
           }}
+          sx={{ minWidth: 120 }}
         >
-          {Array.from({ length: 12 }, (v, k) => (
-            <option key={k} value={k + 1}>
-              {new Date(0, k).toLocaleString("default", { month: "long" })}
-            </option>
+          {months.map((month) => (
+            <MenuItem key={month.value} value={month.value}>
+              {month.name}
+            </MenuItem>
           ))}
-        </select>
-        <select
+        </Select>
+        <Select
           value={selectedYear}
           onChange={(e) => {
             setSelectedYear(e.target.value);
@@ -154,7 +203,7 @@ export default function EmployeeAttendenceHomePage() {
           }}
         >
           {generateYearOptions()}
-        </select>
+        </Select>
       </Box>
       <Box sx={{ display: "flex", gap: "2rem", alignItems: "stretch" }}>
         <EmployeeAttendencePieChart pieData={empData} />

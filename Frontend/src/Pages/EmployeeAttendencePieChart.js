@@ -69,12 +69,13 @@ export default function AttendencePieChart({ pieData, date }) {
               {
                 id: 0,
                 value: Number(data?.presentPercentage),
-                label: "Employees Present",
+                label: "Present Days",
+                tooltip: `${Number(data?.presentPercentage)}% Present Days`,
               },
               {
                 id: 1,
                 value: Number(data?.absentPercentage),
-                label: "Employees Absent",
+                label: "Absent Days",
               },
             ],
             cx: chartSize.cx,
