@@ -90,10 +90,12 @@ export default function EmployeeAttendenceModal({ empId, month, year }) {
 
   async function downloadReport() {
     let selectMonth = selectedMonth >= 10 ? selectedMonth : `0${selectedMonth}`;
-    let endDate = `${selectedYear}-${selectMonth}-${getDaysInMonth(
-      selectedYear,
-      selectedMonth
-    )}`;
+    const endDate = `${selectedYear}-${selectMonth}-${
+      selectedMonth === new Date().getMonth() + 1 &&
+      selectedYear === new Date().getFullYear()
+        ? new Date().getDate()
+        : getDaysInMonth(selectedMonth, selectMonth)
+    }`;
     let startDate = `${selectedYear}-${selectMonth}-01`;
     try {
       setIsLoading(true);

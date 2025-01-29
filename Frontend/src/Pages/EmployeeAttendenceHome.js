@@ -88,7 +88,8 @@ export default function EmployeeAttendenceHomePage() {
   const downloadReport = async (selectMonth, selectYear) => {
     const selectedMonth = selectMonth >= 10 ? selectMonth : `0${selectMonth}`;
     const endDate = `${selectYear}-${selectedMonth}-${
-      selectMonth === new Date().getMonth() + 1
+      selectMonth === new Date().getMonth() + 1 &&
+      selectYear === new Date().getFullYear()
         ? new Date().getDate()
         : getDaysInMonth(selectYear, selectMonth)
     }`;
