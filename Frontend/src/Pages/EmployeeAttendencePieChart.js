@@ -12,9 +12,11 @@ export default function AttendencePieChart({ pieData, date }) {
     ? { width: 300, height: 180, cx: 80, cy: 90 }
     : isMediumScreen
     ? { width: 400, height: 200, cx: 110, cy: 100 }
-    : { width: 500, height: 240, cx: 130, cy: 120 };
+    : { width: 500, height: 265, cx: 130, cy: 120 };
 
   React.useEffect(() => {
+    console.log(pieData);
+    
     setData(pieData?.percentages);
   }, [pieData]);
 
