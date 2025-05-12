@@ -516,6 +516,53 @@ export default function EmployeeAttendenceHomePage() {
                   textAlign: "left",
                 }}
               >
+                Number of Holidays
+              </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  font: {
+                    lg: "normal normal bold 12px/35px Poppins",
+                    md: "normal normal bold 12px/35px Poppins",
+                    sm: "normal normal bold 12px/30px Poppins",
+                    xs: "normal normal bold 12px/30px Poppins",
+                  },
+                  width: "10%",
+                  textAlign: "left",
+                }}
+              >
+                :
+              </Typography>
+              <Typography
+                variant="h6"
+                sx={{
+                  font: {
+                    lg: "normal normal bold 12px/35px Poppins",
+                    md: "normal normal bold 12px/35px Poppins",
+                    sm: "normal normal bold 12px/30px Poppins",
+                    xs: "normal normal bold 12px/30px Poppins",
+                  },
+                  width: "40%",
+                  textAlign: "left",
+                }}
+              >
+                {empData?.no_holidays}
+              </Typography>
+            </Box>
+            <Box className="flex-to-display">
+              <Typography
+                variant="h6"
+                sx={{
+                  font: {
+                    lg: "normal normal bold 12px/35px Poppins",
+                    md: "normal normal bold 12px/35px Poppins",
+                    sm: "normal normal bold 12px/30px Poppins",
+                    xs: "normal normal bold 12px/30px Poppins",
+                  },
+                  width: "50%",
+                  textAlign: "left",
+                }}
+              >
                 Number of Absent
               </Typography>
               <Typography
