@@ -145,6 +145,7 @@ const UserProfileAdmin = () => {
     joining_date: "",
     experience: 0,
     completed_projects: 0,
+    last_working_date : "",
     teams: 0,
     gender: "",
     team_id : null
@@ -159,6 +160,7 @@ const UserProfileAdmin = () => {
     { type: "text", label: "Address", field: "address" },
     { type: "text", label: "Gender", field: "gender" },
     { type: "text", label: "Username", field: "username" },
+    { type: "date", label: "Last Working Date", field: "last_working_date" },
     {
       type: "text",
       label: "Emergency Contact Person Name/Address",
@@ -183,10 +185,6 @@ const UserProfileAdmin = () => {
     {
       value: 5,
       info: "Teams",
-    },
-    {
-      value: 243,
-      info: "Client reports",
     },
     {
       value: 0,
@@ -422,6 +420,7 @@ const UserProfileAdmin = () => {
         designation: userData.designation,
         designation_type: userData.designation_type,
         joining_date: formatDateString(userData.joining_date.split("T")[0]),
+        last_working_date : formatDateString(userData.last_working_date.split("T")[0]),
         experience: userData.experience,
         completed_projects: userData.completed_projects,
         teams: userData.teams,
@@ -493,8 +492,13 @@ const UserProfileAdmin = () => {
     formDataToSend.append("public_id", formData.public_id);
     formDataToSend.append("first_name", formData.first_name);
     formDataToSend.append("last_name", formData.last_name);
-    formDataToSend.append("password", formData.password);
+    formDataToSend.append("password", formData.password); 
     formDataToSend.append("mobile_number", formData.mobile_number);
+    if(formData.last_working_date){
+      formDataToSend.append("last_working_date", formData.last_working_date);
+    }else{
+      formDataToSend.append("last_working_date", 0);
+    }
     formDataToSend.append(
       "emergency_contact_number",
       formData.emergency_contact_number
@@ -665,7 +669,7 @@ const UserProfileAdmin = () => {
                         type={item.type}
                         name={item.field}
                         value={
-                          item.field === "dob"
+                          (item.field === "dob" || item.field === "last_working_date")
                             ? formatDateForInput(formData[item.field])
                             : formData[item.field]
                         }
