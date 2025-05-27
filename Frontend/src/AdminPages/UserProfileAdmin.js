@@ -400,6 +400,8 @@ const UserProfileAdmin = () => {
         }
       );
       const userData = response.data.data[0][0]; // Extracting user data from the response
+      console.log("last working day of current user" , user.last_working_date)
+      const currentuser_last_working_day = userData?.last_working_date ? userData.last_working_date : "" 
       const weightedAvg = response.data.data[1]
       setFormData({
         ...formData,
@@ -419,8 +421,8 @@ const UserProfileAdmin = () => {
         dob: formatDateString(userData.dob.split("T")[0]),
         designation: userData.designation,
         designation_type: userData.designation_type,
-        joining_date: formatDateString(userData.joining_date.split("T")[0]),
-        last_working_date : formatDateString(userData.last_working_date.split("T")[0]),
+        joining_date: formatDateString(userData?.joining_date?.split("T")[0]),
+        last_working_date : formatDateString(currentuser_last_working_day?.split("T")[0]),
         experience: userData.experience,
         completed_projects: userData.completed_projects,
         teams: userData.teams,
