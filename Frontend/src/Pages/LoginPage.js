@@ -198,6 +198,13 @@ const LoginPage = () => {
             variant="standard"
             type={showPassword ? "text" : "password"}
             value={password} // Ensure the value prop is set to the password state
+            onKeyUp={
+              (e) => {
+                if(e.key === "Enter"){
+                  handleLogin()
+                }
+              }
+            }
             onChange={(e) => setPassword(e.target.value)}
             
           />

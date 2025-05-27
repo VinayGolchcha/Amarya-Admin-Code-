@@ -254,7 +254,7 @@ export default function LeaveMangementPage() {
         toast.warn("From date should be less than the to date");
         return;
       }
-      if(!file?.type.includes("image/")){
+      if(!leaveType.toLowerCase().includes("casual") && !file?.type.includes("image/")){
         toast.warn("file should be an image");
         return;
       }

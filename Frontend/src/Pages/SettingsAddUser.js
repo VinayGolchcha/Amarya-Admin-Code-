@@ -39,7 +39,7 @@ export default function SettingsAddUser() {
   const { user , encryptionKey} = useAuth();
   const token = encodeURIComponent(user?.token || "");
 
-  const designationOptions = ["Web Developer", "Sap Developer", "ML Developer"];
+  const designationOptions = ["Web Developer", "Sap Developer", "ML Developer" , "HR and Marketing"];
   const designationTypeOptions = [
     "Senior Employee",
     "Junior Employee",
