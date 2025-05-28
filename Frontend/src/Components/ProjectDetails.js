@@ -162,7 +162,7 @@ const ProjectDetails = ({joiningDate , teamId , fetchProjectTimeline}) => {
 
   const fecthSkills = async() => {
     try{
-      const response = await axios.get("https://amarya-admin-backend-code-dev.onrender.com/api/v1/skillset/fetch-skills", {
+      const response = await axios.get(`${apiUrl}/skillset/fetch-skills`, {
         headers : {
           "x-encryption-key" : encryptionKey
         }

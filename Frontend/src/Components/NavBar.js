@@ -335,7 +335,7 @@ const NavBar = ({ handleDrawerToggle }) => {
         }}
         sx={{ color: "#ff5151", fontWeight: "bold" }}
       >
-        Visit Profile
+        {user?.role === "user" ? <>Visit Profile</> : <>Employee Profile</>}
       </MenuItem>
       <MenuItem
         onClick={handleLogOut}

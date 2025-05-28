@@ -109,10 +109,6 @@ const UserProfilePage = () => {
       info: "Teams",
     },
     {
-      value: 243,
-      info: "Client reports",
-    },
-    {
       value: 0,
       info: "Weighted avg",
     },
