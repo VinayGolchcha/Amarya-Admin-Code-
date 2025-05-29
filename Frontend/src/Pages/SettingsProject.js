@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../Components/AuthContext";
 import Loading from "../sharable/Loading";
+import AddProject from "../sharable/AddProject";
 
 export default function SettingsProject() {
   const { user , encryptionKey} = useAuth();
@@ -33,6 +34,12 @@ export default function SettingsProject() {
   const [editMode, setEditMode] = useState(null);
   const [newProjectIndex, setNewProjectIndex] = useState(null);
   const apiUrl = process.env.REACT_APP_API_URL;
+  // setting the pop up for the add new asset
+   const [open, setOpen] = React.useState(false);
+
+   const handleClose = () => {
+    setOpen(false);
+   }
 
   const labels = [
     "Project Name",
@@ -126,6 +133,7 @@ export default function SettingsProject() {
   };
 
   const handleAddNew = () => {
+    setOpen(true)
     const newProject = {
       "Project Name": "",
       "Client Name": "",
@@ -137,8 +145,6 @@ export default function SettingsProject() {
       Category: "",
       category_id: null,
     };
-
-    setFormData([...formData, newProject]);
     setNewProjectIndex(formData.length);
   };
 
@@ -185,7 +191,7 @@ export default function SettingsProject() {
         return;
       }
 
-
+      setOpen(false)
       setNewProjectIndex(null);
       setEditMode(null);
       fetchProjects();
@@ -331,7 +337,28 @@ export default function SettingsProject() {
     return <Loading />;
   } else {
     return (
-      <Box>
+      <Box sx={{
+        width : "100%"
+      }
+      }>
+        <AddProject open={open} handleClose={handleClose} index={newProjectIndex} handleInputChange={handleInputChange} handleSaveNewProject={handleSaveNewProject} labels={labels} categories={categories}/>
+         <Box
+          sx={{ display: "flex", justifyContent: "center", margin: "10px 0px" }}
+        >
+          <AddOutlinedIcon
+            color="action"
+            onClick={handleAddNew}
+            sx={{
+              borderRadius: "50px",
+              backgroundColor: "rgb(222, 225, 231)",
+              width: "30px",
+              height: "30px",
+              margin: "0px 2px",
+              padding: "4px",
+              cursor: "pointer",
+            }}
+          />
+        </Box>
         {formData?.map((data, index) => (
           <Box
             key={index}
@@ -340,6 +367,7 @@ export default function SettingsProject() {
               padding: "30px",
               boxShadow: "0px 0px 5px rgba(0,0,0,0.2)",
               margin: "10px 0px",
+              width : "100%"
             }}
           >
             <Box
@@ -347,6 +375,8 @@ export default function SettingsProject() {
                 display: "flex",
                 justifyContent: "flex-end",
                 marginBottom: "10px",
+                width : "100%",
+                height : "40px"
               }}
             >
               <RemoveIcon
@@ -396,9 +426,13 @@ export default function SettingsProject() {
                 />
               )}
             </Box>
-            <Grid container spacing={4}>
-              {labels?.map((item, i) => (
-                <Grid item lg={4} md = {4} xs ={10} key={i}>
+            <Grid container spacing={4} >
+              {labels?.map((item, i) => editMode === index || newProjectIndex === index ?  
+              <Grid item lg={4} md = {4} xs ={10} key={i}
+                sx={{
+                  paddingTop: '0px !important',
+                }}
+              >
                   <FormControl fullWidth>
                     <FormLabel sx={{ color: "black", fontWeight: "600" }}>
                       {item}
@@ -523,27 +557,78 @@ export default function SettingsProject() {
                     )}
                   </FormControl>
                 </Grid>
+              : (
+                <Grid item lg={4} md = {4} xs ={10} key={i}
+                sx={{
+                  "&.MuiGrid-item":{
+                    display : (item !== "Project Name" && item !== "Client Name" && item !== "Project Status") && "none"
+                  }
+                }}
+                >
+                  <FormControl fullWidth>
+                    <FormLabel sx={{ color: "black", fontWeight: "600" }}>
+                      {(item === "Project Name" || item === "Project Status" ||  item === "Client Name") && item}
+                    </FormLabel>
+                    {item === "Project Status" && (
+                      <Select
+                        value={data[item]}
+                        onChange={(e) =>
+                          handleInputChange(index, item, e.target.value)
+                        }
+                        sx={{
+                          "& .MuiOutlinedInput-notchedOutline": {
+                            borderWidth: "2px",
+                            borderColor: "#b3b3b3",
+                            borderRadius: "10px",
+                          },
+                          margin: "10px 0px",
+                        }}
+                        disabled={
+                          editMode !== index && newProjectIndex !== index
+                        }
+                      >
+                        <MenuItem value={"completed"}>
+                          Completed
+                        </MenuItem>
+                        <MenuItem value={"in progress"}>
+                          In Progress
+                        </MenuItem>
+                      </Select>
+                    )}
+                    { 
+                      (item === "Client Name" ||
+                      item === "Project Name") &&
+                       (
+                        <TextField
+                          value={data[item]}
+                          type="text"
+                          fullWidth
+                          sx={{
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderWidth: "2px",
+                              borderColor: "#b3b3b3",
+                              borderRadius: "10px",
+                            },
+                            margin: "10px 0px",
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          onChange={(e) =>
+                            handleInputChange(index, item, e.target.value)
+                          }
+                          disabled={
+                            editMode !== index && newProjectIndex !== index
+                          }
+                        />
+                      )
+                    }
+                  </FormControl>
+                </Grid>
               ))}
             </Grid>
           </Box>
         ))}
-        <Box
-          sx={{ display: "flex", justifyContent: "center", margin: "10px 0px" }}
-        >
-          <AddOutlinedIcon
-            color="action"
-            onClick={handleAddNew}
-            sx={{
-              borderRadius: "50px",
-              backgroundColor: "rgb(222, 225, 231)",
-              width: "30px",
-              height: "30px",
-              margin: "0px 2px",
-              padding: "4px",
-              cursor: "pointer",
-            }}
-          />
-        </Box>
       </Box>
     );
   }
