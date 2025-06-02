@@ -15,7 +15,10 @@ import {
   IconButton,
   TextField,
   Tooltip,
+  Modal,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import ViewListIcon from "@mui/icons-material/ViewList";
 import FileDownloadDoneIcon from "@mui/icons-material/FileDownloadDone";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
@@ -30,6 +33,7 @@ import LastPageIcon from "@mui/icons-material/LastPage";
 import PropTypes from "prop-types";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import PendingAssests from "./PendingAssests";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -168,12 +172,23 @@ const rows = [
   },
 ];
 
-export default function AdminApprovals({approvalData , approvalReq}) {
-  const [search, setSearch] = useState('');
+export default function AdminApprovals({ approvalData, approvalReq }) {
+  const [search, setSearch] = useState("");
   const [page, setPage] = useState(0);
   const [filteredItems, setFilteredItems] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const[foreignId , setForeignId] = useState("");
+  const [foreignId, setForeignId] = useState("");
+  const [open, setOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const handleOpen = (item) => {
+    setSelectedItem(item);
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedItem(null);
+  };
 
   useEffect(() => {
     if (search) {
@@ -203,42 +218,46 @@ export default function AdminApprovals({approvalData , approvalReq}) {
   const formattedDate = (date) => {
     const newDate = new Date(date);
     const dateStr = newDate.toString().split(" ");
-    return dateStr[2] + " " + dateStr[1] + " "+ dateStr[3];
-  }
+    return dateStr[2] + " " + dateStr[1] + " " + dateStr[3];
+  };
 
   const handleSearch = (e) => {
     setSearch(e.target.value);
-  }
+  };
 
   const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       setSearch(event.target.value);
-      const filteredItems = approvalData.filter(item => 
+      const filteredItems = approvalData.filter((item) =>
         item?.request_type?.toLowerCase().includes(search.toLowerCase())
       );
     }
-};
+  };
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-  const handleClick = (val , status) => {
-    if(val?.request_type.toLowerCase()==="inventory" || foreignId.length !== 0){
+  const handleClick = (val, status) => {
+    if (
+      val?.request_type.toLowerCase() === "inventory" ||
+      foreignId.length !== 0
+    ) {
       var regEx = /^[a-z0-9]+$/i;
       const isValid = regEx.test(foreignId);
-      if(!isValid){
+      if (!isValid) {
         toast.error("Foreign id should be alphanumeric");
         return;
       }
-    }   
+    }
     const body = {
-        emp_id: val?.emp_id,
-        item: val?.item, // In case of leave
-        foreign_id: (val.foreign_id ? val.foreign_id : foreignId),
-        asset_type : val?.request_type?.toLowerCase()==="inventory" ? val?.asset_type : "",
-        status: status,
-        request_type: val?.request_type
+      emp_id: val?.emp_id,
+      item: val?.item, // In case of leave
+      foreign_id: val.foreign_id ? val.foreign_id : foreignId,
+      asset_type:
+        val?.request_type?.toLowerCase() === "inventory" ? val?.asset_type : "",
+      status: status,
+      request_type: val?.request_type,
     };
-    approvalReq(body)
-  }
+    approvalReq(body);
+  };
   return (
     <div>
       <Box
@@ -263,10 +282,16 @@ export default function AdminApprovals({approvalData , approvalReq}) {
             {" "}
             Approvals
           </Typography>
+          {/* <Tooltip title="Open Popup" placement="top" arrow>
+                      <OpenInNewIcon sx={{ color: "#b1bacb", cursor:"pointer" , ":hover" : {
+                        color: "black"
+                      }}} onClick={handleOpen}/>
+                      </Tooltip> */}
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
+
             <StyledInputBase
               placeholder="Search req. type"
               sx={{ border: "1px solid black", borderRadius: "9px" }}
@@ -355,11 +380,11 @@ export default function AdminApprovals({approvalData , approvalReq}) {
               <TableBody>
                 {(rowsPerPage > 0
                   ? filteredItems?.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage
-                  )
-                : filteredItems
-                )?.map((row , i) => (
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage
+                    )
+                  : filteredItems
+                )?.map((row, i) => (
                   <TableRow
                     key={row.sNo}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -369,7 +394,7 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                       scope="row"
                       sx={{ fontFamily: "Open Sans" }}
                     >
-                      {page * rowsPerPage+i+1}
+                      {page * rowsPerPage + i + 1}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {row?.request_type}
@@ -384,7 +409,15 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                       {row?.full_name}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
-                      {row?.foreign_id ? (row?.foreign_id) : (<TextField variant="standard" sx={{fontSize : "0.9rem"}} onChange={(e) => setForeignId(e.target.value)} />)}
+                      {row?.foreign_id ? (
+                        row?.foreign_id
+                      ) : (
+                        <TextField
+                          variant="standard"
+                          sx={{ fontSize: "0.9rem" }}
+                          onChange={(e) => setForeignId(e.target.value)}
+                        />
+                      )}
                     </TableCell>
                     <TableCell align="left" sx={{ fontFamily: "Open Sans" }}>
                       {formattedDate(row.request_date)}
@@ -429,19 +462,63 @@ export default function AdminApprovals({approvalData , approvalReq}) {
                       )}
                     </TableCell>
                     <TableCell align="left" sx={{ minWidth: "104px" }}>
+                      {row?.status === "pending" &&
+                        row?.request_type === "inventory" && (
+                          <>
+                            <Tooltip
+                              title="Pending Assets"
+                              placement="top"
+                              arrow
+                            >
+                              <ViewListIcon
+                                sx={{
+                                  color: "#b1bacb",
+                                  cursor: "pointer",
+                                  ":hover": {
+                                    color: "black",
+                                  },
+                                }}
+                                onClick={() => handleOpen(row.item)}
+                              />
+                            </Tooltip>
+                          </>
+                        )}
                       <Tooltip title="Approve" placement="top" arrow>
-                      <FileDownloadDoneIcon sx={{ color: "#b1bacb", cursor:"pointer" , ":hover" : {
-                        color: "black"
-                      }}} onClick={() => handleClick(row , "approved")} />
+                        <FileDownloadDoneIcon
+                          sx={{
+                            color: "#b1bacb",
+                            cursor: "pointer",
+                            ":hover": {
+                              color: "black",
+                            },
+                          }}
+                          onClick={() => handleClick(row, "approved")}
+                        />
                       </Tooltip>
                       <Tooltip title="Reject" placement="top" arrow>
-                      <NotInterestedIcon sx={{ color: "#b1bacb", cursor:"pointer" , ":hover" : {
-                        color: "black"
-                      }}} onClick={() => handleClick(row , "rejected")}/></Tooltip>
+                        <NotInterestedIcon
+                          sx={{
+                            color: "#b1bacb",
+                            cursor: "pointer",
+                            ":hover": {
+                              color: "black",
+                            },
+                          }}
+                          onClick={() => handleClick(row, "rejected")}
+                        />
+                      </Tooltip>
                       <Tooltip title="Delete" placement="top" arrow>
-                      <DeleteOutlineIcon sx={{ color: "#b1bacb", cursor:"pointer" , ":hover" : {
-                        color: "black"
-                      } }} onClick={() => handleClick(row , "deleted")}/></Tooltip>
+                        <DeleteOutlineIcon
+                          sx={{
+                            color: "#b1bacb",
+                            cursor: "pointer",
+                            ":hover": {
+                              color: "black",
+                            },
+                          }}
+                          onClick={() => handleClick(row, "deleted")}
+                        />
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -478,6 +555,53 @@ export default function AdminApprovals({approvalData , approvalReq}) {
           </TableContainer>
         </Box>
       </Box>
+      <Modal open={open} onClose={handleClose}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "80%",
+            maxHeight: "90vh",
+            bgcolor: "background.paper",
+            borderRadius: "10px",
+            boxShadow: 24,
+            p: 3,
+            overflowY: "auto", // Make modal scrollable
+          }}
+        >
+          <Typography
+            component="span"
+            sx={{
+              fontFamily: "Poppins",
+              fontWeight: "600",
+              color: "#00000099",
+              // margin: "6px 2px",
+              fontSize: "1.1rem",
+              textAlign: "center",
+              display: "block",
+              width: "100%",
+            }}
+          >
+            {" "}
+            Pending Assets
+          </Typography>
+          <IconButton
+            aria-label="close"
+            onClick={handleClose}
+            sx={{
+              position: "absolute",
+              right: 8,
+              top: 8,
+              color: (theme) => theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <PendingAssests item={selectedItem} />
+        </Box>
+      </Modal>
     </div>
   );
 }
