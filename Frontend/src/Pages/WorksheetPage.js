@@ -643,7 +643,7 @@ const handleEditRowChange = (field, value) => {
   };
   const fetchProjects = async () => {
     try {
-      const response = await fetch(`${apiUrl}/project/fetch-all-projects`, {
+      const response = await fetch(`${apiUrl}/project/fetch-worksheet-projects/${user?.user_id}`, {
         method: "GET",
         credentials: 'include', // Include cookies in the request
         headers: {
