@@ -176,7 +176,7 @@ export default function LeaveMangementPage() {
           },
         }
       );
-      setLeaveTypes(response.data.data || []); // Update the leave types state
+
     } catch (error) {
       if(error?.response?.message){
         toast.error(error?.response?.message);
@@ -227,6 +227,7 @@ export default function LeaveMangementPage() {
           }
         );
         setData(response?.data?.data || []);
+        console.log()
         setLoading(false);
       } catch (error) {
         setErrorr(error);
@@ -254,7 +255,7 @@ export default function LeaveMangementPage() {
         toast.warn("From date should be less than the to date");
         return;
       }
-      if(!leaveType.toLowerCase().includes("casual") && !file?.type.includes("image/")){
+      if(!leaveType.toLowerCase().includes("casual") && !leaveType.toLowerCase().includes("compensatory") && !file?.type.includes("image/")){
         toast.warn("file should be an image");
         return;
       }
@@ -586,7 +587,7 @@ export default function LeaveMangementPage() {
                   onChange={handleChange}
                   required
                 >
-                  {leaveTypes?.map((type) => (
+                  {data?.user_data?.map((type) => (
                     <MenuItem key={type.leave_type} value={type.leave_type}>
                       {type.leave_type}
                     </MenuItem>

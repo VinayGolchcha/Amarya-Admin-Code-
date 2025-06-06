@@ -42,6 +42,8 @@ import { useAuth } from "../Components/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import Alert from "@mui/material/Alert";
 import Loading from "../sharable/Loading";
+import Addcompoff from "../Components/Addcompoff";
+import AddIcon from '@mui/icons-material/Add';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -73,7 +75,13 @@ export default function AdminLeaveManagement() {
   const apiUrl = process.env.REACT_APP_API_URI;
   const [errorr, setErrorr] = React.useState(null);
   const [filterDropdown, setFilterDropdown] = React.useState([]);
+  const [open , setOpen] = React.useState(false);
   const today = new Date();
+
+  // close the compoff pop up
+  const handleClose = () => {
+    setOpen(false);
+  }
 
   // const [error, setError]  = React.useState(null);
 
@@ -327,6 +335,7 @@ export default function AdminLeaveManagement() {
             borderRadius: "10px",
           }}
         >
+          <Addcompoff open={open} handleClose={handleClose} id={filterEmpId} getUserLeaves={getUserLeaves}/>
           <ToastContainer />
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography
@@ -377,8 +386,10 @@ export default function AdminLeaveManagement() {
           </Box>
           <Typography
             sx={{
+               display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center", // optional, for vertical alignment
               margin: "12px 0px",
-              width: "542px",
               height: "28px",
               fontFamily: "Racing Sans One",
               fontSize: "18px",
@@ -387,7 +398,10 @@ export default function AdminLeaveManagement() {
               color: "#121843",
             }}
           >
-            {filterEmpName} - {filterEmpId}
+            <span>{filterEmpName} - {filterEmpId}</span>
+            <AddIcon sx={{
+              cursor : "pointer",
+            }}onClick = {() => setOpen(true)}/>
           </Typography>
           <Box
             sx={{
