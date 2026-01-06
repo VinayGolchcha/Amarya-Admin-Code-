@@ -44,6 +44,7 @@ import Alert from "@mui/material/Alert";
 import Loading from "../sharable/Loading";
 import Addcompoff from "../Components/Addcompoff";
 import AddIcon from '@mui/icons-material/Add';
+import AdminAddUserLeave from "../AdminPages/AdminAddUserLeave";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -76,11 +77,19 @@ export default function AdminLeaveManagement() {
   const [errorr, setErrorr] = React.useState(null);
   const [filterDropdown, setFilterDropdown] = React.useState([]);
   const [open , setOpen] = React.useState(false);
+  const [openAddLeaves , setOpenAddLeaves] = React.useState(false);
   const today = new Date();
+
+
+
 
   // close the compoff pop up
   const handleClose = () => {
     setOpen(false);
+  }
+
+  const handleCloseAddUserLeave = () => {
+    setOpenAddLeaves(false);
   }
 
   // const [error, setError]  = React.useState(null);
@@ -309,6 +318,7 @@ export default function AdminLeaveManagement() {
       setToDate(null);
     }
   }
+  
   function handleChange(e) {
     setLeaveType(e.target.value);
   }
@@ -336,6 +346,7 @@ export default function AdminLeaveManagement() {
           }}
         >
           <Addcompoff open={open} handleClose={handleClose} id={filterEmpId} getUserLeaves={getUserLeaves}/>
+          <AdminAddUserLeave open={openAddLeaves} handleCloseAddUserLeave={handleCloseAddUserLeave} id={filterEmpId} getUserLeaves={getUserLeaves} data ={data}/>
           <ToastContainer />
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography
@@ -505,14 +516,23 @@ export default function AdminLeaveManagement() {
               </ol>
             </Card>
           </Box>
-          <Typography
-            color="error"
-            variant="h6"
-            my={2}
-            sx={{ fontFamily: "Preahvihear" }}
-          >
-            Leave Description
-          </Typography>
+          <Box style={{
+            display : "flex",
+            justifyContent : "space-between",
+            alignItems : "center"
+          }}>
+            <Typography
+              color="error"
+              variant="h6"
+              my={2}
+              sx={{ fontFamily: "Preahvihear" }}
+            >
+              Leave Description
+            </Typography>
+            <AddIcon sx={{
+                cursor : "pointer",
+              }}onClick = {() => setOpenAddLeaves(true)}/>
+          </Box>
           <TableContainer component={Paper} sx={{ marginBottom: "50px" }}>
             <Table>
               <TableHead>
