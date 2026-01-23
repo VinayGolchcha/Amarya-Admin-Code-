@@ -90,7 +90,8 @@ export default function SettingHoliday() {
         setLoading(false);
       })
       .catch((error) => {console.error("Error fetching holiday data:", error)
-        setLoading(false)
+        setEditMode(true);
+        setLoading(false);
       });
   };
   const formatDateForAPI = (dateString) => {
