@@ -89,7 +89,9 @@ export default function SettingHoliday() {
         setOriginalFormData(formattedOriginalData);
         setLoading(false);
       })
-      .catch((error) => console.error("Error fetching holiday data:", error));
+      .catch((error) => {console.error("Error fetching holiday data:", error)
+        setLoading(false)
+      });
   };
   const formatDateForAPI = (dateString) => {
     const [day, month, year] = dateString.split("/");
