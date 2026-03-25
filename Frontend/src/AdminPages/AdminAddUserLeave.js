@@ -38,7 +38,6 @@ const AdminAddUserLeave = ({ open, handleCloseAddUserLeave, id, getUserLeaves, d
     const [isApiHit , setIsApiHit] = useState(false);
     const { user , encryptionKey} = useAuth();
     const apiUrl = process.env.REACT_APP_API_URI;
-
     
     function handleToDateChange(newDate) {
         const datee = new Date(newDate);
